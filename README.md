@@ -10,22 +10,10 @@ The REST API documentation can be found on [docs.context.dev](https://docs.conte
 
 ## Installation
 
-To use this package, install via Composer by adding the following to your application's `composer.json`:
-
 <!-- x-release-please-start-version -->
 
-```json
-{
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "git@github.com:context-dot-dev/context-php-sdk.git"
-    }
-  ],
-  "require": {
-    "org-placeholder/context-dev": "dev-main"
-  }
-}
+```
+composer require "org-placeholder/context-dev 0.0.1"
 ```
 
 <!-- x-release-please-end -->
