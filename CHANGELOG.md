@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.0 (2026-06-22)
+
+Full Changelog: [v1.0.0...v1.1.0](https://github.com/context-dot-dev/context-php-sdk/compare/v1.0.0...v1.1.0)
+
+### Features
+
+* **api:** manual updates ([af06555](https://github.com/context-dot-dev/context-php-sdk/commit/af065558a8581b19ce46dd87f3e2809d436216e4))
+
 ## 1.0.0 (2026-06-21)
 
 Full Changelog: [v0.0.1...v1.0.0](https://github.com/context-dot-dev/context-php-sdk/compare/v0.0.1...v1.0.0)

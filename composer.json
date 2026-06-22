@@ -27,7 +27,7 @@
     "sort-packages": true
   },
   "description": "Context Dev PHP SDK",
-  "name": "org-placeholder/context-dev",
+  "name": "context-dev/context-dev-php",
   "require": {
     "php": "^8.1",
     "php-http/discovery": "^1",
