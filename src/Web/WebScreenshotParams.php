@@ -27,6 +27,7 @@ use ContextDev\Web\WebScreenshotParams\Viewport;
  *   handleCookiePopup?: null|HandleCookiePopup|value-of<HandleCookiePopup>,
  *   maxAgeMs?: int|null,
  *   page?: null|Page|value-of<Page>,
+ *   scrollOffset?: int|null,
  *   timeoutMs?: int|null,
  *   viewport?: null|Viewport|ViewportShape,
  *   waitForMs?: int|null,
@@ -81,6 +82,12 @@ final class WebScreenshotParams implements BaseModel
     public ?string $page;
 
     /**
+     * Optional vertical scroll offset in pixels for capturing a long page in viewport-sized chunks. When provided, the full page is captured once and the returned image is the viewport-sized slice that begins at this Y offset (e.g. request scrollOffset=0, then 1080, then 2160 to walk a 1920x1080 landing page top to bottom). The final slice may be shorter than the viewport height. Takes precedence over fullScreenshot. Max: 100000.
+     */
+    #[Optional]
+    public ?int $scrollOffset;
+
+    /**
      * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      */
     #[Optional]
@@ -120,6 +127,7 @@ final class WebScreenshotParams implements BaseModel
         HandleCookiePopup|string|null $handleCookiePopup = null,
         ?int $maxAgeMs = null,
         Page|string|null $page = null,
+        ?int $scrollOffset = null,
         ?int $timeoutMs = null,
         Viewport|array|null $viewport = null,
         ?int $waitForMs = null,
@@ -132,6 +140,7 @@ final class WebScreenshotParams implements BaseModel
         null !== $handleCookiePopup && $self['handleCookiePopup'] = $handleCookiePopup;
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
         null !== $page && $self['page'] = $page;
+        null !== $scrollOffset && $self['scrollOffset'] = $scrollOffset;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
         null !== $viewport && $self['viewport'] = $viewport;
         null !== $waitForMs && $self['waitForMs'] = $waitForMs;
@@ -209,6 +218,17 @@ final class WebScreenshotParams implements BaseModel
     {
         $self = clone $this;
         $self['page'] = $page;
+
+        return $self;
+    }
+
+    /**
+     * Optional vertical scroll offset in pixels for capturing a long page in viewport-sized chunks. When provided, the full page is captured once and the returned image is the viewport-sized slice that begins at this Y offset (e.g. request scrollOffset=0, then 1080, then 2160 to walk a 1920x1080 landing page top to bottom). The final slice may be shorter than the viewport height. Takes precedence over fullScreenshot. Max: 100000.
+     */
+    public function withScrollOffset(int $scrollOffset): self
+    {
+        $self = clone $this;
+        $self['scrollOffset'] = $scrollOffset;
 
         return $self;
     }
