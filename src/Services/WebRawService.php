@@ -221,6 +221,7 @@ final class WebRawService implements WebRawContract
      *   handleCookiePopup?: HandleCookiePopup|value-of<HandleCookiePopup>,
      *   maxAgeMs?: int,
      *   page?: Page|value-of<Page>,
+     *   scrollOffset?: int,
      *   timeoutMs?: int,
      *   viewport?: Viewport|ViewportShape,
      *   waitForMs?: int,
