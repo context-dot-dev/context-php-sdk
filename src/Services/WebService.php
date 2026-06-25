@@ -229,6 +229,7 @@ final class WebService implements WebContract
      * @param HandleCookiePopup|value-of<HandleCookiePopup> $handleCookiePopup Optional parameter to control cookie/consent popup handling. If 'true', we dismiss cookie banner before capture. If 'false' or not provided, captures the page without that step.
      * @param int $maxAgeMs Return a cached screenshot if a prior screenshot for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always capture fresh.
      * @param Page|value-of<Page> $page Optional parameter to specify which page type to screenshot. If provided, the system will scrape the domain's links and use heuristics to find the most appropriate URL for the specified page type (30 supported languages). If not provided, screenshots the main domain landing page. Only applicable when using 'domain', not 'directUrl'.
+     * @param int $scrollOffset Optional vertical scroll offset in pixels for capturing a long page in viewport-sized chunks. When provided, the full page is captured once and the returned image is the viewport-sized slice that begins at this Y offset (e.g. request scrollOffset=0, then 1080, then 2160 to walk a 1920x1080 landing page top to bottom). The final slice may be shorter than the viewport height. Takes precedence over fullScreenshot. Max: 100000.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param Viewport|ViewportShape $viewport Optional browser viewport dimensions for the screenshot. Defaults to 1920x1080.
      * @param int $waitForMs Optional browser wait time in milliseconds after initial page load before taking the screenshot. Min: 0. Max: 30000 (30 seconds).  Defaults to 3000 ms when omitted.
@@ -243,6 +244,7 @@ final class WebService implements WebContract
         HandleCookiePopup|string $handleCookiePopup = 'false',
         int $maxAgeMs = 86400000,
         Page|string|null $page = null,
+        ?int $scrollOffset = null,
         ?int $timeoutMs = null,
         Viewport|array $viewport = ['width' => 1920, 'height' => 1080],
         int $waitForMs = 3000,
@@ -256,6 +258,7 @@ final class WebService implements WebContract
                 'handleCookiePopup' => $handleCookiePopup,
                 'maxAgeMs' => $maxAgeMs,
                 'page' => $page,
+                'scrollOffset' => $scrollOffset,
                 'timeoutMs' => $timeoutMs,
                 'viewport' => $viewport,
                 'waitForMs' => $waitForMs,
