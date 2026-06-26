@@ -263,10 +263,12 @@ final class WebRawService implements WebRawContract
      *
      * @param array{
      *   query: string,
+     *   country?: value-of<WebSearchParams\Country>,
      *   excludeDomains?: list<string>,
      *   freshness?: Freshness|value-of<Freshness>,
      *   includeDomains?: list<string>,
      *   markdownOptions?: MarkdownOptions|MarkdownOptionsShape,
+     *   numResults?: int,
      *   queryFanout?: bool,
      *   timeoutMs?: int,
      * }|WebSearchParams $params
