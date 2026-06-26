@@ -14,6 +14,7 @@ use ContextDev\Web\WebExtractFontsResponse;
 use ContextDev\Web\WebExtractParams\Pdf;
 use ContextDev\Web\WebExtractResponse;
 use ContextDev\Web\WebExtractStyleguideResponse;
+use ContextDev\Web\WebScreenshotParams\Country;
 use ContextDev\Web\WebScreenshotParams\FullScreenshot;
 use ContextDev\Web\WebScreenshotParams\HandleCookiePopup;
 use ContextDev\Web\WebScreenshotParams\Page;
@@ -223,6 +224,7 @@ final class WebService implements WebContract
      *
      * Capture a screenshot of a website.
      *
+     * @param Country|value-of<Country> $country Two-letter ISO 3166-1 alpha-2 country code for the website request location. When provided, Context.dev fetches the target page from that country.
      * @param string $directURL A specific URL to screenshot directly, bypassing domain resolution (e.g., 'https://example.com/pricing'). When provided, the screenshot is taken of this exact URL. You must provide either 'domain' or 'directUrl', but not both.
      * @param string $domain Domain name to take screenshot of (e.g., 'example.com', 'google.com'). The domain will be automatically normalized and validated. You must provide either 'domain' or 'directUrl', but not both.
      * @param FullScreenshot|value-of<FullScreenshot> $fullScreenshot Optional parameter to determine screenshot type. If 'true', takes a full page screenshot capturing all content. If 'false' or not provided, takes a viewport screenshot (standard browser view).
@@ -238,6 +240,7 @@ final class WebService implements WebContract
      * @throws APIException
      */
     public function screenshot(
+        Country|string|null $country = null,
         ?string $directURL = null,
         ?string $domain = null,
         FullScreenshot|string|null $fullScreenshot = null,
@@ -252,6 +255,7 @@ final class WebService implements WebContract
     ): WebScreenshotResponse {
         $params = Util::removeNulls(
             [
+                'country' => $country,
                 'directURL' => $directURL,
                 'domain' => $domain,
                 'fullScreenshot' => $fullScreenshot,
@@ -321,6 +325,7 @@ final class WebService implements WebContract
      * Performs a crawl starting from a given URL, extracts page content as Markdown, and returns results for all crawled pages.
      *
      * @param string $url The starting URL for the crawl (must include http:// or https:// protocol)
+     * @param \ContextDev\Web\WebWebCrawlMdParams\Country|value-of<\ContextDev\Web\WebWebCrawlMdParams\Country> $country Two-letter ISO 3166-1 alpha-2 country code identifying a supported Context.dev residential proxy exit location. Must be one of Context.dev's supported countries. When provided, Context.dev fetches the target page from that country.
      * @param list<string> $excludeSelectors CSS selectors to remove before each crawled page is converted to Markdown. Applied after includeSelectors. Exclusion takes precedence: an element matching both is removed. Examples: "nav", "footer", ".ad-banner", "[aria-hidden=true]".
      * @param bool $followSubdomains When true, follow links on subdomains of the starting URL's domain (e.g. docs.example.com when starting from example.com). www and apex are always treated as equivalent.
      * @param bool $includeFrames when true, the contents of iframes are rendered to Markdown for each crawled page
@@ -343,6 +348,7 @@ final class WebService implements WebContract
      */
     public function webCrawlMd(
         string $url,
+        \ContextDev\Web\WebWebCrawlMdParams\Country|string|null $country = null,
         ?array $excludeSelectors = null,
         bool $followSubdomains = false,
         bool $includeFrames = false,
@@ -366,6 +372,7 @@ final class WebService implements WebContract
         $params = Util::removeNulls(
             [
                 'url' => $url,
+                'country' => $country,
                 'excludeSelectors' => $excludeSelectors,
                 'followSubdomains' => $followSubdomains,
                 'includeFrames' => $includeFrames,
@@ -397,6 +404,7 @@ final class WebService implements WebContract
      * Scrapes the given URL and returns the raw HTML content of the page.
      *
      * @param string $url Full URL to scrape (must include http:// or https:// protocol)
+     * @param \ContextDev\Web\WebWebScrapeHTMLParams\Country|value-of<\ContextDev\Web\WebWebScrapeHTMLParams\Country> $country Two-letter ISO 3166-1 alpha-2 country code for the website request location. When provided, Context.dev fetches the target page from that country.
      * @param list<string> $excludeSelectors CSS selectors to remove from the result. Applied after includeSelectors. Exclusion takes precedence: an element matching both is removed. Examples: "nav", "footer", ".ad-banner", "[aria-hidden=true]".
      * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
      * @param bool $includeFrames when true, iframes are rendered inline into the returned HTML
@@ -412,6 +420,7 @@ final class WebService implements WebContract
      */
     public function webScrapeHTML(
         string $url,
+        \ContextDev\Web\WebWebScrapeHTMLParams\Country|string|null $country = null,
         ?array $excludeSelectors = null,
         ?array $headers = null,
         bool $includeFrames = false,
@@ -428,6 +437,7 @@ final class WebService implements WebContract
         $params = Util::removeNulls(
             [
                 'url' => $url,
+                'country' => $country,
                 'excludeSelectors' => $excludeSelectors,
                 'headers' => $headers,
                 'includeFrames' => $includeFrames,
@@ -493,6 +503,7 @@ final class WebService implements WebContract
      * Scrapes the given URL into LLM usable Markdown.
      *
      * @param string $url Full URL to scrape into LLM usable Markdown (must include http:// or https:// protocol)
+     * @param \ContextDev\Web\WebWebScrapeMdParams\Country|value-of<\ContextDev\Web\WebWebScrapeMdParams\Country> $country Two-letter ISO 3166-1 alpha-2 country code for the website request location. When provided, Context.dev fetches the target page from that country.
      * @param list<string> $excludeSelectors CSS selectors to remove before conversion to Markdown. Applied after includeSelectors. Exclusion takes precedence: an element matching both is removed. Examples: "nav", "footer", ".ad-banner", "[aria-hidden=true]".
      * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
      * @param bool $includeFrames when true, the contents of iframes are rendered to Markdown
@@ -511,6 +522,7 @@ final class WebService implements WebContract
      */
     public function webScrapeMd(
         string $url,
+        \ContextDev\Web\WebWebScrapeMdParams\Country|string|null $country = null,
         ?array $excludeSelectors = null,
         ?array $headers = null,
         bool $includeFrames = false,
@@ -530,6 +542,7 @@ final class WebService implements WebContract
         $params = Util::removeNulls(
             [
                 'url' => $url,
+                'country' => $country,
                 'excludeSelectors' => $excludeSelectors,
                 'headers' => $headers,
                 'includeFrames' => $includeFrames,

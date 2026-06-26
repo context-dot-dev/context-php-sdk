@@ -227,6 +227,7 @@ final class WebTest extends TestCase
 
         $result = $this->client->web->webCrawlMd(
             url: 'https://example.com',
+            country: 'de',
             excludeSelectors: ['string'],
             followSubdomains: true,
             includeFrames: true,
@@ -271,6 +272,7 @@ final class WebTest extends TestCase
 
         $result = $this->client->web->webScrapeHTML(
             url: 'https://example.com',
+            country: 'de',
             excludeSelectors: ['string'],
             headers: ['foo' => 'J!'],
             includeFrames: true,
@@ -346,6 +348,7 @@ final class WebTest extends TestCase
 
         $result = $this->client->web->webScrapeMd(
             url: 'https://example.com',
+            country: 'de',
             excludeSelectors: ['string'],
             headers: ['foo' => 'J!'],
             includeFrames: true,

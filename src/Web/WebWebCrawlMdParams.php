@@ -9,6 +9,7 @@ use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebWebCrawlMdParams\Country;
 use ContextDev\Web\WebWebCrawlMdParams\Pdf;
 
 /**
@@ -20,6 +21,7 @@ use ContextDev\Web\WebWebCrawlMdParams\Pdf;
  *
  * @phpstan-type WebWebCrawlMdParamsShape = array{
  *   url: string,
+ *   country?: null|Country|value-of<Country>,
  *   excludeSelectors?: list<string>|null,
  *   followSubdomains?: bool|null,
  *   includeFrames?: bool|null,
@@ -49,6 +51,14 @@ final class WebWebCrawlMdParams implements BaseModel
      */
     #[Required]
     public string $url;
+
+    /**
+     * Two-letter ISO 3166-1 alpha-2 country code identifying a supported Context.dev residential proxy exit location. Must be one of Context.dev's supported countries. When provided, Context.dev fetches the target page from that country.
+     *
+     * @var value-of<Country>|null $country
+     */
+    #[Optional(enum: Country::class)]
+    public ?string $country;
 
     /**
      * CSS selectors to remove before each crawled page is converted to Markdown. Applied after includeSelectors. Exclusion takes precedence: an element matching both is removed. Examples: "nav", "footer", ".ad-banner", "[aria-hidden=true]".
@@ -174,12 +184,14 @@ final class WebWebCrawlMdParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param Country|value-of<Country>|null $country
      * @param list<string>|null $excludeSelectors
      * @param list<string>|null $includeSelectors
      * @param Pdf|PdfShape|null $pdf
      */
     public static function with(
         string $url,
+        Country|string|null $country = null,
         ?array $excludeSelectors = null,
         ?bool $followSubdomains = null,
         ?bool $includeFrames = null,
@@ -201,6 +213,7 @@ final class WebWebCrawlMdParams implements BaseModel
 
         $self['url'] = $url;
 
+        null !== $country && $self['country'] = $country;
         null !== $excludeSelectors && $self['excludeSelectors'] = $excludeSelectors;
         null !== $followSubdomains && $self['followSubdomains'] = $followSubdomains;
         null !== $includeFrames && $self['includeFrames'] = $includeFrames;
@@ -228,6 +241,19 @@ final class WebWebCrawlMdParams implements BaseModel
     {
         $self = clone $this;
         $self['url'] = $url;
+
+        return $self;
+    }
+
+    /**
+     * Two-letter ISO 3166-1 alpha-2 country code identifying a supported Context.dev residential proxy exit location. Must be one of Context.dev's supported countries. When provided, Context.dev fetches the target page from that country.
+     *
+     * @param Country|value-of<Country> $country
+     */
+    public function withCountry(Country|string $country): self
+    {
+        $self = clone $this;
+        $self['country'] = $country;
 
         return $self;
     }

@@ -8,6 +8,7 @@ use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebScreenshotParams\Country;
 use ContextDev\Web\WebScreenshotParams\FullScreenshot;
 use ContextDev\Web\WebScreenshotParams\HandleCookiePopup;
 use ContextDev\Web\WebScreenshotParams\Page;
@@ -21,6 +22,7 @@ use ContextDev\Web\WebScreenshotParams\Viewport;
  * @phpstan-import-type ViewportShape from \ContextDev\Web\WebScreenshotParams\Viewport
  *
  * @phpstan-type WebScreenshotParamsShape = array{
+ *   country?: null|Country|value-of<Country>,
  *   directURL?: string|null,
  *   domain?: string|null,
  *   fullScreenshot?: null|FullScreenshot|value-of<FullScreenshot>,
@@ -38,6 +40,14 @@ final class WebScreenshotParams implements BaseModel
     /** @use SdkModel<WebScreenshotParamsShape> */
     use SdkModel;
     use SdkParams;
+
+    /**
+     * Two-letter ISO 3166-1 alpha-2 country code for the website request location. When provided, Context.dev fetches the target page from that country.
+     *
+     * @var value-of<Country>|null $country
+     */
+    #[Optional(enum: Country::class)]
+    public ?string $country;
 
     /**
      * A specific URL to screenshot directly, bypassing domain resolution (e.g., 'https://example.com/pricing'). When provided, the screenshot is taken of this exact URL. You must provide either 'domain' or 'directUrl', but not both.
@@ -115,12 +125,14 @@ final class WebScreenshotParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param Country|value-of<Country>|null $country
      * @param FullScreenshot|value-of<FullScreenshot>|null $fullScreenshot
      * @param HandleCookiePopup|value-of<HandleCookiePopup>|null $handleCookiePopup
      * @param Page|value-of<Page>|null $page
      * @param Viewport|ViewportShape|null $viewport
      */
     public static function with(
+        Country|string|null $country = null,
         ?string $directURL = null,
         ?string $domain = null,
         FullScreenshot|string|null $fullScreenshot = null,
@@ -134,6 +146,7 @@ final class WebScreenshotParams implements BaseModel
     ): self {
         $self = new self;
 
+        null !== $country && $self['country'] = $country;
         null !== $directURL && $self['directURL'] = $directURL;
         null !== $domain && $self['domain'] = $domain;
         null !== $fullScreenshot && $self['fullScreenshot'] = $fullScreenshot;
@@ -144,6 +157,19 @@ final class WebScreenshotParams implements BaseModel
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
         null !== $viewport && $self['viewport'] = $viewport;
         null !== $waitForMs && $self['waitForMs'] = $waitForMs;
+
+        return $self;
+    }
+
+    /**
+     * Two-letter ISO 3166-1 alpha-2 country code for the website request location. When provided, Context.dev fetches the target page from that country.
+     *
+     * @param Country|value-of<Country> $country
+     */
+    public function withCountry(Country|string $country): self
+    {
+        $self = clone $this;
+        $self['country'] = $country;
 
         return $self;
     }
