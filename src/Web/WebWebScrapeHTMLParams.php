@@ -9,6 +9,7 @@ use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebWebScrapeHTMLParams\Country;
 use ContextDev\Web\WebWebScrapeHTMLParams\Pdf;
 
 /**
@@ -20,6 +21,7 @@ use ContextDev\Web\WebWebScrapeHTMLParams\Pdf;
  *
  * @phpstan-type WebWebScrapeHTMLParamsShape = array{
  *   url: string,
+ *   country?: null|Country|value-of<Country>,
  *   excludeSelectors?: list<string>|null,
  *   headers?: array<string,string>|null,
  *   includeFrames?: bool|null,
@@ -42,6 +44,14 @@ final class WebWebScrapeHTMLParams implements BaseModel
      */
     #[Required]
     public string $url;
+
+    /**
+     * Two-letter ISO 3166-1 alpha-2 country code for the website request location. When provided, Context.dev fetches the target page from that country.
+     *
+     * @var value-of<Country>|null $country
+     */
+    #[Optional(enum: Country::class)]
+    public ?string $country;
 
     /**
      * CSS selectors to remove from the result. Applied after includeSelectors. Exclusion takes precedence: an element matching both is removed. Examples: "nav", "footer", ".ad-banner", "[aria-hidden=true]".
@@ -127,6 +137,7 @@ final class WebWebScrapeHTMLParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param Country|value-of<Country>|null $country
      * @param list<string>|null $excludeSelectors
      * @param array<string,string>|null $headers
      * @param list<string>|null $includeSelectors
@@ -134,6 +145,7 @@ final class WebWebScrapeHTMLParams implements BaseModel
      */
     public static function with(
         string $url,
+        Country|string|null $country = null,
         ?array $excludeSelectors = null,
         ?array $headers = null,
         ?bool $includeFrames = null,
@@ -148,6 +160,7 @@ final class WebWebScrapeHTMLParams implements BaseModel
 
         $self['url'] = $url;
 
+        null !== $country && $self['country'] = $country;
         null !== $excludeSelectors && $self['excludeSelectors'] = $excludeSelectors;
         null !== $headers && $self['headers'] = $headers;
         null !== $includeFrames && $self['includeFrames'] = $includeFrames;
@@ -168,6 +181,19 @@ final class WebWebScrapeHTMLParams implements BaseModel
     {
         $self = clone $this;
         $self['url'] = $url;
+
+        return $self;
+    }
+
+    /**
+     * Two-letter ISO 3166-1 alpha-2 country code for the website request location. When provided, Context.dev fetches the target page from that country.
+     *
+     * @param Country|value-of<Country> $country
+     */
+    public function withCountry(Country|string $country): self
+    {
+        $self = clone $this;
+        $self['country'] = $country;
 
         return $self;
     }
