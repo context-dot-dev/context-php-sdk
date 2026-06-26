@@ -182,6 +182,7 @@ final class WebTest extends TestCase
 
         $result = $this->client->web->search(
             query: 'x',
+            country: 'af',
             excludeDomains: ['string'],
             freshness: 'last_24_hours',
             includeDomains: ['string'],
@@ -197,6 +198,7 @@ final class WebTest extends TestCase
                 'useMainContentOnly' => true,
                 'waitForMs' => 0,
             ],
+            numResults: 10,
             queryFanout: true,
             timeoutMs: 1000,
         );

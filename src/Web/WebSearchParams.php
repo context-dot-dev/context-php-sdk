@@ -9,6 +9,7 @@ use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebSearchParams\Country;
 use ContextDev\Web\WebSearchParams\Freshness;
 use ContextDev\Web\WebSearchParams\MarkdownOptions;
 
@@ -21,10 +22,12 @@ use ContextDev\Web\WebSearchParams\MarkdownOptions;
  *
  * @phpstan-type WebSearchParamsShape = array{
  *   query: string,
+ *   country?: null|Country|value-of<Country>,
  *   excludeDomains?: list<string>|null,
  *   freshness?: null|Freshness|value-of<Freshness>,
  *   includeDomains?: list<string>|null,
  *   markdownOptions?: null|MarkdownOptions|MarkdownOptionsShape,
+ *   numResults?: int|null,
  *   queryFanout?: bool|null,
  *   timeoutMs?: int|null,
  * }
@@ -36,10 +39,18 @@ final class WebSearchParams implements BaseModel
     use SdkParams;
 
     /**
-     * Natural-language search query.
+     * Search query. Accepts natural language as well as Google-style search operators such as `site:`, `-site:`, `inurl:`, `intitle:`, quoted phrases, and `OR`.
      */
     #[Required]
     public string $query;
+
+    /**
+     * Two-letter ISO 3166-1 alpha-2 country code to localize results to a specific country (maps to Google's `gl` parameter). Example: "us", "gb", "de".
+     *
+     * @var value-of<Country>|null $country
+     */
+    #[Optional(enum: Country::class)]
+    public ?string $country;
 
     /**
      * Blocklist — drop results from these domains. Example: ["pinterest.com", "reddit.com"].
@@ -70,6 +81,12 @@ final class WebSearchParams implements BaseModel
      */
     #[Optional]
     public ?MarkdownOptions $markdownOptions;
+
+    /**
+     * Number of results to request and return (10–100). Defaults to 10.
+     */
+    #[Optional]
+    public ?int $numResults;
 
     /**
      * Expand the query into multiple parallel variants for broader recall.
@@ -107,6 +124,7 @@ final class WebSearchParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param Country|value-of<Country>|null $country
      * @param list<string>|null $excludeDomains
      * @param Freshness|value-of<Freshness>|null $freshness
      * @param list<string>|null $includeDomains
@@ -114,10 +132,12 @@ final class WebSearchParams implements BaseModel
      */
     public static function with(
         string $query,
+        Country|string|null $country = null,
         ?array $excludeDomains = null,
         Freshness|string|null $freshness = null,
         ?array $includeDomains = null,
         MarkdownOptions|array|null $markdownOptions = null,
+        ?int $numResults = null,
         ?bool $queryFanout = null,
         ?int $timeoutMs = null,
     ): self {
@@ -125,10 +145,12 @@ final class WebSearchParams implements BaseModel
 
         $self['query'] = $query;
 
+        null !== $country && $self['country'] = $country;
         null !== $excludeDomains && $self['excludeDomains'] = $excludeDomains;
         null !== $freshness && $self['freshness'] = $freshness;
         null !== $includeDomains && $self['includeDomains'] = $includeDomains;
         null !== $markdownOptions && $self['markdownOptions'] = $markdownOptions;
+        null !== $numResults && $self['numResults'] = $numResults;
         null !== $queryFanout && $self['queryFanout'] = $queryFanout;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
 
@@ -136,12 +158,25 @@ final class WebSearchParams implements BaseModel
     }
 
     /**
-     * Natural-language search query.
+     * Search query. Accepts natural language as well as Google-style search operators such as `site:`, `-site:`, `inurl:`, `intitle:`, quoted phrases, and `OR`.
      */
     public function withQuery(string $query): self
     {
         $self = clone $this;
         $self['query'] = $query;
+
+        return $self;
+    }
+
+    /**
+     * Two-letter ISO 3166-1 alpha-2 country code to localize results to a specific country (maps to Google's `gl` parameter). Example: "us", "gb", "de".
+     *
+     * @param Country|value-of<Country> $country
+     */
+    public function withCountry(Country|string $country): self
+    {
+        $self = clone $this;
+        $self['country'] = $country;
 
         return $self;
     }
@@ -195,6 +230,17 @@ final class WebSearchParams implements BaseModel
     ): self {
         $self = clone $this;
         $self['markdownOptions'] = $markdownOptions;
+
+        return $self;
+    }
+
+    /**
+     * Number of results to request and return (10–100). Defaults to 10.
+     */
+    public function withNumResults(int $numResults): self
+    {
+        $self = clone $this;
+        $self['numResults'] = $numResults;
 
         return $self;
     }

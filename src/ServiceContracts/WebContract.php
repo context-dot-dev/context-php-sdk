@@ -167,11 +167,13 @@ interface WebContract
     /**
      * @api
      *
-     * @param string $query natural-language search query
+     * @param string $query Search query. Accepts natural language as well as Google-style search operators such as `site:`, `-site:`, `inurl:`, `intitle:`, quoted phrases, and `OR`.
+     * @param \ContextDev\Web\WebSearchParams\Country|value-of<\ContextDev\Web\WebSearchParams\Country> $country Two-letter ISO 3166-1 alpha-2 country code to localize results to a specific country (maps to Google's `gl` parameter). Example: "us", "gb", "de".
      * @param list<string> $excludeDomains Blocklist — drop results from these domains. Example: ["pinterest.com", "reddit.com"].
      * @param Freshness|value-of<Freshness> $freshness restrict results to content published within this window
      * @param list<string> $includeDomains Allowlist — only return results from these domains. Example: ["arxiv.org", "github.com"].
      * @param MarkdownOptions|MarkdownOptionsShape $markdownOptions Inline Markdown scraping for each result. Set `enabled: true` to activate.
+     * @param int $numResults Number of results to request and return (10–100). Defaults to 10.
      * @param bool $queryFanout expand the query into multiple parallel variants for broader recall
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param RequestOpts|null $requestOptions
@@ -180,10 +182,12 @@ interface WebContract
      */
     public function search(
         string $query,
+        \ContextDev\Web\WebSearchParams\Country|string|null $country = null,
         ?array $excludeDomains = null,
         Freshness|string|null $freshness = null,
         ?array $includeDomains = null,
         MarkdownOptions|array|null $markdownOptions = null,
+        int $numResults = 10,
         ?bool $queryFanout = null,
         ?int $timeoutMs = null,
         RequestOptions|array|null $requestOptions = null,
