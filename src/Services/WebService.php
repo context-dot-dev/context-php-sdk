@@ -14,6 +14,7 @@ use ContextDev\Web\WebExtractFontsResponse;
 use ContextDev\Web\WebExtractParams\Pdf;
 use ContextDev\Web\WebExtractResponse;
 use ContextDev\Web\WebExtractStyleguideResponse;
+use ContextDev\Web\WebScreenshotParams\ColorScheme;
 use ContextDev\Web\WebScreenshotParams\Country;
 use ContextDev\Web\WebScreenshotParams\FullScreenshot;
 use ContextDev\Web\WebScreenshotParams\HandleCookiePopup;
@@ -224,6 +225,7 @@ final class WebService implements WebContract
      *
      * Capture a screenshot of a website.
      *
+     * @param ColorScheme|value-of<ColorScheme> $colorScheme Optional parameter to choose the site's visual theme in the screenshot. Use 'light' or 'dark' when the site offers both appearances.
      * @param Country|value-of<Country> $country Two-letter ISO 3166-1 alpha-2 country code for the website request location. When provided, Context.dev fetches the target page from that country.
      * @param string $directURL A specific URL to screenshot directly, bypassing domain resolution (e.g., 'https://example.com/pricing'). When provided, the screenshot is taken of this exact URL. You must provide either 'domain' or 'directUrl', but not both.
      * @param string $domain Domain name to take screenshot of (e.g., 'example.com', 'google.com'). The domain will be automatically normalized and validated. You must provide either 'domain' or 'directUrl', but not both.
@@ -240,6 +242,7 @@ final class WebService implements WebContract
      * @throws APIException
      */
     public function screenshot(
+        ColorScheme|string|null $colorScheme = null,
         Country|string|null $country = null,
         ?string $directURL = null,
         ?string $domain = null,
@@ -255,6 +258,7 @@ final class WebService implements WebContract
     ): WebScreenshotResponse {
         $params = Util::removeNulls(
             [
+                'colorScheme' => $colorScheme,
                 'country' => $country,
                 'directURL' => $directURL,
                 'domain' => $domain,

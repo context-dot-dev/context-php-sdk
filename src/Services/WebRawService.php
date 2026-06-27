@@ -20,6 +20,7 @@ use ContextDev\Web\WebExtractResponse;
 use ContextDev\Web\WebExtractStyleguideParams;
 use ContextDev\Web\WebExtractStyleguideResponse;
 use ContextDev\Web\WebScreenshotParams;
+use ContextDev\Web\WebScreenshotParams\ColorScheme;
 use ContextDev\Web\WebScreenshotParams\Country;
 use ContextDev\Web\WebScreenshotParams\FullScreenshot;
 use ContextDev\Web\WebScreenshotParams\HandleCookiePopup;
@@ -216,6 +217,7 @@ final class WebRawService implements WebRawContract
      * Capture a screenshot of a website.
      *
      * @param array{
+     *   colorScheme?: ColorScheme|value-of<ColorScheme>,
      *   country?: value-of<Country>,
      *   directURL?: string,
      *   domain?: string,
