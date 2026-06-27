@@ -8,6 +8,7 @@ use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebScreenshotParams\ColorScheme;
 use ContextDev\Web\WebScreenshotParams\Country;
 use ContextDev\Web\WebScreenshotParams\FullScreenshot;
 use ContextDev\Web\WebScreenshotParams\HandleCookiePopup;
@@ -22,6 +23,7 @@ use ContextDev\Web\WebScreenshotParams\Viewport;
  * @phpstan-import-type ViewportShape from \ContextDev\Web\WebScreenshotParams\Viewport
  *
  * @phpstan-type WebScreenshotParamsShape = array{
+ *   colorScheme?: null|ColorScheme|value-of<ColorScheme>,
  *   country?: null|Country|value-of<Country>,
  *   directURL?: string|null,
  *   domain?: string|null,
@@ -40,6 +42,14 @@ final class WebScreenshotParams implements BaseModel
     /** @use SdkModel<WebScreenshotParamsShape> */
     use SdkModel;
     use SdkParams;
+
+    /**
+     * Optional parameter to choose the site's visual theme in the screenshot. Use 'light' or 'dark' when the site offers both appearances.
+     *
+     * @var value-of<ColorScheme>|null $colorScheme
+     */
+    #[Optional(enum: ColorScheme::class)]
+    public ?string $colorScheme;
 
     /**
      * Two-letter ISO 3166-1 alpha-2 country code for the website request location. When provided, Context.dev fetches the target page from that country.
@@ -125,6 +135,7 @@ final class WebScreenshotParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param ColorScheme|value-of<ColorScheme>|null $colorScheme
      * @param Country|value-of<Country>|null $country
      * @param FullScreenshot|value-of<FullScreenshot>|null $fullScreenshot
      * @param HandleCookiePopup|value-of<HandleCookiePopup>|null $handleCookiePopup
@@ -132,6 +143,7 @@ final class WebScreenshotParams implements BaseModel
      * @param Viewport|ViewportShape|null $viewport
      */
     public static function with(
+        ColorScheme|string|null $colorScheme = null,
         Country|string|null $country = null,
         ?string $directURL = null,
         ?string $domain = null,
@@ -146,6 +158,7 @@ final class WebScreenshotParams implements BaseModel
     ): self {
         $self = new self;
 
+        null !== $colorScheme && $self['colorScheme'] = $colorScheme;
         null !== $country && $self['country'] = $country;
         null !== $directURL && $self['directURL'] = $directURL;
         null !== $domain && $self['domain'] = $domain;
@@ -157,6 +170,19 @@ final class WebScreenshotParams implements BaseModel
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
         null !== $viewport && $self['viewport'] = $viewport;
         null !== $waitForMs && $self['waitForMs'] = $waitForMs;
+
+        return $self;
+    }
+
+    /**
+     * Optional parameter to choose the site's visual theme in the screenshot. Use 'light' or 'dark' when the site offers both appearances.
+     *
+     * @param ColorScheme|value-of<ColorScheme> $colorScheme
+     */
+    public function withColorScheme(ColorScheme|string $colorScheme): self
+    {
+        $self = clone $this;
+        $self['colorScheme'] = $colorScheme;
 
         return $self;
     }
