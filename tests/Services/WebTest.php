@@ -182,6 +182,7 @@ final class WebTest extends TestCase
 
         $result = $this->client->web->search(
             query: 'x',
+            country: 'af',
             excludeDomains: ['string'],
             freshness: 'last_24_hours',
             includeDomains: ['string'],
@@ -197,6 +198,7 @@ final class WebTest extends TestCase
                 'useMainContentOnly' => true,
                 'waitForMs' => 0,
             ],
+            numResults: 10,
             queryFanout: true,
             timeoutMs: 1000,
         );
@@ -227,6 +229,7 @@ final class WebTest extends TestCase
 
         $result = $this->client->web->webCrawlMd(
             url: 'https://example.com',
+            country: 'de',
             excludeSelectors: ['string'],
             followSubdomains: true,
             includeFrames: true,
@@ -271,6 +274,7 @@ final class WebTest extends TestCase
 
         $result = $this->client->web->webScrapeHTML(
             url: 'https://example.com',
+            country: 'de',
             excludeSelectors: ['string'],
             headers: ['foo' => 'J!'],
             includeFrames: true,
@@ -346,6 +350,7 @@ final class WebTest extends TestCase
 
         $result = $this->client->web->webScrapeMd(
             url: 'https://example.com',
+            country: 'de',
             excludeSelectors: ['string'],
             headers: ['foo' => 'J!'],
             includeFrames: true,

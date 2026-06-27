@@ -18,8 +18,10 @@ use ContextDev\Web\WebExtractParams;
 use ContextDev\Web\WebExtractParams\Pdf;
 use ContextDev\Web\WebExtractResponse;
 use ContextDev\Web\WebExtractStyleguideParams;
+use ContextDev\Web\WebExtractStyleguideParams\ColorScheme;
 use ContextDev\Web\WebExtractStyleguideResponse;
 use ContextDev\Web\WebScreenshotParams;
+use ContextDev\Web\WebScreenshotParams\Country;
 use ContextDev\Web\WebScreenshotParams\FullScreenshot;
 use ContextDev\Web\WebScreenshotParams\HandleCookiePopup;
 use ContextDev\Web\WebScreenshotParams\Page;
@@ -179,7 +181,11 @@ final class WebRawService implements WebRawContract
      * Extract a comprehensive design system from a website including colors, typography, spacing, shadows, and UI components.
      *
      * @param array{
-     *   directURL?: string, domain?: string, maxAgeMs?: int, timeoutMs?: int
+     *   colorScheme?: ColorScheme|value-of<ColorScheme>,
+     *   directURL?: string,
+     *   domain?: string,
+     *   maxAgeMs?: int,
+     *   timeoutMs?: int,
      * }|WebExtractStyleguideParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -215,6 +221,8 @@ final class WebRawService implements WebRawContract
      * Capture a screenshot of a website.
      *
      * @param array{
+     *   colorScheme?: WebScreenshotParams\ColorScheme|value-of<WebScreenshotParams\ColorScheme>,
+     *   country?: value-of<Country>,
      *   directURL?: string,
      *   domain?: string,
      *   fullScreenshot?: FullScreenshot|value-of<FullScreenshot>,
@@ -261,10 +269,12 @@ final class WebRawService implements WebRawContract
      *
      * @param array{
      *   query: string,
+     *   country?: value-of<WebSearchParams\Country>,
      *   excludeDomains?: list<string>,
      *   freshness?: Freshness|value-of<Freshness>,
      *   includeDomains?: list<string>,
      *   markdownOptions?: MarkdownOptions|MarkdownOptionsShape,
+     *   numResults?: int,
      *   queryFanout?: bool,
      *   timeoutMs?: int,
      * }|WebSearchParams $params
@@ -300,6 +310,7 @@ final class WebRawService implements WebRawContract
      *
      * @param array{
      *   url: string,
+     *   country?: value-of<WebWebCrawlMdParams\Country>,
      *   excludeSelectors?: list<string>,
      *   followSubdomains?: bool,
      *   includeFrames?: bool,
@@ -349,6 +360,7 @@ final class WebRawService implements WebRawContract
      *
      * @param array{
      *   url: string,
+     *   country?: value-of<WebWebScrapeHTMLParams\Country>,
      *   excludeSelectors?: list<string>,
      *   headers?: array<string,string>,
      *   includeFrames?: bool,
@@ -429,6 +441,7 @@ final class WebRawService implements WebRawContract
      *
      * @param array{
      *   url: string,
+     *   country?: value-of<WebWebScrapeMdParams\Country>,
      *   excludeSelectors?: list<string>,
      *   headers?: array<string,string>,
      *   includeFrames?: bool,
