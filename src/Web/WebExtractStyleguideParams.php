@@ -8,6 +8,7 @@ use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebExtractStyleguideParams\ColorScheme;
 
 /**
  * Extract a comprehensive design system from a website including colors, typography, spacing, shadows, and UI components.
@@ -15,6 +16,7 @@ use ContextDev\Core\Contracts\BaseModel;
  * @see ContextDev\Services\WebService::extractStyleguide()
  *
  * @phpstan-type WebExtractStyleguideParamsShape = array{
+ *   colorScheme?: null|ColorScheme|value-of<ColorScheme>,
  *   directURL?: string|null,
  *   domain?: string|null,
  *   maxAgeMs?: int|null,
@@ -26,6 +28,14 @@ final class WebExtractStyleguideParams implements BaseModel
     /** @use SdkModel<WebExtractStyleguideParamsShape> */
     use SdkModel;
     use SdkParams;
+
+    /**
+     * Optional browser color scheme to emulate for websites that respond to prefers-color-scheme. This value is part of the styleguide cache key.
+     *
+     * @var value-of<ColorScheme>|null $colorScheme
+     */
+    #[Optional(enum: ColorScheme::class)]
+    public ?string $colorScheme;
 
     /**
      * A specific URL to fetch the styleguide from directly, bypassing domain resolution (e.g., 'https://example.com/design-system'). When provided, the styleguide is extracted from this exact URL. You must provide either 'domain' or 'directUrl', but not both.
@@ -60,8 +70,11 @@ final class WebExtractStyleguideParams implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param ColorScheme|value-of<ColorScheme>|null $colorScheme
      */
     public static function with(
+        ColorScheme|string|null $colorScheme = null,
         ?string $directURL = null,
         ?string $domain = null,
         ?int $maxAgeMs = null,
@@ -69,10 +82,24 @@ final class WebExtractStyleguideParams implements BaseModel
     ): self {
         $self = new self;
 
+        null !== $colorScheme && $self['colorScheme'] = $colorScheme;
         null !== $directURL && $self['directURL'] = $directURL;
         null !== $domain && $self['domain'] = $domain;
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
+
+        return $self;
+    }
+
+    /**
+     * Optional browser color scheme to emulate for websites that respond to prefers-color-scheme. This value is part of the styleguide cache key.
+     *
+     * @param ColorScheme|value-of<ColorScheme> $colorScheme
+     */
+    public function withColorScheme(ColorScheme|string $colorScheme): self
+    {
+        $self = clone $this;
+        $self['colorScheme'] = $colorScheme;
 
         return $self;
     }

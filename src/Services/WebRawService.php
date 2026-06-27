@@ -18,9 +18,9 @@ use ContextDev\Web\WebExtractParams;
 use ContextDev\Web\WebExtractParams\Pdf;
 use ContextDev\Web\WebExtractResponse;
 use ContextDev\Web\WebExtractStyleguideParams;
+use ContextDev\Web\WebExtractStyleguideParams\ColorScheme;
 use ContextDev\Web\WebExtractStyleguideResponse;
 use ContextDev\Web\WebScreenshotParams;
-use ContextDev\Web\WebScreenshotParams\ColorScheme;
 use ContextDev\Web\WebScreenshotParams\Country;
 use ContextDev\Web\WebScreenshotParams\FullScreenshot;
 use ContextDev\Web\WebScreenshotParams\HandleCookiePopup;
@@ -181,7 +181,11 @@ final class WebRawService implements WebRawContract
      * Extract a comprehensive design system from a website including colors, typography, spacing, shadows, and UI components.
      *
      * @param array{
-     *   directURL?: string, domain?: string, maxAgeMs?: int, timeoutMs?: int
+     *   colorScheme?: ColorScheme|value-of<ColorScheme>,
+     *   directURL?: string,
+     *   domain?: string,
+     *   maxAgeMs?: int,
+     *   timeoutMs?: int,
      * }|WebExtractStyleguideParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -217,7 +221,7 @@ final class WebRawService implements WebRawContract
      * Capture a screenshot of a website.
      *
      * @param array{
-     *   colorScheme?: ColorScheme|value-of<ColorScheme>,
+     *   colorScheme?: WebScreenshotParams\ColorScheme|value-of<WebScreenshotParams\ColorScheme>,
      *   country?: value-of<Country>,
      *   directURL?: string,
      *   domain?: string,
