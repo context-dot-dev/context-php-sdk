@@ -10,6 +10,7 @@ use ContextDev\Core\Util;
 use ContextDev\Services\AIService;
 use ContextDev\Services\BrandService;
 use ContextDev\Services\IndustryService;
+use ContextDev\Services\MonitorsService;
 use ContextDev\Services\UtilityService;
 use ContextDev\Services\WebService;
 use Http\Discovery\Psr17FactoryDiscovery;
@@ -47,6 +48,11 @@ class Client extends BaseClient
      * @api
      */
     public UtilityService $utility;
+
+    /**
+     * @api
+     */
+    public MonitorsService $monitors;
 
     /**
      * @param RequestOpts|null $requestOptions
@@ -111,6 +117,7 @@ class Client extends BaseClient
         $this->brand = new BrandService($this);
         $this->industry = new IndustryService($this);
         $this->utility = new UtilityService($this);
+        $this->monitors = new MonitorsService($this);
     }
 
     /** @return array<string,string> */
