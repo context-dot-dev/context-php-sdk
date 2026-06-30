@@ -10,8 +10,14 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Monitors\MonitorCreateParams\ChangeDetection;
+use ContextDev\Monitors\MonitorCreateParams\ChangeDetection\MonitorsExactChangeDetection;
+use ContextDev\Monitors\MonitorCreateParams\ChangeDetection\MonitorsSemanticChangeDetection;
+use ContextDev\Monitors\MonitorCreateParams\Mode;
 use ContextDev\Monitors\MonitorCreateParams\Schedule;
 use ContextDev\Monitors\MonitorCreateParams\Target;
+use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsExtractTarget;
+use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsPageTarget;
+use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsSitemapTarget;
 use ContextDev\Monitors\MonitorCreateParams\Webhook;
 
 /**
@@ -19,16 +25,19 @@ use ContextDev\Monitors\MonitorCreateParams\Webhook;
  *
  * @see ContextDev\Services\MonitorsService::create()
  *
+ * @phpstan-import-type ChangeDetectionVariants from \ContextDev\Monitors\MonitorCreateParams\ChangeDetection
+ * @phpstan-import-type TargetVariants from \ContextDev\Monitors\MonitorCreateParams\Target
  * @phpstan-import-type ChangeDetectionShape from \ContextDev\Monitors\MonitorCreateParams\ChangeDetection
  * @phpstan-import-type ScheduleShape from \ContextDev\Monitors\MonitorCreateParams\Schedule
  * @phpstan-import-type TargetShape from \ContextDev\Monitors\MonitorCreateParams\Target
  * @phpstan-import-type WebhookShape from \ContextDev\Monitors\MonitorCreateParams\Webhook
  *
  * @phpstan-type MonitorCreateParamsShape = array{
- *   changeDetection: ChangeDetection|ChangeDetectionShape,
+ *   changeDetection: ChangeDetectionShape,
  *   name: string,
  *   schedule: Schedule|ScheduleShape,
- *   target: Target|TargetShape,
+ *   target: TargetShape,
+ *   mode?: null|Mode|value-of<Mode>,
  *   tags?: list<string>|null,
  *   webhook?: null|Webhook|WebhookShape,
  * }
@@ -40,10 +49,12 @@ final class MonitorCreateParams implements BaseModel
     use SdkParams;
 
     /**
-     * Detect meaning-level changes that match a natural language query.
+     * Discriminated union describing how changes are detected.
+     *
+     * @var ChangeDetectionVariants $changeDetection
      */
-    #[Required('change_detection')]
-    public ChangeDetection $changeDetection;
+    #[Required('change_detection', union: ChangeDetection::class)]
+    public MonitorsExactChangeDetection|MonitorsSemanticChangeDetection $changeDetection;
 
     #[Required]
     public string $name;
@@ -54,8 +65,21 @@ final class MonitorCreateParams implements BaseModel
     #[Required]
     public Schedule $schedule;
 
-    #[Required]
-    public Target $target;
+    /**
+     * Discriminated union describing what the monitor watches.
+     *
+     * @var TargetVariants $target
+     */
+    #[Required(union: Target::class)]
+    public MonitorsPageTarget|MonitorsSitemapTarget|MonitorsExtractTarget $target;
+
+    /**
+     * Top-level monitor category. Always `web` today; the concrete behavior is described by `target` and `change_detection`.
+     *
+     * @var value-of<Mode>|null $mode
+     */
+    #[Optional(enum: Mode::class)]
+    public ?string $mode;
 
     /**
      * User-defined tags for grouping and filtering monitors and their changes.
@@ -98,17 +122,19 @@ final class MonitorCreateParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param ChangeDetection|ChangeDetectionShape $changeDetection
+     * @param ChangeDetectionShape $changeDetection
      * @param Schedule|ScheduleShape $schedule
-     * @param Target|TargetShape $target
+     * @param TargetShape $target
+     * @param Mode|value-of<Mode>|null $mode
      * @param list<string>|null $tags
      * @param Webhook|WebhookShape|null $webhook
      */
     public static function with(
-        ChangeDetection|array $changeDetection,
+        MonitorsExactChangeDetection|array|MonitorsSemanticChangeDetection $changeDetection,
         string $name,
         Schedule|array $schedule,
-        Target|array $target,
+        MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget $target,
+        Mode|string|null $mode = null,
         ?array $tags = null,
         Webhook|array|null $webhook = null,
     ): self {
@@ -119,6 +145,7 @@ final class MonitorCreateParams implements BaseModel
         $self['schedule'] = $schedule;
         $self['target'] = $target;
 
+        null !== $mode && $self['mode'] = $mode;
         null !== $tags && $self['tags'] = $tags;
         null !== $webhook && $self['webhook'] = $webhook;
 
@@ -126,12 +153,12 @@ final class MonitorCreateParams implements BaseModel
     }
 
     /**
-     * Detect meaning-level changes that match a natural language query.
+     * Discriminated union describing how changes are detected.
      *
-     * @param ChangeDetection|ChangeDetectionShape $changeDetection
+     * @param ChangeDetectionShape $changeDetection
      */
     public function withChangeDetection(
-        ChangeDetection|array $changeDetection
+        MonitorsExactChangeDetection|array|MonitorsSemanticChangeDetection $changeDetection,
     ): self {
         $self = clone $this;
         $self['changeDetection'] = $changeDetection;
@@ -161,12 +188,28 @@ final class MonitorCreateParams implements BaseModel
     }
 
     /**
-     * @param Target|TargetShape $target
+     * Discriminated union describing what the monitor watches.
+     *
+     * @param TargetShape $target
      */
-    public function withTarget(Target|array $target): self
-    {
+    public function withTarget(
+        MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget $target
+    ): self {
         $self = clone $this;
         $self['target'] = $target;
+
+        return $self;
+    }
+
+    /**
+     * Top-level monitor category. Always `web` today; the concrete behavior is described by `target` and `change_detection`.
+     *
+     * @param Mode|value-of<Mode> $mode
+     */
+    public function withMode(Mode|string $mode): self
+    {
+        $self = clone $this;
+        $self['mode'] = $mode;
 
         return $self;
     }

@@ -10,11 +10,10 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Monitors\MonitorListAccountChangesResponse\Data;
 
 /**
- * @phpstan-import-type DataVariants from \ContextDev\Monitors\MonitorListAccountChangesResponse\Data
  * @phpstan-import-type DataShape from \ContextDev\Monitors\MonitorListAccountChangesResponse\Data
  *
  * @phpstan-type MonitorListAccountChangesResponseShape = array{
- *   data: list<DataShape>, hasMore: bool, nextCursor: string|null
+ *   data: list<Data|DataShape>, hasMore: bool, nextCursor: string|null
  * }
  */
 final class MonitorListAccountChangesResponse implements BaseModel
@@ -22,7 +21,7 @@ final class MonitorListAccountChangesResponse implements BaseModel
     /** @use SdkModel<MonitorListAccountChangesResponseShape> */
     use SdkModel;
 
-    /** @var list<DataVariants> $data */
+    /** @var list<Data> $data */
     #[Required(list: Data::class)]
     public array $data;
 
@@ -61,7 +60,7 @@ final class MonitorListAccountChangesResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param list<DataShape> $data
+     * @param list<Data|DataShape> $data
      */
     public static function with(
         array $data,
@@ -78,7 +77,7 @@ final class MonitorListAccountChangesResponse implements BaseModel
     }
 
     /**
-     * @param list<DataShape> $data
+     * @param list<Data|DataShape> $data
      */
     public function withData(array $data): self
     {

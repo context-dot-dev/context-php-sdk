@@ -10,6 +10,8 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
+ * Watch a site's extracted structured data.
+ *
  * @phpstan-type MonitorsExtractTargetShape = array{
  *   type: 'extract',
  *   url: string,

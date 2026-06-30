@@ -10,6 +10,8 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
+ * Watch a single web page.
+ *
  * @phpstan-type MonitorsPageTargetShape = array{
  *   type: 'page', url: string, normalizeWhitespace?: bool|null
  * }

@@ -7,33 +7,30 @@ namespace ContextDev\Services;
 use ContextDev\Client;
 use ContextDev\Core\Exceptions\APIException;
 use ContextDev\Core\Util;
-use ContextDev\Monitors\MonitorCreateParams\ChangeDetection;
+use ContextDev\Monitors\MonitorCreateParams\ChangeDetection\MonitorsExactChangeDetection;
+use ContextDev\Monitors\MonitorCreateParams\ChangeDetection\MonitorsSemanticChangeDetection;
+use ContextDev\Monitors\MonitorCreateParams\Mode;
 use ContextDev\Monitors\MonitorCreateParams\Schedule;
-use ContextDev\Monitors\MonitorCreateParams\Target;
+use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsExtractTarget;
+use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsPageTarget;
+use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsSitemapTarget;
 use ContextDev\Monitors\MonitorCreateParams\Webhook;
 use ContextDev\Monitors\MonitorDeleteResponse;
-use ContextDev\Monitors\MonitorGetChangeResponse\MonitorsExtractSemanticChange;
-use ContextDev\Monitors\MonitorGetChangeResponse\MonitorsPageExactChange;
-use ContextDev\Monitors\MonitorGetChangeResponse\MonitorsPageSemanticChange;
-use ContextDev\Monitors\MonitorGetChangeResponse\MonitorsSitemapExactChange;
+use ContextDev\Monitors\MonitorGetChangeResponse;
+use ContextDev\Monitors\MonitorGetResponse;
 use ContextDev\Monitors\MonitorListAccountChangesResponse;
 use ContextDev\Monitors\MonitorListAccountRunsResponse;
 use ContextDev\Monitors\MonitorListChangesResponse;
 use ContextDev\Monitors\MonitorListParams\ChangeDetectionType;
+use ContextDev\Monitors\MonitorListParams\SearchBy;
+use ContextDev\Monitors\MonitorListParams\SearchType;
 use ContextDev\Monitors\MonitorListParams\TargetType;
 use ContextDev\Monitors\MonitorListResponse;
 use ContextDev\Monitors\MonitorListRunsResponse;
-use ContextDev\Monitors\MonitorNewResponse\MonitorsExtractSemanticMonitor;
-use ContextDev\Monitors\MonitorNewResponse\MonitorsPageExactMonitor;
-use ContextDev\Monitors\MonitorNewResponse\MonitorsPageSemanticMonitor;
-use ContextDev\Monitors\MonitorNewResponse\MonitorsSitemapExactMonitor;
+use ContextDev\Monitors\MonitorNewResponse;
 use ContextDev\Monitors\MonitorRunResponse;
-use ContextDev\Monitors\MonitorUpdateParams\ChangeDetection\MonitorsExactChangeDetection;
-use ContextDev\Monitors\MonitorUpdateParams\ChangeDetection\MonitorsSemanticChangeDetection;
 use ContextDev\Monitors\MonitorUpdateParams\Status;
-use ContextDev\Monitors\MonitorUpdateParams\Target\MonitorsExtractTarget;
-use ContextDev\Monitors\MonitorUpdateParams\Target\MonitorsPageTarget;
-use ContextDev\Monitors\MonitorUpdateParams\Target\MonitorsSitemapTarget;
+use ContextDev\Monitors\MonitorUpdateResponse;
 use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\MonitorsContract;
 
@@ -70,9 +67,10 @@ final class MonitorsService implements MonitorsContract
      *
      * Creates a monitor. The request body is a union of the supported target/change detection combinations. The monitor runs immediately after creation to create its initial baseline.
      *
-     * @param ChangeDetection|ChangeDetectionShape $changeDetection detect meaning-level changes that match a natural language query
+     * @param ChangeDetectionShape $changeDetection discriminated union describing how changes are detected
      * @param Schedule|ScheduleShape $schedule Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
-     * @param Target|TargetShape $target
+     * @param TargetShape $target discriminated union describing what the monitor watches
+     * @param Mode|value-of<Mode> $mode Top-level monitor category. Always `web` today; the concrete behavior is described by `target` and `change_detection`.
      * @param list<string> $tags user-defined tags for grouping and filtering monitors and their changes
      * @param Webhook|WebhookShape|null $webhook
      * @param RequestOpts|null $requestOptions
@@ -80,20 +78,22 @@ final class MonitorsService implements MonitorsContract
      * @throws APIException
      */
     public function create(
-        ChangeDetection|array $changeDetection,
+        MonitorsExactChangeDetection|array|MonitorsSemanticChangeDetection $changeDetection,
         string $name,
         Schedule|array $schedule,
-        Target|array $target,
+        MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget $target,
+        Mode|string|null $mode = null,
         ?array $tags = null,
         Webhook|array|null $webhook = null,
         RequestOptions|array|null $requestOptions = null,
-    ): MonitorsPageExactMonitor|MonitorsSitemapExactMonitor|MonitorsPageSemanticMonitor|MonitorsExtractSemanticMonitor {
+    ): MonitorNewResponse {
         $params = Util::removeNulls(
             [
                 'changeDetection' => $changeDetection,
                 'name' => $name,
                 'schedule' => $schedule,
                 'target' => $target,
+                'mode' => $mode,
                 'tags' => $tags,
                 'webhook' => $webhook,
             ],
@@ -117,7 +117,7 @@ final class MonitorsService implements MonitorsContract
     public function retrieve(
         string $monitorID,
         RequestOptions|array|null $requestOptions = null
-    ): \ContextDev\Monitors\MonitorGetResponse\MonitorsPageExactMonitor|\ContextDev\Monitors\MonitorGetResponse\MonitorsSitemapExactMonitor|\ContextDev\Monitors\MonitorGetResponse\MonitorsPageSemanticMonitor|\ContextDev\Monitors\MonitorGetResponse\MonitorsExtractSemanticMonitor {
+    ): MonitorGetResponse {
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->retrieve($monitorID, requestOptions: $requestOptions);
 
@@ -141,15 +141,15 @@ final class MonitorsService implements MonitorsContract
      */
     public function update(
         string $monitorID,
-        MonitorsExactChangeDetection|array|MonitorsSemanticChangeDetection|null $changeDetection = null,
+        \ContextDev\Monitors\MonitorUpdateParams\ChangeDetection\MonitorsExactChangeDetection|array|\ContextDev\Monitors\MonitorUpdateParams\ChangeDetection\MonitorsSemanticChangeDetection|null $changeDetection = null,
         ?string $name = null,
         \ContextDev\Monitors\MonitorUpdateParams\Schedule|array|null $schedule = null,
         Status|string|null $status = null,
         ?array $tags = null,
-        MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget|null $target = null,
+        \ContextDev\Monitors\MonitorUpdateParams\Target\MonitorsPageTarget|array|\ContextDev\Monitors\MonitorUpdateParams\Target\MonitorsSitemapTarget|\ContextDev\Monitors\MonitorUpdateParams\Target\MonitorsExtractTarget|null $target = null,
         \ContextDev\Monitors\MonitorUpdateParams\Webhook|array|null $webhook = null,
         RequestOptions|array|null $requestOptions = null,
-    ): \ContextDev\Monitors\MonitorUpdateResponse\MonitorsPageExactMonitor|\ContextDev\Monitors\MonitorUpdateResponse\MonitorsSitemapExactMonitor|\ContextDev\Monitors\MonitorUpdateResponse\MonitorsPageSemanticMonitor|\ContextDev\Monitors\MonitorUpdateResponse\MonitorsExtractSemanticMonitor {
+    ): MonitorUpdateResponse {
         $params = Util::removeNulls(
             [
                 'changeDetection' => $changeDetection,
@@ -171,11 +171,15 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * List monitors
+     * Lists monitors for the authenticated organization. Supports free-text search (`q` over `search_by` fields, `prefix` or `exact` via `search_type`) plus status/type/tag filters. Results are paginated via the opaque `cursor`.
      *
      * @param ChangeDetectionType|value-of<ChangeDetectionType> $changeDetectionType
+     * @param string $q free-text search term, matched against the fields named in `search_by`
+     * @param list<SearchBy|value-of<SearchBy>> $searchBy Comma-separated fields to search with `q`. Defaults to all of them. Note `query` only exists on semantic monitors.
+     * @param SearchType|value-of<SearchType> $searchType `prefix` for as-you-type prefix matching (default), `exact` for full-token matching
      * @param \ContextDev\Monitors\MonitorListParams\Status|value-of<\ContextDev\Monitors\MonitorListParams\Status> $status
      * @param string $tag filter to items that have this tag
+     * @param list<string> $tags comma-separated list of tags to filter by (matches monitors having any of them)
      * @param TargetType|value-of<TargetType> $targetType
      * @param RequestOpts|null $requestOptions
      *
@@ -185,8 +189,12 @@ final class MonitorsService implements MonitorsContract
         ChangeDetectionType|string|null $changeDetectionType = null,
         ?string $cursor = null,
         int $limit = 25,
+        ?string $q = null,
+        ?array $searchBy = null,
+        SearchType|string $searchType = 'prefix',
         \ContextDev\Monitors\MonitorListParams\Status|string|null $status = null,
         ?string $tag = null,
+        ?array $tags = null,
         TargetType|string|null $targetType = null,
         RequestOptions|array|null $requestOptions = null,
     ): MonitorListResponse {
@@ -195,8 +203,12 @@ final class MonitorsService implements MonitorsContract
                 'changeDetectionType' => $changeDetectionType,
                 'cursor' => $cursor,
                 'limit' => $limit,
+                'q' => $q,
+                'searchBy' => $searchBy,
+                'searchType' => $searchType,
                 'status' => $status,
                 'tag' => $tag,
+                'tags' => $tags,
                 'targetType' => $targetType,
             ],
         );
@@ -368,7 +380,7 @@ final class MonitorsService implements MonitorsContract
     public function retrieveChange(
         string $changeID,
         RequestOptions|array|null $requestOptions = null
-    ): MonitorsPageExactChange|MonitorsSitemapExactChange|MonitorsPageSemanticChange|MonitorsExtractSemanticChange {
+    ): MonitorGetChangeResponse {
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->retrieveChange($changeID, requestOptions: $requestOptions);
 

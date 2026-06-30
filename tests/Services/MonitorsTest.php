@@ -5,12 +5,16 @@ namespace Tests\Services;
 use ContextDev\Client;
 use ContextDev\Core\Util;
 use ContextDev\Monitors\MonitorDeleteResponse;
+use ContextDev\Monitors\MonitorGetChangeResponse;
+use ContextDev\Monitors\MonitorGetResponse;
 use ContextDev\Monitors\MonitorListAccountChangesResponse;
 use ContextDev\Monitors\MonitorListAccountRunsResponse;
 use ContextDev\Monitors\MonitorListChangesResponse;
 use ContextDev\Monitors\MonitorListResponse;
 use ContextDev\Monitors\MonitorListRunsResponse;
+use ContextDev\Monitors\MonitorNewResponse;
 use ContextDev\Monitors\MonitorRunResponse;
+use ContextDev\Monitors\MonitorUpdateResponse;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -42,17 +46,14 @@ final class MonitorsTest extends TestCase
         }
 
         $result = $this->client->monitors->create(
-            changeDetection: [
-                'query' => 'Tell me when pricing, packaging, plan limits, or discounts change.',
-                'type' => 'semantic',
-            ],
-            name: 'Acme pricing monitor',
+            changeDetection: ['type' => 'exact'],
+            name: 'Acme pricing page',
             schedule: ['frequency' => 6, 'type' => 'interval', 'unit' => 'hours'],
-            target: ['type' => 'extract', 'url' => 'https://acme.com'],
+            target: ['type' => 'page', 'url' => 'https://acme.com/pricing'],
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNotNull($result);
+        $this->assertInstanceOf(MonitorNewResponse::class, $result);
     }
 
     #[Test]
@@ -63,28 +64,21 @@ final class MonitorsTest extends TestCase
         }
 
         $result = $this->client->monitors->create(
-            changeDetection: [
-                'query' => 'Tell me when pricing, packaging, plan limits, or discounts change.',
-                'type' => 'semantic',
-                'confidenceThreshold' => 0,
-            ],
-            name: 'Acme pricing monitor',
+            changeDetection: ['type' => 'exact'],
+            name: 'Acme pricing page',
             schedule: ['frequency' => 6, 'type' => 'interval', 'unit' => 'hours'],
             target: [
-                'type' => 'extract',
-                'url' => 'https://acme.com',
-                'followSubdomains' => true,
-                'instructions' => 'Extract every pricing plan with its monthly price and included limits.',
-                'maxDepth' => 0,
-                'maxPages' => 1,
-                'schema' => ['type' => 'bar', 'properties' => 'bar'],
+                'type' => 'page',
+                'url' => 'https://acme.com/pricing',
+                'normalizeWhitespace' => true,
             ],
+            mode: 'web',
             tags: ['pricing', 'competitor'],
             webhook: ['url' => 'https://example.com/webhook'],
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNotNull($result);
+        $this->assertInstanceOf(MonitorNewResponse::class, $result);
     }
 
     #[Test]
@@ -97,7 +91,7 @@ final class MonitorsTest extends TestCase
         $result = $this->client->monitors->retrieve('mon_123');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNotNull($result);
+        $this->assertInstanceOf(MonitorGetResponse::class, $result);
     }
 
     #[Test]
@@ -110,7 +104,7 @@ final class MonitorsTest extends TestCase
         $result = $this->client->monitors->update('mon_123');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNotNull($result);
+        $this->assertInstanceOf(MonitorUpdateResponse::class, $result);
     }
 
     #[Test]
@@ -201,7 +195,7 @@ final class MonitorsTest extends TestCase
         $result = $this->client->monitors->retrieveChange('chg_123');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNotNull($result);
+        $this->assertInstanceOf(MonitorGetChangeResponse::class, $result);
     }
 
     #[Test]

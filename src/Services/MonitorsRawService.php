@@ -9,16 +9,11 @@ use ContextDev\Core\Contracts\BaseResponse;
 use ContextDev\Core\Exceptions\APIException;
 use ContextDev\Core\Util;
 use ContextDev\Monitors\MonitorCreateParams;
-use ContextDev\Monitors\MonitorCreateParams\ChangeDetection;
+use ContextDev\Monitors\MonitorCreateParams\Mode;
 use ContextDev\Monitors\MonitorCreateParams\Schedule;
-use ContextDev\Monitors\MonitorCreateParams\Target;
 use ContextDev\Monitors\MonitorCreateParams\Webhook;
 use ContextDev\Monitors\MonitorDeleteResponse;
 use ContextDev\Monitors\MonitorGetChangeResponse;
-use ContextDev\Monitors\MonitorGetChangeResponse\MonitorsExtractSemanticChange;
-use ContextDev\Monitors\MonitorGetChangeResponse\MonitorsPageExactChange;
-use ContextDev\Monitors\MonitorGetChangeResponse\MonitorsPageSemanticChange;
-use ContextDev\Monitors\MonitorGetChangeResponse\MonitorsSitemapExactChange;
 use ContextDev\Monitors\MonitorGetResponse;
 use ContextDev\Monitors\MonitorListAccountChangesParams;
 use ContextDev\Monitors\MonitorListAccountChangesResponse;
@@ -28,15 +23,13 @@ use ContextDev\Monitors\MonitorListChangesParams;
 use ContextDev\Monitors\MonitorListChangesResponse;
 use ContextDev\Monitors\MonitorListParams;
 use ContextDev\Monitors\MonitorListParams\ChangeDetectionType;
+use ContextDev\Monitors\MonitorListParams\SearchBy;
+use ContextDev\Monitors\MonitorListParams\SearchType;
 use ContextDev\Monitors\MonitorListParams\TargetType;
 use ContextDev\Monitors\MonitorListResponse;
 use ContextDev\Monitors\MonitorListRunsParams;
 use ContextDev\Monitors\MonitorListRunsResponse;
 use ContextDev\Monitors\MonitorNewResponse;
-use ContextDev\Monitors\MonitorNewResponse\MonitorsExtractSemanticMonitor;
-use ContextDev\Monitors\MonitorNewResponse\MonitorsPageExactMonitor;
-use ContextDev\Monitors\MonitorNewResponse\MonitorsPageSemanticMonitor;
-use ContextDev\Monitors\MonitorNewResponse\MonitorsSitemapExactMonitor;
 use ContextDev\Monitors\MonitorRunResponse;
 use ContextDev\Monitors\MonitorUpdateParams;
 use ContextDev\Monitors\MonitorUpdateParams\Status;
@@ -71,16 +64,17 @@ final class MonitorsRawService implements MonitorsRawContract
      * Creates a monitor. The request body is a union of the supported target/change detection combinations. The monitor runs immediately after creation to create its initial baseline.
      *
      * @param array{
-     *   changeDetection: ChangeDetection|ChangeDetectionShape,
+     *   changeDetection: ChangeDetectionShape,
      *   name: string,
      *   schedule: Schedule|ScheduleShape,
-     *   target: Target|TargetShape,
+     *   target: TargetShape,
+     *   mode?: Mode|value-of<Mode>,
      *   tags?: list<string>,
      *   webhook?: Webhook|WebhookShape|null,
      * }|MonitorCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<MonitorsPageExactMonitor|MonitorsSitemapExactMonitor|MonitorsPageSemanticMonitor|MonitorsExtractSemanticMonitor,>
+     * @return BaseResponse<MonitorNewResponse>
      *
      * @throws APIException
      */
@@ -110,7 +104,7 @@ final class MonitorsRawService implements MonitorsRawContract
      *
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<MonitorGetResponse\MonitorsPageExactMonitor|MonitorGetResponse\MonitorsSitemapExactMonitor|MonitorGetResponse\MonitorsPageSemanticMonitor|MonitorGetResponse\MonitorsExtractSemanticMonitor,>
+     * @return BaseResponse<MonitorGetResponse>
      *
      * @throws APIException
      */
@@ -143,7 +137,7 @@ final class MonitorsRawService implements MonitorsRawContract
      * }|MonitorUpdateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<MonitorUpdateResponse\MonitorsPageExactMonitor|MonitorUpdateResponse\MonitorsSitemapExactMonitor|MonitorUpdateResponse\MonitorsPageSemanticMonitor|MonitorUpdateResponse\MonitorsExtractSemanticMonitor,>
+     * @return BaseResponse<MonitorUpdateResponse>
      *
      * @throws APIException
      */
@@ -170,14 +164,18 @@ final class MonitorsRawService implements MonitorsRawContract
     /**
      * @api
      *
-     * List monitors
+     * Lists monitors for the authenticated organization. Supports free-text search (`q` over `search_by` fields, `prefix` or `exact` via `search_type`) plus status/type/tag filters. Results are paginated via the opaque `cursor`.
      *
      * @param array{
      *   changeDetectionType?: ChangeDetectionType|value-of<ChangeDetectionType>,
      *   cursor?: string,
      *   limit?: int,
+     *   q?: string,
+     *   searchBy?: list<SearchBy|value-of<SearchBy>>,
+     *   searchType?: SearchType|value-of<SearchType>,
      *   status?: MonitorListParams\Status|value-of<MonitorListParams\Status>,
      *   tag?: string,
+     *   tags?: list<string>,
      *   targetType?: TargetType|value-of<TargetType>,
      * }|MonitorListParams $params
      * @param RequestOpts|null $requestOptions
@@ -203,6 +201,8 @@ final class MonitorsRawService implements MonitorsRawContract
                 $parsed,
                 [
                     'changeDetectionType' => 'change_detection_type',
+                    'searchBy' => 'search_by',
+                    'searchType' => 'search_type',
                     'targetType' => 'target_type',
                 ],
             ),
@@ -398,7 +398,7 @@ final class MonitorsRawService implements MonitorsRawContract
      *
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<MonitorsPageExactChange|MonitorsSitemapExactChange|MonitorsPageSemanticChange|MonitorsExtractSemanticChange,>
+     * @return BaseResponse<MonitorGetChangeResponse>
      *
      * @throws APIException
      */

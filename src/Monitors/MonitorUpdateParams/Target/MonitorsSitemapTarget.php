@@ -10,6 +10,8 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
+ * Watch a sitemap for URL additions and removals.
+ *
  * @phpstan-type MonitorsSitemapTargetShape = array{
  *   type: 'sitemap',
  *   url: string,
