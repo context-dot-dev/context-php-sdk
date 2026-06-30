@@ -8,10 +8,8 @@ use ContextDev\Core\Contracts\BaseResponse;
 use ContextDev\Core\Exceptions\APIException;
 use ContextDev\Monitors\MonitorCreateParams;
 use ContextDev\Monitors\MonitorDeleteResponse;
-use ContextDev\Monitors\MonitorGetChangeResponse\MonitorsExtractSemanticChange;
-use ContextDev\Monitors\MonitorGetChangeResponse\MonitorsPageExactChange;
-use ContextDev\Monitors\MonitorGetChangeResponse\MonitorsPageSemanticChange;
-use ContextDev\Monitors\MonitorGetChangeResponse\MonitorsSitemapExactChange;
+use ContextDev\Monitors\MonitorGetChangeResponse;
+use ContextDev\Monitors\MonitorGetResponse;
 use ContextDev\Monitors\MonitorListAccountChangesParams;
 use ContextDev\Monitors\MonitorListAccountChangesResponse;
 use ContextDev\Monitors\MonitorListAccountRunsParams;
@@ -22,12 +20,10 @@ use ContextDev\Monitors\MonitorListParams;
 use ContextDev\Monitors\MonitorListResponse;
 use ContextDev\Monitors\MonitorListRunsParams;
 use ContextDev\Monitors\MonitorListRunsResponse;
-use ContextDev\Monitors\MonitorNewResponse\MonitorsExtractSemanticMonitor;
-use ContextDev\Monitors\MonitorNewResponse\MonitorsPageExactMonitor;
-use ContextDev\Monitors\MonitorNewResponse\MonitorsPageSemanticMonitor;
-use ContextDev\Monitors\MonitorNewResponse\MonitorsSitemapExactMonitor;
+use ContextDev\Monitors\MonitorNewResponse;
 use ContextDev\Monitors\MonitorRunResponse;
 use ContextDev\Monitors\MonitorUpdateParams;
+use ContextDev\Monitors\MonitorUpdateResponse;
 use ContextDev\RequestOptions;
 
 /**
@@ -41,7 +37,7 @@ interface MonitorsRawContract
      * @param array<string,mixed>|MonitorCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<MonitorsPageExactMonitor|MonitorsSitemapExactMonitor|MonitorsPageSemanticMonitor|MonitorsExtractSemanticMonitor,>
+     * @return BaseResponse<MonitorNewResponse>
      *
      * @throws APIException
      */
@@ -55,7 +51,7 @@ interface MonitorsRawContract
      *
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<\ContextDev\Monitors\MonitorGetResponse\MonitorsPageExactMonitor|\ContextDev\Monitors\MonitorGetResponse\MonitorsSitemapExactMonitor|\ContextDev\Monitors\MonitorGetResponse\MonitorsPageSemanticMonitor|\ContextDev\Monitors\MonitorGetResponse\MonitorsExtractSemanticMonitor,>
+     * @return BaseResponse<MonitorGetResponse>
      *
      * @throws APIException
      */
@@ -70,7 +66,7 @@ interface MonitorsRawContract
      * @param array<string,mixed>|MonitorUpdateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<\ContextDev\Monitors\MonitorUpdateResponse\MonitorsPageExactMonitor|\ContextDev\Monitors\MonitorUpdateResponse\MonitorsSitemapExactMonitor|\ContextDev\Monitors\MonitorUpdateResponse\MonitorsPageSemanticMonitor|\ContextDev\Monitors\MonitorUpdateResponse\MonitorsExtractSemanticMonitor,>
+     * @return BaseResponse<MonitorUpdateResponse>
      *
      * @throws APIException
      */
@@ -176,7 +172,7 @@ interface MonitorsRawContract
      *
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<MonitorsPageExactChange|MonitorsSitemapExactChange|MonitorsPageSemanticChange|MonitorsExtractSemanticChange,>
+     * @return BaseResponse<MonitorGetChangeResponse>
      *
      * @throws APIException
      */
