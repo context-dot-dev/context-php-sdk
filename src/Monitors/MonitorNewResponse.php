@@ -11,6 +11,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Monitors\MonitorNewResponse\ChangeDetection;
 use ContextDev\Monitors\MonitorNewResponse\ChangeDetection\MonitorsExactChangeDetection;
 use ContextDev\Monitors\MonitorNewResponse\ChangeDetection\MonitorsSemanticChangeDetection;
+use ContextDev\Monitors\MonitorNewResponse\LastError;
 use ContextDev\Monitors\MonitorNewResponse\Mode;
 use ContextDev\Monitors\MonitorNewResponse\Schedule;
 use ContextDev\Monitors\MonitorNewResponse\Status;
@@ -28,6 +29,7 @@ use ContextDev\Monitors\MonitorNewResponse\Webhook;
  * @phpstan-import-type ChangeDetectionShape from \ContextDev\Monitors\MonitorNewResponse\ChangeDetection
  * @phpstan-import-type ScheduleShape from \ContextDev\Monitors\MonitorNewResponse\Schedule
  * @phpstan-import-type TargetShape from \ContextDev\Monitors\MonitorNewResponse\Target
+ * @phpstan-import-type LastErrorShape from \ContextDev\Monitors\MonitorNewResponse\LastError
  * @phpstan-import-type WebhookShape from \ContextDev\Monitors\MonitorNewResponse\Webhook
  *
  * @phpstan-type MonitorNewResponseShape = array{
@@ -41,7 +43,9 @@ use ContextDev\Monitors\MonitorNewResponse\Webhook;
  *   target: TargetShape,
  *   updatedAt: \DateTimeInterface,
  *   lastChangeAt?: \DateTimeInterface|null,
+ *   lastError?: null|LastError|LastErrorShape,
  *   lastRunAt?: \DateTimeInterface|null,
+ *   nextRunAt?: \DateTimeInterface|null,
  *   tags?: list<string>|null,
  *   webhook?: null|Webhook|WebhookShape,
  * }
@@ -82,7 +86,11 @@ final class MonitorNewResponse implements BaseModel
     #[Required]
     public Schedule $schedule;
 
-    /** @var value-of<Status> $status */
+    /**
+     * Monitor lifecycle status. `failed` means the most recent run failed (see the monitor's `last_error`); failed monitors keep running on schedule and flip back to `active` on the next successful run. Monitors are auto-`paused` after repeated consecutive failures or insufficient-credit skips; resume by PATCHing status to `active`.
+     *
+     * @var value-of<Status> $status
+     */
     #[Required(enum: Status::class)]
     public string $status;
 
@@ -100,8 +108,20 @@ final class MonitorNewResponse implements BaseModel
     #[Optional('last_change_at', nullable: true)]
     public ?\DateTimeInterface $lastChangeAt;
 
+    /**
+     * Error from the most recent failed run; null when the last run succeeded.
+     */
+    #[Optional('last_error', nullable: true)]
+    public ?LastError $lastError;
+
     #[Optional('last_run_at', nullable: true)]
     public ?\DateTimeInterface $lastRunAt;
+
+    /**
+     * When the next scheduled run is due.
+     */
+    #[Optional('next_run_at', nullable: true)]
+    public ?\DateTimeInterface $nextRunAt;
 
     /**
      * User-defined tags for grouping and filtering monitors and their changes.
@@ -162,6 +182,7 @@ final class MonitorNewResponse implements BaseModel
      * @param Schedule|ScheduleShape $schedule
      * @param Status|value-of<Status> $status
      * @param TargetShape $target
+     * @param LastError|LastErrorShape|null $lastError
      * @param list<string>|null $tags
      * @param Webhook|WebhookShape|null $webhook
      */
@@ -176,7 +197,9 @@ final class MonitorNewResponse implements BaseModel
         MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget $target,
         \DateTimeInterface $updatedAt,
         ?\DateTimeInterface $lastChangeAt = null,
+        LastError|array|null $lastError = null,
         ?\DateTimeInterface $lastRunAt = null,
+        ?\DateTimeInterface $nextRunAt = null,
         ?array $tags = null,
         Webhook|array|null $webhook = null,
     ): self {
@@ -193,7 +216,9 @@ final class MonitorNewResponse implements BaseModel
         $self['updatedAt'] = $updatedAt;
 
         null !== $lastChangeAt && $self['lastChangeAt'] = $lastChangeAt;
+        null !== $lastError && $self['lastError'] = $lastError;
         null !== $lastRunAt && $self['lastRunAt'] = $lastRunAt;
+        null !== $nextRunAt && $self['nextRunAt'] = $nextRunAt;
         null !== $tags && $self['tags'] = $tags;
         null !== $webhook && $self['webhook'] = $webhook;
 
@@ -265,6 +290,8 @@ final class MonitorNewResponse implements BaseModel
     }
 
     /**
+     * Monitor lifecycle status. `failed` means the most recent run failed (see the monitor's `last_error`); failed monitors keep running on schedule and flip back to `active` on the next successful run. Monitors are auto-`paused` after repeated consecutive failures or insufficient-credit skips; resume by PATCHing status to `active`.
+     *
      * @param Status|value-of<Status> $status
      */
     public function withStatus(Status|string $status): self
@@ -305,10 +332,34 @@ final class MonitorNewResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Error from the most recent failed run; null when the last run succeeded.
+     *
+     * @param LastError|LastErrorShape|null $lastError
+     */
+    public function withLastError(LastError|array|null $lastError): self
+    {
+        $self = clone $this;
+        $self['lastError'] = $lastError;
+
+        return $self;
+    }
+
     public function withLastRunAt(?\DateTimeInterface $lastRunAt): self
     {
         $self = clone $this;
         $self['lastRunAt'] = $lastRunAt;
+
+        return $self;
+    }
+
+    /**
+     * When the next scheduled run is due.
+     */
+    public function withNextRunAt(?\DateTimeInterface $nextRunAt): self
+    {
+        $self = clone $this;
+        $self['nextRunAt'] = $nextRunAt;
 
         return $self;
     }

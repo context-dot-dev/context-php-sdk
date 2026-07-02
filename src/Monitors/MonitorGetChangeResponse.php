@@ -25,6 +25,7 @@ use ContextDev\Monitors\MonitorGetChangeResponse\TargetType;
  *   detectedAt: \DateTimeInterface,
  *   mode: Mode|value-of<Mode>,
  *   monitorID: string,
+ *   runID: string,
  *   summary: string,
  *   targetType: TargetType|value-of<TargetType>,
  *   title: string,
@@ -71,6 +72,12 @@ final class MonitorGetChangeResponse implements BaseModel
     #[Required('monitor_id')]
     public string $monitorID;
 
+    /**
+     * The run that detected this change.
+     */
+    #[Required('run_id')]
+    public string $runID;
+
     #[Required]
     public string $summary;
 
@@ -87,7 +94,11 @@ final class MonitorGetChangeResponse implements BaseModel
     #[Optional('added_url_count')]
     public ?int $addedURLCount;
 
-    /** @var list<string>|null $addedURLs */
+    /**
+     * At most 500 URLs are included; the corresponding count field is always exact.
+     *
+     * @var list<string>|null $addedURLs
+     */
     #[Optional('added_urls', list: 'string')]
     public ?array $addedURLs;
 
@@ -117,7 +128,11 @@ final class MonitorGetChangeResponse implements BaseModel
     #[Optional('matched_url_count')]
     public ?int $matchedURLCount;
 
-    /** @var list<string>|null $matchedURLs */
+    /**
+     * At most 500 URLs are included; the corresponding count field is always exact.
+     *
+     * @var list<string>|null $matchedURLs
+     */
     #[Optional('matched_urls', list: 'string')]
     public ?array $matchedURLs;
 
@@ -127,7 +142,11 @@ final class MonitorGetChangeResponse implements BaseModel
     #[Optional('removed_url_count')]
     public ?int $removedURLCount;
 
-    /** @var list<string>|null $removedURLs */
+    /**
+     * At most 500 URLs are included; the corresponding count field is always exact.
+     *
+     * @var list<string>|null $removedURLs
+     */
     #[Optional('removed_urls', list: 'string')]
     public ?array $removedURLs;
 
@@ -150,6 +169,7 @@ final class MonitorGetChangeResponse implements BaseModel
      *   detectedAt: ...,
      *   mode: ...,
      *   monitorID: ...,
+     *   runID: ...,
      *   summary: ...,
      *   targetType: ...,
      *   title: ...,
@@ -166,6 +186,7 @@ final class MonitorGetChangeResponse implements BaseModel
      *   ->withDetectedAt(...)
      *   ->withMode(...)
      *   ->withMonitorID(...)
+     *   ->withRunID(...)
      *   ->withSummary(...)
      *   ->withTargetType(...)
      *   ->withTitle(...)
@@ -198,6 +219,7 @@ final class MonitorGetChangeResponse implements BaseModel
         \DateTimeInterface $detectedAt,
         Mode|string $mode,
         string $monitorID,
+        string $runID,
         string $summary,
         TargetType|string $targetType,
         string $title,
@@ -224,6 +246,7 @@ final class MonitorGetChangeResponse implements BaseModel
         $self['detectedAt'] = $detectedAt;
         $self['mode'] = $mode;
         $self['monitorID'] = $monitorID;
+        $self['runID'] = $runID;
         $self['summary'] = $summary;
         $self['targetType'] = $targetType;
         $self['title'] = $title;
@@ -296,6 +319,17 @@ final class MonitorGetChangeResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * The run that detected this change.
+     */
+    public function withRunID(string $runID): self
+    {
+        $self = clone $this;
+        $self['runID'] = $runID;
+
+        return $self;
+    }
+
     public function withSummary(string $summary): self
     {
         $self = clone $this;
@@ -340,6 +374,8 @@ final class MonitorGetChangeResponse implements BaseModel
     }
 
     /**
+     * At most 500 URLs are included; the corresponding count field is always exact.
+     *
      * @param list<string> $addedURLs
      */
     public function withAddedURLs(array $addedURLs): self
@@ -416,6 +452,8 @@ final class MonitorGetChangeResponse implements BaseModel
     }
 
     /**
+     * At most 500 URLs are included; the corresponding count field is always exact.
+     *
      * @param list<string> $matchedURLs
      */
     public function withMatchedURLs(array $matchedURLs): self
@@ -443,6 +481,8 @@ final class MonitorGetChangeResponse implements BaseModel
     }
 
     /**
+     * At most 500 URLs are included; the corresponding count field is always exact.
+     *
      * @param list<string> $removedURLs
      */
     public function withRemovedURLs(array $removedURLs): self

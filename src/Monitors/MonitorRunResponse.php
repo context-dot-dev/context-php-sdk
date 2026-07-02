@@ -9,7 +9,9 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * @phpstan-type MonitorRunResponseShape = array{monitorID: string, queued: bool}
+ * @phpstan-type MonitorRunResponseShape = array{
+ *   monitorID: string, queued: bool, runID: string
+ * }
  */
 final class MonitorRunResponse implements BaseModel
 {
@@ -23,17 +25,23 @@ final class MonitorRunResponse implements BaseModel
     public bool $queued;
 
     /**
+     * The queued run. Poll GET /monitors/{monitor_id}/runs or use it to correlate results.
+     */
+    #[Required('run_id')]
+    public string $runID;
+
+    /**
      * `new MonitorRunResponse()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * MonitorRunResponse::with(monitorID: ..., queued: ...)
+     * MonitorRunResponse::with(monitorID: ..., queued: ..., runID: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new MonitorRunResponse)->withMonitorID(...)->withQueued(...)
+     * (new MonitorRunResponse)->withMonitorID(...)->withQueued(...)->withRunID(...)
      * ```
      */
     public function __construct()
@@ -46,12 +54,16 @@ final class MonitorRunResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(string $monitorID, bool $queued): self
-    {
+    public static function with(
+        string $monitorID,
+        bool $queued,
+        string $runID
+    ): self {
         $self = new self;
 
         $self['monitorID'] = $monitorID;
         $self['queued'] = $queued;
+        $self['runID'] = $runID;
 
         return $self;
     }
@@ -68,6 +80,17 @@ final class MonitorRunResponse implements BaseModel
     {
         $self = clone $this;
         $self['queued'] = $queued;
+
+        return $self;
+    }
+
+    /**
+     * The queued run. Poll GET /monitors/{monitor_id}/runs or use it to correlate results.
+     */
+    public function withRunID(string $runID): self
+    {
+        $self = clone $this;
+        $self['runID'] = $runID;
 
         return $self;
     }

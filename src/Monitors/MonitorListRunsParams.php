@@ -31,7 +31,11 @@ final class MonitorListRunsParams implements BaseModel
     #[Optional]
     public ?int $limit;
 
-    /** @var value-of<Status>|null $status */
+    /**
+     * Lifecycle status of a run. `skipped` runs never executed — see `skip_reason` (insufficient credits, monitor paused, or superseded by a concurrent run).
+     *
+     * @var value-of<Status>|null $status
+     */
     #[Optional(enum: Status::class)]
     public ?string $status;
 
@@ -78,6 +82,8 @@ final class MonitorListRunsParams implements BaseModel
     }
 
     /**
+     * Lifecycle status of a run. `skipped` runs never executed — see `skip_reason` (insufficient credits, monitor paused, or superseded by a concurrent run).
+     *
      * @param Status|value-of<Status> $status
      */
     public function withStatus(Status|string $status): self

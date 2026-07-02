@@ -11,6 +11,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Monitors\MonitorListRunsResponse\Data\ChangeDetectionType;
 use ContextDev\Monitors\MonitorListRunsResponse\Data\Error;
 use ContextDev\Monitors\MonitorListRunsResponse\Data\RunType;
+use ContextDev\Monitors\MonitorListRunsResponse\Data\SkipReason;
 use ContextDev\Monitors\MonitorListRunsResponse\Data\Status;
 use ContextDev\Monitors\MonitorListRunsResponse\Data\TargetType;
 
@@ -22,6 +23,7 @@ use ContextDev\Monitors\MonitorListRunsResponse\Data\TargetType;
  *   baselineCreated: bool,
  *   changeDetected: bool,
  *   changeDetectionType: ChangeDetectionType|value-of<ChangeDetectionType>,
+ *   creditsCharged: int,
  *   monitorID: string,
  *   runType: RunType|value-of<RunType>,
  *   status: Status|value-of<Status>,
@@ -29,6 +31,7 @@ use ContextDev\Monitors\MonitorListRunsResponse\Data\TargetType;
  *   changeID?: string|null,
  *   completedAt?: \DateTimeInterface|null,
  *   error?: null|Error|ErrorShape,
+ *   skipReason?: null|SkipReason|value-of<SkipReason>,
  *   startedAt?: \DateTimeInterface|null,
  * }
  */
@@ -53,6 +56,12 @@ final class Data implements BaseModel
     #[Required('change_detection_type', enum: ChangeDetectionType::class)]
     public string $changeDetectionType;
 
+    /**
+     * Credits charged for this run (0 for skipped/failed runs).
+     */
+    #[Required('credits_charged')]
+    public int $creditsCharged;
+
     #[Required('monitor_id')]
     public string $monitorID;
 
@@ -64,7 +73,11 @@ final class Data implements BaseModel
     #[Required('run_type', enum: RunType::class)]
     public string $runType;
 
-    /** @var value-of<Status> $status */
+    /**
+     * Lifecycle status of a run. `skipped` runs never executed — see `skip_reason` (insufficient credits, monitor paused, or superseded by a concurrent run).
+     *
+     * @var value-of<Status> $status
+     */
     #[Required(enum: Status::class)]
     public string $status;
 
@@ -81,6 +94,14 @@ final class Data implements BaseModel
     #[Optional(nullable: true)]
     public ?Error $error;
 
+    /**
+     * Why a skipped run never executed; null unless status is `skipped`.
+     *
+     * @var value-of<SkipReason>|null $skipReason
+     */
+    #[Optional('skip_reason', enum: SkipReason::class, nullable: true)]
+    public ?string $skipReason;
+
     #[Optional('started_at', nullable: true)]
     public ?\DateTimeInterface $startedAt;
 
@@ -94,6 +115,7 @@ final class Data implements BaseModel
      *   baselineCreated: ...,
      *   changeDetected: ...,
      *   changeDetectionType: ...,
+     *   creditsCharged: ...,
      *   monitorID: ...,
      *   runType: ...,
      *   status: ...,
@@ -109,6 +131,7 @@ final class Data implements BaseModel
      *   ->withBaselineCreated(...)
      *   ->withChangeDetected(...)
      *   ->withChangeDetectionType(...)
+     *   ->withCreditsCharged(...)
      *   ->withMonitorID(...)
      *   ->withRunType(...)
      *   ->withStatus(...)
@@ -130,12 +153,14 @@ final class Data implements BaseModel
      * @param Status|value-of<Status> $status
      * @param TargetType|value-of<TargetType> $targetType
      * @param Error|ErrorShape|null $error
+     * @param SkipReason|value-of<SkipReason>|null $skipReason
      */
     public static function with(
         string $id,
         bool $baselineCreated,
         bool $changeDetected,
         ChangeDetectionType|string $changeDetectionType,
+        int $creditsCharged,
         string $monitorID,
         RunType|string $runType,
         Status|string $status,
@@ -143,6 +168,7 @@ final class Data implements BaseModel
         ?string $changeID = null,
         ?\DateTimeInterface $completedAt = null,
         Error|array|null $error = null,
+        SkipReason|string|null $skipReason = null,
         ?\DateTimeInterface $startedAt = null,
     ): self {
         $self = new self;
@@ -151,6 +177,7 @@ final class Data implements BaseModel
         $self['baselineCreated'] = $baselineCreated;
         $self['changeDetected'] = $changeDetected;
         $self['changeDetectionType'] = $changeDetectionType;
+        $self['creditsCharged'] = $creditsCharged;
         $self['monitorID'] = $monitorID;
         $self['runType'] = $runType;
         $self['status'] = $status;
@@ -159,6 +186,7 @@ final class Data implements BaseModel
         null !== $changeID && $self['changeID'] = $changeID;
         null !== $completedAt && $self['completedAt'] = $completedAt;
         null !== $error && $self['error'] = $error;
+        null !== $skipReason && $self['skipReason'] = $skipReason;
         null !== $startedAt && $self['startedAt'] = $startedAt;
 
         return $self;
@@ -203,6 +231,17 @@ final class Data implements BaseModel
         return $self;
     }
 
+    /**
+     * Credits charged for this run (0 for skipped/failed runs).
+     */
+    public function withCreditsCharged(int $creditsCharged): self
+    {
+        $self = clone $this;
+        $self['creditsCharged'] = $creditsCharged;
+
+        return $self;
+    }
+
     public function withMonitorID(string $monitorID): self
     {
         $self = clone $this;
@@ -225,6 +264,8 @@ final class Data implements BaseModel
     }
 
     /**
+     * Lifecycle status of a run. `skipped` runs never executed — see `skip_reason` (insufficient credits, monitor paused, or superseded by a concurrent run).
+     *
      * @param Status|value-of<Status> $status
      */
     public function withStatus(Status|string $status): self
@@ -269,6 +310,19 @@ final class Data implements BaseModel
     {
         $self = clone $this;
         $self['error'] = $error;
+
+        return $self;
+    }
+
+    /**
+     * Why a skipped run never executed; null unless status is `skipped`.
+     *
+     * @param SkipReason|value-of<SkipReason>|null $skipReason
+     */
+    public function withSkipReason(SkipReason|string|null $skipReason): self
+    {
+        $self = clone $this;
+        $self['skipReason'] = $skipReason;
 
         return $self;
     }
