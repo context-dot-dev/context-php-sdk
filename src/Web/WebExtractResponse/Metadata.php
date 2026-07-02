@@ -11,6 +11,7 @@ use ContextDev\Core\Contracts\BaseModel;
 /**
  * @phpstan-type MetadataShape = array{
  *   maxCrawlDepth: int,
+ *   numBlocked: int,
  *   numFailed: int,
  *   numSkipped: int,
  *   numSucceeded: int,
@@ -24,6 +25,12 @@ final class Metadata implements BaseModel
 
     #[Required]
     public int $maxCrawlDepth;
+
+    /**
+     * Number of crawled pages excluded because they were anti-bot challenges, error pages, or parked-domain placeholders.
+     */
+    #[Required]
+    public int $numBlocked;
 
     #[Required]
     public int $numFailed;
@@ -44,6 +51,7 @@ final class Metadata implements BaseModel
      * ```
      * Metadata::with(
      *   maxCrawlDepth: ...,
+     *   numBlocked: ...,
      *   numFailed: ...,
      *   numSkipped: ...,
      *   numSucceeded: ...,
@@ -56,6 +64,7 @@ final class Metadata implements BaseModel
      * ```
      * (new Metadata)
      *   ->withMaxCrawlDepth(...)
+     *   ->withNumBlocked(...)
      *   ->withNumFailed(...)
      *   ->withNumSkipped(...)
      *   ->withNumSucceeded(...)
@@ -74,6 +83,7 @@ final class Metadata implements BaseModel
      */
     public static function with(
         int $maxCrawlDepth,
+        int $numBlocked,
         int $numFailed,
         int $numSkipped,
         int $numSucceeded,
@@ -82,6 +92,7 @@ final class Metadata implements BaseModel
         $self = new self;
 
         $self['maxCrawlDepth'] = $maxCrawlDepth;
+        $self['numBlocked'] = $numBlocked;
         $self['numFailed'] = $numFailed;
         $self['numSkipped'] = $numSkipped;
         $self['numSucceeded'] = $numSucceeded;
@@ -94,6 +105,17 @@ final class Metadata implements BaseModel
     {
         $self = clone $this;
         $self['maxCrawlDepth'] = $maxCrawlDepth;
+
+        return $self;
+    }
+
+    /**
+     * Number of crawled pages excluded because they were anti-bot challenges, error pages, or parked-domain placeholders.
+     */
+    public function withNumBlocked(int $numBlocked): self
+    {
+        $self = clone $this;
+        $self['numBlocked'] = $numBlocked;
 
         return $self;
     }
