@@ -32,6 +32,7 @@ use ContextDev\Web\WebWebCrawlMdParams\Pdf;
  *   maxDepth?: int|null,
  *   maxPages?: int|null,
  *   pdf?: null|Pdf|PdfShape,
+ *   settleAnimations?: bool|null,
  *   shortenBase64Images?: bool|null,
  *   stopAfterMs?: int|null,
  *   timeoutMs?: int|null,
@@ -125,6 +126,12 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?Pdf $pdf;
 
     /**
+     * When true, waits briefly for CSS and transition animations to settle before extracting each crawled page. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
+     */
+    #[Optional]
+    public ?bool $settleAnimations;
+
+    /**
      * Truncate base64-encoded image data in the Markdown output.
      */
     #[Optional]
@@ -202,6 +209,7 @@ final class WebWebCrawlMdParams implements BaseModel
         ?int $maxDepth = null,
         ?int $maxPages = null,
         Pdf|array|null $pdf = null,
+        ?bool $settleAnimations = null,
         ?bool $shortenBase64Images = null,
         ?int $stopAfterMs = null,
         ?int $timeoutMs = null,
@@ -224,6 +232,7 @@ final class WebWebCrawlMdParams implements BaseModel
         null !== $maxDepth && $self['maxDepth'] = $maxDepth;
         null !== $maxPages && $self['maxPages'] = $maxPages;
         null !== $pdf && $self['pdf'] = $pdf;
+        null !== $settleAnimations && $self['settleAnimations'] = $settleAnimations;
         null !== $shortenBase64Images && $self['shortenBase64Images'] = $shortenBase64Images;
         null !== $stopAfterMs && $self['stopAfterMs'] = $stopAfterMs;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
@@ -370,6 +379,17 @@ final class WebWebCrawlMdParams implements BaseModel
     {
         $self = clone $this;
         $self['pdf'] = $pdf;
+
+        return $self;
+    }
+
+    /**
+     * When true, waits briefly for CSS and transition animations to settle before extracting each crawled page. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
+     */
+    public function withSettleAnimations(bool $settleAnimations): self
+    {
+        $self = clone $this;
+        $self['settleAnimations'] = $settleAnimations;
 
         return $self;
     }
