@@ -70,7 +70,11 @@ final class MonitorListParams implements BaseModel
     #[Optional(enum: SearchType::class)]
     public ?string $searchType;
 
-    /** @var value-of<Status>|null $status */
+    /**
+     * Monitor lifecycle status. `failed` means the most recent run failed (see the monitor's `last_error`); failed monitors keep running on schedule and flip back to `active` on the next successful run. Monitors are auto-`paused` after repeated consecutive failures or insufficient-credit skips; resume by PATCHing status to `active`.
+     *
+     * @var value-of<Status>|null $status
+     */
     #[Optional(enum: Status::class)]
     public ?string $status;
 
@@ -203,6 +207,8 @@ final class MonitorListParams implements BaseModel
     }
 
     /**
+     * Monitor lifecycle status. `failed` means the most recent run failed (see the monitor's `last_error`); failed monitors keep running on schedule and flip back to `active` on the next successful run. Monitors are auto-`paused` after repeated consecutive failures or insufficient-credit skips; resume by PATCHing status to `active`.
+     *
      * @param Status|value-of<Status> $status
      */
     public function withStatus(Status|string $status): self
