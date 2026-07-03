@@ -49,7 +49,7 @@ final class WebWebScrapeHTMLResponse implements BaseModel
     public bool $success;
 
     /**
-     * Detected content type of the returned `html` field. Sitemaps and feeds are surfaced as `xml`; ordinary pages are `html`.
+     * Detected content type of the returned `html` field. Sitemaps and feeds are surfaced as `xml`; ordinary pages are `html`. Excel workbooks are surfaced as `xlsx`/`xls` with the extracted sheets as HTML tables.
      *
      * @var value-of<Type> $type
      */
@@ -160,7 +160,7 @@ final class WebWebScrapeHTMLResponse implements BaseModel
     }
 
     /**
-     * Detected content type of the returned `html` field. Sitemaps and feeds are surfaced as `xml`; ordinary pages are `html`.
+     * Detected content type of the returned `html` field. Sitemaps and feeds are surfaced as `xml`; ordinary pages are `html`. Excel workbooks are surfaced as `xlsx`/`xls` with the extracted sheets as HTML tables.
      *
      * @param Type|value-of<Type> $type
      */

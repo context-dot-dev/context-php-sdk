@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Web\WebWebScrapeHTMLResponse;
 
 /**
- * Detected content type of the returned `html` field. Sitemaps and feeds are surfaced as `xml`; ordinary pages are `html`.
+ * Detected content type of the returned `html` field. Sitemaps and feeds are surfaced as `xml`; ordinary pages are `html`. Excel workbooks are surfaced as `xlsx`/`xls` with the extracted sheets as HTML tables.
  */
 enum Type: string
 {
@@ -28,4 +28,8 @@ enum Type: string
     case DOCX = 'docx';
 
     case DOC = 'doc';
+
+    case XLSX = 'xlsx';
+
+    case XLS = 'xls';
 }
