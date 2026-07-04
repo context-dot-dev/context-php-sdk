@@ -20,6 +20,7 @@ use ContextDev\Web\WebWebScrapeImagesParams\Enrichment;
  *
  * @phpstan-type WebWebScrapeImagesParamsShape = array{
  *   url: string,
+ *   dedupe?: bool|null,
  *   enrichment?: null|Enrichment|EnrichmentShape,
  *   headers?: array<string,string>|null,
  *   maxAgeMs?: int|null,
@@ -38,6 +39,12 @@ final class WebWebScrapeImagesParams implements BaseModel
      */
     #[Required]
     public string $url;
+
+    /**
+     * When true, visually duplicate images are removed: every image is loaded and perceptually hashed, and only the highest-resolution copy of each duplicate group is kept. Images that cannot be downloaded or hashed are kept. Default: false.
+     */
+    #[Optional]
+    public ?bool $dedupe;
 
     /**
      * Optional per-image processing, sent as deep-object query params such as enrichment[resolution]=true.
@@ -100,6 +107,7 @@ final class WebWebScrapeImagesParams implements BaseModel
      */
     public static function with(
         string $url,
+        ?bool $dedupe = null,
         Enrichment|array|null $enrichment = null,
         ?array $headers = null,
         ?int $maxAgeMs = null,
@@ -110,6 +118,7 @@ final class WebWebScrapeImagesParams implements BaseModel
 
         $self['url'] = $url;
 
+        null !== $dedupe && $self['dedupe'] = $dedupe;
         null !== $enrichment && $self['enrichment'] = $enrichment;
         null !== $headers && $self['headers'] = $headers;
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
@@ -126,6 +135,17 @@ final class WebWebScrapeImagesParams implements BaseModel
     {
         $self = clone $this;
         $self['url'] = $url;
+
+        return $self;
+    }
+
+    /**
+     * When true, visually duplicate images are removed: every image is loaded and perceptually hashed, and only the highest-resolution copy of each duplicate group is kept. Images that cannot be downloaded or hashed are kept. Default: false.
+     */
+    public function withDedupe(bool $dedupe): self
+    {
+        $self = clone $this;
+        $self['dedupe'] = $dedupe;
 
         return $self;
     }

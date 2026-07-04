@@ -405,6 +405,7 @@ final class WebRawService implements WebRawContract
      *
      * @param array{
      *   url: string,
+     *   dedupe?: bool,
      *   enrichment?: Enrichment|EnrichmentShape,
      *   headers?: array<string,string>,
      *   maxAgeMs?: int,

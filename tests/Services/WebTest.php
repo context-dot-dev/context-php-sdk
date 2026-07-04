@@ -314,6 +314,7 @@ final class WebTest extends TestCase
 
         $result = $this->client->web->webScrapeImages(
             url: 'https://example.com',
+            dedupe: true,
             enrichment: [
                 'classification' => true,
                 'hostedURL' => true,

@@ -290,6 +290,7 @@ interface WebContract
      * @api
      *
      * @param string $url Page URL to inspect. Must include http:// or https://.
+     * @param bool $dedupe When true, visually duplicate images are removed: every image is loaded and perceptually hashed, and only the highest-resolution copy of each duplicate group is kept. Images that cannot be downloaded or hashed are kept. Default: false.
      * @param Enrichment|EnrichmentShape $enrichment optional per-image processing, sent as deep-object query params such as enrichment[resolution]=true
      * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
      * @param int $maxAgeMs Reuse a cached result this many milliseconds old or newer. Default: 86400000 (1 day). Set to 0 to bypass cache. Maximum: 2592000000 (30 days).
@@ -301,6 +302,7 @@ interface WebContract
      */
     public function webScrapeImages(
         string $url,
+        bool $dedupe = false,
         Enrichment|array|null $enrichment = null,
         ?array $headers = null,
         int $maxAgeMs = 86400000,
