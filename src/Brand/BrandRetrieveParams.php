@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Brand;
 
 use ContextDev\Brand\BrandRetrieveParams\ForceLanguage;
+use ContextDev\Brand\BrandRetrieveParams\Type;
 use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
@@ -18,6 +19,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *
  * @phpstan-type BrandRetrieveParamsShape = array{
  *   domain: string,
+ *   type: Type|value-of<Type>,
  *   forceLanguage?: null|ForceLanguage|value-of<ForceLanguage>,
  *   maxAgeMs?: int|null,
  *   maxSpeed?: bool|null,
@@ -45,6 +47,14 @@ final class BrandRetrieveParams implements BaseModel
      */
     #[Required]
     public string $domain;
+
+    /**
+     * Discriminator for transaction-based brand retrieval.
+     *
+     * @var value-of<Type> $type
+     */
+    #[Required(enum: Type::class)]
+    public string $type;
 
     /** @var value-of<ForceLanguage>|null $forceLanguage */
     #[Optional('force_language', enum: ForceLanguage::class)]
@@ -134,7 +144,12 @@ final class BrandRetrieveParams implements BaseModel
      * To enforce required parameters use
      * ```
      * BrandRetrieveParams::with(
-     *   domain: ..., name: ..., email: ..., ticker: ..., transactionInfo: ...
+     *   domain: ...,
+     *   type: ...,
+     *   name: ...,
+     *   email: ...,
+     *   ticker: ...,
+     *   transactionInfo: ...,
      * )
      * ```
      *
@@ -143,6 +158,7 @@ final class BrandRetrieveParams implements BaseModel
      * ```
      * (new BrandRetrieveParams)
      *   ->withDomain(...)
+     *   ->withType(...)
      *   ->withName(...)
      *   ->withEmail(...)
      *   ->withTicker(...)
@@ -159,10 +175,12 @@ final class BrandRetrieveParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param Type|value-of<Type> $type
      * @param ForceLanguage|value-of<ForceLanguage>|null $forceLanguage
      */
     public static function with(
         string $domain,
+        Type|string $type,
         string $name,
         string $email,
         string $ticker,
@@ -181,6 +199,7 @@ final class BrandRetrieveParams implements BaseModel
         $self = new self;
 
         $self['domain'] = $domain;
+        $self['type'] = $type;
         $self['name'] = $name;
         $self['email'] = $email;
         $self['ticker'] = $ticker;
@@ -207,6 +226,19 @@ final class BrandRetrieveParams implements BaseModel
     {
         $self = clone $this;
         $self['domain'] = $domain;
+
+        return $self;
+    }
+
+    /**
+     * Discriminator for transaction-based brand retrieval.
+     *
+     * @param Type|value-of<Type> $type
+     */
+    public function withType(Type|string $type): self
+    {
+        $self = clone $this;
+        $self['type'] = $type;
 
         return $self;
     }
