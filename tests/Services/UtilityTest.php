@@ -4,7 +4,6 @@ namespace Tests\Services;
 
 use ContextDev\Client;
 use ContextDev\Core\Util;
-use ContextDev\Utility\UtilityPrefetchByEmailResponse;
 use ContextDev\Utility\UtilityPrefetchResponse;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
@@ -36,7 +35,10 @@ final class UtilityTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->utility->prefetch(domain: 'domain');
+        $result = $this->client->utility->prefetch(
+            identifier: ['domain' => 'domain'],
+            type: 'brand'
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(UtilityPrefetchResponse::class, $result);
@@ -50,42 +52,12 @@ final class UtilityTest extends TestCase
         }
 
         $result = $this->client->utility->prefetch(
-            domain: 'domain',
+            identifier: ['domain' => 'domain'],
+            type: 'brand',
             timeoutMs: 1000
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(UtilityPrefetchResponse::class, $result);
-    }
-
-    #[Test]
-    public function testPrefetchByEmail(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->utility->prefetchByEmail(
-            email: 'dev@stainless.com'
-        );
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(UtilityPrefetchByEmailResponse::class, $result);
-    }
-
-    #[Test]
-    public function testPrefetchByEmailWithOptionalParams(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->utility->prefetchByEmail(
-            email: 'dev@stainless.com',
-            timeoutMs: 1000
-        );
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(UtilityPrefetchByEmailResponse::class, $result);
     }
 }

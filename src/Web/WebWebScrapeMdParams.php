@@ -30,6 +30,7 @@ use ContextDev\Web\WebWebScrapeMdParams\Pdf;
  *   includeSelectors?: list<string>|null,
  *   maxAgeMs?: int|null,
  *   pdf?: null|Pdf|PdfShape,
+ *   settleAnimations?: bool|null,
  *   shortenBase64Images?: bool|null,
  *   timeoutMs?: int|null,
  *   useMainContentOnly?: bool|null,
@@ -111,6 +112,12 @@ final class WebWebScrapeMdParams implements BaseModel
     public ?Pdf $pdf;
 
     /**
+     * When true, waits briefly for CSS and transition animations to settle before converting to Markdown. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
+     */
+    #[Optional]
+    public ?bool $settleAnimations;
+
+    /**
      * Shorten base64-encoded image data in the Markdown output.
      */
     #[Optional]
@@ -175,6 +182,7 @@ final class WebWebScrapeMdParams implements BaseModel
         ?array $includeSelectors = null,
         ?int $maxAgeMs = null,
         Pdf|array|null $pdf = null,
+        ?bool $settleAnimations = null,
         ?bool $shortenBase64Images = null,
         ?int $timeoutMs = null,
         ?bool $useMainContentOnly = null,
@@ -193,6 +201,7 @@ final class WebWebScrapeMdParams implements BaseModel
         null !== $includeSelectors && $self['includeSelectors'] = $includeSelectors;
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
         null !== $pdf && $self['pdf'] = $pdf;
+        null !== $settleAnimations && $self['settleAnimations'] = $settleAnimations;
         null !== $shortenBase64Images && $self['shortenBase64Images'] = $shortenBase64Images;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
         null !== $useMainContentOnly && $self['useMainContentOnly'] = $useMainContentOnly;
@@ -317,6 +326,17 @@ final class WebWebScrapeMdParams implements BaseModel
     {
         $self = clone $this;
         $self['pdf'] = $pdf;
+
+        return $self;
+    }
+
+    /**
+     * When true, waits briefly for CSS and transition animations to settle before converting to Markdown. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
+     */
+    public function withSettleAnimations(bool $settleAnimations): self
+    {
+        $self = clone $this;
+        $self['settleAnimations'] = $settleAnimations;
 
         return $self;
     }

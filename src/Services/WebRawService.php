@@ -321,6 +321,7 @@ final class WebRawService implements WebRawContract
      *   maxDepth?: int,
      *   maxPages?: int,
      *   pdf?: WebWebCrawlMdParams\Pdf|PdfShape1,
+     *   settleAnimations?: bool,
      *   shortenBase64Images?: bool,
      *   stopAfterMs?: int,
      *   timeoutMs?: int,
@@ -367,6 +368,7 @@ final class WebRawService implements WebRawContract
      *   includeSelectors?: list<string>,
      *   maxAgeMs?: int,
      *   pdf?: WebWebScrapeHTMLParams\Pdf|PdfShape2,
+     *   settleAnimations?: bool,
      *   timeoutMs?: int,
      *   useMainContentOnly?: bool,
      *   waitForMs?: int,
@@ -403,6 +405,7 @@ final class WebRawService implements WebRawContract
      *
      * @param array{
      *   url: string,
+     *   dedupe?: bool,
      *   enrichment?: Enrichment|EnrichmentShape,
      *   headers?: array<string,string>,
      *   maxAgeMs?: int,
@@ -450,6 +453,7 @@ final class WebRawService implements WebRawContract
      *   includeSelectors?: list<string>,
      *   maxAgeMs?: int,
      *   pdf?: WebWebScrapeMdParams\Pdf|PdfShape3,
+     *   settleAnimations?: bool,
      *   shortenBase64Images?: bool,
      *   timeoutMs?: int,
      *   useMainContentOnly?: bool,

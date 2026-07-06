@@ -32,7 +32,14 @@ class ClientTest extends TestCase
             requestOptions: ['transporter' => $transporter],
         );
 
-        $client->brand->retrieve(domain: 'domain');
+        $client->brand->retrieve(
+            domain: 'domain',
+            type: 'by_transaction',
+            name: 'xxx',
+            email: 'dev@stainless.com',
+            ticker: 'ticker',
+            transactionInfo: 'xxx',
+        );
 
         $this->assertNotFalse($requested = $transporter->getRequests()[0] ?? false);
 

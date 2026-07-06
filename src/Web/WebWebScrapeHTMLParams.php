@@ -28,6 +28,7 @@ use ContextDev\Web\WebWebScrapeHTMLParams\Pdf;
  *   includeSelectors?: list<string>|null,
  *   maxAgeMs?: int|null,
  *   pdf?: null|Pdf|PdfShape,
+ *   settleAnimations?: bool|null,
  *   timeoutMs?: int|null,
  *   useMainContentOnly?: bool|null,
  *   waitForMs?: int|null,
@@ -96,6 +97,12 @@ final class WebWebScrapeHTMLParams implements BaseModel
     public ?Pdf $pdf;
 
     /**
+     * When true, waits briefly for CSS and transition animations to settle before extracting HTML. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
+     */
+    #[Optional]
+    public ?bool $settleAnimations;
+
+    /**
      * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      */
     #[Optional]
@@ -152,6 +159,7 @@ final class WebWebScrapeHTMLParams implements BaseModel
         ?array $includeSelectors = null,
         ?int $maxAgeMs = null,
         Pdf|array|null $pdf = null,
+        ?bool $settleAnimations = null,
         ?int $timeoutMs = null,
         ?bool $useMainContentOnly = null,
         ?int $waitForMs = null,
@@ -167,6 +175,7 @@ final class WebWebScrapeHTMLParams implements BaseModel
         null !== $includeSelectors && $self['includeSelectors'] = $includeSelectors;
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
         null !== $pdf && $self['pdf'] = $pdf;
+        null !== $settleAnimations && $self['settleAnimations'] = $settleAnimations;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
         null !== $useMainContentOnly && $self['useMainContentOnly'] = $useMainContentOnly;
         null !== $waitForMs && $self['waitForMs'] = $waitForMs;
@@ -268,6 +277,17 @@ final class WebWebScrapeHTMLParams implements BaseModel
     {
         $self = clone $this;
         $self['pdf'] = $pdf;
+
+        return $self;
+    }
+
+    /**
+     * When true, waits briefly for CSS and transition animations to settle before extracting HTML. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
+     */
+    public function withSettleAnimations(bool $settleAnimations): self
+    {
+        $self = clone $this;
+        $self['settleAnimations'] = $settleAnimations;
 
         return $self;
     }

@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.0.0 (2026-07-06)
+
+Full Changelog: [v1.3.0...v2.0.0](https://github.com/context-dot-dev/context-php-sdk/compare/v1.3.0...v2.0.0)
+
+### Features
+
+* **api:** api update ([a109b94](https://github.com/context-dot-dev/context-php-sdk/commit/a109b94c372f554a6f9d6c669dd01fc3afe37c85))
+* **api:** api update ([fc46359](https://github.com/context-dot-dev/context-php-sdk/commit/fc4635910c2035f4edffb817e4a7259b82e1c39c))
+* **api:** api update ([b6570c0](https://github.com/context-dot-dev/context-php-sdk/commit/b6570c0cad69d665d2cce99f57c2b85fb6ff408e))
+* **api:** api update ([61d8ed4](https://github.com/context-dot-dev/context-php-sdk/commit/61d8ed4cb6be1d1c2caad265f97987b5e93f620d))
+* **api:** api update ([16b3c1e](https://github.com/context-dot-dev/context-php-sdk/commit/16b3c1efb31c9d1da12ab3a2a5e65f4bfcd74247))
+* **api:** api update ([b96c262](https://github.com/context-dot-dev/context-php-sdk/commit/b96c26218eb833e9227dee9551ee9eb2b94b9abd))
+* **api:** api update ([4589097](https://github.com/context-dot-dev/context-php-sdk/commit/45890973be2637f7e69fb82cc5b5e52840420ca1))
+* **api:** api update ([b635a05](https://github.com/context-dot-dev/context-php-sdk/commit/b635a0588edc056550fbf1ddce2a239f4b4b29b2))
+* **api:** api update ([f7a3ee5](https://github.com/context-dot-dev/context-php-sdk/commit/f7a3ee5f797c5bd286293a69db0b50cd402d56fe))
+* **api:** manual updates ([33c37e5](https://github.com/context-dot-dev/context-php-sdk/commit/33c37e56e87ef187161361879db3cc25c12e663e))
+* **api:** manual updates ([d3c55dc](https://github.com/context-dot-dev/context-php-sdk/commit/d3c55dc909d9431595788c4e140a608e7cea5c5d))
+* **api:** manual updates ([d1b85dd](https://github.com/context-dot-dev/context-php-sdk/commit/d1b85ddef694ea143f27b352a9bca54f77b07512))
+
 ## 1.3.0 (2026-06-27)
 
 Full Changelog: [v1.2.0...v1.3.0](https://github.com/context-dot-dev/context-php-sdk/compare/v1.2.0...v1.3.0)

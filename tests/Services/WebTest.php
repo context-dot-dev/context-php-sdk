@@ -240,6 +240,7 @@ final class WebTest extends TestCase
             maxDepth: 0,
             maxPages: 1,
             pdf: ['end' => 1, 'shouldParse' => true, 'start' => 1],
+            settleAnimations: true,
             shortenBase64Images: true,
             stopAfterMs: 10000,
             timeoutMs: 1000,
@@ -281,6 +282,7 @@ final class WebTest extends TestCase
             includeSelectors: ['string'],
             maxAgeMs: 0,
             pdf: ['end' => 1, 'shouldParse' => true, 'start' => 1],
+            settleAnimations: true,
             timeoutMs: 1000,
             useMainContentOnly: true,
             waitForMs: 0,
@@ -312,6 +314,7 @@ final class WebTest extends TestCase
 
         $result = $this->client->web->webScrapeImages(
             url: 'https://example.com',
+            dedupe: true,
             enrichment: [
                 'classification' => true,
                 'hostedURL' => true,
@@ -359,6 +362,7 @@ final class WebTest extends TestCase
             includeSelectors: ['string'],
             maxAgeMs: 0,
             pdf: ['end' => 1, 'shouldParse' => true, 'start' => 1],
+            settleAnimations: true,
             shortenBase64Images: true,
             timeoutMs: 1000,
             useMainContentOnly: true,

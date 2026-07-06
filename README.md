@@ -13,7 +13,7 @@ The REST API documentation can be found on [docs.context.dev](https://docs.conte
 <!-- x-release-please-start-version -->
 
 ```
-composer require "context-dev/context-dev-php 1.3.0"
+composer require "context-dev/context-dev-php 2.0.0"
 ```
 
 <!-- x-release-please-end -->
@@ -30,7 +30,7 @@ use ContextDev\Client;
 
 $client = new Client(apiKey: getenv('CONTEXT_DEV_API_KEY') ?: 'My API Key');
 
-$brand = $client->brand->retrieve(domain: 'REPLACE_ME');
+$brand = $client->brand->retrieve(domain: 'REPLACE_ME', type: 'by_domain');
 
 var_dump($brand->brand);
 ```
@@ -54,7 +54,7 @@ use ContextDev\Core\Exceptions\RateLimitException;
 use ContextDev\Core\Exceptions\APIStatusException;
 
 try {
-  $brand = $client->brand->retrieve(domain: 'REPLACE_ME');
+  $brand = $client->brand->retrieve(domain: 'REPLACE_ME', type: 'by_domain');
 } catch (APIConnectionException $e) {
   echo "The server could not be reached", PHP_EOL;
   var_dump($e->getPrevious());
@@ -100,7 +100,7 @@ $client = new Client(requestOptions: ['maxRetries' => 0]);
 
 // Or, configure per-request:
 $result = $client->brand->retrieve(
-  domain: 'REPLACE_ME', requestOptions: ['maxRetries' => 5]
+  domain: 'REPLACE_ME', type: 'by_domain', requestOptions: ['maxRetries' => 5]
 );
 ```
 
@@ -119,6 +119,7 @@ Note: the `extra*` parameters of the same name overrides the documented paramete
 
 $brand = $client->brand->retrieve(
   domain: 'REPLACE_ME',
+  type: 'by_domain',
   requestOptions: [
     'extraQueryParams' => ['my_query_parameter' => 'value'],
     'extraBodyParams' => ['my_body_parameter' => 'value'],

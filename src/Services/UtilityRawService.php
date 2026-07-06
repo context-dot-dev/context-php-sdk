@@ -9,12 +9,12 @@ use ContextDev\Core\Contracts\BaseResponse;
 use ContextDev\Core\Exceptions\APIException;
 use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\UtilityRawContract;
-use ContextDev\Utility\UtilityPrefetchByEmailParams;
-use ContextDev\Utility\UtilityPrefetchByEmailResponse;
 use ContextDev\Utility\UtilityPrefetchParams;
+use ContextDev\Utility\UtilityPrefetchParams\Type;
 use ContextDev\Utility\UtilityPrefetchResponse;
 
 /**
+ * @phpstan-import-type IdentifierShape from \ContextDev\Utility\UtilityPrefetchParams\Identifier
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class UtilityRawService implements UtilityRawContract
@@ -28,9 +28,11 @@ final class UtilityRawService implements UtilityRawContract
     /**
      * @api
      *
-     * Signal that you may fetch brand data for a particular domain soon to improve latency.
+     * Signal that you may fetch brand data soon to improve latency. The type field selects what to prefetch (currently only 'brand') and identifier carries exactly one lookup key: a domain, or an email whose domain is extracted and validated (free email providers and disposable email addresses are not allowed).
      *
-     * @param array{domain: string, timeoutMs?: int}|UtilityPrefetchParams $params
+     * @param array{
+     *   identifier: IdentifierShape, type: Type|value-of<Type>, timeoutMs?: int
+     * }|UtilityPrefetchParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<UtilityPrefetchResponse>
@@ -49,43 +51,10 @@ final class UtilityRawService implements UtilityRawContract
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'post',
-            path: 'brand/prefetch',
+            path: 'utility/prefetch',
             body: (object) $parsed,
             options: $options,
             convert: UtilityPrefetchResponse::class,
-        );
-    }
-
-    /**
-     * @api
-     *
-     * Signal that you may fetch brand data for a particular domain soon to improve latency. This endpoint accepts an email address, extracts the domain from it, validates that it's not a disposable or free email provider, and queues the domain for prefetching.
-     *
-     * @param array{
-     *   email: string, timeoutMs?: int
-     * }|UtilityPrefetchByEmailParams $params
-     * @param RequestOpts|null $requestOptions
-     *
-     * @return BaseResponse<UtilityPrefetchByEmailResponse>
-     *
-     * @throws APIException
-     */
-    public function prefetchByEmail(
-        array|UtilityPrefetchByEmailParams $params,
-        RequestOptions|array|null $requestOptions = null,
-    ): BaseResponse {
-        [$parsed, $options] = UtilityPrefetchByEmailParams::parseRequest(
-            $params,
-            $requestOptions,
-        );
-
-        // @phpstan-ignore-next-line return.type
-        return $this->client->request(
-            method: 'post',
-            path: 'brand/prefetch-by-email',
-            body: (object) $parsed,
-            options: $options,
-            convert: UtilityPrefetchByEmailResponse::class,
         );
     }
 }
