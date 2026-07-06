@@ -9,7 +9,8 @@ use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
-use ContextDev\Utility\UtilityPrefetchParams\Identifier;
+use ContextDev\Utility\UtilityPrefetchParams\Identifier\UtilityPrefetchDomainIdentifier;
+use ContextDev\Utility\UtilityPrefetchParams\Identifier\UtilityPrefetchEmailIdentifier;
 use ContextDev\Utility\UtilityPrefetchParams\Type;
 
 /**
@@ -17,12 +18,11 @@ use ContextDev\Utility\UtilityPrefetchParams\Type;
  *
  * @see ContextDev\Services\UtilityService::prefetch()
  *
+ * @phpstan-import-type IdentifierVariants from \ContextDev\Utility\UtilityPrefetchParams\Identifier
  * @phpstan-import-type IdentifierShape from \ContextDev\Utility\UtilityPrefetchParams\Identifier
  *
  * @phpstan-type UtilityPrefetchParamsShape = array{
- *   identifier: Identifier|IdentifierShape,
- *   type: Type|value-of<Type>,
- *   timeoutMs?: int|null,
+ *   identifier: IdentifierShape, type: Type|value-of<Type>, timeoutMs?: int|null
  * }
  */
 final class UtilityPrefetchParams implements BaseModel
@@ -33,9 +33,11 @@ final class UtilityPrefetchParams implements BaseModel
 
     /**
      * Identifier of the brand to prefetch. Provide exactly one of domain or email.
+     *
+     * @var IdentifierVariants $identifier
      */
     #[Required]
-    public Identifier $identifier;
+    public UtilityPrefetchDomainIdentifier|UtilityPrefetchEmailIdentifier $identifier;
 
     /**
      * What to prefetch. Currently only 'brand' is supported.
@@ -75,13 +77,13 @@ final class UtilityPrefetchParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param Identifier|IdentifierShape $identifier
+     * @param IdentifierShape $identifier
      * @param Type|value-of<Type> $type
      */
     public static function with(
-        Identifier|array $identifier,
+        UtilityPrefetchDomainIdentifier|array|UtilityPrefetchEmailIdentifier $identifier,
         Type|string $type,
-        ?int $timeoutMs = null
+        ?int $timeoutMs = null,
     ): self {
         $self = new self;
 
@@ -96,10 +98,11 @@ final class UtilityPrefetchParams implements BaseModel
     /**
      * Identifier of the brand to prefetch. Provide exactly one of domain or email.
      *
-     * @param Identifier|IdentifierShape $identifier
+     * @param IdentifierShape $identifier
      */
-    public function withIdentifier(Identifier|array $identifier): self
-    {
+    public function withIdentifier(
+        UtilityPrefetchDomainIdentifier|array|UtilityPrefetchEmailIdentifier $identifier,
+    ): self {
         $self = clone $this;
         $self['identifier'] = $identifier;
 
