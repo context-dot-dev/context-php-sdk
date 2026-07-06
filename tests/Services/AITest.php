@@ -2,7 +2,6 @@
 
 namespace Tests\Services;
 
-use ContextDev\AI\AIAIQueryResponse;
 use ContextDev\AI\AIExtractProductResponse;
 use ContextDev\AI\AIExtractProductsResponse;
 use ContextDev\Client;
@@ -28,68 +27,6 @@ final class AITest extends TestCase
         $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
 
         $this->client = $client;
-    }
-
-    #[Test]
-    public function testAIQuery(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->ai->aiQuery(
-            dataToExtract: [
-                [
-                    'datapointDescription' => 'datapoint_description',
-                    'datapointExample' => 'datapoint_example',
-                    'datapointName' => 'datapoint_name',
-                    'datapointType' => 'text',
-                ],
-            ],
-            domain: 'domain',
-        );
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(AIAIQueryResponse::class, $result);
-    }
-
-    #[Test]
-    public function testAIQueryWithOptionalParams(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->ai->aiQuery(
-            dataToExtract: [
-                [
-                    'datapointDescription' => 'datapoint_description',
-                    'datapointExample' => 'datapoint_example',
-                    'datapointName' => 'datapoint_name',
-                    'datapointType' => 'text',
-                    'datapointListType' => 'string',
-                    'datapointObjectSchema' => [
-                        'testimonial_text' => 'string', 'testimonial_author' => 'string',
-                    ],
-                ],
-            ],
-            domain: 'domain',
-            specificPages: [
-                'aboutUs' => true,
-                'blog' => true,
-                'careers' => true,
-                'contactUs' => true,
-                'faq' => true,
-                'homePage' => true,
-                'pricing' => true,
-                'privacyPolicy' => true,
-                'termsAndConditions' => true,
-            ],
-            timeoutMs: 1000,
-        );
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(AIAIQueryResponse::class, $result);
     }
 
     #[Test]

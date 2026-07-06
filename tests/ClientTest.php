@@ -32,7 +32,15 @@ class ClientTest extends TestCase
             requestOptions: ['transporter' => $transporter],
         );
 
-        $client->brand->retrieve(domain: 'domain');
+        $client->web->extract(
+            schema: [
+                'type' => 'bar',
+                'properties' => 'bar',
+                'required' => 'bar',
+                'additionalProperties' => 'bar',
+            ],
+            url: 'https://example.com',
+        );
 
         $this->assertNotFalse($requested = $transporter->getRequests()[0] ?? false);
 

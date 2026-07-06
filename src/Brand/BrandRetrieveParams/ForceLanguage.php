@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace ContextDev\Brand\BrandRetrieveParams;
 
-/**
- * Optional parameter to force the language of the retrieved brand data.
- */
 enum ForceLanguage: string
 {
     case AFRIKAANS = 'afrikaans';

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace ContextDev\ServiceContracts;
 
-use ContextDev\AI\AIAIQueryParams;
-use ContextDev\AI\AIAIQueryResponse;
 use ContextDev\AI\AIExtractProductParams;
 use ContextDev\AI\AIExtractProductResponse;
 use ContextDev\AI\AIExtractProductsParams;
@@ -19,21 +17,6 @@ use ContextDev\RequestOptions;
  */
 interface AIRawContract
 {
-    /**
-     * @api
-     *
-     * @param array<string,mixed>|AIAIQueryParams $params
-     * @param RequestOpts|null $requestOptions
-     *
-     * @return BaseResponse<AIAIQueryResponse>
-     *
-     * @throws APIException
-     */
-    public function aiQuery(
-        array|AIAIQueryParams $params,
-        RequestOptions|array|null $requestOptions = null,
-    ): BaseResponse;
-
     /**
      * @api
      *

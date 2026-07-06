@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace ContextDev\Services;
 
-use ContextDev\AI\AIAIQueryParams;
-use ContextDev\AI\AIAIQueryParams\DataToExtract;
-use ContextDev\AI\AIAIQueryParams\SpecificPages;
-use ContextDev\AI\AIAIQueryResponse;
 use ContextDev\AI\AIExtractProductParams;
 use ContextDev\AI\AIExtractProductResponse;
 use ContextDev\AI\AIExtractProductsParams;
@@ -19,8 +15,6 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\AIRawContract;
 
 /**
- * @phpstan-import-type DataToExtractShape from \ContextDev\AI\AIAIQueryParams\DataToExtract
- * @phpstan-import-type SpecificPagesShape from \ContextDev\AI\AIAIQueryParams\SpecificPages
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class AIRawService implements AIRawContract
@@ -30,42 +24,6 @@ final class AIRawService implements AIRawContract
      * @internal
      */
     public function __construct(private Client $client) {}
-
-    /**
-     * @api
-     *
-     * Use AI to extract specific data points from a brand's website. The AI will crawl the website and extract the requested information based on the provided data points.
-     *
-     * @param array{
-     *   dataToExtract: list<DataToExtract|DataToExtractShape>,
-     *   domain: string,
-     *   specificPages?: SpecificPages|SpecificPagesShape,
-     *   timeoutMs?: int,
-     * }|AIAIQueryParams $params
-     * @param RequestOpts|null $requestOptions
-     *
-     * @return BaseResponse<AIAIQueryResponse>
-     *
-     * @throws APIException
-     */
-    public function aiQuery(
-        array|AIAIQueryParams $params,
-        RequestOptions|array|null $requestOptions = null,
-    ): BaseResponse {
-        [$parsed, $options] = AIAIQueryParams::parseRequest(
-            $params,
-            $requestOptions,
-        );
-
-        // @phpstan-ignore-next-line return.type
-        return $this->client->request(
-            method: 'post',
-            path: 'brand/ai/query',
-            body: (object) $parsed,
-            options: $options,
-            convert: AIAIQueryResponse::class,
-        );
-    }
 
     /**
      * @api

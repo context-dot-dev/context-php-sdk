@@ -8,6 +8,7 @@ use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Utility\UtilityPrefetchResponse\KeyMetadata;
+use ContextDev\Utility\UtilityPrefetchResponse\Type;
 
 /**
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Utility\UtilityPrefetchResponse\KeyMetadata
@@ -17,6 +18,7 @@ use ContextDev\Utility\UtilityPrefetchResponse\KeyMetadata;
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  *   message?: string|null,
  *   status?: string|null,
+ *   type?: null|Type|value-of<Type>,
  * }
  */
 final class UtilityPrefetchResponse implements BaseModel
@@ -48,6 +50,14 @@ final class UtilityPrefetchResponse implements BaseModel
     #[Optional]
     public ?string $status;
 
+    /**
+     * The type of prefetch that was queued, echoed from the request (currently always 'brand').
+     *
+     * @var value-of<Type>|null $type
+     */
+    #[Optional(enum: Type::class)]
+    public ?string $type;
+
     public function __construct()
     {
         $this->initialize();
@@ -59,12 +69,14 @@ final class UtilityPrefetchResponse implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
+     * @param Type|value-of<Type>|null $type
      */
     public static function with(
         ?string $domain = null,
         KeyMetadata|array|null $keyMetadata = null,
         ?string $message = null,
         ?string $status = null,
+        Type|string|null $type = null,
     ): self {
         $self = new self;
 
@@ -72,6 +84,7 @@ final class UtilityPrefetchResponse implements BaseModel
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
         null !== $message && $self['message'] = $message;
         null !== $status && $self['status'] = $status;
+        null !== $type && $self['type'] = $type;
 
         return $self;
     }
@@ -118,6 +131,19 @@ final class UtilityPrefetchResponse implements BaseModel
     {
         $self = clone $this;
         $self['status'] = $status;
+
+        return $self;
+    }
+
+    /**
+     * The type of prefetch that was queued, echoed from the request (currently always 'brand').
+     *
+     * @param Type|value-of<Type> $type
+     */
+    public function withType(Type|string $type): self
+    {
+        $self = clone $this;
+        $self['type'] = $type;
 
         return $self;
     }
