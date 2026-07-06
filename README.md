@@ -30,9 +30,9 @@ use ContextDev\Client;
 
 $client = new Client(apiKey: getenv('CONTEXT_DEV_API_KEY') ?: 'My API Key');
 
-$brand = $client->brand->retrieve(domain: 'REPLACE_ME');
+$response = $client->web->extract();
 
-var_dump($brand->brand);
+var_dump($response->data);
 ```
 
 ### Value Objects
@@ -54,7 +54,7 @@ use ContextDev\Core\Exceptions\RateLimitException;
 use ContextDev\Core\Exceptions\APIStatusException;
 
 try {
-  $brand = $client->brand->retrieve(domain: 'REPLACE_ME');
+  $response = $client->web->extract();
 } catch (APIConnectionException $e) {
   echo "The server could not be reached", PHP_EOL;
   var_dump($e->getPrevious());
@@ -99,9 +99,7 @@ use ContextDev\Client;
 $client = new Client(requestOptions: ['maxRetries' => 0]);
 
 // Or, configure per-request:
-$result = $client->brand->retrieve(
-  domain: 'REPLACE_ME', requestOptions: ['maxRetries' => 5]
-);
+$result = $client->web->extract(requestOptions: ['maxRetries' => 5]);
 ```
 
 ## Advanced concepts
@@ -117,8 +115,7 @@ Note: the `extra*` parameters of the same name overrides the documented paramete
 ```php
 <?php
 
-$brand = $client->brand->retrieve(
-  domain: 'REPLACE_ME',
+$response = $client->web->extract(
   requestOptions: [
     'extraQueryParams' => ['my_query_parameter' => 'value'],
     'extraBodyParams' => ['my_body_parameter' => 'value'],

@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace ContextDev\Services;
 
-use ContextDev\AI\AIAIQueryParams\DataToExtract;
-use ContextDev\AI\AIAIQueryParams\SpecificPages;
-use ContextDev\AI\AIAIQueryResponse;
 use ContextDev\AI\AIExtractProductResponse;
 use ContextDev\AI\AIExtractProductsResponse;
 use ContextDev\Client;
@@ -16,8 +13,6 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\AIContract;
 
 /**
- * @phpstan-import-type DataToExtractShape from \ContextDev\AI\AIAIQueryParams\DataToExtract
- * @phpstan-import-type SpecificPagesShape from \ContextDev\AI\AIAIQueryParams\SpecificPages
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class AIService implements AIContract
@@ -33,41 +28,6 @@ final class AIService implements AIContract
     public function __construct(private Client $client)
     {
         $this->raw = new AIRawService($client);
-    }
-
-    /**
-     * @api
-     *
-     * Use AI to extract specific data points from a brand's website. The AI will crawl the website and extract the requested information based on the provided data points.
-     *
-     * @param list<DataToExtract|DataToExtractShape> $dataToExtract Array of data points to extract from the website
-     * @param string $domain The domain name to analyze
-     * @param SpecificPages|SpecificPagesShape $specificPages Optional object specifying which pages to analyze
-     * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
-     * @param RequestOpts|null $requestOptions
-     *
-     * @throws APIException
-     */
-    public function aiQuery(
-        array $dataToExtract,
-        string $domain,
-        SpecificPages|array|null $specificPages = null,
-        ?int $timeoutMs = null,
-        RequestOptions|array|null $requestOptions = null,
-    ): AIAIQueryResponse {
-        $params = Util::removeNulls(
-            [
-                'dataToExtract' => $dataToExtract,
-                'domain' => $domain,
-                'specificPages' => $specificPages,
-                'timeoutMs' => $timeoutMs,
-            ],
-        );
-
-        // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->aiQuery(params: $params, requestOptions: $requestOptions);
-
-        return $response->parse();
     }
 
     /**
