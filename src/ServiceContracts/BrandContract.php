@@ -7,6 +7,7 @@ namespace ContextDev\ServiceContracts;
 use ContextDev\Brand\BrandGetResponse;
 use ContextDev\Brand\BrandGetSimplifiedResponse;
 use ContextDev\Brand\BrandRetrieveParams\ForceLanguage;
+use ContextDev\Brand\BrandRetrieveParams\Type;
 use ContextDev\Core\Exceptions\APIException;
 use ContextDev\RequestOptions;
 
@@ -19,6 +20,7 @@ interface BrandContract
      * @api
      *
      * @param string $domain Domain name to retrieve brand data for (e.g., 'stripe.com').
+     * @param Type|value-of<Type> $type discriminator for transaction-based brand retrieval
      * @param string $name Company name to retrieve brand data for (e.g., 'Apple Inc').
      * @param string $email Email address to retrieve brand data for (e.g., 'jane@stripe.com').
      * @param string $ticker Stock ticker symbol to retrieve brand data for (e.g., 'AAPL').
@@ -39,6 +41,7 @@ interface BrandContract
      */
     public function retrieve(
         string $domain,
+        Type|string $type,
         string $name,
         string $email,
         string $ticker,

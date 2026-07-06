@@ -8,6 +8,7 @@ use ContextDev\Brand\BrandGetResponse;
 use ContextDev\Brand\BrandGetSimplifiedResponse;
 use ContextDev\Brand\BrandRetrieveParams;
 use ContextDev\Brand\BrandRetrieveParams\ForceLanguage;
+use ContextDev\Brand\BrandRetrieveParams\Type;
 use ContextDev\Brand\BrandRetrieveSimplifiedParams;
 use ContextDev\Client;
 use ContextDev\Core\Contracts\BaseResponse;
@@ -34,6 +35,7 @@ final class BrandRawService implements BrandRawContract
      *
      * @param array{
      *   domain: string,
+     *   type: Type|value-of<Type>,
      *   forceLanguage?: value-of<ForceLanguage>,
      *   maxAgeMs?: int,
      *   maxSpeed?: bool,

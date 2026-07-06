@@ -38,6 +38,7 @@ final class BrandTest extends TestCase
 
         $result = $this->client->brand->retrieve(
             domain: 'domain',
+            type: 'by_transaction',
             name: 'xxx',
             email: 'dev@stainless.com',
             ticker: 'ticker',
@@ -57,6 +58,7 @@ final class BrandTest extends TestCase
 
         $result = $this->client->brand->retrieve(
             domain: 'domain',
+            type: 'by_transaction',
             forceLanguage: 'afrikaans',
             maxAgeMs: 0,
             maxSpeed: true,
