@@ -35,7 +35,10 @@ final class UtilityTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->utility->prefetch(identifier: [], type: 'brand');
+        $result = $this->client->utility->prefetch(
+            identifier: ['domain' => 'domain'],
+            type: 'brand'
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(UtilityPrefetchResponse::class, $result);
@@ -49,9 +52,9 @@ final class UtilityTest extends TestCase
         }
 
         $result = $this->client->utility->prefetch(
-            identifier: ['domain' => 'domain', 'email' => 'dev@stainless.com'],
+            identifier: ['domain' => 'domain'],
             type: 'brand',
-            timeoutMs: 1000,
+            timeoutMs: 1000
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
