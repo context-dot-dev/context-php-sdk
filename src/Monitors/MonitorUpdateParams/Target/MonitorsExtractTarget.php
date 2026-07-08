@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Watch a site's extracted structured data.
+ * Watch the monitor-relevant pages of a site for meaningful changes. A crawl guided by `schema`/`instructions` selects up to `max_pages` relevant pages to track; each run re-checks exactly those pages, and confirmed content changes are judged against the monitor's instructions. The tracked page set is refreshed by a periodic re-discovery crawl.
  *
  * @phpstan-type MonitorsExtractTargetShape = array{
  *   instructions: string,
@@ -32,7 +32,7 @@ final class MonitorsExtractTarget implements BaseModel
     public string $type = 'extract';
 
     /**
-     * Natural-language instructions describing what to extract and watch. This single prompt scopes both the extraction and what changes get reported: only data captured by the schema and these instructions is compared between runs.
+     * Natural-language instructions guiding which pages and facts to track and which changes to report.
      */
     #[Required]
     public string $instructions;
@@ -53,13 +53,13 @@ final class MonitorsExtractTarget implements BaseModel
     public ?int $maxDepth;
 
     /**
-     * Maximum number of pages to analyze during extraction.
+     * Maximum number of pages to track.
      */
     #[Optional('max_pages')]
     public ?int $maxPages;
 
     /**
-     * JSON Schema describing the structured data to extract and watch for changes. If omitted, a default summary + key-points schema is used.
+     * JSON Schema describing the data you care about. It guides which pages are selected for tracking and gives the change judge context on what matters. If omitted, a default summary + key-points schema is used.
      *
      * @var array<string,mixed>|null $schema
      */
@@ -114,7 +114,7 @@ final class MonitorsExtractTarget implements BaseModel
     }
 
     /**
-     * Natural-language instructions describing what to extract and watch. This single prompt scopes both the extraction and what changes get reported: only data captured by the schema and these instructions is compared between runs.
+     * Natural-language instructions guiding which pages and facts to track and which changes to report.
      */
     public function withInstructions(string $instructions): self
     {
@@ -166,7 +166,7 @@ final class MonitorsExtractTarget implements BaseModel
     }
 
     /**
-     * Maximum number of pages to analyze during extraction.
+     * Maximum number of pages to track.
      */
     public function withMaxPages(int $maxPages): self
     {
@@ -177,7 +177,7 @@ final class MonitorsExtractTarget implements BaseModel
     }
 
     /**
-     * JSON Schema describing the structured data to extract and watch for changes. If omitted, a default summary + key-points schema is used.
+     * JSON Schema describing the data you care about. It guides which pages are selected for tracking and gives the change judge context on what matters. If omitted, a default summary + key-points schema is used.
      *
      * @param array<string,mixed> $schema
      */
