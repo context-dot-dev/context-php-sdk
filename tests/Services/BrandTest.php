@@ -42,6 +42,7 @@ final class BrandTest extends TestCase
             name: 'xxx',
             email: 'dev@stainless.com',
             ticker: 'ticker',
+            directURL: 'https://example.com',
             transactionInfo: 'xxx',
         );
 
@@ -68,6 +69,7 @@ final class BrandTest extends TestCase
             email: 'dev@stainless.com',
             ticker: 'ticker',
             tickerExchange: 'ticker_exchange',
+            directURL: 'https://example.com',
             transactionInfo: 'xxx',
             city: 'city',
             highConfidenceOnly: true,

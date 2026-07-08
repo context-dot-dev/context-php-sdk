@@ -38,6 +38,7 @@ class ClientTest extends TestCase
             name: 'xxx',
             email: 'dev@stainless.com',
             ticker: 'ticker',
+            directURL: 'https://example.com',
             transactionInfo: 'xxx',
         );
 
