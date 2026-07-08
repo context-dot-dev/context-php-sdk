@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Current baseline of an `extract` monitor: the structured data as last extracted.
+ * Current baseline of an `extract` monitor: the pages it tracks and the structured data as last extracted.
  *
  * @phpstan-type MonitorsExtractBaselineShape = array{
  *   capturedAt: \DateTimeInterface, data: mixed, urlsAnalyzed: list<string>
@@ -27,13 +27,13 @@ final class MonitorsExtractBaseline implements BaseModel
     public \DateTimeInterface $capturedAt;
 
     /**
-     * The extracted structured data, matching the monitor's extraction schema (same shape as the /web/extract endpoint's `data`).
+     * The extracted structured data, matching the monitor's extraction schema (same shape as the /web/extract endpoint's `data`). Refreshed when the monitor re-discovers its page set (at most about once a day); `null` when no extraction has been captured yet.
      */
     #[Required]
     public mixed $data;
 
     /**
-     * URLs that were analyzed to produce the extracted data.
+     * The page URLs the monitor tracks and analyzes for changes.
      *
      * @var list<string> $urlsAnalyzed
      */
@@ -95,7 +95,7 @@ final class MonitorsExtractBaseline implements BaseModel
     }
 
     /**
-     * The extracted structured data, matching the monitor's extraction schema (same shape as the /web/extract endpoint's `data`).
+     * The extracted structured data, matching the monitor's extraction schema (same shape as the /web/extract endpoint's `data`). Refreshed when the monitor re-discovers its page set (at most about once a day); `null` when no extraction has been captured yet.
      */
     public function withData(mixed $data): self
     {
@@ -106,7 +106,7 @@ final class MonitorsExtractBaseline implements BaseModel
     }
 
     /**
-     * URLs that were analyzed to produce the extracted data.
+     * The page URLs the monitor tracks and analyzes for changes.
      *
      * @param list<string> $urlsAnalyzed
      */
