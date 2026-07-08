@@ -13,7 +13,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Retrieve logos, backdrops, colors, industry, description, and more. Provide exactly one lookup identifier in the request body: a domain, company name, email address, stock ticker, or transaction descriptor.
+ * Retrieve logos, backdrops, colors, industry, description, and more. Provide exactly one lookup identifier in the request body: a domain, company name, email address, stock ticker, transaction descriptor, or direct URL. Note: `by_direct_url` fetches brand data only from the provided URL — not from the entire internet.
  *
  * @see ContextDev\Services\BrandService::retrieve()
  *
@@ -29,6 +29,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   email: string,
  *   ticker: string,
  *   tickerExchange?: string|null,
+ *   directURL: string,
  *   transactionInfo: string,
  *   city?: string|null,
  *   highConfidenceOnly?: bool|null,
@@ -109,6 +110,12 @@ final class BrandRetrieveParams implements BaseModel
     public ?string $tickerExchange;
 
     /**
+     * Full http(s) URL to fetch brand data from (e.g., 'https://stripe.com/enterprise'). Only this URL is fetched — not the entire internet.
+     */
+    #[Required('direct_url')]
+    public string $directURL;
+
+    /**
      * Transaction information to identify the brand.
      */
     #[Required('transaction_info')]
@@ -149,6 +156,7 @@ final class BrandRetrieveParams implements BaseModel
      *   name: ...,
      *   email: ...,
      *   ticker: ...,
+     *   directURL: ...,
      *   transactionInfo: ...,
      * )
      * ```
@@ -162,6 +170,7 @@ final class BrandRetrieveParams implements BaseModel
      *   ->withName(...)
      *   ->withEmail(...)
      *   ->withTicker(...)
+     *   ->withDirectURL(...)
      *   ->withTransactionInfo(...)
      * ```
      */
@@ -184,6 +193,7 @@ final class BrandRetrieveParams implements BaseModel
         string $name,
         string $email,
         string $ticker,
+        string $directURL,
         string $transactionInfo,
         ForceLanguage|string|null $forceLanguage = null,
         ?int $maxAgeMs = null,
@@ -203,6 +213,7 @@ final class BrandRetrieveParams implements BaseModel
         $self['name'] = $name;
         $self['email'] = $email;
         $self['ticker'] = $ticker;
+        $self['directURL'] = $directURL;
         $self['transactionInfo'] = $transactionInfo;
 
         null !== $forceLanguage && $self['forceLanguage'] = $forceLanguage;
@@ -338,6 +349,17 @@ final class BrandRetrieveParams implements BaseModel
     {
         $self = clone $this;
         $self['tickerExchange'] = $tickerExchange;
+
+        return $self;
+    }
+
+    /**
+     * Full http(s) URL to fetch brand data from (e.g., 'https://stripe.com/enterprise'). Only this URL is fetched — not the entire internet.
+     */
+    public function withDirectURL(string $directURL): self
+    {
+        $self = clone $this;
+        $self['directURL'] = $directURL;
 
         return $self;
     }
