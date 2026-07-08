@@ -13,10 +13,10 @@ use ContextDev\Core\Contracts\BaseModel;
  * Watch a site's extracted structured data.
  *
  * @phpstan-type MonitorsExtractTargetShape = array{
+ *   instructions: string,
  *   type: 'extract',
  *   url: string,
  *   followSubdomains?: bool|null,
- *   instructions?: string|null,
  *   maxDepth?: int|null,
  *   maxPages?: int|null,
  *   schema?: array<string,mixed>|null,
@@ -32,6 +32,12 @@ final class MonitorsExtractTarget implements BaseModel
     public string $type = 'extract';
 
     /**
+     * Natural-language instructions describing what to extract and watch. This single prompt scopes both the extraction and what changes get reported: only data captured by the schema and these instructions is compared between runs.
+     */
+    #[Required]
+    public string $instructions;
+
+    /**
      * Root URL to extract structured data from.
      */
     #[Required]
@@ -39,12 +45,6 @@ final class MonitorsExtractTarget implements BaseModel
 
     #[Optional('follow_subdomains')]
     public ?bool $followSubdomains;
-
-    /**
-     * Optional natural-language instructions guiding what to extract.
-     */
-    #[Optional]
-    public ?string $instructions;
 
     /**
      * Optional maximum link depth from the starting URL (0 = only the starting page).
@@ -71,13 +71,13 @@ final class MonitorsExtractTarget implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * MonitorsExtractTarget::with(url: ...)
+     * MonitorsExtractTarget::with(instructions: ..., url: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new MonitorsExtractTarget)->withURL(...)
+     * (new MonitorsExtractTarget)->withInstructions(...)->withURL(...)
      * ```
      */
     public function __construct()
@@ -93,22 +93,33 @@ final class MonitorsExtractTarget implements BaseModel
      * @param array<string,mixed>|null $schema
      */
     public static function with(
+        string $instructions,
         string $url,
         ?bool $followSubdomains = null,
-        ?string $instructions = null,
         ?int $maxDepth = null,
         ?int $maxPages = null,
         ?array $schema = null,
     ): self {
         $self = new self;
 
+        $self['instructions'] = $instructions;
         $self['url'] = $url;
 
         null !== $followSubdomains && $self['followSubdomains'] = $followSubdomains;
-        null !== $instructions && $self['instructions'] = $instructions;
         null !== $maxDepth && $self['maxDepth'] = $maxDepth;
         null !== $maxPages && $self['maxPages'] = $maxPages;
         null !== $schema && $self['schema'] = $schema;
+
+        return $self;
+    }
+
+    /**
+     * Natural-language instructions describing what to extract and watch. This single prompt scopes both the extraction and what changes get reported: only data captured by the schema and these instructions is compared between runs.
+     */
+    public function withInstructions(string $instructions): self
+    {
+        $self = clone $this;
+        $self['instructions'] = $instructions;
 
         return $self;
     }
@@ -139,17 +150,6 @@ final class MonitorsExtractTarget implements BaseModel
     {
         $self = clone $this;
         $self['followSubdomains'] = $followSubdomains;
-
-        return $self;
-    }
-
-    /**
-     * Optional natural-language instructions guiding what to extract.
-     */
-    public function withInstructions(string $instructions): self
-    {
-        $self = clone $this;
-        $self['instructions'] = $instructions;
 
         return $self;
     }

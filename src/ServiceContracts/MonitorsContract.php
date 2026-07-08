@@ -110,7 +110,7 @@ interface MonitorsContract
      *
      * @param ChangeDetectionType|value-of<ChangeDetectionType> $changeDetectionType
      * @param string $q free-text search term, matched against the fields named in `search_by`
-     * @param list<SearchBy|value-of<SearchBy>> $searchBy Comma-separated fields to search with `q`. Defaults to all of them. Note `query` only exists on semantic monitors.
+     * @param list<SearchBy|value-of<SearchBy>> $searchBy Comma-separated fields to search with `q`. Defaults to all of them. Note `instructions` only exists on extract monitors.
      * @param SearchType|value-of<SearchType> $searchType `prefix` for as-you-type prefix matching (default), `exact` for full-token matching
      * @param \ContextDev\Monitors\MonitorListParams\Status|value-of<\ContextDev\Monitors\MonitorListParams\Status> $status Monitor lifecycle status. `failed` means the most recent run failed (see the monitor's `last_error`); failed monitors keep running on schedule and flip back to `active` on the next successful run. Monitors are auto-`paused` after repeated consecutive failures or insufficient-credit skips; resume by PATCHing status to `active`.
      * @param string $tag filter to items that have this tag

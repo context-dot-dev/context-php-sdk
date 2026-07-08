@@ -10,10 +10,10 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Detect meaning-level changes that match a natural language query.
+ * Detect meaning-level changes to the extracted data, ignoring cosmetic or paraphrase-only differences. What is watched is determined by the extract target's `schema` and `instructions`.
  *
  * @phpstan-type MonitorsSemanticChangeDetectionShape = array{
- *   query: string, type: 'semantic', confidenceThreshold?: float|null
+ *   type: 'semantic', confidenceThreshold?: float|null
  * }
  */
 final class MonitorsSemanticChangeDetection implements BaseModel
@@ -25,26 +25,9 @@ final class MonitorsSemanticChangeDetection implements BaseModel
     #[Required]
     public string $type = 'semantic';
 
-    #[Required]
-    public string $query;
-
     #[Optional('confidence_threshold')]
     public ?float $confidenceThreshold;
 
-    /**
-     * `new MonitorsSemanticChangeDetection()` is missing required properties by the API.
-     *
-     * To enforce required parameters use
-     * ```
-     * MonitorsSemanticChangeDetection::with(query: ...)
-     * ```
-     *
-     * Otherwise ensure the following setters are called
-     *
-     * ```
-     * (new MonitorsSemanticChangeDetection)->withQuery(...)
-     * ```
-     */
     public function __construct()
     {
         $this->initialize();
@@ -55,23 +38,11 @@ final class MonitorsSemanticChangeDetection implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(
-        string $query,
-        ?float $confidenceThreshold = null
-    ): self {
+    public static function with(?float $confidenceThreshold = null): self
+    {
         $self = new self;
 
-        $self['query'] = $query;
-
         null !== $confidenceThreshold && $self['confidenceThreshold'] = $confidenceThreshold;
-
-        return $self;
-    }
-
-    public function withQuery(string $query): self
-    {
-        $self = clone $this;
-        $self['query'] = $query;
 
         return $self;
     }
