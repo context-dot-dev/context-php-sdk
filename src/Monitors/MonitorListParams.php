@@ -55,7 +55,7 @@ final class MonitorListParams implements BaseModel
     public ?string $q;
 
     /**
-     * Comma-separated fields to search with `q`. Defaults to all of them. Note `query` only exists on semantic monitors.
+     * Comma-separated fields to search with `q`. Defaults to all of them. Note `instructions` only exists on extract monitors.
      *
      * @var list<value-of<SearchBy>>|null $searchBy
      */
@@ -181,7 +181,7 @@ final class MonitorListParams implements BaseModel
     }
 
     /**
-     * Comma-separated fields to search with `q`. Defaults to all of them. Note `query` only exists on semantic monitors.
+     * Comma-separated fields to search with `q`. Defaults to all of them. Note `instructions` only exists on extract monitors.
      *
      * @param list<SearchBy|value-of<SearchBy>> $searchBy
      */

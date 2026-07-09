@@ -8,6 +8,9 @@ use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Monitors\MonitorNewResponse\Baseline\MonitorsExtractBaseline;
+use ContextDev\Monitors\MonitorNewResponse\Baseline\MonitorsPageBaseline;
+use ContextDev\Monitors\MonitorNewResponse\Baseline\MonitorsSitemapBaseline;
 use ContextDev\Monitors\MonitorNewResponse\ChangeDetection;
 use ContextDev\Monitors\MonitorNewResponse\ChangeDetection\MonitorsExactChangeDetection;
 use ContextDev\Monitors\MonitorNewResponse\ChangeDetection\MonitorsSemanticChangeDetection;
@@ -26,9 +29,11 @@ use ContextDev\Monitors\MonitorNewResponse\Webhook;
  *
  * @phpstan-import-type ChangeDetectionVariants from \ContextDev\Monitors\MonitorNewResponse\ChangeDetection
  * @phpstan-import-type TargetVariants from \ContextDev\Monitors\MonitorNewResponse\Target
+ * @phpstan-import-type BaselineVariants from \ContextDev\Monitors\MonitorNewResponse\Baseline
  * @phpstan-import-type ChangeDetectionShape from \ContextDev\Monitors\MonitorNewResponse\ChangeDetection
  * @phpstan-import-type ScheduleShape from \ContextDev\Monitors\MonitorNewResponse\Schedule
  * @phpstan-import-type TargetShape from \ContextDev\Monitors\MonitorNewResponse\Target
+ * @phpstan-import-type BaselineShape from \ContextDev\Monitors\MonitorNewResponse\Baseline
  * @phpstan-import-type LastErrorShape from \ContextDev\Monitors\MonitorNewResponse\LastError
  * @phpstan-import-type WebhookShape from \ContextDev\Monitors\MonitorNewResponse\Webhook
  *
@@ -42,6 +47,7 @@ use ContextDev\Monitors\MonitorNewResponse\Webhook;
  *   status: Status|value-of<Status>,
  *   target: TargetShape,
  *   updatedAt: \DateTimeInterface,
+ *   baseline?: BaselineShape|null,
  *   lastChangeAt?: \DateTimeInterface|null,
  *   lastError?: null|LastError|LastErrorShape,
  *   lastRunAt?: \DateTimeInterface|null,
@@ -104,6 +110,14 @@ final class MonitorNewResponse implements BaseModel
 
     #[Required('updated_at')]
     public \DateTimeInterface $updatedAt;
+
+    /**
+     * Current baseline: the last observed value the monitor compares new snapshots against. Its shape follows `target.type` (page/sitemap/extract). Only populated on GET /monitors/{monitor_id}; null until the first baseline run completes (and after a target or change_detection update, which resets the baseline).
+     *
+     * @var BaselineVariants|null $baseline
+     */
+    #[Optional(nullable: true)]
+    public MonitorsPageBaseline|MonitorsSitemapBaseline|MonitorsExtractBaseline|null $baseline;
 
     #[Optional('last_change_at', nullable: true)]
     public ?\DateTimeInterface $lastChangeAt;
@@ -182,6 +196,7 @@ final class MonitorNewResponse implements BaseModel
      * @param Schedule|ScheduleShape $schedule
      * @param Status|value-of<Status> $status
      * @param TargetShape $target
+     * @param BaselineShape|null $baseline
      * @param LastError|LastErrorShape|null $lastError
      * @param list<string>|null $tags
      * @param Webhook|WebhookShape|null $webhook
@@ -196,6 +211,7 @@ final class MonitorNewResponse implements BaseModel
         Status|string $status,
         MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget $target,
         \DateTimeInterface $updatedAt,
+        MonitorsPageBaseline|array|MonitorsSitemapBaseline|MonitorsExtractBaseline|null $baseline = null,
         ?\DateTimeInterface $lastChangeAt = null,
         LastError|array|null $lastError = null,
         ?\DateTimeInterface $lastRunAt = null,
@@ -215,6 +231,7 @@ final class MonitorNewResponse implements BaseModel
         $self['target'] = $target;
         $self['updatedAt'] = $updatedAt;
 
+        null !== $baseline && $self['baseline'] = $baseline;
         null !== $lastChangeAt && $self['lastChangeAt'] = $lastChangeAt;
         null !== $lastError && $self['lastError'] = $lastError;
         null !== $lastRunAt && $self['lastRunAt'] = $lastRunAt;
@@ -320,6 +337,20 @@ final class MonitorNewResponse implements BaseModel
     {
         $self = clone $this;
         $self['updatedAt'] = $updatedAt;
+
+        return $self;
+    }
+
+    /**
+     * Current baseline: the last observed value the monitor compares new snapshots against. Its shape follows `target.type` (page/sitemap/extract). Only populated on GET /monitors/{monitor_id}; null until the first baseline run completes (and after a target or change_detection update, which resets the baseline).
+     *
+     * @param BaselineShape|null $baseline
+     */
+    public function withBaseline(
+        MonitorsPageBaseline|array|MonitorsSitemapBaseline|MonitorsExtractBaseline|null $baseline,
+    ): self {
+        $self = clone $this;
+        $self['baseline'] = $baseline;
 
         return $self;
     }

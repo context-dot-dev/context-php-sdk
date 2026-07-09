@@ -10,7 +10,7 @@ enum SearchBy: string
 
     case URL = 'url';
 
-    case QUERY = 'query';
+    case INSTRUCTIONS = 'instructions';
 
     case TAGS = 'tags';
 }

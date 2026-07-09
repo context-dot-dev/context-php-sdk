@@ -40,7 +40,6 @@ use ContextDev\Monitors\MonitorGetChangeResponse\TargetType;
  *   importance?: null|Importance|value-of<Importance>,
  *   matchedURLCount?: int|null,
  *   matchedURLs?: list<string>|null,
- *   query?: string|null,
  *   removedURLCount?: int|null,
  *   removedURLs?: list<string>|null,
  *   tags?: list<string>|null,
@@ -135,9 +134,6 @@ final class MonitorGetChangeResponse implements BaseModel
      */
     #[Optional('matched_urls', list: 'string')]
     public ?array $matchedURLs;
-
-    #[Optional]
-    public ?string $query;
 
     #[Optional('removed_url_count')]
     public ?int $removedURLCount;
@@ -234,7 +230,6 @@ final class MonitorGetChangeResponse implements BaseModel
         Importance|string|null $importance = null,
         ?int $matchedURLCount = null,
         ?array $matchedURLs = null,
-        ?string $query = null,
         ?int $removedURLCount = null,
         ?array $removedURLs = null,
         ?array $tags = null,
@@ -262,7 +257,6 @@ final class MonitorGetChangeResponse implements BaseModel
         null !== $importance && $self['importance'] = $importance;
         null !== $matchedURLCount && $self['matchedURLCount'] = $matchedURLCount;
         null !== $matchedURLs && $self['matchedURLs'] = $matchedURLs;
-        null !== $query && $self['query'] = $query;
         null !== $removedURLCount && $self['removedURLCount'] = $removedURLCount;
         null !== $removedURLs && $self['removedURLs'] = $removedURLs;
         null !== $tags && $self['tags'] = $tags;
@@ -460,14 +454,6 @@ final class MonitorGetChangeResponse implements BaseModel
     {
         $self = clone $this;
         $self['matchedURLs'] = $matchedURLs;
-
-        return $self;
-    }
-
-    public function withQuery(string $query): self
-    {
-        $self = clone $this;
-        $self['query'] = $query;
 
         return $self;
     }

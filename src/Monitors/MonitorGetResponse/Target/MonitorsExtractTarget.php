@@ -10,13 +10,13 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Watch a site's extracted structured data.
+ * Watch the monitor-relevant pages of a site for meaningful changes. A crawl guided by `schema`/`instructions` selects up to `max_pages` relevant pages to track; each run re-checks exactly those pages, and confirmed content changes are judged against the monitor's instructions. The tracked page set is refreshed by a periodic re-discovery crawl.
  *
  * @phpstan-type MonitorsExtractTargetShape = array{
+ *   instructions: string,
  *   type: 'extract',
  *   url: string,
  *   followSubdomains?: bool|null,
- *   instructions?: string|null,
  *   maxDepth?: int|null,
  *   maxPages?: int|null,
  *   schema?: array<string,mixed>|null,
@@ -32,6 +32,12 @@ final class MonitorsExtractTarget implements BaseModel
     public string $type = 'extract';
 
     /**
+     * Natural-language instructions guiding which pages and facts to track and which changes to report.
+     */
+    #[Required]
+    public string $instructions;
+
+    /**
      * Root URL to extract structured data from.
      */
     #[Required]
@@ -41,25 +47,19 @@ final class MonitorsExtractTarget implements BaseModel
     public ?bool $followSubdomains;
 
     /**
-     * Optional natural-language instructions guiding what to extract.
-     */
-    #[Optional]
-    public ?string $instructions;
-
-    /**
      * Optional maximum link depth from the starting URL (0 = only the starting page).
      */
     #[Optional('max_depth')]
     public ?int $maxDepth;
 
     /**
-     * Maximum number of pages to analyze during extraction.
+     * Maximum number of pages to track.
      */
     #[Optional('max_pages')]
     public ?int $maxPages;
 
     /**
-     * JSON Schema describing the structured data to extract and watch for changes. If omitted, a default summary + key-points schema is used.
+     * JSON Schema describing the data you care about. It guides which pages are selected for tracking and gives the change judge context on what matters. If omitted, a default summary + key-points schema is used.
      *
      * @var array<string,mixed>|null $schema
      */
@@ -71,13 +71,13 @@ final class MonitorsExtractTarget implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * MonitorsExtractTarget::with(url: ...)
+     * MonitorsExtractTarget::with(instructions: ..., url: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new MonitorsExtractTarget)->withURL(...)
+     * (new MonitorsExtractTarget)->withInstructions(...)->withURL(...)
      * ```
      */
     public function __construct()
@@ -93,22 +93,33 @@ final class MonitorsExtractTarget implements BaseModel
      * @param array<string,mixed>|null $schema
      */
     public static function with(
+        string $instructions,
         string $url,
         ?bool $followSubdomains = null,
-        ?string $instructions = null,
         ?int $maxDepth = null,
         ?int $maxPages = null,
         ?array $schema = null,
     ): self {
         $self = new self;
 
+        $self['instructions'] = $instructions;
         $self['url'] = $url;
 
         null !== $followSubdomains && $self['followSubdomains'] = $followSubdomains;
-        null !== $instructions && $self['instructions'] = $instructions;
         null !== $maxDepth && $self['maxDepth'] = $maxDepth;
         null !== $maxPages && $self['maxPages'] = $maxPages;
         null !== $schema && $self['schema'] = $schema;
+
+        return $self;
+    }
+
+    /**
+     * Natural-language instructions guiding which pages and facts to track and which changes to report.
+     */
+    public function withInstructions(string $instructions): self
+    {
+        $self = clone $this;
+        $self['instructions'] = $instructions;
 
         return $self;
     }
@@ -144,17 +155,6 @@ final class MonitorsExtractTarget implements BaseModel
     }
 
     /**
-     * Optional natural-language instructions guiding what to extract.
-     */
-    public function withInstructions(string $instructions): self
-    {
-        $self = clone $this;
-        $self['instructions'] = $instructions;
-
-        return $self;
-    }
-
-    /**
      * Optional maximum link depth from the starting URL (0 = only the starting page).
      */
     public function withMaxDepth(int $maxDepth): self
@@ -166,7 +166,7 @@ final class MonitorsExtractTarget implements BaseModel
     }
 
     /**
-     * Maximum number of pages to analyze during extraction.
+     * Maximum number of pages to track.
      */
     public function withMaxPages(int $maxPages): self
     {
@@ -177,7 +177,7 @@ final class MonitorsExtractTarget implements BaseModel
     }
 
     /**
-     * JSON Schema describing the structured data to extract and watch for changes. If omitted, a default summary + key-points schema is used.
+     * JSON Schema describing the data you care about. It guides which pages are selected for tracking and gives the change judge context on what matters. If omitted, a default summary + key-points schema is used.
      *
      * @param array<string,mixed> $schema
      */

@@ -35,13 +35,14 @@ final class BrandService implements BrandContract
     /**
      * @api
      *
-     * Retrieve logos, backdrops, colors, industry, description, and more. Provide exactly one lookup identifier in the request body: a domain, company name, email address, stock ticker, or transaction descriptor.
+     * Retrieve logos, backdrops, colors, industry, description, and more. Provide exactly one lookup identifier in the request body: a domain, company name, email address, stock ticker, transaction descriptor, or direct URL. Note: `by_direct_url` fetches brand data only from the provided URL — not from the entire internet.
      *
      * @param string $domain Domain name to retrieve brand data for (e.g., 'stripe.com').
      * @param Type|value-of<Type> $type discriminator for transaction-based brand retrieval
      * @param string $name Company name to retrieve brand data for (e.g., 'Apple Inc').
      * @param string $email Email address to retrieve brand data for (e.g., 'jane@stripe.com').
      * @param string $ticker Stock ticker symbol to retrieve brand data for (e.g., 'AAPL').
+     * @param string $directURL Full http(s) URL to fetch brand data from (e.g., 'https://stripe.com/enterprise'). Only this URL is fetched — not the entire internet.
      * @param string $transactionInfo transaction information to identify the brand
      * @param ForceLanguage|value-of<ForceLanguage> $forceLanguage
      * @param int $maxAgeMs Maximum age in milliseconds for cached brand data before the API performs a hard refresh. Defaults to 3 months (7776000000 ms). Values below 1 day (86400000 ms) are clamped to 1 day; values above 1 year (31536000000 ms) are clamped to 1 year.
@@ -63,6 +64,7 @@ final class BrandService implements BrandContract
         string $name,
         string $email,
         string $ticker,
+        string $directURL,
         string $transactionInfo,
         ForceLanguage|string|null $forceLanguage = null,
         ?int $maxAgeMs = null,
@@ -89,6 +91,7 @@ final class BrandService implements BrandContract
                 'email' => $email,
                 'ticker' => $ticker,
                 'tickerExchange' => $tickerExchange,
+                'directURL' => $directURL,
                 'transactionInfo' => $transactionInfo,
                 'city' => $city,
                 'highConfidenceOnly' => $highConfidenceOnly,

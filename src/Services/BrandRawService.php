@@ -31,7 +31,7 @@ final class BrandRawService implements BrandRawContract
     /**
      * @api
      *
-     * Retrieve logos, backdrops, colors, industry, description, and more. Provide exactly one lookup identifier in the request body: a domain, company name, email address, stock ticker, or transaction descriptor.
+     * Retrieve logos, backdrops, colors, industry, description, and more. Provide exactly one lookup identifier in the request body: a domain, company name, email address, stock ticker, transaction descriptor, or direct URL. Note: `by_direct_url` fetches brand data only from the provided URL — not from the entire internet.
      *
      * @param array{
      *   domain: string,
@@ -45,6 +45,7 @@ final class BrandRawService implements BrandRawContract
      *   email: string,
      *   ticker: string,
      *   tickerExchange?: string,
+     *   directURL: string,
      *   transactionInfo: string,
      *   city?: string,
      *   highConfidenceOnly?: bool,
