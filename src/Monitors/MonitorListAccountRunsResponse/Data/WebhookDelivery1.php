@@ -7,29 +7,25 @@ namespace ContextDev\Monitors\MonitorListAccountRunsResponse\Data;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
-use ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery\Error;
-use ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery\Event;
-use ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery\Status;
+use ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery1\Error;
+use ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery1\Event;
+use ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery1\Status;
 
 /**
- * Deprecated: use `webhook_deliveries`, which records every attempt now that a run can deliver multiple events. Omitted when no webhook was attempted, including historical runs created before delivery tracking was added.
+ * @phpstan-import-type ErrorShape from \ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery1\Error
  *
- * @deprecated
- *
- * @phpstan-import-type ErrorShape from \ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery\Error
- *
- * @phpstan-type WebhookDeliveryShape = array{
+ * @phpstan-type WebhookDelivery1Shape = array{
  *   attemptedAt: \DateTimeInterface,
- *   error: null|\ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery\Error|ErrorShape,
+ *   error: null|\ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery1\Error|ErrorShape,
  *   event: Event|value-of<Event>,
  *   eventID: string,
  *   httpStatus: int|null,
- *   status: \ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery\Status|value-of<\ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery\Status>,
+ *   status: \ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery1\Status|value-of<\ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery1\Status>,
  * }
  */
-final class WebhookDelivery implements BaseModel
+final class WebhookDelivery1 implements BaseModel
 {
-    /** @use SdkModel<WebhookDeliveryShape> */
+    /** @use SdkModel<WebhookDelivery1Shape> */
     use SdkModel;
 
     #[Required('attempted_at')]
@@ -69,11 +65,11 @@ final class WebhookDelivery implements BaseModel
     public string $status;
 
     /**
-     * `new WebhookDelivery()` is missing required properties by the API.
+     * `new WebhookDelivery1()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * WebhookDelivery::with(
+     * WebhookDelivery1::with(
      *   attemptedAt: ...,
      *   error: ...,
      *   event: ...,
@@ -86,7 +82,7 @@ final class WebhookDelivery implements BaseModel
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new WebhookDelivery)
+     * (new WebhookDelivery1)
      *   ->withAttemptedAt(...)
      *   ->withError(...)
      *   ->withEvent(...)
