@@ -522,7 +522,20 @@ final class WebService implements WebContract
     /**
      * @api
      *
-     * Scrapes the given URL into LLM usable Markdown.
+     * Scrapes the given URL into LLM usable Markdown. Inspect key_metadata on JSON responses from a recognized API key; use error_code to distinguish stable failure categories.
+     *
+     * ### Billing & errors
+     *
+     * | HTTP status | Billed? | Meaning |
+     * | --- | --- | --- |
+     * | 200 | Yes — 1 credit | Successful scrape, including a zero-length result when includeSelectors matched nothing |
+     * | 400 | No | Invalid input, skipped PDF, or the page could not be scraped |
+     * | 401 / 403 | No | Invalid/disabled key, insufficient permissions, or credits exhausted; inspect error_code |
+     * | 404 | No | Target page returned or fingerprinted as not found |
+     * | 408 | No | Request timed out |
+     * | 415 | No | Unsupported content type |
+     * | 429 | No | Per-minute rate limit exceeded; honor Retry-After |
+     * | 500 | No | Internal error |
      *
      * @param string $url Full URL to scrape into LLM usable Markdown (must include http:// or https:// protocol)
      * @param \ContextDev\Web\WebWebScrapeMdParams\Country|value-of<\ContextDev\Web\WebWebScrapeMdParams\Country> $country Two-letter ISO 3166-1 alpha-2 country code for the website request location. When provided, Context.dev fetches the target page from that country.
