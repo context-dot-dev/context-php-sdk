@@ -74,7 +74,10 @@ final class MonitorsTest extends TestCase
             ],
             mode: 'web',
             tags: ['pricing', 'competitor'],
-            webhook: ['url' => 'https://example.com/webhook'],
+            webhook: [
+                'url' => 'https://example.com/webhook',
+                'events' => ['change.detected', 'run.completed'],
+            ],
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
