@@ -23,6 +23,7 @@ use ContextDev\Monitors\MonitorUpdateResponse\Target\MonitorsExtractTarget;
 use ContextDev\Monitors\MonitorUpdateResponse\Target\MonitorsPageTarget;
 use ContextDev\Monitors\MonitorUpdateResponse\Target\MonitorsSitemapTarget;
 use ContextDev\Monitors\MonitorUpdateResponse\Webhook;
+use ContextDev\Monitors\MonitorUpdateResponse\WebhookFailure;
 
 /**
  * A web monitor. `mode` is the constant `web`; behavior is described by `target` (page/sitemap/extract) and `change_detection` (exact/semantic).
@@ -36,6 +37,7 @@ use ContextDev\Monitors\MonitorUpdateResponse\Webhook;
  * @phpstan-import-type BaselineShape from \ContextDev\Monitors\MonitorUpdateResponse\Baseline
  * @phpstan-import-type LastErrorShape from \ContextDev\Monitors\MonitorUpdateResponse\LastError
  * @phpstan-import-type WebhookShape from \ContextDev\Monitors\MonitorUpdateResponse\Webhook
+ * @phpstan-import-type WebhookFailureShape from \ContextDev\Monitors\MonitorUpdateResponse\WebhookFailure
  *
  * @phpstan-type MonitorUpdateResponseShape = array{
  *   id: string,
@@ -54,6 +56,7 @@ use ContextDev\Monitors\MonitorUpdateResponse\Webhook;
  *   nextRunAt?: \DateTimeInterface|null,
  *   tags?: list<string>|null,
  *   webhook?: null|Webhook|WebhookShape,
+ *   webhookFailure?: null|WebhookFailure|WebhookFailureShape,
  * }
  */
 final class MonitorUpdateResponse implements BaseModel
@@ -149,6 +152,12 @@ final class MonitorUpdateResponse implements BaseModel
     public ?Webhook $webhook;
 
     /**
+     * Present while webhook deliveries are failing consecutively; null when deliveries are healthy or no webhook is configured. Cleared on the next successful delivery and when the webhook URL changes.
+     */
+    #[Optional('webhook_failure', nullable: true)]
+    public ?WebhookFailure $webhookFailure;
+
+    /**
      * `new MonitorUpdateResponse()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -200,6 +209,7 @@ final class MonitorUpdateResponse implements BaseModel
      * @param LastError|LastErrorShape|null $lastError
      * @param list<string>|null $tags
      * @param Webhook|WebhookShape|null $webhook
+     * @param WebhookFailure|WebhookFailureShape|null $webhookFailure
      */
     public static function with(
         string $id,
@@ -218,6 +228,7 @@ final class MonitorUpdateResponse implements BaseModel
         ?\DateTimeInterface $nextRunAt = null,
         ?array $tags = null,
         Webhook|array|null $webhook = null,
+        WebhookFailure|array|null $webhookFailure = null,
     ): self {
         $self = new self;
 
@@ -238,6 +249,7 @@ final class MonitorUpdateResponse implements BaseModel
         null !== $nextRunAt && $self['nextRunAt'] = $nextRunAt;
         null !== $tags && $self['tags'] = $tags;
         null !== $webhook && $self['webhook'] = $webhook;
+        null !== $webhookFailure && $self['webhookFailure'] = $webhookFailure;
 
         return $self;
     }
@@ -415,6 +427,20 @@ final class MonitorUpdateResponse implements BaseModel
     {
         $self = clone $this;
         $self['webhook'] = $webhook;
+
+        return $self;
+    }
+
+    /**
+     * Present while webhook deliveries are failing consecutively; null when deliveries are healthy or no webhook is configured. Cleared on the next successful delivery and when the webhook URL changes.
+     *
+     * @param WebhookFailure|WebhookFailureShape|null $webhookFailure
+     */
+    public function withWebhookFailure(
+        WebhookFailure|array|null $webhookFailure
+    ): self {
+        $self = clone $this;
+        $self['webhookFailure'] = $webhookFailure;
 
         return $self;
     }
