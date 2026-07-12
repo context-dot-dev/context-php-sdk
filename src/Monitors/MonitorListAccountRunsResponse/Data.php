@@ -14,11 +14,11 @@ use ContextDev\Monitors\MonitorListAccountRunsResponse\Data\RunType;
 use ContextDev\Monitors\MonitorListAccountRunsResponse\Data\SkipReason;
 use ContextDev\Monitors\MonitorListAccountRunsResponse\Data\Status;
 use ContextDev\Monitors\MonitorListAccountRunsResponse\Data\TargetType;
-use ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery;
+use ContextDev\Monitors\WebhookDelivery;
 
 /**
  * @phpstan-import-type ErrorShape from \ContextDev\Monitors\MonitorListAccountRunsResponse\Data\Error
- * @phpstan-import-type WebhookDeliveryShape from \ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery
+ * @phpstan-import-type WebhookDeliveryShape from \ContextDev\Monitors\WebhookDelivery
  *
  * @phpstan-type DataShape = array{
  *   id: string,
@@ -35,6 +35,7 @@ use ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery;
  *   error?: null|Error|ErrorShape,
  *   skipReason?: null|SkipReason|value-of<SkipReason>,
  *   startedAt?: \DateTimeInterface|null,
+ *   webhookDeliveries?: list<WebhookDelivery|WebhookDeliveryShape>|null,
  *   webhookDelivery?: null|WebhookDelivery|WebhookDeliveryShape,
  * }
  */
@@ -109,7 +110,17 @@ final class Data implements BaseModel
     public ?\DateTimeInterface $startedAt;
 
     /**
-     * The webhook delivery attempted for a change detected by this run. Omitted when no webhook was attempted, including historical runs created before delivery tracking was added.
+     * All webhook deliveries attempted by this run — one per subscribed event that fired. Omitted when no webhook was attempted, including runs created before event selection was added.
+     *
+     * @var list<WebhookDelivery>|null $webhookDeliveries
+     */
+    #[Optional('webhook_deliveries', list: WebhookDelivery::class)]
+    public ?array $webhookDeliveries;
+
+    /**
+     * @deprecated
+     *
+     * Deprecated: use `webhook_deliveries`, which records every attempt now that a run can deliver multiple events. Omitted when no webhook was attempted, including historical runs created before delivery tracking was added.
      */
     #[Optional('webhook_delivery')]
     public ?WebhookDelivery $webhookDelivery;
@@ -163,6 +174,7 @@ final class Data implements BaseModel
      * @param TargetType|value-of<TargetType> $targetType
      * @param Error|ErrorShape|null $error
      * @param SkipReason|value-of<SkipReason>|null $skipReason
+     * @param list<WebhookDelivery|WebhookDeliveryShape>|null $webhookDeliveries
      * @param WebhookDelivery|WebhookDeliveryShape|null $webhookDelivery
      */
     public static function with(
@@ -180,6 +192,7 @@ final class Data implements BaseModel
         Error|array|null $error = null,
         SkipReason|string|null $skipReason = null,
         ?\DateTimeInterface $startedAt = null,
+        ?array $webhookDeliveries = null,
         WebhookDelivery|array|null $webhookDelivery = null,
     ): self {
         $self = new self;
@@ -199,6 +212,7 @@ final class Data implements BaseModel
         null !== $error && $self['error'] = $error;
         null !== $skipReason && $self['skipReason'] = $skipReason;
         null !== $startedAt && $self['startedAt'] = $startedAt;
+        null !== $webhookDeliveries && $self['webhookDeliveries'] = $webhookDeliveries;
         null !== $webhookDelivery && $self['webhookDelivery'] = $webhookDelivery;
 
         return $self;
@@ -348,7 +362,20 @@ final class Data implements BaseModel
     }
 
     /**
-     * The webhook delivery attempted for a change detected by this run. Omitted when no webhook was attempted, including historical runs created before delivery tracking was added.
+     * All webhook deliveries attempted by this run — one per subscribed event that fired. Omitted when no webhook was attempted, including runs created before event selection was added.
+     *
+     * @param list<WebhookDelivery|WebhookDeliveryShape> $webhookDeliveries
+     */
+    public function withWebhookDeliveries(array $webhookDeliveries): self
+    {
+        $self = clone $this;
+        $self['webhookDeliveries'] = $webhookDeliveries;
+
+        return $self;
+    }
+
+    /**
+     * Deprecated: use `webhook_deliveries`, which records every attempt now that a run can deliver multiple events. Omitted when no webhook was attempted, including historical runs created before delivery tracking was added.
      *
      * @param WebhookDelivery|WebhookDeliveryShape $webhookDelivery
      */

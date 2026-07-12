@@ -16,6 +16,7 @@ use ContextDev\Web\WebWebScrapeMdResponse\Metadata;
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Web\WebWebScrapeMdResponse\KeyMetadata
  *
  * @phpstan-type WebWebScrapeMdResponseShape = array{
+ *   contentLength: int,
  *   markdown: string,
  *   metadata: Metadata|MetadataShape,
  *   success: bool,
@@ -27,6 +28,12 @@ final class WebWebScrapeMdResponse implements BaseModel
 {
     /** @use SdkModel<WebWebScrapeMdResponseShape> */
     use SdkModel;
+
+    /**
+     * UTF-8 byte length of the returned Markdown. Use 0 to identify an empty result and compare small values against your workload's minimum useful-content threshold.
+     */
+    #[Required]
+    public int $contentLength;
 
     /**
      * Page content converted to GitHub Flavored Markdown.
@@ -64,7 +71,7 @@ final class WebWebScrapeMdResponse implements BaseModel
      * To enforce required parameters use
      * ```
      * WebWebScrapeMdResponse::with(
-     *   markdown: ..., metadata: ..., success: ..., url: ...
+     *   contentLength: ..., markdown: ..., metadata: ..., success: ..., url: ...
      * )
      * ```
      *
@@ -72,6 +79,7 @@ final class WebWebScrapeMdResponse implements BaseModel
      *
      * ```
      * (new WebWebScrapeMdResponse)
+     *   ->withContentLength(...)
      *   ->withMarkdown(...)
      *   ->withMetadata(...)
      *   ->withSuccess(...)
@@ -92,6 +100,7 @@ final class WebWebScrapeMdResponse implements BaseModel
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
     public static function with(
+        int $contentLength,
         string $markdown,
         Metadata|array $metadata,
         bool $success,
@@ -100,12 +109,24 @@ final class WebWebScrapeMdResponse implements BaseModel
     ): self {
         $self = new self;
 
+        $self['contentLength'] = $contentLength;
         $self['markdown'] = $markdown;
         $self['metadata'] = $metadata;
         $self['success'] = $success;
         $self['url'] = $url;
 
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
+
+        return $self;
+    }
+
+    /**
+     * UTF-8 byte length of the returned Markdown. Use 0 to identify an empty result and compare small values against your workload's minimum useful-content threshold.
+     */
+    public function withContentLength(int $contentLength): self
+    {
+        $self = clone $this;
+        $self['contentLength'] = $contentLength;
 
         return $self;
     }

@@ -15,7 +15,7 @@ use ContextDev\Monitors\MonitorGetChangeResponse\Mode;
 use ContextDev\Monitors\MonitorGetChangeResponse\TargetType;
 
 /**
- * A detected change. `mode` is the constant `web`; `target_type` and `change_detection_type` describe the change, and which optional fields are present depends on them (page: `diff` + excerpts; sitemap: `added_urls`/`removed_urls`; semantic: `query`/`confidence`/`importance`/`evidence`/`matched_urls`).
+ * A detected change. `mode` is the constant `web`; `target_type` and `change_detection_type` describe the change, and which optional fields are present depends on them (page: `diff` + excerpts; sitemap: `added_urls`/`removed_urls`; semantic: `confidence`/`importance`/`evidence`/`matched_urls`).
  *
  * @phpstan-import-type EvidenceShape from \ContextDev\Monitors\MonitorGetChangeResponse\Evidence
  *
@@ -27,6 +27,7 @@ use ContextDev\Monitors\MonitorGetChangeResponse\TargetType;
  *   monitorID: string,
  *   runID: string,
  *   summary: string,
+ *   tags: list<string>,
  *   targetType: TargetType|value-of<TargetType>,
  *   title: string,
  *   url: string,
@@ -42,7 +43,6 @@ use ContextDev\Monitors\MonitorGetChangeResponse\TargetType;
  *   matchedURLs?: list<string>|null,
  *   removedURLCount?: int|null,
  *   removedURLs?: list<string>|null,
- *   tags?: list<string>|null,
  * }
  */
 final class MonitorGetChangeResponse implements BaseModel
@@ -79,6 +79,14 @@ final class MonitorGetChangeResponse implements BaseModel
 
     #[Required]
     public string $summary;
+
+    /**
+     * User-defined tags for grouping and filtering monitors and their changes.
+     *
+     * @var list<string> $tags
+     */
+    #[Required(list: 'string')]
+    public array $tags;
 
     /** @var value-of<TargetType> $targetType */
     #[Required('target_type', enum: TargetType::class)]
@@ -147,14 +155,6 @@ final class MonitorGetChangeResponse implements BaseModel
     public ?array $removedURLs;
 
     /**
-     * User-defined tags for grouping and filtering monitors and their changes.
-     *
-     * @var list<string>|null $tags
-     */
-    #[Optional(list: 'string')]
-    public ?array $tags;
-
-    /**
      * `new MonitorGetChangeResponse()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -167,6 +167,7 @@ final class MonitorGetChangeResponse implements BaseModel
      *   monitorID: ...,
      *   runID: ...,
      *   summary: ...,
+     *   tags: ...,
      *   targetType: ...,
      *   title: ...,
      *   url: ...,
@@ -184,6 +185,7 @@ final class MonitorGetChangeResponse implements BaseModel
      *   ->withMonitorID(...)
      *   ->withRunID(...)
      *   ->withSummary(...)
+     *   ->withTags(...)
      *   ->withTargetType(...)
      *   ->withTitle(...)
      *   ->withURL(...)
@@ -201,13 +203,13 @@ final class MonitorGetChangeResponse implements BaseModel
      *
      * @param ChangeDetectionType|value-of<ChangeDetectionType> $changeDetectionType
      * @param Mode|value-of<Mode> $mode
+     * @param list<string> $tags
      * @param TargetType|value-of<TargetType> $targetType
      * @param list<string>|null $addedURLs
      * @param list<Evidence|EvidenceShape>|null $evidence
      * @param Importance|value-of<Importance>|null $importance
      * @param list<string>|null $matchedURLs
      * @param list<string>|null $removedURLs
-     * @param list<string>|null $tags
      */
     public static function with(
         string $id,
@@ -217,6 +219,7 @@ final class MonitorGetChangeResponse implements BaseModel
         string $monitorID,
         string $runID,
         string $summary,
+        array $tags,
         TargetType|string $targetType,
         string $title,
         string $url,
@@ -232,7 +235,6 @@ final class MonitorGetChangeResponse implements BaseModel
         ?array $matchedURLs = null,
         ?int $removedURLCount = null,
         ?array $removedURLs = null,
-        ?array $tags = null,
     ): self {
         $self = new self;
 
@@ -243,6 +245,7 @@ final class MonitorGetChangeResponse implements BaseModel
         $self['monitorID'] = $monitorID;
         $self['runID'] = $runID;
         $self['summary'] = $summary;
+        $self['tags'] = $tags;
         $self['targetType'] = $targetType;
         $self['title'] = $title;
         $self['url'] = $url;
@@ -259,7 +262,6 @@ final class MonitorGetChangeResponse implements BaseModel
         null !== $matchedURLs && $self['matchedURLs'] = $matchedURLs;
         null !== $removedURLCount && $self['removedURLCount'] = $removedURLCount;
         null !== $removedURLs && $self['removedURLs'] = $removedURLs;
-        null !== $tags && $self['tags'] = $tags;
 
         return $self;
     }
@@ -328,6 +330,19 @@ final class MonitorGetChangeResponse implements BaseModel
     {
         $self = clone $this;
         $self['summary'] = $summary;
+
+        return $self;
+    }
+
+    /**
+     * User-defined tags for grouping and filtering monitors and their changes.
+     *
+     * @param list<string> $tags
+     */
+    public function withTags(array $tags): self
+    {
+        $self = clone $this;
+        $self['tags'] = $tags;
 
         return $self;
     }
@@ -475,19 +490,6 @@ final class MonitorGetChangeResponse implements BaseModel
     {
         $self = clone $this;
         $self['removedURLs'] = $removedURLs;
-
-        return $self;
-    }
-
-    /**
-     * User-defined tags for grouping and filtering monitors and their changes.
-     *
-     * @param list<string> $tags
-     */
-    public function withTags(array $tags): self
-    {
-        $self = clone $this;
-        $self['tags'] = $tags;
 
         return $self;
     }

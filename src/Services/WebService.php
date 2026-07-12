@@ -348,7 +348,7 @@ final class WebService implements WebContract
      * @param int $maxAgeMs Return a cached result if a prior scrape for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always scrape fresh.
      * @param int $maxDepth Maximum link depth from the starting URL (0 = only the starting page)
      * @param int $maxPages Maximum number of pages to crawl. Hard cap: 500.
-     * @param \ContextDev\Web\WebWebCrawlMdParams\Pdf|PdfShape1 $pdf PDF parsing controls. Use start/end to limit text extraction and OCR to an inclusive 1-based page range.
+     * @param \ContextDev\Web\WebWebCrawlMdParams\Pdf|PdfShape1 $pdf PDF parsing controls. Use start/end to limit text extraction and embedded-image detection/OCR to an inclusive 1-based page range.
      * @param bool $settleAnimations When true, waits briefly for CSS and transition animations to settle before extracting each crawled page. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
      * @param bool $shortenBase64Images Truncate base64-encoded image data in the Markdown output
      * @param int $stopAfterMs Soft time budget for the crawl in milliseconds. After each scrape, the crawler checks the elapsed time and, if exceeded, returns the pages collected so far instead of continuing. Min: 10000 (10s). Max: 110000 (110s). Default: 80000 (80s).
@@ -373,7 +373,7 @@ final class WebService implements WebContract
         ?int $maxDepth = null,
         int $maxPages = 100,
         \ContextDev\Web\WebWebCrawlMdParams\Pdf|array $pdf = [
-            'shouldParse' => true,
+            'shouldParse' => true, 'ocr' => false,
         ],
         bool $settleAnimations = false,
         bool $shortenBase64Images = true,
@@ -426,7 +426,7 @@ final class WebService implements WebContract
      * @param bool $includeFrames when true, iframes are rendered inline into the returned HTML
      * @param list<string> $includeSelectors CSS selectors. When provided, only matching subtrees (and their descendants) are kept and everything else is dropped. When omitted, the entire document is kept. Examples: "article.main", "#content", "[role=main]".
      * @param int $maxAgeMs Return a cached result if a prior scrape for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always scrape fresh.
-     * @param \ContextDev\Web\WebWebScrapeHTMLParams\Pdf|PdfShape2 $pdf PDF parsing controls. Use start/end to limit text extraction and OCR to an inclusive 1-based page range.
+     * @param \ContextDev\Web\WebWebScrapeHTMLParams\Pdf|PdfShape2 $pdf PDF parsing controls. Use start/end to limit text extraction and embedded-image detection/OCR to an inclusive 1-based page range.
      * @param bool $settleAnimations When true, waits briefly for CSS and transition animations to settle before extracting HTML. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param bool $useMainContentOnly when true, return only the page's main content in the HTML response, excluding headers, footers, sidebars, and navigation when detectable
@@ -444,7 +444,7 @@ final class WebService implements WebContract
         ?array $includeSelectors = null,
         int $maxAgeMs = 86400000,
         \ContextDev\Web\WebWebScrapeHTMLParams\Pdf|array $pdf = [
-            'shouldParse' => true,
+            'shouldParse' => true, 'ocr' => false,
         ],
         bool $settleAnimations = false,
         ?int $timeoutMs = null,
@@ -522,7 +522,20 @@ final class WebService implements WebContract
     /**
      * @api
      *
-     * Scrapes the given URL into LLM usable Markdown.
+     * Scrapes the given URL into LLM usable Markdown. Inspect key_metadata on JSON responses from a recognized API key; use error_code to distinguish stable failure categories.
+     *
+     * ### Billing & errors
+     *
+     * | HTTP status | Billed? | Meaning |
+     * | --- | --- | --- |
+     * | 200 | Yes — 1 credit | Successful scrape, including a zero-length result when includeSelectors matched nothing |
+     * | 400 | No | Invalid input, skipped PDF, or the page could not be scraped |
+     * | 401 / 403 | No | Invalid/disabled key, insufficient permissions, or credits exhausted; inspect error_code |
+     * | 404 | No | Target page returned or fingerprinted as not found |
+     * | 408 | No | Request timed out |
+     * | 415 | No | Unsupported content type |
+     * | 429 | No | Per-minute rate limit exceeded; honor Retry-After |
+     * | 500 | No | Internal error |
      *
      * @param string $url Full URL to scrape into LLM usable Markdown (must include http:// or https:// protocol)
      * @param \ContextDev\Web\WebWebScrapeMdParams\Country|value-of<\ContextDev\Web\WebWebScrapeMdParams\Country> $country Two-letter ISO 3166-1 alpha-2 country code for the website request location. When provided, Context.dev fetches the target page from that country.
@@ -533,7 +546,7 @@ final class WebService implements WebContract
      * @param bool $includeLinks Preserve hyperlinks in Markdown output
      * @param list<string> $includeSelectors CSS selectors. When provided, only matching HTML subtrees (and their descendants) are kept before conversion to Markdown. When omitted, the entire document is kept. Examples: "article.main", "#content", "[role=main]".
      * @param int $maxAgeMs Return a cached result if a prior scrape for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always scrape fresh.
-     * @param \ContextDev\Web\WebWebScrapeMdParams\Pdf|PdfShape3 $pdf PDF parsing controls. Use start/end to limit text extraction and OCR to an inclusive 1-based page range.
+     * @param \ContextDev\Web\WebWebScrapeMdParams\Pdf|PdfShape3 $pdf PDF parsing controls. Use start/end to limit text extraction and embedded-image detection/OCR to an inclusive 1-based page range.
      * @param bool $settleAnimations When true, waits briefly for CSS and transition animations to settle before converting to Markdown. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
      * @param bool $shortenBase64Images Shorten base64-encoded image data in the Markdown output
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
@@ -554,7 +567,7 @@ final class WebService implements WebContract
         ?array $includeSelectors = null,
         int $maxAgeMs = 86400000,
         \ContextDev\Web\WebWebScrapeMdParams\Pdf|array $pdf = [
-            'shouldParse' => true,
+            'shouldParse' => true, 'ocr' => false,
         ],
         bool $settleAnimations = false,
         bool $shortenBase64Images = true,

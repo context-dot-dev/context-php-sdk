@@ -13,7 +13,20 @@ use ContextDev\Web\WebWebScrapeMdParams\Country;
 use ContextDev\Web\WebWebScrapeMdParams\Pdf;
 
 /**
- * Scrapes the given URL into LLM usable Markdown.
+ * Scrapes the given URL into LLM usable Markdown. Inspect key_metadata on JSON responses from a recognized API key; use error_code to distinguish stable failure categories.
+ *
+ * ### Billing & errors
+ *
+ * | HTTP status | Billed? | Meaning |
+ * | --- | --- | --- |
+ * | 200 | Yes — 1 credit | Successful scrape, including a zero-length result when includeSelectors matched nothing |
+ * | 400 | No | Invalid input, skipped PDF, or the page could not be scraped |
+ * | 401 / 403 | No | Invalid/disabled key, insufficient permissions, or credits exhausted; inspect error_code |
+ * | 404 | No | Target page returned or fingerprinted as not found |
+ * | 408 | No | Request timed out |
+ * | 415 | No | Unsupported content type |
+ * | 429 | No | Per-minute rate limit exceeded; honor Retry-After |
+ * | 500 | No | Internal error |
  *
  * @see ContextDev\Services\WebService::webScrapeMd()
  *
@@ -106,7 +119,7 @@ final class WebWebScrapeMdParams implements BaseModel
     public ?int $maxAgeMs;
 
     /**
-     * PDF parsing controls. Use start/end to limit text extraction and OCR to an inclusive 1-based page range.
+     * PDF parsing controls. Use start/end to limit text extraction and embedded-image detection/OCR to an inclusive 1-based page range.
      */
     #[Optional]
     public ?Pdf $pdf;
@@ -318,7 +331,7 @@ final class WebWebScrapeMdParams implements BaseModel
     }
 
     /**
-     * PDF parsing controls. Use start/end to limit text extraction and OCR to an inclusive 1-based page range.
+     * PDF parsing controls. Use start/end to limit text extraction and embedded-image detection/OCR to an inclusive 1-based page range.
      *
      * @param Pdf|PdfShape $pdf
      */

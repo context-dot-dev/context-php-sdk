@@ -2,25 +2,25 @@
 
 declare(strict_types=1);
 
-namespace ContextDev\Monitors\MonitorListAccountRunsResponse\Data;
+namespace ContextDev\Monitors;
 
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
-use ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery\Error;
-use ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery\Status;
+use ContextDev\Monitors\WebhookDelivery\Error;
+use ContextDev\Monitors\WebhookDelivery\Event;
+use ContextDev\Monitors\WebhookDelivery\Status;
 
 /**
- * The webhook delivery attempted for a change detected by this run. Omitted when no webhook was attempted, including historical runs created before delivery tracking was added.
- *
- * @phpstan-import-type ErrorShape from \ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery\Error
+ * @phpstan-import-type ErrorShape from \ContextDev\Monitors\WebhookDelivery\Error
  *
  * @phpstan-type WebhookDeliveryShape = array{
  *   attemptedAt: \DateTimeInterface,
- *   error: null|\ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery\Error|ErrorShape,
+ *   error: null|Error|ErrorShape,
+ *   event: Event|value-of<Event>,
  *   eventID: string,
  *   httpStatus: int|null,
- *   status: \ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery\Status|value-of<\ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery\Status>,
+ *   status: Status|value-of<Status>,
  * }
  */
 final class WebhookDelivery implements BaseModel
@@ -33,6 +33,14 @@ final class WebhookDelivery implements BaseModel
 
     #[Required]
     public ?Error $error;
+
+    /**
+     * The event this delivery carried. Deliveries recorded before event selection existed report change.detected.
+     *
+     * @var value-of<Event> $event
+     */
+    #[Required(enum: Event::class)]
+    public string $event;
 
     /**
      * Identifier sent in the X-Context-Id header.
@@ -51,9 +59,7 @@ final class WebhookDelivery implements BaseModel
      *
      * @var value-of<Status> $status
      */
-    #[Required(
-        enum: Status::class,
-    )]
+    #[Required(enum: Status::class)]
     public string $status;
 
     /**
@@ -62,7 +68,12 @@ final class WebhookDelivery implements BaseModel
      * To enforce required parameters use
      * ```
      * WebhookDelivery::with(
-     *   attemptedAt: ..., error: ..., eventID: ..., httpStatus: ..., status: ...
+     *   attemptedAt: ...,
+     *   error: ...,
+     *   event: ...,
+     *   eventID: ...,
+     *   httpStatus: ...,
+     *   status: ...,
      * )
      * ```
      *
@@ -72,6 +83,7 @@ final class WebhookDelivery implements BaseModel
      * (new WebhookDelivery)
      *   ->withAttemptedAt(...)
      *   ->withError(...)
+     *   ->withEvent(...)
      *   ->withEventID(...)
      *   ->withHTTPStatus(...)
      *   ->withStatus(...)
@@ -88,11 +100,13 @@ final class WebhookDelivery implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param Error|ErrorShape|null $error
+     * @param Event|value-of<Event> $event
      * @param Status|value-of<Status> $status
      */
     public static function with(
         \DateTimeInterface $attemptedAt,
         Error|array|null $error,
+        Event|string $event,
         string $eventID,
         ?int $httpStatus,
         Status|string $status,
@@ -101,6 +115,7 @@ final class WebhookDelivery implements BaseModel
 
         $self['attemptedAt'] = $attemptedAt;
         $self['error'] = $error;
+        $self['event'] = $event;
         $self['eventID'] = $eventID;
         $self['httpStatus'] = $httpStatus;
         $self['status'] = $status;
@@ -119,11 +134,23 @@ final class WebhookDelivery implements BaseModel
     /**
      * @param Error|ErrorShape|null $error
      */
-    public function withError(
-        Error|array|null $error,
-    ): self {
+    public function withError(Error|array|null $error): self
+    {
         $self = clone $this;
         $self['error'] = $error;
+
+        return $self;
+    }
+
+    /**
+     * The event this delivery carried. Deliveries recorded before event selection existed report change.detected.
+     *
+     * @param Event|value-of<Event> $event
+     */
+    public function withEvent(Event|string $event): self
+    {
+        $self = clone $this;
+        $self['event'] = $event;
 
         return $self;
     }
@@ -155,9 +182,8 @@ final class WebhookDelivery implements BaseModel
      *
      * @param Status|value-of<Status> $status
      */
-    public function withStatus(
-        Status|string $status,
-    ): self {
+    public function withStatus(Status|string $status): self
+    {
         $self = clone $this;
         $self['status'] = $status;
 
