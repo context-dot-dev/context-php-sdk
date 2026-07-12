@@ -9,10 +9,10 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * PDF parsing controls. Use start/end to limit text extraction and OCR to an inclusive 1-based page range.
+ * PDF parsing controls. Use start/end to limit text extraction and embedded-image detection/OCR to an inclusive 1-based page range.
  *
  * @phpstan-type PdfShape = array{
- *   end?: int|null, shouldParse?: bool|null, start?: int|null
+ *   end?: int|null, ocr?: bool|null, shouldParse?: bool|null, start?: int|null
  * }
  */
 final class Pdf implements BaseModel
@@ -25,6 +25,12 @@ final class Pdf implements BaseModel
      */
     #[Optional]
     public ?int $end;
+
+    /**
+     * When true, detect and OCR images embedded in the selected PDF pages, inserting recognized text at each image's position in page reading order while preserving the PDF text layer. This is separate from automatic scanned-PDF OCR fallback.
+     */
+    #[Optional]
+    public ?bool $ocr;
 
     /**
      * When true, PDF URLs are fetched and parsed. When false, PDF URLs are skipped and a 400 WEBSITE_ACCESS_ERROR is returned.
@@ -50,12 +56,14 @@ final class Pdf implements BaseModel
      */
     public static function with(
         ?int $end = null,
+        ?bool $ocr = null,
         ?bool $shouldParse = null,
-        ?int $start = null
+        ?int $start = null,
     ): self {
         $self = new self;
 
         null !== $end && $self['end'] = $end;
+        null !== $ocr && $self['ocr'] = $ocr;
         null !== $shouldParse && $self['shouldParse'] = $shouldParse;
         null !== $start && $self['start'] = $start;
 
@@ -69,6 +77,17 @@ final class Pdf implements BaseModel
     {
         $self = clone $this;
         $self['end'] = $end;
+
+        return $self;
+    }
+
+    /**
+     * When true, detect and OCR images embedded in the selected PDF pages, inserting recognized text at each image's position in page reading order while preserving the PDF text layer. This is separate from automatic scanned-PDF OCR fallback.
+     */
+    public function withOcr(bool $ocr): self
+    {
+        $self = clone $this;
+        $self['ocr'] = $ocr;
 
         return $self;
     }
