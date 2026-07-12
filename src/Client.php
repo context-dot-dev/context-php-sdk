@@ -11,6 +11,7 @@ use ContextDev\Services\AIService;
 use ContextDev\Services\BrandService;
 use ContextDev\Services\IndustryService;
 use ContextDev\Services\MonitorsService;
+use ContextDev\Services\ParseService;
 use ContextDev\Services\UtilityService;
 use ContextDev\Services\WebService;
 use Http\Discovery\Psr17FactoryDiscovery;
@@ -23,6 +24,11 @@ use Http\Discovery\Psr18ClientDiscovery;
 class Client extends BaseClient
 {
     public string $apiKey;
+
+    /**
+     * @api
+     */
+    public ParseService $parse;
 
     /**
      * @api
@@ -112,6 +118,7 @@ class Client extends BaseClient
             options: $options
         );
 
+        $this->parse = new ParseService($this);
         $this->web = new WebService($this);
         $this->ai = new AIService($this);
         $this->brand = new BrandService($this);
