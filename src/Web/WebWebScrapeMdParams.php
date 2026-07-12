@@ -119,7 +119,7 @@ final class WebWebScrapeMdParams implements BaseModel
     public ?int $maxAgeMs;
 
     /**
-     * PDF parsing controls. Use start/end to limit text extraction and OCR to an inclusive 1-based page range.
+     * PDF parsing controls. Use start/end to limit text extraction and embedded-image detection/OCR to an inclusive 1-based page range.
      */
     #[Optional]
     public ?Pdf $pdf;
@@ -331,7 +331,7 @@ final class WebWebScrapeMdParams implements BaseModel
     }
 
     /**
-     * PDF parsing controls. Use start/end to limit text extraction and OCR to an inclusive 1-based page range.
+     * PDF parsing controls. Use start/end to limit text extraction and embedded-image detection/OCR to an inclusive 1-based page range.
      *
      * @param Pdf|PdfShape $pdf
      */
