@@ -8,21 +8,22 @@ use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Parse\ParseHandleParams\Extension;
+use ContextDev\Parse\ParseHandleParams\Pdf;
 
 /**
- * Converts raw text, source code, web/data, PDF, Microsoft Office, and image bytes into LLM-usable Markdown.
+ * Converts raw text, source code, web/data, PDF, Microsoft Office, and image bytes into LLM-usable Markdown. The base request costs 1 credit. When OCR runs (requires ocr=true), the entire call costs 5 credits; ocr=true requests where no OCR ends up running still cost 1 credit.
  *
  * @see ContextDev\Services\ParseService::handle()
  *
+ * @phpstan-import-type PdfShape from \ContextDev\Parse\ParseHandleParams\Pdf
+ *
  * @phpstan-type ParseHandleParamsShape = array{
- *   baseURL?: string|null,
- *   extension?: string|null,
- *   filename?: string|null,
+ *   extension?: null|Extension|value-of<Extension>,
  *   includeImages?: bool|null,
  *   includeLinks?: bool|null,
  *   ocr?: bool|null,
- *   pdfEnd?: int|null,
- *   pdfStart?: int|null,
+ *   pdf?: null|Pdf|PdfShape,
  *   shortenBase64Images?: bool|null,
  *   useMainContentOnly?: bool|null,
  * }
@@ -34,22 +35,12 @@ final class ParseHandleParams implements BaseModel
     use SdkParams;
 
     /**
-     * Optional HTTP(S) source document URL used to resolve relative links and image references. Relative references remain relative when omitted.
+     * Optional file extension hint. Case-insensitive; a leading dot is accepted (e.g. ".pdf").
+     *
+     * @var value-of<Extension>|null $extension
      */
-    #[Optional]
-    public ?string $baseURL;
-
-    /**
-     * Optional file extension hint, such as pdf, docx, xlsx, pptx, html, json, csv, md, py, rtf, jpg, png, or txt.
-     */
-    #[Optional]
+    #[Optional(enum: Extension::class)]
     public ?string $extension;
-
-    /**
-     * Optional filename hint used to infer the extension when extension is omitted.
-     */
-    #[Optional]
-    public ?string $filename;
 
     /**
      * Include image references in Markdown output.
@@ -64,22 +55,16 @@ final class ParseHandleParams implements BaseModel
     public ?bool $includeLinks;
 
     /**
-     * When true for PDF inputs, detect and OCR images embedded in the selected pages, inserting recognized text at each image's position in page reading order while preserving the PDF text layer. pdfStart/pdfEnd limit the inclusive page range. This is separate from automatic scanned-PDF OCR fallback.
+     * Gates all OCR. When true, PDFs get embedded-image OCR (recognized text inserted at each image's position in page reading order, preserving the text layer; pdf.start/pdf.end limit the page range), scanned PDFs with no text layer get full-document OCR, and raster images get their visible text transcribed. When false, no OCR runs: scanned PDFs may yield no content and images return only format/dimension metadata. Calls where OCR actually runs cost 5 credits instead of 1.
      */
     #[Optional]
     public ?bool $ocr;
 
     /**
-     * Last 1-based PDF page to parse. When omitted, parsing ends at the last page. Must be greater than or equal to pdfStart when both are provided.
+     * PDF page-range controls. Use start/end to limit parsing (and OCR when ocr=true) to an inclusive 1-based page range.
      */
     #[Optional]
-    public ?int $pdfEnd;
-
-    /**
-     * First 1-based PDF page to parse. When omitted, parsing starts at the first page.
-     */
-    #[Optional]
-    public ?int $pdfStart;
+    public ?Pdf $pdf;
 
     /**
      * Shorten base64-encoded image data in the Markdown output.
@@ -102,29 +87,26 @@ final class ParseHandleParams implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param Extension|value-of<Extension>|null $extension
+     * @param Pdf|PdfShape|null $pdf
      */
     public static function with(
-        ?string $baseURL = null,
-        ?string $extension = null,
-        ?string $filename = null,
+        Extension|string|null $extension = null,
         ?bool $includeImages = null,
         ?bool $includeLinks = null,
         ?bool $ocr = null,
-        ?int $pdfEnd = null,
-        ?int $pdfStart = null,
+        Pdf|array|null $pdf = null,
         ?bool $shortenBase64Images = null,
         ?bool $useMainContentOnly = null,
     ): self {
         $self = new self;
 
-        null !== $baseURL && $self['baseURL'] = $baseURL;
         null !== $extension && $self['extension'] = $extension;
-        null !== $filename && $self['filename'] = $filename;
         null !== $includeImages && $self['includeImages'] = $includeImages;
         null !== $includeLinks && $self['includeLinks'] = $includeLinks;
         null !== $ocr && $self['ocr'] = $ocr;
-        null !== $pdfEnd && $self['pdfEnd'] = $pdfEnd;
-        null !== $pdfStart && $self['pdfStart'] = $pdfStart;
+        null !== $pdf && $self['pdf'] = $pdf;
         null !== $shortenBase64Images && $self['shortenBase64Images'] = $shortenBase64Images;
         null !== $useMainContentOnly && $self['useMainContentOnly'] = $useMainContentOnly;
 
@@ -132,34 +114,14 @@ final class ParseHandleParams implements BaseModel
     }
 
     /**
-     * Optional HTTP(S) source document URL used to resolve relative links and image references. Relative references remain relative when omitted.
+     * Optional file extension hint. Case-insensitive; a leading dot is accepted (e.g. ".pdf").
+     *
+     * @param Extension|value-of<Extension> $extension
      */
-    public function withBaseURL(string $baseURL): self
-    {
-        $self = clone $this;
-        $self['baseURL'] = $baseURL;
-
-        return $self;
-    }
-
-    /**
-     * Optional file extension hint, such as pdf, docx, xlsx, pptx, html, json, csv, md, py, rtf, jpg, png, or txt.
-     */
-    public function withExtension(string $extension): self
+    public function withExtension(Extension|string $extension): self
     {
         $self = clone $this;
         $self['extension'] = $extension;
-
-        return $self;
-    }
-
-    /**
-     * Optional filename hint used to infer the extension when extension is omitted.
-     */
-    public function withFilename(string $filename): self
-    {
-        $self = clone $this;
-        $self['filename'] = $filename;
 
         return $self;
     }
@@ -187,7 +149,7 @@ final class ParseHandleParams implements BaseModel
     }
 
     /**
-     * When true for PDF inputs, detect and OCR images embedded in the selected pages, inserting recognized text at each image's position in page reading order while preserving the PDF text layer. pdfStart/pdfEnd limit the inclusive page range. This is separate from automatic scanned-PDF OCR fallback.
+     * Gates all OCR. When true, PDFs get embedded-image OCR (recognized text inserted at each image's position in page reading order, preserving the text layer; pdf.start/pdf.end limit the page range), scanned PDFs with no text layer get full-document OCR, and raster images get their visible text transcribed. When false, no OCR runs: scanned PDFs may yield no content and images return only format/dimension metadata. Calls where OCR actually runs cost 5 credits instead of 1.
      */
     public function withOcr(bool $ocr): self
     {
@@ -198,23 +160,14 @@ final class ParseHandleParams implements BaseModel
     }
 
     /**
-     * Last 1-based PDF page to parse. When omitted, parsing ends at the last page. Must be greater than or equal to pdfStart when both are provided.
+     * PDF page-range controls. Use start/end to limit parsing (and OCR when ocr=true) to an inclusive 1-based page range.
+     *
+     * @param Pdf|PdfShape $pdf
      */
-    public function withPdfEnd(int $pdfEnd): self
+    public function withPdf(Pdf|array $pdf): self
     {
         $self = clone $this;
-        $self['pdfEnd'] = $pdfEnd;
-
-        return $self;
-    }
-
-    /**
-     * First 1-based PDF page to parse. When omitted, parsing starts at the first page.
-     */
-    public function withPdfStart(int $pdfStart): self
-    {
-        $self = clone $this;
-        $self['pdfStart'] = $pdfStart;
+        $self['pdf'] = $pdf;
 
         return $self;
     }

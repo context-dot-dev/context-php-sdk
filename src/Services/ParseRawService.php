@@ -8,13 +8,15 @@ use ContextDev\Client;
 use ContextDev\Core\Contracts\BaseResponse;
 use ContextDev\Core\Exceptions\APIException;
 use ContextDev\Core\FileParam;
-use ContextDev\Core\Util;
 use ContextDev\Parse\ParseHandleParams;
+use ContextDev\Parse\ParseHandleParams\Extension;
+use ContextDev\Parse\ParseHandleParams\Pdf;
 use ContextDev\Parse\ParseHandleResponse;
 use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\ParseRawContract;
 
 /**
+ * @phpstan-import-type PdfShape from \ContextDev\Parse\ParseHandleParams\Pdf
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class ParseRawService implements ParseRawContract
@@ -28,18 +30,15 @@ final class ParseRawService implements ParseRawContract
     /**
      * @api
      *
-     * Converts raw text, source code, web/data, PDF, Microsoft Office, and image bytes into LLM-usable Markdown.
+     * Converts raw text, source code, web/data, PDF, Microsoft Office, and image bytes into LLM-usable Markdown. The base request costs 1 credit. When OCR runs (requires ocr=true), the entire call costs 5 credits; ocr=true requests where no OCR ends up running still cost 1 credit.
      *
      * @param string|FileParam $body Body param
      * @param array{
-     *   baseURL?: string,
-     *   extension?: string,
-     *   filename?: string,
+     *   extension?: value-of<Extension>,
      *   includeImages?: bool,
      *   includeLinks?: bool,
      *   ocr?: bool,
-     *   pdfEnd?: int,
-     *   pdfStart?: int,
+     *   pdf?: Pdf|PdfShape,
      *   shortenBase64Images?: bool,
      *   useMainContentOnly?: bool,
      * }|ParseHandleParams $params
@@ -63,10 +62,7 @@ final class ParseRawService implements ParseRawContract
         return $this->client->request(
             method: 'post',
             path: 'parse',
-            query: Util::array_transform_keys(
-                array_diff_key($parsed, array_flip(['body'])),
-                ['baseURL' => 'baseUrl']
-            ),
+            query: array_diff_key($parsed, array_flip(['body'])),
             headers: ['Content-Type' => 'application/octet-stream'],
             body: $parsed,
             options: $options,
