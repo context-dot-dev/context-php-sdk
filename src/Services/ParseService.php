@@ -8,11 +8,14 @@ use ContextDev\Client;
 use ContextDev\Core\Exceptions\APIException;
 use ContextDev\Core\FileParam;
 use ContextDev\Core\Util;
+use ContextDev\Parse\ParseHandleParams\Extension;
+use ContextDev\Parse\ParseHandleParams\Pdf;
 use ContextDev\Parse\ParseHandleResponse;
 use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\ParseContract;
 
 /**
+ * @phpstan-import-type PdfShape from \ContextDev\Parse\ParseHandleParams\Pdf
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class ParseService implements ParseContract
@@ -33,17 +36,14 @@ final class ParseService implements ParseContract
     /**
      * @api
      *
-     * Converts raw text, source code, web/data, PDF, Microsoft Office, and image bytes into LLM-usable Markdown.
+     * Converts raw text, source code, web/data, PDF, Microsoft Office, and image bytes into LLM-usable Markdown. The base request costs 1 credit. When OCR runs (requires ocr=true), the entire call costs 5 credits; ocr=true requests where no OCR ends up running still cost 1 credit.
      *
      * @param string|FileParam $body Body param
-     * @param string $baseURL Query param: Optional HTTP(S) source document URL used to resolve relative links and image references. Relative references remain relative when omitted.
-     * @param string $extension query param: Optional file extension hint, such as pdf, docx, xlsx, pptx, html, json, csv, md, py, rtf, jpg, png, or txt
-     * @param string $filename query param: Optional filename hint used to infer the extension when extension is omitted
+     * @param Extension|value-of<Extension> $extension Query param: Optional file extension hint. Case-insensitive; a leading dot is accepted (e.g. ".pdf").
      * @param bool $includeImages Query param: Include image references in Markdown output
      * @param bool $includeLinks Query param: Preserve hyperlinks in Markdown output
-     * @param bool $ocr Query param: When true for PDF inputs, detect and OCR images embedded in the selected pages, inserting recognized text at each image's position in page reading order while preserving the PDF text layer. pdfStart/pdfEnd limit the inclusive page range. This is separate from automatic scanned-PDF OCR fallback.
-     * @param int $pdfEnd Query param: Last 1-based PDF page to parse. When omitted, parsing ends at the last page. Must be greater than or equal to pdfStart when both are provided.
-     * @param int $pdfStart Query param: First 1-based PDF page to parse. When omitted, parsing starts at the first page.
+     * @param bool $ocr Query param: Gates all OCR. When true, PDFs get embedded-image OCR (recognized text inserted at each image's position in page reading order, preserving the text layer; pdf.start/pdf.end limit the page range), scanned PDFs with no text layer get full-document OCR, and raster images get their visible text transcribed. When false, no OCR runs: scanned PDFs may yield no content and images return only format/dimension metadata. Calls where OCR actually runs cost 5 credits instead of 1.
+     * @param Pdf|PdfShape $pdf Query param: PDF page-range controls. Use start/end to limit parsing (and OCR when ocr=true) to an inclusive 1-based page range.
      * @param bool $shortenBase64Images Query param: Shorten base64-encoded image data in the Markdown output
      * @param bool $useMainContentOnly Query param: Extract only the main content from HTML-like inputs
      * @param RequestOpts|null $requestOptions
@@ -52,28 +52,22 @@ final class ParseService implements ParseContract
      */
     public function handle(
         string|FileParam $body,
-        ?string $baseURL = null,
-        ?string $extension = null,
-        ?string $filename = null,
+        Extension|string|null $extension = null,
         bool $includeImages = false,
         bool $includeLinks = true,
         bool $ocr = false,
-        ?int $pdfEnd = null,
-        ?int $pdfStart = null,
+        Pdf|array $pdf = (object) [],
         bool $shortenBase64Images = true,
         bool $useMainContentOnly = false,
         RequestOptions|array|null $requestOptions = null,
     ): ParseHandleResponse {
         $params = Util::removeNulls(
             [
-                'baseURL' => $baseURL,
                 'extension' => $extension,
-                'filename' => $filename,
                 'includeImages' => $includeImages,
                 'includeLinks' => $includeLinks,
                 'ocr' => $ocr,
-                'pdfEnd' => $pdfEnd,
-                'pdfStart' => $pdfStart,
+                'pdf' => $pdf,
                 'shortenBase64Images' => $shortenBase64Images,
                 'useMainContentOnly' => $useMainContentOnly,
             ],
