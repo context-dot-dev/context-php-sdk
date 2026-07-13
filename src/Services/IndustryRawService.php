@@ -33,7 +33,11 @@ final class IndustryRawService implements IndustryRawContract
      * Classify any brand into 2022 NAICS industry codes from its domain or name.
      *
      * @param array{
-     *   input: string, maxResults?: int, minResults?: int, timeoutMs?: int
+     *   input: string,
+     *   maxResults?: int,
+     *   minResults?: int,
+     *   tags?: list<string>,
+     *   timeoutMs?: int,
      * }|IndustryRetrieveNaicsParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -69,6 +73,7 @@ final class IndustryRawService implements IndustryRawContract
      *   input: string,
      *   maxResults?: int,
      *   minResults?: int,
+     *   tags?: list<string>,
      *   timeoutMs?: int,
      *   type?: Type|value-of<Type>,
      * }|IndustryRetrieveSicParams $params

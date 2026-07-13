@@ -45,6 +45,7 @@ final class ParseService implements ParseContract
      * @param bool $ocr Query param: Gates all OCR. When true, PDFs get embedded-image OCR (recognized text inserted at each image's position in page reading order, preserving the text layer; pdf.start/pdf.end limit the page range), scanned PDFs with no text layer get full-document OCR, and raster images get their visible text transcribed. When false, no OCR runs: scanned PDFs may yield no content and images return only format/dimension metadata. Calls where OCR actually runs cost 5 credits instead of 1.
      * @param Pdf|PdfShape $pdf Query param: PDF page-range controls. Use start/end to limit parsing (and OCR when ocr=true) to an inclusive 1-based page range.
      * @param bool $shortenBase64Images Query param: Shorten base64-encoded image data in the Markdown output
+     * @param list<string> $tags Query param: Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
      * @param bool $useMainContentOnly Query param: Extract only the main content from HTML-like inputs
      * @param RequestOpts|null $requestOptions
      *
@@ -58,6 +59,7 @@ final class ParseService implements ParseContract
         bool $ocr = false,
         Pdf|array $pdf = (object) [],
         bool $shortenBase64Images = true,
+        ?array $tags = null,
         bool $useMainContentOnly = false,
         RequestOptions|array|null $requestOptions = null,
     ): ParseHandleResponse {
@@ -69,6 +71,7 @@ final class ParseService implements ParseContract
                 'ocr' => $ocr,
                 'pdf' => $pdf,
                 'shortenBase64Images' => $shortenBase64Images,
+                'tags' => $tags,
                 'useMainContentOnly' => $useMainContentOnly,
             ],
         );

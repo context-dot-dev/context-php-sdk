@@ -32,6 +32,7 @@ use ContextDev\Web\WebScreenshotParams\Viewport;
  *   maxAgeMs?: int|null,
  *   page?: null|Page|value-of<Page>,
  *   scrollOffset?: int|null,
+ *   tags?: list<string>|null,
  *   timeoutMs?: int|null,
  *   viewport?: null|Viewport|ViewportShape,
  *   waitForMs?: int|null,
@@ -108,6 +109,14 @@ final class WebScreenshotParams implements BaseModel
     public ?int $scrollOffset;
 
     /**
+     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @var list<string>|null $tags
+     */
+    #[Optional(list: 'string')]
+    public ?array $tags;
+
+    /**
      * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      */
     #[Optional]
@@ -140,6 +149,7 @@ final class WebScreenshotParams implements BaseModel
      * @param FullScreenshot|value-of<FullScreenshot>|null $fullScreenshot
      * @param HandleCookiePopup|value-of<HandleCookiePopup>|null $handleCookiePopup
      * @param Page|value-of<Page>|null $page
+     * @param list<string>|null $tags
      * @param Viewport|ViewportShape|null $viewport
      */
     public static function with(
@@ -152,6 +162,7 @@ final class WebScreenshotParams implements BaseModel
         ?int $maxAgeMs = null,
         Page|string|null $page = null,
         ?int $scrollOffset = null,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         Viewport|array|null $viewport = null,
         ?int $waitForMs = null,
@@ -167,6 +178,7 @@ final class WebScreenshotParams implements BaseModel
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
         null !== $page && $self['page'] = $page;
         null !== $scrollOffset && $self['scrollOffset'] = $scrollOffset;
+        null !== $tags && $self['tags'] = $tags;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
         null !== $viewport && $self['viewport'] = $viewport;
         null !== $waitForMs && $self['waitForMs'] = $waitForMs;
@@ -281,6 +293,19 @@ final class WebScreenshotParams implements BaseModel
     {
         $self = clone $this;
         $self['scrollOffset'] = $scrollOffset;
+
+        return $self;
+    }
+
+    /**
+     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @param list<string> $tags
+     */
+    public function withTags(array $tags): self
+    {
+        $self = clone $this;
+        $self['tags'] = $tags;
 
         return $self;
     }

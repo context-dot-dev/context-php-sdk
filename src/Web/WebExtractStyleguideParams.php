@@ -20,6 +20,7 @@ use ContextDev\Web\WebExtractStyleguideParams\ColorScheme;
  *   directURL?: string|null,
  *   domain?: string|null,
  *   maxAgeMs?: int|null,
+ *   tags?: list<string>|null,
  *   timeoutMs?: int|null,
  * }
  */
@@ -56,6 +57,14 @@ final class WebExtractStyleguideParams implements BaseModel
     public ?int $maxAgeMs;
 
     /**
+     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @var list<string>|null $tags
+     */
+    #[Optional(list: 'string')]
+    public ?array $tags;
+
+    /**
      * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      */
     #[Optional]
@@ -72,12 +81,14 @@ final class WebExtractStyleguideParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param ColorScheme|value-of<ColorScheme>|null $colorScheme
+     * @param list<string>|null $tags
      */
     public static function with(
         ColorScheme|string|null $colorScheme = null,
         ?string $directURL = null,
         ?string $domain = null,
         ?int $maxAgeMs = null,
+        ?array $tags = null,
         ?int $timeoutMs = null,
     ): self {
         $self = new self;
@@ -86,6 +97,7 @@ final class WebExtractStyleguideParams implements BaseModel
         null !== $directURL && $self['directURL'] = $directURL;
         null !== $domain && $self['domain'] = $domain;
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
+        null !== $tags && $self['tags'] = $tags;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
 
         return $self;
@@ -133,6 +145,19 @@ final class WebExtractStyleguideParams implements BaseModel
     {
         $self = clone $this;
         $self['maxAgeMs'] = $maxAgeMs;
+
+        return $self;
+    }
+
+    /**
+     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @param list<string> $tags
+     */
+    public function withTags(array $tags): self
+    {
+        $self = clone $this;
+        $self['tags'] = $tags;
 
         return $self;
     }

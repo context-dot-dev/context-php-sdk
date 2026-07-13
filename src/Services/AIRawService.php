@@ -31,7 +31,7 @@ final class AIRawService implements AIRawContract
      * Given a single URL, determines if it is a product page and extracts the product information.
      *
      * @param array{
-     *   url: string, maxAgeMs?: int, timeoutMs?: int
+     *   url: string, maxAgeMs?: int, tags?: list<string>, timeoutMs?: int
      * }|AIExtractProductParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -67,6 +67,7 @@ final class AIRawService implements AIRawContract
      *   domain: string,
      *   maxAgeMs?: int,
      *   maxProducts?: int,
+     *   tags?: list<string>,
      *   timeoutMs?: int,
      *   directURL: string,
      * }|AIExtractProductsParams $params

@@ -39,6 +39,7 @@ final class BrandRawService implements BrandRawContract
      *   forceLanguage?: value-of<ForceLanguage>,
      *   maxAgeMs?: int,
      *   maxSpeed?: bool,
+     *   tags?: list<string>,
      *   timeoutMs?: int,
      *   name: string,
      *   countryGl?: string,
@@ -83,7 +84,7 @@ final class BrandRawService implements BrandRawContract
      * Returns a simplified version of brand data containing only essential information: domain, title, colors, logos, and backdrops. Optimized for faster responses and reduced data transfer.
      *
      * @param array{
-     *   domain: string, maxAgeMs?: int, timeoutMs?: int
+     *   domain: string, maxAgeMs?: int, tags?: list<string>, timeoutMs?: int
      * }|BrandRetrieveSimplifiedParams $params
      * @param RequestOpts|null $requestOptions
      *

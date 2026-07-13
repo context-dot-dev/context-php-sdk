@@ -25,6 +25,7 @@ use ContextDev\Parse\ParseHandleParams\Pdf;
  *   ocr?: bool|null,
  *   pdf?: null|Pdf|PdfShape,
  *   shortenBase64Images?: bool|null,
+ *   tags?: list<string>|null,
  *   useMainContentOnly?: bool|null,
  * }
  */
@@ -73,6 +74,14 @@ final class ParseHandleParams implements BaseModel
     public ?bool $shortenBase64Images;
 
     /**
+     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @var list<string>|null $tags
+     */
+    #[Optional(list: 'string')]
+    public ?array $tags;
+
+    /**
      * Extract only the main content from HTML-like inputs.
      */
     #[Optional]
@@ -90,6 +99,7 @@ final class ParseHandleParams implements BaseModel
      *
      * @param Extension|value-of<Extension>|null $extension
      * @param Pdf|PdfShape|null $pdf
+     * @param list<string>|null $tags
      */
     public static function with(
         Extension|string|null $extension = null,
@@ -98,6 +108,7 @@ final class ParseHandleParams implements BaseModel
         ?bool $ocr = null,
         Pdf|array|null $pdf = null,
         ?bool $shortenBase64Images = null,
+        ?array $tags = null,
         ?bool $useMainContentOnly = null,
     ): self {
         $self = new self;
@@ -108,6 +119,7 @@ final class ParseHandleParams implements BaseModel
         null !== $ocr && $self['ocr'] = $ocr;
         null !== $pdf && $self['pdf'] = $pdf;
         null !== $shortenBase64Images && $self['shortenBase64Images'] = $shortenBase64Images;
+        null !== $tags && $self['tags'] = $tags;
         null !== $useMainContentOnly && $self['useMainContentOnly'] = $useMainContentOnly;
 
         return $self;
@@ -179,6 +191,19 @@ final class ParseHandleParams implements BaseModel
     {
         $self = clone $this;
         $self['shortenBase64Images'] = $shortenBase64Images;
+
+        return $self;
+    }
+
+    /**
+     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @param list<string> $tags
+     */
+    public function withTags(array $tags): self
+    {
+        $self = clone $this;
+        $self['tags'] = $tags;
 
         return $self;
     }

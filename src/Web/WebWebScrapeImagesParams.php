@@ -24,6 +24,7 @@ use ContextDev\Web\WebWebScrapeImagesParams\Enrichment;
  *   enrichment?: null|Enrichment|EnrichmentShape,
  *   headers?: array<string,string>|null,
  *   maxAgeMs?: int|null,
+ *   tags?: list<string>|null,
  *   timeoutMs?: int|null,
  *   waitForMs?: int|null,
  * }
@@ -67,6 +68,14 @@ final class WebWebScrapeImagesParams implements BaseModel
     public ?int $maxAgeMs;
 
     /**
+     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @var list<string>|null $tags
+     */
+    #[Optional(list: 'string')]
+    public ?array $tags;
+
+    /**
      * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      */
     #[Optional]
@@ -104,6 +113,7 @@ final class WebWebScrapeImagesParams implements BaseModel
      *
      * @param Enrichment|EnrichmentShape|null $enrichment
      * @param array<string,string>|null $headers
+     * @param list<string>|null $tags
      */
     public static function with(
         string $url,
@@ -111,6 +121,7 @@ final class WebWebScrapeImagesParams implements BaseModel
         Enrichment|array|null $enrichment = null,
         ?array $headers = null,
         ?int $maxAgeMs = null,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         ?int $waitForMs = null,
     ): self {
@@ -122,6 +133,7 @@ final class WebWebScrapeImagesParams implements BaseModel
         null !== $enrichment && $self['enrichment'] = $enrichment;
         null !== $headers && $self['headers'] = $headers;
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
+        null !== $tags && $self['tags'] = $tags;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
         null !== $waitForMs && $self['waitForMs'] = $waitForMs;
 
@@ -183,6 +195,19 @@ final class WebWebScrapeImagesParams implements BaseModel
     {
         $self = clone $this;
         $self['maxAgeMs'] = $maxAgeMs;
+
+        return $self;
+    }
+
+    /**
+     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @param list<string> $tags
+     */
+    public function withTags(array $tags): self
+    {
+        $self = clone $this;
+        $self['tags'] = $tags;
 
         return $self;
     }

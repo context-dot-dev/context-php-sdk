@@ -72,6 +72,7 @@ final class WebService implements WebContract
      * @param int $maxPages Maximum number of pages to analyze for extraction. Hard cap: 50. Defaults to 5.
      * @param Pdf|PdfShape $pdf
      * @param int $stopAfterMs Soft time budget for the crawl in milliseconds. Min: 10000 (10s). Max: 110000 (110s). Default: 80000 (80s).
+     * @param list<string> $tags Optional caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param int $waitForMs optional browser wait time in milliseconds after initial page load for each crawled page
      * @param RequestOpts|null $requestOptions
@@ -90,6 +91,7 @@ final class WebService implements WebContract
         int $maxPages = 5,
         Pdf|array $pdf = ['shouldParse' => true],
         int $stopAfterMs = 80000,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         ?int $waitForMs = null,
         RequestOptions|array|null $requestOptions = null,
@@ -107,6 +109,7 @@ final class WebService implements WebContract
                 'maxPages' => $maxPages,
                 'pdf' => $pdf,
                 'stopAfterMs' => $stopAfterMs,
+                'tags' => $tags,
                 'timeoutMs' => $timeoutMs,
                 'waitForMs' => $waitForMs,
             ],
@@ -125,6 +128,7 @@ final class WebService implements WebContract
      *
      * @param string $domain Company domain to analyze, such as `stripe.com`. Full http(s) URLs are accepted and normalized to their domain.
      * @param int $numCompetitors Exact number of direct competitors to return. Defaults to 5.
+     * @param list<string> $tags Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param RequestOpts|null $requestOptions
      *
@@ -133,6 +137,7 @@ final class WebService implements WebContract
     public function extractCompetitors(
         string $domain,
         int $numCompetitors = 5,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         RequestOptions|array|null $requestOptions = null,
     ): WebExtractCompetitorsResponse {
@@ -140,6 +145,7 @@ final class WebService implements WebContract
             [
                 'domain' => $domain,
                 'numCompetitors' => $numCompetitors,
+                'tags' => $tags,
                 'timeoutMs' => $timeoutMs,
             ],
         );
@@ -158,6 +164,7 @@ final class WebService implements WebContract
      * @param string $directURL A specific URL to fetch fonts from directly, bypassing domain resolution (e.g., 'https://example.com/design-system'). When provided, fonts are extracted from this exact URL. You must provide either 'domain' or 'directUrl', but not both.
      * @param string $domain Domain name to extract fonts from (e.g., 'example.com', 'google.com'). The domain will be automatically normalized and validated. You must provide either 'domain' or 'directUrl', but not both.
      * @param int $maxAgeMs Maximum age in milliseconds for cached data before the API performs a hard refresh. Defaults to 3 months (7776000000 ms). Values below 1 day (86400000 ms) are clamped to 1 day; values above 1 year (31536000000 ms) are clamped to 1 year.
+     * @param list<string> $tags Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param RequestOpts|null $requestOptions
      *
@@ -167,6 +174,7 @@ final class WebService implements WebContract
         ?string $directURL = null,
         ?string $domain = null,
         int $maxAgeMs = 7776000000,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         RequestOptions|array|null $requestOptions = null,
     ): WebExtractFontsResponse {
@@ -175,6 +183,7 @@ final class WebService implements WebContract
                 'directURL' => $directURL,
                 'domain' => $domain,
                 'maxAgeMs' => $maxAgeMs,
+                'tags' => $tags,
                 'timeoutMs' => $timeoutMs,
             ],
         );
@@ -194,6 +203,7 @@ final class WebService implements WebContract
      * @param string $directURL A specific URL to fetch the styleguide from directly, bypassing domain resolution (e.g., 'https://example.com/design-system'). When provided, the styleguide is extracted from this exact URL. You must provide either 'domain' or 'directUrl', but not both.
      * @param string $domain Domain name to extract styleguide from (e.g., 'example.com', 'google.com'). The domain will be automatically normalized and validated. You must provide either 'domain' or 'directUrl', but not both.
      * @param int $maxAgeMs Maximum age in milliseconds for cached data before the API performs a hard refresh. Defaults to 3 months (7776000000 ms). Values below 1 day (86400000 ms) are clamped to 1 day; values above 1 year (31536000000 ms) are clamped to 1 year.
+     * @param list<string> $tags Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param RequestOpts|null $requestOptions
      *
@@ -204,6 +214,7 @@ final class WebService implements WebContract
         ?string $directURL = null,
         ?string $domain = null,
         int $maxAgeMs = 7776000000,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         RequestOptions|array|null $requestOptions = null,
     ): WebExtractStyleguideResponse {
@@ -213,6 +224,7 @@ final class WebService implements WebContract
                 'directURL' => $directURL,
                 'domain' => $domain,
                 'maxAgeMs' => $maxAgeMs,
+                'tags' => $tags,
                 'timeoutMs' => $timeoutMs,
             ],
         );
@@ -237,6 +249,7 @@ final class WebService implements WebContract
      * @param int $maxAgeMs Return a cached screenshot if a prior screenshot for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always capture fresh.
      * @param Page|value-of<Page> $page Optional parameter to specify which page type to screenshot. If provided, the system will scrape the domain's links and use heuristics to find the most appropriate URL for the specified page type (30 supported languages). If not provided, screenshots the main domain landing page. Only applicable when using 'domain', not 'directUrl'.
      * @param int $scrollOffset Optional vertical scroll offset in pixels for capturing a long page in viewport-sized chunks. When provided, the full page is captured once and the returned image is the viewport-sized slice that begins at this Y offset (e.g. request scrollOffset=0, then 1080, then 2160 to walk a 1920x1080 landing page top to bottom). The final slice may be shorter than the viewport height. Takes precedence over fullScreenshot. Max: 100000.
+     * @param list<string> $tags Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param Viewport|ViewportShape $viewport Optional browser viewport dimensions for the screenshot. Defaults to 1920x1080.
      * @param int $waitForMs Optional browser wait time in milliseconds after initial page load before taking the screenshot. Min: 0. Max: 30000 (30 seconds).  Defaults to 3000 ms when omitted.
@@ -254,6 +267,7 @@ final class WebService implements WebContract
         int $maxAgeMs = 86400000,
         Page|string|null $page = null,
         ?int $scrollOffset = null,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         Viewport|array $viewport = ['width' => 1920, 'height' => 1080],
         int $waitForMs = 3000,
@@ -270,6 +284,7 @@ final class WebService implements WebContract
                 'maxAgeMs' => $maxAgeMs,
                 'page' => $page,
                 'scrollOffset' => $scrollOffset,
+                'tags' => $tags,
                 'timeoutMs' => $timeoutMs,
                 'viewport' => $viewport,
                 'waitForMs' => $waitForMs,
@@ -295,6 +310,7 @@ final class WebService implements WebContract
      * @param MarkdownOptions|MarkdownOptionsShape $markdownOptions Inline Markdown scraping for each result. Set `enabled: true` to activate.
      * @param int $numResults Number of results to request and return (10–100). Defaults to 10.
      * @param bool $queryFanout expand the query into multiple parallel variants for broader recall
+     * @param list<string> $tags Optional caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param RequestOpts|null $requestOptions
      *
@@ -309,6 +325,7 @@ final class WebService implements WebContract
         MarkdownOptions|array|null $markdownOptions = null,
         int $numResults = 10,
         ?bool $queryFanout = null,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         RequestOptions|array|null $requestOptions = null,
     ): WebSearchResponse {
@@ -322,6 +339,7 @@ final class WebService implements WebContract
                 'markdownOptions' => $markdownOptions,
                 'numResults' => $numResults,
                 'queryFanout' => $queryFanout,
+                'tags' => $tags,
                 'timeoutMs' => $timeoutMs,
             ],
         );
@@ -352,6 +370,7 @@ final class WebService implements WebContract
      * @param bool $settleAnimations When true, waits briefly for CSS and transition animations to settle before extracting each crawled page. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
      * @param bool $shortenBase64Images Truncate base64-encoded image data in the Markdown output
      * @param int $stopAfterMs Soft time budget for the crawl in milliseconds. After each scrape, the crawler checks the elapsed time and, if exceeded, returns the pages collected so far instead of continuing. Min: 10000 (10s). Max: 110000 (110s). Default: 80000 (80s).
+     * @param list<string> $tags Optional caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param string $urlRegex Regex pattern. Only URLs matching this pattern will be followed and scraped.
      * @param bool $useMainContentOnly Extract only the main content, stripping headers, footers, sidebars, and navigation
@@ -378,6 +397,7 @@ final class WebService implements WebContract
         bool $settleAnimations = false,
         bool $shortenBase64Images = true,
         int $stopAfterMs = 80000,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         ?string $urlRegex = null,
         bool $useMainContentOnly = false,
@@ -401,6 +421,7 @@ final class WebService implements WebContract
                 'settleAnimations' => $settleAnimations,
                 'shortenBase64Images' => $shortenBase64Images,
                 'stopAfterMs' => $stopAfterMs,
+                'tags' => $tags,
                 'timeoutMs' => $timeoutMs,
                 'urlRegex' => $urlRegex,
                 'useMainContentOnly' => $useMainContentOnly,
@@ -428,6 +449,7 @@ final class WebService implements WebContract
      * @param int $maxAgeMs Return a cached result if a prior scrape for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always scrape fresh.
      * @param \ContextDev\Web\WebWebScrapeHTMLParams\Pdf|PdfShape2 $pdf PDF parsing controls. Use start/end to limit text extraction and embedded-image detection/OCR to an inclusive 1-based page range.
      * @param bool $settleAnimations When true, waits briefly for CSS and transition animations to settle before extracting HTML. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
+     * @param list<string> $tags Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param bool $useMainContentOnly when true, return only the page's main content in the HTML response, excluding headers, footers, sidebars, and navigation when detectable
      * @param int $waitForMs Optional browser wait time in milliseconds after initial page load. Min: 0. Max: 30000 (30 seconds).
@@ -447,6 +469,7 @@ final class WebService implements WebContract
             'shouldParse' => true, 'ocr' => false,
         ],
         bool $settleAnimations = false,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         bool $useMainContentOnly = false,
         ?int $waitForMs = null,
@@ -463,6 +486,7 @@ final class WebService implements WebContract
                 'maxAgeMs' => $maxAgeMs,
                 'pdf' => $pdf,
                 'settleAnimations' => $settleAnimations,
+                'tags' => $tags,
                 'timeoutMs' => $timeoutMs,
                 'useMainContentOnly' => $useMainContentOnly,
                 'waitForMs' => $waitForMs,
@@ -485,6 +509,7 @@ final class WebService implements WebContract
      * @param Enrichment|EnrichmentShape $enrichment optional per-image processing, sent as deep-object query params such as enrichment[resolution]=true
      * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
      * @param int $maxAgeMs Reuse a cached result this many milliseconds old or newer. Default: 86400000 (1 day). Set to 0 to bypass cache. Maximum: 2592000000 (30 days).
+     * @param list<string> $tags Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param int $waitForMs Optional browser wait time in milliseconds after initial page load before collecting images. Min: 0. Max: 30000 (30 seconds).
      * @param RequestOpts|null $requestOptions
@@ -497,6 +522,7 @@ final class WebService implements WebContract
         Enrichment|array|null $enrichment = null,
         ?array $headers = null,
         int $maxAgeMs = 86400000,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         ?int $waitForMs = null,
         RequestOptions|array|null $requestOptions = null,
@@ -508,6 +534,7 @@ final class WebService implements WebContract
                 'enrichment' => $enrichment,
                 'headers' => $headers,
                 'maxAgeMs' => $maxAgeMs,
+                'tags' => $tags,
                 'timeoutMs' => $timeoutMs,
                 'waitForMs' => $waitForMs,
             ],
@@ -549,6 +576,7 @@ final class WebService implements WebContract
      * @param \ContextDev\Web\WebWebScrapeMdParams\Pdf|PdfShape3 $pdf PDF parsing controls. Use start/end to limit text extraction and embedded-image detection/OCR to an inclusive 1-based page range.
      * @param bool $settleAnimations When true, waits briefly for CSS and transition animations to settle before converting to Markdown. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
      * @param bool $shortenBase64Images Shorten base64-encoded image data in the Markdown output
+     * @param list<string> $tags Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param bool $useMainContentOnly Extract only the main content of the page, excluding headers, footers, sidebars, and navigation
      * @param int $waitForMs Optional browser wait time in milliseconds after initial page load before converting the page to Markdown. Min: 0. Max: 30000 (30 seconds).
@@ -571,6 +599,7 @@ final class WebService implements WebContract
         ],
         bool $settleAnimations = false,
         bool $shortenBase64Images = true,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         bool $useMainContentOnly = false,
         ?int $waitForMs = null,
@@ -590,6 +619,7 @@ final class WebService implements WebContract
                 'pdf' => $pdf,
                 'settleAnimations' => $settleAnimations,
                 'shortenBase64Images' => $shortenBase64Images,
+                'tags' => $tags,
                 'timeoutMs' => $timeoutMs,
                 'useMainContentOnly' => $useMainContentOnly,
                 'waitForMs' => $waitForMs,
@@ -610,6 +640,7 @@ final class WebService implements WebContract
      * @param string $domain Domain to build a sitemap for
      * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
      * @param int $maxLinks Maximum number of links to return from the sitemap crawl. Defaults to 10,000. Minimum is 1, maximum is 100,000.
+     * @param list<string> $tags Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param string $urlRegex Optional RE2-compatible regex pattern. Only URLs matching this pattern are returned and counted against maxLinks.
      * @param RequestOpts|null $requestOptions
@@ -620,6 +651,7 @@ final class WebService implements WebContract
         string $domain,
         ?array $headers = null,
         int $maxLinks = 10000,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         ?string $urlRegex = null,
         RequestOptions|array|null $requestOptions = null,
@@ -629,6 +661,7 @@ final class WebService implements WebContract
                 'domain' => $domain,
                 'headers' => $headers,
                 'maxLinks' => $maxLinks,
+                'tags' => $tags,
                 'timeoutMs' => $timeoutMs,
                 'urlRegex' => $urlRegex,
             ],

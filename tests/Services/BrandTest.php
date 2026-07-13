@@ -63,6 +63,7 @@ final class BrandTest extends TestCase
             forceLanguage: 'afrikaans',
             maxAgeMs: 0,
             maxSpeed: true,
+            tags: ['production', 'team-alpha'],
             timeoutMs: 1000,
             name: 'xxx',
             countryGl: 'country_gl',
@@ -104,7 +105,8 @@ final class BrandTest extends TestCase
         $result = $this->client->brand->retrieveSimplified(
             domain: 'domain',
             maxAgeMs: 86400000,
-            timeoutMs: 1000
+            tags: ['production', 'team-alpha'],
+            timeoutMs: 1000,
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
