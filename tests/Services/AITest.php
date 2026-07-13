@@ -52,7 +52,8 @@ final class AITest extends TestCase
         $result = $this->client->ai->extractProduct(
             url: 'https://example.com',
             maxAgeMs: 0,
-            timeoutMs: 1000
+            tags: ['production', 'team-alpha'],
+            timeoutMs: 1000,
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -86,6 +87,7 @@ final class AITest extends TestCase
             domain: 'domain',
             maxAgeMs: 0,
             maxProducts: 1,
+            tags: ['production', 'team-alpha'],
             timeoutMs: 1000,
             directURL: 'https://example.com',
         );

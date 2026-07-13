@@ -19,6 +19,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   domain: string,
  *   headers?: array<string,string>|null,
  *   maxLinks?: int|null,
+ *   tags?: list<string>|null,
  *   timeoutMs?: int|null,
  *   urlRegex?: string|null,
  * }
@@ -48,6 +49,14 @@ final class WebWebScrapeSitemapParams implements BaseModel
      */
     #[Optional]
     public ?int $maxLinks;
+
+    /**
+     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @var list<string>|null $tags
+     */
+    #[Optional(list: 'string')]
+    public ?array $tags;
 
     /**
      * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
@@ -86,11 +95,13 @@ final class WebWebScrapeSitemapParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param array<string,string>|null $headers
+     * @param list<string>|null $tags
      */
     public static function with(
         string $domain,
         ?array $headers = null,
         ?int $maxLinks = null,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         ?string $urlRegex = null,
     ): self {
@@ -100,6 +111,7 @@ final class WebWebScrapeSitemapParams implements BaseModel
 
         null !== $headers && $self['headers'] = $headers;
         null !== $maxLinks && $self['maxLinks'] = $maxLinks;
+        null !== $tags && $self['tags'] = $tags;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
         null !== $urlRegex && $self['urlRegex'] = $urlRegex;
 
@@ -137,6 +149,19 @@ final class WebWebScrapeSitemapParams implements BaseModel
     {
         $self = clone $this;
         $self['maxLinks'] = $maxLinks;
+
+        return $self;
+    }
+
+    /**
+     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @param list<string> $tags
+     */
+    public function withTags(array $tags): self
+    {
+        $self = clone $this;
+        $self['tags'] = $tags;
 
         return $self;
     }

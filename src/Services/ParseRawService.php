@@ -40,6 +40,7 @@ final class ParseRawService implements ParseRawContract
      *   ocr?: bool,
      *   pdf?: Pdf|PdfShape,
      *   shortenBase64Images?: bool,
+     *   tags?: list<string>,
      *   useMainContentOnly?: bool,
      * }|ParseHandleParams $params
      * @param RequestOpts|null $requestOptions

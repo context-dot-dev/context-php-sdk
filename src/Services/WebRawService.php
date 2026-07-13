@@ -78,6 +78,7 @@ final class WebRawService implements WebRawContract
      *   maxPages?: int,
      *   pdf?: Pdf|PdfShape,
      *   stopAfterMs?: int,
+     *   tags?: list<string>,
      *   timeoutMs?: int,
      *   waitForMs?: int,
      * }|WebExtractParams $params
@@ -112,7 +113,7 @@ final class WebRawService implements WebRawContract
      * Analyze a company's landing page and web search evidence to return direct competitors for the same product or market.
      *
      * @param array{
-     *   domain: string, numCompetitors?: int, timeoutMs?: int
+     *   domain: string, numCompetitors?: int, tags?: list<string>, timeoutMs?: int
      * }|WebExtractCompetitorsParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -145,7 +146,11 @@ final class WebRawService implements WebRawContract
      * Scrape font information from a website including font families, usage statistics, fallbacks, and element/word counts.
      *
      * @param array{
-     *   directURL?: string, domain?: string, maxAgeMs?: int, timeoutMs?: int
+     *   directURL?: string,
+     *   domain?: string,
+     *   maxAgeMs?: int,
+     *   tags?: list<string>,
+     *   timeoutMs?: int,
      * }|WebExtractFontsParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -185,6 +190,7 @@ final class WebRawService implements WebRawContract
      *   directURL?: string,
      *   domain?: string,
      *   maxAgeMs?: int,
+     *   tags?: list<string>,
      *   timeoutMs?: int,
      * }|WebExtractStyleguideParams $params
      * @param RequestOpts|null $requestOptions
@@ -230,6 +236,7 @@ final class WebRawService implements WebRawContract
      *   maxAgeMs?: int,
      *   page?: Page|value-of<Page>,
      *   scrollOffset?: int,
+     *   tags?: list<string>,
      *   timeoutMs?: int,
      *   viewport?: Viewport|ViewportShape,
      *   waitForMs?: int,
@@ -276,6 +283,7 @@ final class WebRawService implements WebRawContract
      *   markdownOptions?: MarkdownOptions|MarkdownOptionsShape,
      *   numResults?: int,
      *   queryFanout?: bool,
+     *   tags?: list<string>,
      *   timeoutMs?: int,
      * }|WebSearchParams $params
      * @param RequestOpts|null $requestOptions
@@ -324,6 +332,7 @@ final class WebRawService implements WebRawContract
      *   settleAnimations?: bool,
      *   shortenBase64Images?: bool,
      *   stopAfterMs?: int,
+     *   tags?: list<string>,
      *   timeoutMs?: int,
      *   urlRegex?: string,
      *   useMainContentOnly?: bool,
@@ -369,6 +378,7 @@ final class WebRawService implements WebRawContract
      *   maxAgeMs?: int,
      *   pdf?: WebWebScrapeHTMLParams\Pdf|PdfShape2,
      *   settleAnimations?: bool,
+     *   tags?: list<string>,
      *   timeoutMs?: int,
      *   useMainContentOnly?: bool,
      *   waitForMs?: int,
@@ -409,6 +419,7 @@ final class WebRawService implements WebRawContract
      *   enrichment?: Enrichment|EnrichmentShape,
      *   headers?: array<string,string>,
      *   maxAgeMs?: int,
+     *   tags?: list<string>,
      *   timeoutMs?: int,
      *   waitForMs?: int,
      * }|WebWebScrapeImagesParams $params
@@ -468,6 +479,7 @@ final class WebRawService implements WebRawContract
      *   pdf?: WebWebScrapeMdParams\Pdf|PdfShape3,
      *   settleAnimations?: bool,
      *   shortenBase64Images?: bool,
+     *   tags?: list<string>,
      *   timeoutMs?: int,
      *   useMainContentOnly?: bool,
      *   waitForMs?: int,
@@ -506,6 +518,7 @@ final class WebRawService implements WebRawContract
      *   domain: string,
      *   headers?: array<string,string>,
      *   maxLinks?: int,
+     *   tags?: list<string>,
      *   timeoutMs?: int,
      *   urlRegex?: string,
      * }|WebWebScrapeSitemapParams $params

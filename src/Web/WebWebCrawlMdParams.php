@@ -35,6 +35,7 @@ use ContextDev\Web\WebWebCrawlMdParams\Pdf;
  *   settleAnimations?: bool|null,
  *   shortenBase64Images?: bool|null,
  *   stopAfterMs?: int|null,
+ *   tags?: list<string>|null,
  *   timeoutMs?: int|null,
  *   urlRegex?: string|null,
  *   useMainContentOnly?: bool|null,
@@ -144,6 +145,14 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?int $stopAfterMs;
 
     /**
+     * Optional caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @var list<string>|null $tags
+     */
+    #[Optional(list: 'string')]
+    public ?array $tags;
+
+    /**
      * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      */
     #[Optional('timeoutMS')]
@@ -195,6 +204,7 @@ final class WebWebCrawlMdParams implements BaseModel
      * @param list<string>|null $excludeSelectors
      * @param list<string>|null $includeSelectors
      * @param Pdf|PdfShape|null $pdf
+     * @param list<string>|null $tags
      */
     public static function with(
         string $url,
@@ -212,6 +222,7 @@ final class WebWebCrawlMdParams implements BaseModel
         ?bool $settleAnimations = null,
         ?bool $shortenBase64Images = null,
         ?int $stopAfterMs = null,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         ?string $urlRegex = null,
         ?bool $useMainContentOnly = null,
@@ -235,6 +246,7 @@ final class WebWebCrawlMdParams implements BaseModel
         null !== $settleAnimations && $self['settleAnimations'] = $settleAnimations;
         null !== $shortenBase64Images && $self['shortenBase64Images'] = $shortenBase64Images;
         null !== $stopAfterMs && $self['stopAfterMs'] = $stopAfterMs;
+        null !== $tags && $self['tags'] = $tags;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
         null !== $urlRegex && $self['urlRegex'] = $urlRegex;
         null !== $useMainContentOnly && $self['useMainContentOnly'] = $useMainContentOnly;
@@ -412,6 +424,19 @@ final class WebWebCrawlMdParams implements BaseModel
     {
         $self = clone $this;
         $self['stopAfterMs'] = $stopAfterMs;
+
+        return $self;
+    }
+
+    /**
+     * Optional caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @param list<string> $tags
+     */
+    public function withTags(array $tags): self
+    {
+        $self = clone $this;
+        $self['tags'] = $tags;
 
         return $self;
     }

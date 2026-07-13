@@ -45,6 +45,7 @@ use ContextDev\Web\WebWebScrapeMdParams\Pdf;
  *   pdf?: null|Pdf|PdfShape,
  *   settleAnimations?: bool|null,
  *   shortenBase64Images?: bool|null,
+ *   tags?: list<string>|null,
  *   timeoutMs?: int|null,
  *   useMainContentOnly?: bool|null,
  *   waitForMs?: int|null,
@@ -137,6 +138,14 @@ final class WebWebScrapeMdParams implements BaseModel
     public ?bool $shortenBase64Images;
 
     /**
+     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @var list<string>|null $tags
+     */
+    #[Optional(list: 'string')]
+    public ?array $tags;
+
+    /**
      * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      */
     #[Optional]
@@ -183,6 +192,7 @@ final class WebWebScrapeMdParams implements BaseModel
      * @param array<string,string>|null $headers
      * @param list<string>|null $includeSelectors
      * @param Pdf|PdfShape|null $pdf
+     * @param list<string>|null $tags
      */
     public static function with(
         string $url,
@@ -197,6 +207,7 @@ final class WebWebScrapeMdParams implements BaseModel
         Pdf|array|null $pdf = null,
         ?bool $settleAnimations = null,
         ?bool $shortenBase64Images = null,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         ?bool $useMainContentOnly = null,
         ?int $waitForMs = null,
@@ -216,6 +227,7 @@ final class WebWebScrapeMdParams implements BaseModel
         null !== $pdf && $self['pdf'] = $pdf;
         null !== $settleAnimations && $self['settleAnimations'] = $settleAnimations;
         null !== $shortenBase64Images && $self['shortenBase64Images'] = $shortenBase64Images;
+        null !== $tags && $self['tags'] = $tags;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
         null !== $useMainContentOnly && $self['useMainContentOnly'] = $useMainContentOnly;
         null !== $waitForMs && $self['waitForMs'] = $waitForMs;
@@ -361,6 +373,19 @@ final class WebWebScrapeMdParams implements BaseModel
     {
         $self = clone $this;
         $self['shortenBase64Images'] = $shortenBase64Images;
+
+        return $self;
+    }
+
+    /**
+     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @param list<string> $tags
+     */
+    public function withTags(array $tags): self
+    {
+        $self = clone $this;
+        $self['tags'] = $tags;
 
         return $self;
     }

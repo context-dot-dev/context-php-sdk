@@ -53,7 +53,8 @@ final class IndustryTest extends TestCase
             input: 'input',
             maxResults: 1,
             minResults: 1,
-            timeoutMs: 1000
+            tags: ['production', 'team-alpha'],
+            timeoutMs: 1000,
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -84,6 +85,7 @@ final class IndustryTest extends TestCase
             input: 'input',
             maxResults: 1,
             minResults: 1,
+            tags: ['production', 'team-alpha'],
             timeoutMs: 1000,
             type: 'original_sic',
         );

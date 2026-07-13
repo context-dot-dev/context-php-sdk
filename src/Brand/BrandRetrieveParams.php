@@ -23,6 +23,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   forceLanguage?: null|ForceLanguage|value-of<ForceLanguage>,
  *   maxAgeMs?: int|null,
  *   maxSpeed?: bool|null,
+ *   tags?: list<string>|null,
  *   timeoutMs?: int|null,
  *   name: string,
  *   countryGl?: string|null,
@@ -72,6 +73,14 @@ final class BrandRetrieveParams implements BaseModel
      */
     #[Optional]
     public ?bool $maxSpeed;
+
+    /**
+     * Optional caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @var list<string>|null $tags
+     */
+    #[Optional(list: 'string')]
+    public ?array $tags;
 
     /**
      * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
@@ -186,6 +195,7 @@ final class BrandRetrieveParams implements BaseModel
      *
      * @param Type|value-of<Type> $type
      * @param ForceLanguage|value-of<ForceLanguage>|null $forceLanguage
+     * @param list<string>|null $tags
      */
     public static function with(
         string $domain,
@@ -198,6 +208,7 @@ final class BrandRetrieveParams implements BaseModel
         ForceLanguage|string|null $forceLanguage = null,
         ?int $maxAgeMs = null,
         ?bool $maxSpeed = null,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         ?string $countryGl = null,
         ?string $tickerExchange = null,
@@ -219,6 +230,7 @@ final class BrandRetrieveParams implements BaseModel
         null !== $forceLanguage && $self['forceLanguage'] = $forceLanguage;
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
         null !== $maxSpeed && $self['maxSpeed'] = $maxSpeed;
+        null !== $tags && $self['tags'] = $tags;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
         null !== $countryGl && $self['countryGl'] = $countryGl;
         null !== $tickerExchange && $self['tickerExchange'] = $tickerExchange;
@@ -283,6 +295,19 @@ final class BrandRetrieveParams implements BaseModel
     {
         $self = clone $this;
         $self['maxSpeed'] = $maxSpeed;
+
+        return $self;
+    }
+
+    /**
+     * Optional caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @param list<string> $tags
+     */
+    public function withTags(array $tags): self
+    {
+        $self = clone $this;
+        $self['tags'] = $tags;
 
         return $self;
     }

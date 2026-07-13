@@ -47,6 +47,7 @@ final class BrandService implements BrandContract
      * @param ForceLanguage|value-of<ForceLanguage> $forceLanguage
      * @param int $maxAgeMs Maximum age in milliseconds for cached brand data before the API performs a hard refresh. Defaults to 3 months (7776000000 ms). Values below 1 day (86400000 ms) are clamped to 1 day; values above 1 year (31536000000 ms) are clamped to 1 year.
      * @param bool $maxSpeed Optional parameter to optimize the API call for maximum speed. When set to true, the API will skip time-consuming operations for faster response at the cost of less comprehensive data.
+     * @param list<string> $tags Optional caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param string $countryGl optional country code hint (GL parameter) to specify the country when identifying a transaction
      * @param string $tickerExchange Optional stock exchange for the ticker. Defaults to NASDAQ if not specified.
@@ -69,6 +70,7 @@ final class BrandService implements BrandContract
         ForceLanguage|string|null $forceLanguage = null,
         ?int $maxAgeMs = null,
         ?bool $maxSpeed = null,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         ?string $countryGl = null,
         ?string $tickerExchange = null,
@@ -85,6 +87,7 @@ final class BrandService implements BrandContract
                 'forceLanguage' => $forceLanguage,
                 'maxAgeMs' => $maxAgeMs,
                 'maxSpeed' => $maxSpeed,
+                'tags' => $tags,
                 'timeoutMs' => $timeoutMs,
                 'name' => $name,
                 'countryGl' => $countryGl,
@@ -113,6 +116,7 @@ final class BrandService implements BrandContract
      *
      * @param string $domain Domain name to retrieve simplified brand data for
      * @param int $maxAgeMs Maximum age in milliseconds for cached brand data before the API performs a hard refresh. Defaults to 3 months (7776000000 ms). Values below 1 day (86400000 ms) are clamped to 1 day; values above 1 year (31536000000 ms) are clamped to 1 year.
+     * @param list<string> $tags Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param RequestOpts|null $requestOptions
      *
@@ -121,11 +125,17 @@ final class BrandService implements BrandContract
     public function retrieveSimplified(
         string $domain,
         int $maxAgeMs = 7776000000,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         RequestOptions|array|null $requestOptions = null,
     ): BrandGetSimplifiedResponse {
         $params = Util::removeNulls(
-            ['domain' => $domain, 'maxAgeMs' => $maxAgeMs, 'timeoutMs' => $timeoutMs]
+            [
+                'domain' => $domain,
+                'maxAgeMs' => $maxAgeMs,
+                'tags' => $tags,
+                'timeoutMs' => $timeoutMs,
+            ],
         );
 
         // @phpstan-ignore-next-line argument.type

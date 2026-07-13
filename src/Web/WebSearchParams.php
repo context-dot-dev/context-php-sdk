@@ -29,6 +29,7 @@ use ContextDev\Web\WebSearchParams\MarkdownOptions;
  *   markdownOptions?: null|MarkdownOptions|MarkdownOptionsShape,
  *   numResults?: int|null,
  *   queryFanout?: bool|null,
+ *   tags?: list<string>|null,
  *   timeoutMs?: int|null,
  * }
  */
@@ -95,6 +96,14 @@ final class WebSearchParams implements BaseModel
     public ?bool $queryFanout;
 
     /**
+     * Optional caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @var list<string>|null $tags
+     */
+    #[Optional(list: 'string')]
+    public ?array $tags;
+
+    /**
      * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      */
     #[Optional('timeoutMS')]
@@ -129,6 +138,7 @@ final class WebSearchParams implements BaseModel
      * @param Freshness|value-of<Freshness>|null $freshness
      * @param list<string>|null $includeDomains
      * @param MarkdownOptions|MarkdownOptionsShape|null $markdownOptions
+     * @param list<string>|null $tags
      */
     public static function with(
         string $query,
@@ -139,6 +149,7 @@ final class WebSearchParams implements BaseModel
         MarkdownOptions|array|null $markdownOptions = null,
         ?int $numResults = null,
         ?bool $queryFanout = null,
+        ?array $tags = null,
         ?int $timeoutMs = null,
     ): self {
         $self = new self;
@@ -152,6 +163,7 @@ final class WebSearchParams implements BaseModel
         null !== $markdownOptions && $self['markdownOptions'] = $markdownOptions;
         null !== $numResults && $self['numResults'] = $numResults;
         null !== $queryFanout && $self['queryFanout'] = $queryFanout;
+        null !== $tags && $self['tags'] = $tags;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
 
         return $self;
@@ -252,6 +264,19 @@ final class WebSearchParams implements BaseModel
     {
         $self = clone $this;
         $self['queryFanout'] = $queryFanout;
+
+        return $self;
+    }
+
+    /**
+     * Optional caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @param list<string> $tags
+     */
+    public function withTags(array $tags): self
+    {
+        $self = clone $this;
+        $self['tags'] = $tags;
 
         return $self;
     }

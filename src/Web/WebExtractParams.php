@@ -30,6 +30,7 @@ use ContextDev\Web\WebExtractParams\Pdf;
  *   maxPages?: int|null,
  *   pdf?: null|Pdf|PdfShape,
  *   stopAfterMs?: int|null,
+ *   tags?: list<string>|null,
  *   timeoutMs?: int|null,
  *   waitForMs?: int|null,
  * }
@@ -106,6 +107,14 @@ final class WebExtractParams implements BaseModel
     public ?int $stopAfterMs;
 
     /**
+     * Optional caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @var list<string>|null $tags
+     */
+    #[Optional(list: 'string')]
+    public ?array $tags;
+
+    /**
      * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      */
     #[Optional('timeoutMS')]
@@ -143,6 +152,7 @@ final class WebExtractParams implements BaseModel
      *
      * @param array<string,mixed> $schema
      * @param Pdf|PdfShape|null $pdf
+     * @param list<string>|null $tags
      */
     public static function with(
         array $schema,
@@ -156,6 +166,7 @@ final class WebExtractParams implements BaseModel
         ?int $maxPages = null,
         Pdf|array|null $pdf = null,
         ?int $stopAfterMs = null,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         ?int $waitForMs = null,
     ): self {
@@ -173,6 +184,7 @@ final class WebExtractParams implements BaseModel
         null !== $maxPages && $self['maxPages'] = $maxPages;
         null !== $pdf && $self['pdf'] = $pdf;
         null !== $stopAfterMs && $self['stopAfterMs'] = $stopAfterMs;
+        null !== $tags && $self['tags'] = $tags;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
         null !== $waitForMs && $self['waitForMs'] = $waitForMs;
 
@@ -298,6 +310,19 @@ final class WebExtractParams implements BaseModel
     {
         $self = clone $this;
         $self['stopAfterMs'] = $stopAfterMs;
+
+        return $self;
+    }
+
+    /**
+     * Optional caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @param list<string> $tags
+     */
+    public function withTags(array $tags): self
+    {
+        $self = clone $this;
+        $self['tags'] = $tags;
 
         return $self;
     }

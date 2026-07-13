@@ -83,6 +83,7 @@ final class WebTest extends TestCase
             maxPages: 1,
             pdf: ['end' => 1, 'shouldParse' => true, 'start' => 1],
             stopAfterMs: 10000,
+            tags: ['production', 'team-alpha'],
             timeoutMs: 1000,
             waitForMs: 0,
         );
@@ -114,7 +115,8 @@ final class WebTest extends TestCase
         $result = $this->client->web->extractCompetitors(
             domain: 'xxx',
             numCompetitors: 1,
-            timeoutMs: 1000
+            tags: ['production', 'team-alpha'],
+            timeoutMs: 1000,
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -200,6 +202,7 @@ final class WebTest extends TestCase
             ],
             numResults: 10,
             queryFanout: true,
+            tags: ['production', 'team-alpha'],
             timeoutMs: 1000,
         );
 
@@ -243,6 +246,7 @@ final class WebTest extends TestCase
             settleAnimations: true,
             shortenBase64Images: true,
             stopAfterMs: 10000,
+            tags: ['production', 'team-alpha'],
             timeoutMs: 1000,
             urlRegex: '^https?://[^/]+/blog/',
             useMainContentOnly: true,
@@ -283,6 +287,7 @@ final class WebTest extends TestCase
             maxAgeMs: 0,
             pdf: ['end' => 1, 'ocr' => true, 'shouldParse' => true, 'start' => 1],
             settleAnimations: true,
+            tags: ['production', 'team-alpha'],
             timeoutMs: 1000,
             useMainContentOnly: true,
             waitForMs: 0,
@@ -323,6 +328,7 @@ final class WebTest extends TestCase
             ],
             headers: ['foo' => 'J!'],
             maxAgeMs: 0,
+            tags: ['production', 'team-alpha'],
             timeoutMs: 1000,
             waitForMs: 0,
         );
@@ -364,6 +370,7 @@ final class WebTest extends TestCase
             pdf: ['end' => 1, 'ocr' => true, 'shouldParse' => true, 'start' => 1],
             settleAnimations: true,
             shortenBase64Images: true,
+            tags: ['production', 'team-alpha'],
             timeoutMs: 1000,
             useMainContentOnly: true,
             waitForMs: 0,
@@ -397,6 +404,7 @@ final class WebTest extends TestCase
             domain: 'domain',
             headers: ['foo' => 'J!'],
             maxLinks: 1,
+            tags: ['production', 'team-alpha'],
             timeoutMs: 1000,
             urlRegex: '^https?://[^/]+/blog/',
         );
