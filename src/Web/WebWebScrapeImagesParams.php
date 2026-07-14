@@ -9,6 +9,8 @@ use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebWebScrapeImagesParams\Dedupe;
+use ContextDev\Web\WebWebScrapeImagesParams\Dedupe\UnionMember1;
 use ContextDev\Web\WebWebScrapeImagesParams\Enrichment;
 
 /**
@@ -16,11 +18,13 @@ use ContextDev\Web\WebWebScrapeImagesParams\Enrichment;
  *
  * @see ContextDev\Services\WebService::webScrapeImages()
  *
+ * @phpstan-import-type DedupeVariants from \ContextDev\Web\WebWebScrapeImagesParams\Dedupe
+ * @phpstan-import-type DedupeShape from \ContextDev\Web\WebWebScrapeImagesParams\Dedupe
  * @phpstan-import-type EnrichmentShape from \ContextDev\Web\WebWebScrapeImagesParams\Enrichment
  *
  * @phpstan-type WebWebScrapeImagesParamsShape = array{
  *   url: string,
- *   dedupe?: bool|null,
+ *   dedupe?: DedupeShape|null,
  *   enrichment?: null|Enrichment|EnrichmentShape,
  *   headers?: array<string,string>|null,
  *   maxAgeMs?: int|null,
@@ -43,14 +47,16 @@ final class WebWebScrapeImagesParams implements BaseModel
 
     /**
      * When true, visually duplicate images are removed: every image is loaded and perceptually hashed, and only the highest-resolution copy of each duplicate group is kept. Images that cannot be downloaded or hashed are kept. Default: false.
+     *
+     * @var DedupeVariants|null $dedupe
      */
-    #[Optional]
-    public ?bool $dedupe;
+    #[Optional(union: Dedupe::class)]
+    public bool|string|null $dedupe;
 
     /**
      * Optional per-image processing, sent as deep-object query params such as enrichment[resolution]=true.
      */
-    #[Optional]
+    #[Optional(nullable: true)]
     public ?Enrichment $enrichment;
 
     /**
@@ -64,7 +70,7 @@ final class WebWebScrapeImagesParams implements BaseModel
     /**
      * Reuse a cached result this many milliseconds old or newer. Default: 86400000 (1 day). Set to 0 to bypass cache. Maximum: 2592000000 (30 days).
      */
-    #[Optional]
+    #[Optional(nullable: true)]
     public ?int $maxAgeMs;
 
     /**
@@ -84,7 +90,7 @@ final class WebWebScrapeImagesParams implements BaseModel
     /**
      * Optional browser wait time in milliseconds after initial page load before collecting images. Min: 0. Max: 30000 (30 seconds).
      */
-    #[Optional]
+    #[Optional(nullable: true)]
     public ?int $waitForMs;
 
     /**
@@ -111,13 +117,14 @@ final class WebWebScrapeImagesParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param DedupeShape|null $dedupe
      * @param Enrichment|EnrichmentShape|null $enrichment
      * @param array<string,string>|null $headers
      * @param list<string>|null $tags
      */
     public static function with(
         string $url,
-        ?bool $dedupe = null,
+        bool|UnionMember1|string|null $dedupe = null,
         Enrichment|array|null $enrichment = null,
         ?array $headers = null,
         ?int $maxAgeMs = null,
@@ -153,8 +160,10 @@ final class WebWebScrapeImagesParams implements BaseModel
 
     /**
      * When true, visually duplicate images are removed: every image is loaded and perceptually hashed, and only the highest-resolution copy of each duplicate group is kept. Images that cannot be downloaded or hashed are kept. Default: false.
+     *
+     * @param DedupeShape $dedupe
      */
-    public function withDedupe(bool $dedupe): self
+    public function withDedupe(bool|UnionMember1|string $dedupe): self
     {
         $self = clone $this;
         $self['dedupe'] = $dedupe;
@@ -165,9 +174,9 @@ final class WebWebScrapeImagesParams implements BaseModel
     /**
      * Optional per-image processing, sent as deep-object query params such as enrichment[resolution]=true.
      *
-     * @param Enrichment|EnrichmentShape $enrichment
+     * @param Enrichment|EnrichmentShape|null $enrichment
      */
-    public function withEnrichment(Enrichment|array $enrichment): self
+    public function withEnrichment(Enrichment|array|null $enrichment): self
     {
         $self = clone $this;
         $self['enrichment'] = $enrichment;
@@ -191,7 +200,7 @@ final class WebWebScrapeImagesParams implements BaseModel
     /**
      * Reuse a cached result this many milliseconds old or newer. Default: 86400000 (1 day). Set to 0 to bypass cache. Maximum: 2592000000 (30 days).
      */
-    public function withMaxAgeMs(int $maxAgeMs): self
+    public function withMaxAgeMs(?int $maxAgeMs): self
     {
         $self = clone $this;
         $self['maxAgeMs'] = $maxAgeMs;
@@ -226,7 +235,7 @@ final class WebWebScrapeImagesParams implements BaseModel
     /**
      * Optional browser wait time in milliseconds after initial page load before collecting images. Min: 0. Max: 30000 (30 seconds).
      */
-    public function withWaitForMs(int $waitForMs): self
+    public function withWaitForMs(?int $waitForMs): self
     {
         $self = clone $this;
         $self['waitForMs'] = $waitForMs;

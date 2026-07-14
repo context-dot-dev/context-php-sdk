@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace ContextDev\Monitors\MonitorListAccountChangesParams;
 
+/**
+ * Filter by target type.
+ */
 enum TargetType: string
 {
     case PAGE = 'page';

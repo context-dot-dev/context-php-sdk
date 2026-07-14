@@ -2,30 +2,30 @@
 
 declare(strict_types=1);
 
-namespace ContextDev\Monitors;
+namespace ContextDev\Monitors\MonitorListAccountRunsResponse\Data;
 
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
-use ContextDev\Monitors\WebhookDelivery\Error;
-use ContextDev\Monitors\WebhookDelivery\Event;
-use ContextDev\Monitors\WebhookDelivery\Status;
+use ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery1\Error;
+use ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery1\Event;
+use ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery1\Status;
 
 /**
- * @phpstan-import-type ErrorShape from \ContextDev\Monitors\WebhookDelivery\Error
+ * @phpstan-import-type ErrorShape from \ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery1\Error
  *
- * @phpstan-type WebhookDeliveryShape = array{
+ * @phpstan-type WebhookDelivery1Shape = array{
  *   attemptedAt: \DateTimeInterface,
- *   error: null|Error|ErrorShape,
+ *   error: null|\ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery1\Error|ErrorShape,
  *   event: Event|value-of<Event>,
  *   eventID: string,
  *   httpStatus: int|null,
- *   status: Status|value-of<Status>,
+ *   status: \ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery1\Status|value-of<\ContextDev\Monitors\MonitorListAccountRunsResponse\Data\WebhookDelivery1\Status>,
  * }
  */
-final class WebhookDelivery implements BaseModel
+final class WebhookDelivery1 implements BaseModel
 {
-    /** @use SdkModel<WebhookDeliveryShape> */
+    /** @use SdkModel<WebhookDelivery1Shape> */
     use SdkModel;
 
     #[Required('attempted_at')]
@@ -59,15 +59,17 @@ final class WebhookDelivery implements BaseModel
      *
      * @var value-of<Status> $status
      */
-    #[Required(enum: Status::class)]
+    #[Required(
+        enum: Status::class,
+    )]
     public string $status;
 
     /**
-     * `new WebhookDelivery()` is missing required properties by the API.
+     * `new WebhookDelivery1()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * WebhookDelivery::with(
+     * WebhookDelivery1::with(
      *   attemptedAt: ...,
      *   error: ...,
      *   event: ...,
@@ -80,7 +82,7 @@ final class WebhookDelivery implements BaseModel
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new WebhookDelivery)
+     * (new WebhookDelivery1)
      *   ->withAttemptedAt(...)
      *   ->withError(...)
      *   ->withEvent(...)
@@ -134,8 +136,9 @@ final class WebhookDelivery implements BaseModel
     /**
      * @param Error|ErrorShape|null $error
      */
-    public function withError(Error|array|null $error): self
-    {
+    public function withError(
+        Error|array|null $error,
+    ): self {
         $self = clone $this;
         $self['error'] = $error;
 
@@ -182,8 +185,9 @@ final class WebhookDelivery implements BaseModel
      *
      * @param Status|value-of<Status> $status
      */
-    public function withStatus(Status|string $status): self
-    {
+    public function withStatus(
+        Status|string $status,
+    ): self {
         $self = clone $this;
         $self['status'] = $status;
 

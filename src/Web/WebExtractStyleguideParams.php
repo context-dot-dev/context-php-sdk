@@ -51,9 +51,9 @@ final class WebExtractStyleguideParams implements BaseModel
     public ?string $domain;
 
     /**
-     * Maximum age in milliseconds for cached data before the API performs a hard refresh. Defaults to 3 months (7776000000 ms). Values below 1 day (86400000 ms) are clamped to 1 day; values above 1 year (31536000000 ms) are clamped to 1 year.
+     * Maximum age in milliseconds for cached brand data before the API performs a hard refresh. Defaults to 3 months (7776000000 ms). Values below 1 day (86400000 ms) are clamped to 1 day; values above 1 year (31536000000 ms) are clamped to 1 year.
      */
-    #[Optional]
+    #[Optional(nullable: true)]
     public ?int $maxAgeMs;
 
     /**
@@ -139,9 +139,9 @@ final class WebExtractStyleguideParams implements BaseModel
     }
 
     /**
-     * Maximum age in milliseconds for cached data before the API performs a hard refresh. Defaults to 3 months (7776000000 ms). Values below 1 day (86400000 ms) are clamped to 1 day; values above 1 year (31536000000 ms) are clamped to 1 year.
+     * Maximum age in milliseconds for cached brand data before the API performs a hard refresh. Defaults to 3 months (7776000000 ms). Values below 1 day (86400000 ms) are clamped to 1 day; values above 1 year (31536000000 ms) are clamped to 1 year.
      */
-    public function withMaxAgeMs(int $maxAgeMs): self
+    public function withMaxAgeMs(?int $maxAgeMs): self
     {
         $self = clone $this;
         $self['maxAgeMs'] = $maxAgeMs;

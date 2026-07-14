@@ -280,16 +280,16 @@ final class WebTest extends TestCase
         $result = $this->client->web->webScrapeHTML(
             url: 'https://example.com',
             country: 'de',
-            excludeSelectors: ['string'],
+            excludeSelectors: ['x'],
             headers: ['foo' => 'J!'],
-            includeFrames: true,
-            includeSelectors: ['string'],
+            includeFrames: 'true',
+            includeSelectors: ['x'],
             maxAgeMs: 0,
-            pdf: ['end' => 1, 'ocr' => true, 'shouldParse' => true, 'start' => 1],
-            settleAnimations: true,
+            pdf: ['end' => 1, 'ocr' => 'true', 'shouldParse' => 'true', 'start' => 1],
+            settleAnimations: 'true',
             tags: ['production', 'team-alpha'],
-            timeoutMs: 1000,
-            useMainContentOnly: true,
+            timeoutMs: 1,
+            useMainContentOnly: 'true',
             waitForMs: 0,
         );
 
@@ -319,17 +319,17 @@ final class WebTest extends TestCase
 
         $result = $this->client->web->webScrapeImages(
             url: 'https://example.com',
-            dedupe: true,
+            dedupe: 'true',
             enrichment: [
-                'classification' => true,
-                'hostedURL' => true,
+                'classification' => 'true',
+                'hostedURL' => 'true',
                 'maxTimePerMs' => 1,
-                'resolution' => true,
+                'resolution' => 'true',
             ],
             headers: ['foo' => 'J!'],
             maxAgeMs: 0,
             tags: ['production', 'team-alpha'],
-            timeoutMs: 1000,
+            timeoutMs: 1,
             waitForMs: 0,
         );
 
@@ -360,19 +360,19 @@ final class WebTest extends TestCase
         $result = $this->client->web->webScrapeMd(
             url: 'https://example.com',
             country: 'de',
-            excludeSelectors: ['string'],
+            excludeSelectors: ['x'],
             headers: ['foo' => 'J!'],
-            includeFrames: true,
-            includeImages: true,
-            includeLinks: true,
-            includeSelectors: ['string'],
+            includeFrames: 'true',
+            includeImages: 'true',
+            includeLinks: 'true',
+            includeSelectors: ['x'],
             maxAgeMs: 0,
-            pdf: ['end' => 1, 'ocr' => true, 'shouldParse' => true, 'start' => 1],
-            settleAnimations: true,
-            shortenBase64Images: true,
+            pdf: ['end' => 1, 'ocr' => 'true', 'shouldParse' => 'true', 'start' => 1],
+            settleAnimations: 'true',
+            shortenBase64Images: 'true',
             tags: ['production', 'team-alpha'],
-            timeoutMs: 1000,
-            useMainContentOnly: true,
+            timeoutMs: 1,
+            useMainContentOnly: 'true',
             waitForMs: 0,
         );
 
@@ -387,7 +387,7 @@ final class WebTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->web->webScrapeSitemap(domain: 'domain');
+        $result = $this->client->web->webScrapeSitemap(domain: 'xxx');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(WebWebScrapeSitemapResponse::class, $result);
@@ -401,11 +401,12 @@ final class WebTest extends TestCase
         }
 
         $result = $this->client->web->webScrapeSitemap(
-            domain: 'domain',
+            domain: 'xxx',
             headers: ['foo' => 'J!'],
             maxLinks: 1,
+            sitemapURL: 'https://example.com',
             tags: ['production', 'team-alpha'],
-            timeoutMs: 1000,
+            timeoutMs: 1,
             urlRegex: '^https?://[^/]+/blog/',
         );
 

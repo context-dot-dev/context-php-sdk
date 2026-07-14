@@ -171,11 +171,11 @@ final class MonitorsRawService implements MonitorsRawContract
      *   cursor?: string,
      *   limit?: int,
      *   q?: string,
-     *   searchBy?: list<SearchBy|value-of<SearchBy>>,
+     *   searchBy?: list<SearchBy|value-of<SearchBy>>|null,
      *   searchType?: SearchType|value-of<SearchType>,
      *   status?: MonitorListParams\Status|value-of<MonitorListParams\Status>,
      *   tag?: string,
-     *   tags?: list<string>,
+     *   tags?: list<string>|null,
      *   targetType?: TargetType|value-of<TargetType>,
      * }|MonitorListParams $params
      * @param RequestOpts|null $requestOptions

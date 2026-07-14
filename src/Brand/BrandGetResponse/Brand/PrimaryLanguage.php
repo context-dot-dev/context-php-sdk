@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Brand\BrandGetResponse\Brand;
 
 /**
- * The primary language of the brand's website content. Detected from the HTML lang tag, page content analysis, or social media descriptions.
+ * Language to force for the retrieved brand data.
  */
 enum PrimaryLanguage: string
 {

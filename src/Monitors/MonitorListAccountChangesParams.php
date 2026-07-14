@@ -33,19 +33,35 @@ final class MonitorListAccountChangesParams implements BaseModel
     use SdkModel;
     use SdkParams;
 
-    /** @var value-of<ChangeDetectionType>|null $changeDetectionType */
+    /**
+     * Filter by change detection type.
+     *
+     * @var value-of<ChangeDetectionType>|null $changeDetectionType
+     */
     #[Optional(enum: ChangeDetectionType::class)]
     public ?string $changeDetectionType;
 
+    /**
+     * Opaque pagination cursor from a previous response.
+     */
     #[Optional]
     public ?string $cursor;
 
+    /**
+     * Maximum number of items to return per page (1-100). Defaults to 25.
+     */
     #[Optional]
     public ?int $limit;
 
+    /**
+     * Filter changes to a single monitor.
+     */
     #[Optional]
     public ?string $monitorID;
 
+    /**
+     * Only include items at or after this ISO 8601 timestamp.
+     */
     #[Optional]
     public ?\DateTimeInterface $since;
 
@@ -55,10 +71,17 @@ final class MonitorListAccountChangesParams implements BaseModel
     #[Optional]
     public ?string $tag;
 
-    /** @var value-of<TargetType>|null $targetType */
+    /**
+     * Filter by target type.
+     *
+     * @var value-of<TargetType>|null $targetType
+     */
     #[Optional(enum: TargetType::class)]
     public ?string $targetType;
 
+    /**
+     * Only include items before this ISO 8601 timestamp.
+     */
     #[Optional]
     public ?\DateTimeInterface $until;
 
@@ -100,6 +123,8 @@ final class MonitorListAccountChangesParams implements BaseModel
     }
 
     /**
+     * Filter by change detection type.
+     *
      * @param ChangeDetectionType|value-of<ChangeDetectionType> $changeDetectionType
      */
     public function withChangeDetectionType(
@@ -111,6 +136,9 @@ final class MonitorListAccountChangesParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Opaque pagination cursor from a previous response.
+     */
     public function withCursor(string $cursor): self
     {
         $self = clone $this;
@@ -119,6 +147,9 @@ final class MonitorListAccountChangesParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Maximum number of items to return per page (1-100). Defaults to 25.
+     */
     public function withLimit(int $limit): self
     {
         $self = clone $this;
@@ -127,6 +158,9 @@ final class MonitorListAccountChangesParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Filter changes to a single monitor.
+     */
     public function withMonitorID(string $monitorID): self
     {
         $self = clone $this;
@@ -135,6 +169,9 @@ final class MonitorListAccountChangesParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Only include items at or after this ISO 8601 timestamp.
+     */
     public function withSince(\DateTimeInterface $since): self
     {
         $self = clone $this;
@@ -155,6 +192,8 @@ final class MonitorListAccountChangesParams implements BaseModel
     }
 
     /**
+     * Filter by target type.
+     *
      * @param TargetType|value-of<TargetType> $targetType
      */
     public function withTargetType(TargetType|string $targetType): self
@@ -165,6 +204,9 @@ final class MonitorListAccountChangesParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Only include items before this ISO 8601 timestamp.
+     */
     public function withUntil(\DateTimeInterface $until): self
     {
         $self = clone $this;

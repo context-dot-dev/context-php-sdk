@@ -38,13 +38,23 @@ final class MonitorListParams implements BaseModel
     use SdkModel;
     use SdkParams;
 
-    /** @var value-of<ChangeDetectionType>|null $changeDetectionType */
+    /**
+     * Filter by change detection type.
+     *
+     * @var value-of<ChangeDetectionType>|null $changeDetectionType
+     */
     #[Optional(enum: ChangeDetectionType::class)]
     public ?string $changeDetectionType;
 
+    /**
+     * Opaque pagination cursor from a previous response.
+     */
     #[Optional]
     public ?string $cursor;
 
+    /**
+     * Maximum number of items to return per page (1-100). Defaults to 25.
+     */
     #[Optional]
     public ?int $limit;
 
@@ -59,7 +69,7 @@ final class MonitorListParams implements BaseModel
      *
      * @var list<value-of<SearchBy>>|null $searchBy
      */
-    #[Optional(list: SearchBy::class)]
+    #[Optional(list: SearchBy::class, nullable: true)]
     public ?array $searchBy;
 
     /**
@@ -71,7 +81,7 @@ final class MonitorListParams implements BaseModel
     public ?string $searchType;
 
     /**
-     * Monitor lifecycle status. `failed` means the most recent run failed (see the monitor's `last_error`); failed monitors keep running on schedule and flip back to `active` on the next successful run. Monitors are auto-`paused` after repeated consecutive failures or insufficient-credit skips; resume by PATCHing status to `active`.
+     * Filter monitors by lifecycle status.
      *
      * @var value-of<Status>|null $status
      */
@@ -89,10 +99,14 @@ final class MonitorListParams implements BaseModel
      *
      * @var list<string>|null $tags
      */
-    #[Optional(list: 'string')]
+    #[Optional(list: 'string', nullable: true)]
     public ?array $tags;
 
-    /** @var value-of<TargetType>|null $targetType */
+    /**
+     * Filter by target type.
+     *
+     * @var value-of<TargetType>|null $targetType
+     */
     #[Optional(enum: TargetType::class)]
     public ?string $targetType;
 
@@ -142,6 +156,8 @@ final class MonitorListParams implements BaseModel
     }
 
     /**
+     * Filter by change detection type.
+     *
      * @param ChangeDetectionType|value-of<ChangeDetectionType> $changeDetectionType
      */
     public function withChangeDetectionType(
@@ -153,6 +169,9 @@ final class MonitorListParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Opaque pagination cursor from a previous response.
+     */
     public function withCursor(string $cursor): self
     {
         $self = clone $this;
@@ -161,6 +180,9 @@ final class MonitorListParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Maximum number of items to return per page (1-100). Defaults to 25.
+     */
     public function withLimit(int $limit): self
     {
         $self = clone $this;
@@ -183,9 +205,9 @@ final class MonitorListParams implements BaseModel
     /**
      * Comma-separated fields to search with `q`. Defaults to all of them. Note `instructions` only exists on extract monitors.
      *
-     * @param list<SearchBy|value-of<SearchBy>> $searchBy
+     * @param list<SearchBy|value-of<SearchBy>>|null $searchBy
      */
-    public function withSearchBy(array $searchBy): self
+    public function withSearchBy(?array $searchBy): self
     {
         $self = clone $this;
         $self['searchBy'] = $searchBy;
@@ -207,7 +229,7 @@ final class MonitorListParams implements BaseModel
     }
 
     /**
-     * Monitor lifecycle status. `failed` means the most recent run failed (see the monitor's `last_error`); failed monitors keep running on schedule and flip back to `active` on the next successful run. Monitors are auto-`paused` after repeated consecutive failures or insufficient-credit skips; resume by PATCHing status to `active`.
+     * Filter monitors by lifecycle status.
      *
      * @param Status|value-of<Status> $status
      */
@@ -233,9 +255,9 @@ final class MonitorListParams implements BaseModel
     /**
      * Comma-separated list of tags to filter by (matches monitors having any of them).
      *
-     * @param list<string> $tags
+     * @param list<string>|null $tags
      */
-    public function withTags(array $tags): self
+    public function withTags(?array $tags): self
     {
         $self = clone $this;
         $self['tags'] = $tags;
@@ -244,6 +266,8 @@ final class MonitorListParams implements BaseModel
     }
 
     /**
+     * Filter by target type.
+     *
      * @param TargetType|value-of<TargetType> $targetType
      */
     public function withTargetType(TargetType|string $targetType): self

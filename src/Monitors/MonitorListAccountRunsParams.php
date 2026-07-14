@@ -25,14 +25,20 @@ final class MonitorListAccountRunsParams implements BaseModel
     use SdkModel;
     use SdkParams;
 
+    /**
+     * Opaque pagination cursor from a previous response.
+     */
     #[Optional]
     public ?string $cursor;
 
+    /**
+     * Maximum number of items to return per page (1-100). Defaults to 25.
+     */
     #[Optional]
     public ?int $limit;
 
     /**
-     * Lifecycle status of a run. `skipped` runs never executed — see `skip_reason` (insufficient credits, monitor paused, or superseded by a concurrent run).
+     * Filter runs by lifecycle status.
      *
      * @var value-of<Status>|null $status
      */
@@ -65,6 +71,9 @@ final class MonitorListAccountRunsParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Opaque pagination cursor from a previous response.
+     */
     public function withCursor(string $cursor): self
     {
         $self = clone $this;
@@ -73,6 +82,9 @@ final class MonitorListAccountRunsParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Maximum number of items to return per page (1-100). Defaults to 25.
+     */
     public function withLimit(int $limit): self
     {
         $self = clone $this;
@@ -82,7 +94,7 @@ final class MonitorListAccountRunsParams implements BaseModel
     }
 
     /**
-     * Lifecycle status of a run. `skipped` runs never executed — see `skip_reason` (insufficient credits, monitor paused, or superseded by a concurrent run).
+     * Filter runs by lifecycle status.
      *
      * @param Status|value-of<Status> $status
      */

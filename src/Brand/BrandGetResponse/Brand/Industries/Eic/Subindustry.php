@@ -109,8 +109,6 @@ enum Subindustry: string
 
     case CREATOR_ECONOMY_INFLUENCER_PLATFORMS = 'Creator Economy & Influencer Platforms';
 
-    case ADVERTISING_ADTECH_MEDIA_BUYING = 'Advertising, Adtech & Media Buying';
-
     case FILM_TV_PRODUCTION_STUDIOS = 'Film, TV & Production Studios';
 
     case EVENTS_VENUES_LIVE_ENTERTAINMENT = 'Events, Venues & Live Entertainment';
@@ -230,6 +228,8 @@ enum Subindustry: string
     case COUTURE_MADE_TO_MEASURE = 'Couture & Made-to-Measure';
 
     case NEWS_PUBLISHING_JOURNALISM = 'News Publishing & Journalism';
+
+    case ADVERTISING_ADTECH_MEDIA_BUYING = 'Advertising, Adtech & Media Buying';
 
     case DIGITAL_MEDIA_CONTENT_PLATFORMS = 'Digital Media & Content Platforms';
 
