@@ -108,14 +108,16 @@ interface MonitorsContract
     /**
      * @api
      *
-     * @param ChangeDetectionType|value-of<ChangeDetectionType> $changeDetectionType
+     * @param ChangeDetectionType|value-of<ChangeDetectionType> $changeDetectionType filter by change detection type
+     * @param string $cursor opaque pagination cursor from a previous response
+     * @param int $limit Maximum number of items to return per page (1-100). Defaults to 25.
      * @param string $q free-text search term, matched against the fields named in `search_by`
-     * @param list<SearchBy|value-of<SearchBy>> $searchBy Comma-separated fields to search with `q`. Defaults to all of them. Note `instructions` only exists on extract monitors.
+     * @param list<SearchBy|value-of<SearchBy>>|null $searchBy Comma-separated fields to search with `q`. Defaults to all of them. Note `instructions` only exists on extract monitors.
      * @param SearchType|value-of<SearchType> $searchType `prefix` for as-you-type prefix matching (default), `exact` for full-token matching
-     * @param \ContextDev\Monitors\MonitorListParams\Status|value-of<\ContextDev\Monitors\MonitorListParams\Status> $status Monitor lifecycle status. `failed` means the most recent run failed (see the monitor's `last_error`); failed monitors keep running on schedule and flip back to `active` on the next successful run. Monitors are auto-`paused` after repeated consecutive failures or insufficient-credit skips; resume by PATCHing status to `active`.
+     * @param \ContextDev\Monitors\MonitorListParams\Status|value-of<\ContextDev\Monitors\MonitorListParams\Status> $status filter monitors by lifecycle status
      * @param string $tag filter to items that have this tag
-     * @param list<string> $tags comma-separated list of tags to filter by (matches monitors having any of them)
-     * @param TargetType|value-of<TargetType> $targetType
+     * @param list<string>|null $tags comma-separated list of tags to filter by (matches monitors having any of them)
+     * @param TargetType|value-of<TargetType> $targetType filter by target type
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -123,10 +125,10 @@ interface MonitorsContract
     public function list(
         ChangeDetectionType|string|null $changeDetectionType = null,
         ?string $cursor = null,
-        int $limit = 25,
+        ?int $limit = null,
         ?string $q = null,
         ?array $searchBy = null,
-        SearchType|string $searchType = 'prefix',
+        SearchType|string|null $searchType = null,
         \ContextDev\Monitors\MonitorListParams\Status|string|null $status = null,
         ?string $tag = null,
         ?array $tags = null,
@@ -149,9 +151,14 @@ interface MonitorsContract
     /**
      * @api
      *
-     * @param \ContextDev\Monitors\MonitorListAccountChangesParams\ChangeDetectionType|value-of<\ContextDev\Monitors\MonitorListAccountChangesParams\ChangeDetectionType> $changeDetectionType
+     * @param \ContextDev\Monitors\MonitorListAccountChangesParams\ChangeDetectionType|value-of<\ContextDev\Monitors\MonitorListAccountChangesParams\ChangeDetectionType> $changeDetectionType filter by change detection type
+     * @param string $cursor opaque pagination cursor from a previous response
+     * @param int $limit Maximum number of items to return per page (1-100). Defaults to 25.
+     * @param string $monitorID filter changes to a single monitor
+     * @param \DateTimeInterface $since only include items at or after this ISO 8601 timestamp
      * @param string $tag filter to items that have this tag
-     * @param \ContextDev\Monitors\MonitorListAccountChangesParams\TargetType|value-of<\ContextDev\Monitors\MonitorListAccountChangesParams\TargetType> $targetType
+     * @param \ContextDev\Monitors\MonitorListAccountChangesParams\TargetType|value-of<\ContextDev\Monitors\MonitorListAccountChangesParams\TargetType> $targetType filter by target type
+     * @param \DateTimeInterface $until only include items before this ISO 8601 timestamp
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -159,7 +166,7 @@ interface MonitorsContract
     public function listAccountChanges(
         \ContextDev\Monitors\MonitorListAccountChangesParams\ChangeDetectionType|string|null $changeDetectionType = null,
         ?string $cursor = null,
-        int $limit = 25,
+        ?int $limit = null,
         ?string $monitorID = null,
         ?\DateTimeInterface $since = null,
         ?string $tag = null,
@@ -171,14 +178,16 @@ interface MonitorsContract
     /**
      * @api
      *
-     * @param \ContextDev\Monitors\MonitorListAccountRunsParams\Status|value-of<\ContextDev\Monitors\MonitorListAccountRunsParams\Status> $status Lifecycle status of a run. `skipped` runs never executed — see `skip_reason` (insufficient credits, monitor paused, or superseded by a concurrent run).
+     * @param string $cursor opaque pagination cursor from a previous response
+     * @param int $limit Maximum number of items to return per page (1-100). Defaults to 25.
+     * @param \ContextDev\Monitors\MonitorListAccountRunsParams\Status|value-of<\ContextDev\Monitors\MonitorListAccountRunsParams\Status> $status filter runs by lifecycle status
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function listAccountRuns(
         ?string $cursor = null,
-        int $limit = 25,
+        ?int $limit = null,
         \ContextDev\Monitors\MonitorListAccountRunsParams\Status|string|null $status = null,
         RequestOptions|array|null $requestOptions = null,
     ): MonitorListAccountRunsResponse;
@@ -186,7 +195,11 @@ interface MonitorsContract
     /**
      * @api
      *
+     * @param string $cursor opaque pagination cursor from a previous response
+     * @param int $limit Maximum number of items to return per page (1-100). Defaults to 25.
+     * @param \DateTimeInterface $since only include items at or after this ISO 8601 timestamp
      * @param string $tag filter to items that have this tag
+     * @param \DateTimeInterface $until only include items before this ISO 8601 timestamp
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -194,7 +207,7 @@ interface MonitorsContract
     public function listChanges(
         string $monitorID,
         ?string $cursor = null,
-        int $limit = 25,
+        ?int $limit = null,
         ?\DateTimeInterface $since = null,
         ?string $tag = null,
         ?\DateTimeInterface $until = null,
@@ -204,7 +217,9 @@ interface MonitorsContract
     /**
      * @api
      *
-     * @param \ContextDev\Monitors\MonitorListRunsParams\Status|value-of<\ContextDev\Monitors\MonitorListRunsParams\Status> $status Lifecycle status of a run. `skipped` runs never executed — see `skip_reason` (insufficient credits, monitor paused, or superseded by a concurrent run).
+     * @param string $cursor opaque pagination cursor from a previous response
+     * @param int $limit Maximum number of items to return per page (1-100). Defaults to 25.
+     * @param \ContextDev\Monitors\MonitorListRunsParams\Status|value-of<\ContextDev\Monitors\MonitorListRunsParams\Status> $status filter runs by lifecycle status
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -212,7 +227,7 @@ interface MonitorsContract
     public function listRuns(
         string $monitorID,
         ?string $cursor = null,
-        int $limit = 25,
+        ?int $limit = null,
         \ContextDev\Monitors\MonitorListRunsParams\Status|string|null $status = null,
         RequestOptions|array|null $requestOptions = null,
     ): MonitorListRunsResponse;

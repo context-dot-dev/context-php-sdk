@@ -36,7 +36,7 @@ final class UtilityTest extends TestCase
         }
 
         $result = $this->client->utility->prefetch(
-            identifier: ['domain' => 'domain'],
+            identifier: ['domain' => 'xxx'],
             type: 'brand'
         );
 
@@ -52,7 +52,7 @@ final class UtilityTest extends TestCase
         }
 
         $result = $this->client->utility->prefetch(
-            identifier: ['domain' => 'domain'],
+            identifier: ['domain' => 'xxx'],
             type: 'brand',
             tags: ['production', 'team-alpha'],
             timeoutMs: 1000,

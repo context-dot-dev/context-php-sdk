@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ContextDev\Brand;
 
+use ContextDev\Brand\BrandRetrieveSimplifiedParams\Theme;
 use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
@@ -19,6 +20,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   domain: string,
  *   maxAgeMs?: int|null,
  *   tags?: list<string>|null,
+ *   theme?: null|Theme|value-of<Theme>,
  *   timeoutMs?: int|null,
  * }
  */
@@ -37,7 +39,7 @@ final class BrandRetrieveSimplifiedParams implements BaseModel
     /**
      * Maximum age in milliseconds for cached brand data before the API performs a hard refresh. Defaults to 3 months (7776000000 ms). Values below 1 day (86400000 ms) are clamped to 1 day; values above 1 year (31536000000 ms) are clamped to 1 year.
      */
-    #[Optional]
+    #[Optional(nullable: true)]
     public ?int $maxAgeMs;
 
     /**
@@ -47,6 +49,14 @@ final class BrandRetrieveSimplifiedParams implements BaseModel
      */
     #[Optional(list: 'string')]
     public ?array $tags;
+
+    /**
+     * Optional theme preference used when selecting brand assets.
+     *
+     * @var value-of<Theme>|null $theme
+     */
+    #[Optional(enum: Theme::class)]
+    public ?string $theme;
 
     /**
      * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
@@ -79,11 +89,13 @@ final class BrandRetrieveSimplifiedParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param list<string>|null $tags
+     * @param Theme|value-of<Theme>|null $theme
      */
     public static function with(
         string $domain,
         ?int $maxAgeMs = null,
         ?array $tags = null,
+        Theme|string|null $theme = null,
         ?int $timeoutMs = null,
     ): self {
         $self = new self;
@@ -92,6 +104,7 @@ final class BrandRetrieveSimplifiedParams implements BaseModel
 
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
         null !== $tags && $self['tags'] = $tags;
+        null !== $theme && $self['theme'] = $theme;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
 
         return $self;
@@ -111,7 +124,7 @@ final class BrandRetrieveSimplifiedParams implements BaseModel
     /**
      * Maximum age in milliseconds for cached brand data before the API performs a hard refresh. Defaults to 3 months (7776000000 ms). Values below 1 day (86400000 ms) are clamped to 1 day; values above 1 year (31536000000 ms) are clamped to 1 year.
      */
-    public function withMaxAgeMs(int $maxAgeMs): self
+    public function withMaxAgeMs(?int $maxAgeMs): self
     {
         $self = clone $this;
         $self['maxAgeMs'] = $maxAgeMs;
@@ -128,6 +141,19 @@ final class BrandRetrieveSimplifiedParams implements BaseModel
     {
         $self = clone $this;
         $self['tags'] = $tags;
+
+        return $self;
+    }
+
+    /**
+     * Optional theme preference used when selecting brand assets.
+     *
+     * @param Theme|value-of<Theme> $theme
+     */
+    public function withTheme(Theme|string $theme): self
+    {
+        $self = clone $this;
+        $self['theme'] = $theme;
 
         return $self;
     }

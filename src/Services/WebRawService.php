@@ -23,7 +23,6 @@ use ContextDev\Web\WebExtractStyleguideResponse;
 use ContextDev\Web\WebScreenshotParams;
 use ContextDev\Web\WebScreenshotParams\Country;
 use ContextDev\Web\WebScreenshotParams\FullScreenshot;
-use ContextDev\Web\WebScreenshotParams\HandleCookiePopup;
 use ContextDev\Web\WebScreenshotParams\Page;
 use ContextDev\Web\WebScreenshotParams\Viewport;
 use ContextDev\Web\WebScreenshotResponse;
@@ -45,12 +44,23 @@ use ContextDev\Web\WebWebScrapeSitemapResponse;
 
 /**
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebExtractParams\Pdf
+ * @phpstan-import-type HandleCookiePopupShape from \ContextDev\Web\WebScreenshotParams\HandleCookiePopup
  * @phpstan-import-type ViewportShape from \ContextDev\Web\WebScreenshotParams\Viewport
  * @phpstan-import-type MarkdownOptionsShape from \ContextDev\Web\WebSearchParams\MarkdownOptions
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebCrawlMdParams\Pdf as PdfShape1
+ * @phpstan-import-type IncludeFramesShape from \ContextDev\Web\WebWebScrapeHTMLParams\IncludeFrames
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeHTMLParams\Pdf as PdfShape2
+ * @phpstan-import-type SettleAnimationsShape from \ContextDev\Web\WebWebScrapeHTMLParams\SettleAnimations
+ * @phpstan-import-type UseMainContentOnlyShape from \ContextDev\Web\WebWebScrapeHTMLParams\UseMainContentOnly
+ * @phpstan-import-type DedupeShape from \ContextDev\Web\WebWebScrapeImagesParams\Dedupe
  * @phpstan-import-type EnrichmentShape from \ContextDev\Web\WebWebScrapeImagesParams\Enrichment
+ * @phpstan-import-type IncludeFramesShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeFrames as IncludeFramesShape1
+ * @phpstan-import-type IncludeImagesShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeImages
+ * @phpstan-import-type IncludeLinksShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeLinks
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeMdParams\Pdf as PdfShape3
+ * @phpstan-import-type SettleAnimationsShape from \ContextDev\Web\WebWebScrapeMdParams\SettleAnimations as SettleAnimationsShape1
+ * @phpstan-import-type ShortenBase64ImagesShape from \ContextDev\Web\WebWebScrapeMdParams\ShortenBase64Images
+ * @phpstan-import-type UseMainContentOnlyShape from \ContextDev\Web\WebWebScrapeMdParams\UseMainContentOnly as UseMainContentOnlyShape1
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class WebRawService implements WebRawContract
@@ -148,7 +158,7 @@ final class WebRawService implements WebRawContract
      * @param array{
      *   directURL?: string,
      *   domain?: string,
-     *   maxAgeMs?: int,
+     *   maxAgeMs?: int|null,
      *   tags?: list<string>,
      *   timeoutMs?: int,
      * }|WebExtractFontsParams $params
@@ -189,7 +199,7 @@ final class WebRawService implements WebRawContract
      *   colorScheme?: ColorScheme|value-of<ColorScheme>,
      *   directURL?: string,
      *   domain?: string,
-     *   maxAgeMs?: int,
+     *   maxAgeMs?: int|null,
      *   tags?: list<string>,
      *   timeoutMs?: int,
      * }|WebExtractStyleguideParams $params
@@ -232,14 +242,14 @@ final class WebRawService implements WebRawContract
      *   directURL?: string,
      *   domain?: string,
      *   fullScreenshot?: FullScreenshot|value-of<FullScreenshot>,
-     *   handleCookiePopup?: HandleCookiePopup|value-of<HandleCookiePopup>,
-     *   maxAgeMs?: int,
+     *   handleCookiePopup?: HandleCookiePopupShape,
+     *   maxAgeMs?: int|null,
      *   page?: Page|value-of<Page>,
-     *   scrollOffset?: int,
+     *   scrollOffset?: int|null,
      *   tags?: list<string>,
      *   timeoutMs?: int,
      *   viewport?: Viewport|ViewportShape,
-     *   waitForMs?: int,
+     *   waitForMs?: int|null,
      * }|WebScreenshotParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -371,17 +381,17 @@ final class WebRawService implements WebRawContract
      * @param array{
      *   url: string,
      *   country?: value-of<WebWebScrapeHTMLParams\Country>,
-     *   excludeSelectors?: list<string>,
+     *   excludeSelectors?: list<string>|null,
      *   headers?: array<string,string>,
-     *   includeFrames?: bool,
-     *   includeSelectors?: list<string>,
-     *   maxAgeMs?: int,
+     *   includeFrames?: IncludeFramesShape,
+     *   includeSelectors?: list<string>|null,
+     *   maxAgeMs?: int|null,
      *   pdf?: WebWebScrapeHTMLParams\Pdf|PdfShape2,
-     *   settleAnimations?: bool,
+     *   settleAnimations?: SettleAnimationsShape,
      *   tags?: list<string>,
      *   timeoutMs?: int,
-     *   useMainContentOnly?: bool,
-     *   waitForMs?: int,
+     *   useMainContentOnly?: UseMainContentOnlyShape,
+     *   waitForMs?: int|null,
      * }|WebWebScrapeHTMLParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -415,13 +425,13 @@ final class WebRawService implements WebRawContract
      *
      * @param array{
      *   url: string,
-     *   dedupe?: bool,
-     *   enrichment?: Enrichment|EnrichmentShape,
+     *   dedupe?: DedupeShape,
+     *   enrichment?: Enrichment|EnrichmentShape|null,
      *   headers?: array<string,string>,
-     *   maxAgeMs?: int,
+     *   maxAgeMs?: int|null,
      *   tags?: list<string>,
      *   timeoutMs?: int,
-     *   waitForMs?: int,
+     *   waitForMs?: int|null,
      * }|WebWebScrapeImagesParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -469,20 +479,20 @@ final class WebRawService implements WebRawContract
      * @param array{
      *   url: string,
      *   country?: value-of<WebWebScrapeMdParams\Country>,
-     *   excludeSelectors?: list<string>,
+     *   excludeSelectors?: list<string>|null,
      *   headers?: array<string,string>,
-     *   includeFrames?: bool,
-     *   includeImages?: bool,
-     *   includeLinks?: bool,
-     *   includeSelectors?: list<string>,
-     *   maxAgeMs?: int,
+     *   includeFrames?: IncludeFramesShape1,
+     *   includeImages?: IncludeImagesShape,
+     *   includeLinks?: IncludeLinksShape,
+     *   includeSelectors?: list<string>|null,
+     *   maxAgeMs?: int|null,
      *   pdf?: WebWebScrapeMdParams\Pdf|PdfShape3,
-     *   settleAnimations?: bool,
-     *   shortenBase64Images?: bool,
+     *   settleAnimations?: SettleAnimationsShape1,
+     *   shortenBase64Images?: ShortenBase64ImagesShape,
      *   tags?: list<string>,
      *   timeoutMs?: int,
-     *   useMainContentOnly?: bool,
-     *   waitForMs?: int,
+     *   useMainContentOnly?: UseMainContentOnlyShape1,
+     *   waitForMs?: int|null,
      * }|WebWebScrapeMdParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -518,6 +528,7 @@ final class WebRawService implements WebRawContract
      *   domain: string,
      *   headers?: array<string,string>,
      *   maxLinks?: int,
+     *   sitemapURL?: string,
      *   tags?: list<string>,
      *   timeoutMs?: int,
      *   urlRegex?: string,
@@ -541,7 +552,10 @@ final class WebRawService implements WebRawContract
         return $this->client->request(
             method: 'get',
             path: 'web/scrape/sitemap',
-            query: Util::array_transform_keys($parsed, ['timeoutMs' => 'timeoutMS']),
+            query: Util::array_transform_keys(
+                $parsed,
+                ['sitemapURL' => 'sitemapUrl', 'timeoutMs' => 'timeoutMS']
+            ),
             options: $options,
             convert: WebWebScrapeSitemapResponse::class,
         );

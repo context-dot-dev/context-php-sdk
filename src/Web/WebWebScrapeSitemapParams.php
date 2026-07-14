@@ -19,6 +19,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   domain: string,
  *   headers?: array<string,string>|null,
  *   maxLinks?: int|null,
+ *   sitemapURL?: string|null,
  *   tags?: list<string>|null,
  *   timeoutMs?: int|null,
  *   urlRegex?: string|null,
@@ -49,6 +50,12 @@ final class WebWebScrapeSitemapParams implements BaseModel
      */
     #[Optional]
     public ?int $maxLinks;
+
+    /**
+     * Optional explicit sitemap URL. When provided, exactly this sitemap is crawled instead of discovering the domain's sitemaps.
+     */
+    #[Optional]
+    public ?string $sitemapURL;
 
     /**
      * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
@@ -101,6 +108,7 @@ final class WebWebScrapeSitemapParams implements BaseModel
         string $domain,
         ?array $headers = null,
         ?int $maxLinks = null,
+        ?string $sitemapURL = null,
         ?array $tags = null,
         ?int $timeoutMs = null,
         ?string $urlRegex = null,
@@ -111,6 +119,7 @@ final class WebWebScrapeSitemapParams implements BaseModel
 
         null !== $headers && $self['headers'] = $headers;
         null !== $maxLinks && $self['maxLinks'] = $maxLinks;
+        null !== $sitemapURL && $self['sitemapURL'] = $sitemapURL;
         null !== $tags && $self['tags'] = $tags;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
         null !== $urlRegex && $self['urlRegex'] = $urlRegex;
@@ -149,6 +158,17 @@ final class WebWebScrapeSitemapParams implements BaseModel
     {
         $self = clone $this;
         $self['maxLinks'] = $maxLinks;
+
+        return $self;
+    }
+
+    /**
+     * Optional explicit sitemap URL. When provided, exactly this sitemap is crawled instead of discovering the domain's sitemaps.
+     */
+    public function withSitemapURL(string $sitemapURL): self
+    {
+        $self = clone $this;
+        $self['sitemapURL'] = $sitemapURL;
 
         return $self;
     }

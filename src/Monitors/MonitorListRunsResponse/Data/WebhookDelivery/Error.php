@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ContextDev\Monitors\WebhookDelivery;
+namespace ContextDev\Monitors\MonitorListRunsResponse\Data\WebhookDelivery;
 
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;

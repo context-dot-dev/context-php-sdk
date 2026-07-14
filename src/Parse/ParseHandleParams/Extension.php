@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Parse\ParseHandleParams;
 
 /**
- * Optional file extension hint. Case-insensitive; a leading dot is accepted (e.g. ".pdf").
+ * Optional file extension hint, such as pdf, docx, xlsx, pptx, html, json, csv, md, py, rtf, jpg, png, or txt.
  */
 enum Extension: string
 {
