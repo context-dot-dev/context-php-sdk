@@ -82,6 +82,7 @@ final class WebTest extends TestCase
             maxDepth: 0,
             maxPages: 1,
             pdf: ['end' => 1, 'shouldParse' => true, 'start' => 1],
+            settleAnimations: true,
             stopAfterMs: 10000,
             tags: ['production', 'team-alpha'],
             timeoutMs: 1000,

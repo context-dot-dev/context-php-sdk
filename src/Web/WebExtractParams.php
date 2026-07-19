@@ -29,6 +29,7 @@ use ContextDev\Web\WebExtractParams\Pdf;
  *   maxDepth?: int|null,
  *   maxPages?: int|null,
  *   pdf?: null|Pdf|PdfShape,
+ *   settleAnimations?: bool|null,
  *   stopAfterMs?: int|null,
  *   tags?: list<string>|null,
  *   timeoutMs?: int|null,
@@ -101,13 +102,19 @@ final class WebExtractParams implements BaseModel
     public ?Pdf $pdf;
 
     /**
+     * When true, waits briefly for CSS and transition animations to settle before extracting each crawled page. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
+     */
+    #[Optional]
+    public ?bool $settleAnimations;
+
+    /**
      * Soft time budget for the crawl in milliseconds. Min: 10000 (10s). Max: 110000 (110s). Default: 80000 (80s).
      */
     #[Optional]
     public ?int $stopAfterMs;
 
     /**
-     * Optional caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
      *
      * @var list<string>|null $tags
      */
@@ -165,6 +172,7 @@ final class WebExtractParams implements BaseModel
         ?int $maxDepth = null,
         ?int $maxPages = null,
         Pdf|array|null $pdf = null,
+        ?bool $settleAnimations = null,
         ?int $stopAfterMs = null,
         ?array $tags = null,
         ?int $timeoutMs = null,
@@ -183,6 +191,7 @@ final class WebExtractParams implements BaseModel
         null !== $maxDepth && $self['maxDepth'] = $maxDepth;
         null !== $maxPages && $self['maxPages'] = $maxPages;
         null !== $pdf && $self['pdf'] = $pdf;
+        null !== $settleAnimations && $self['settleAnimations'] = $settleAnimations;
         null !== $stopAfterMs && $self['stopAfterMs'] = $stopAfterMs;
         null !== $tags && $self['tags'] = $tags;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
@@ -304,6 +313,17 @@ final class WebExtractParams implements BaseModel
     }
 
     /**
+     * When true, waits briefly for CSS and transition animations to settle before extracting each crawled page. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
+     */
+    public function withSettleAnimations(bool $settleAnimations): self
+    {
+        $self = clone $this;
+        $self['settleAnimations'] = $settleAnimations;
+
+        return $self;
+    }
+
+    /**
      * Soft time budget for the crawl in milliseconds. Min: 10000 (10s). Max: 110000 (110s). Default: 80000 (80s).
      */
     public function withStopAfterMs(int $stopAfterMs): self
@@ -315,7 +335,7 @@ final class WebExtractParams implements BaseModel
     }
 
     /**
-     * Optional caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
      *
      * @param list<string> $tags
      */

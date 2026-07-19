@@ -22,7 +22,7 @@ interface UtilityContract
      *
      * @param IdentifierShape $identifier Identifier of the brand to prefetch. Provide exactly one of domain or email.
      * @param Type|value-of<Type> $type What to prefetch. Currently only 'brand' is supported.
-     * @param list<string> $tags Optional caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param RequestOpts|null $requestOptions
      *

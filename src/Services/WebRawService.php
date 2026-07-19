@@ -87,6 +87,7 @@ final class WebRawService implements WebRawContract
      *   maxDepth?: int,
      *   maxPages?: int,
      *   pdf?: Pdf|PdfShape,
+     *   settleAnimations?: bool,
      *   stopAfterMs?: int,
      *   tags?: list<string>,
      *   timeoutMs?: int,

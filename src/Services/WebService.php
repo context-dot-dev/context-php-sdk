@@ -82,8 +82,9 @@ final class WebService implements WebContract
      * @param int $maxDepth Optional maximum link depth from the starting URL (0 = only the starting page). If omitted, there is no crawl depth limit.
      * @param int $maxPages Maximum number of pages to analyze for extraction. Hard cap: 50. Defaults to 5.
      * @param Pdf|PdfShape $pdf
+     * @param bool $settleAnimations When true, waits briefly for CSS and transition animations to settle before extracting each crawled page. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
      * @param int $stopAfterMs Soft time budget for the crawl in milliseconds. Min: 10000 (10s). Max: 110000 (110s). Default: 80000 (80s).
-     * @param list<string> $tags Optional caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param int $waitForMs optional browser wait time in milliseconds after initial page load for each crawled page
      * @param RequestOpts|null $requestOptions
@@ -101,6 +102,7 @@ final class WebService implements WebContract
         ?int $maxDepth = null,
         int $maxPages = 5,
         Pdf|array $pdf = ['shouldParse' => true],
+        bool $settleAnimations = false,
         int $stopAfterMs = 80000,
         ?array $tags = null,
         ?int $timeoutMs = null,
@@ -119,6 +121,7 @@ final class WebService implements WebContract
                 'maxDepth' => $maxDepth,
                 'maxPages' => $maxPages,
                 'pdf' => $pdf,
+                'settleAnimations' => $settleAnimations,
                 'stopAfterMs' => $stopAfterMs,
                 'tags' => $tags,
                 'timeoutMs' => $timeoutMs,
@@ -321,7 +324,7 @@ final class WebService implements WebContract
      * @param MarkdownOptions|MarkdownOptionsShape $markdownOptions Inline Markdown scraping for each result. Set `enabled: true` to activate.
      * @param int $numResults Number of results to request and return (10–100). Defaults to 10.
      * @param bool $queryFanout expand the query into multiple parallel variants for broader recall
-     * @param list<string> $tags Optional caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param RequestOpts|null $requestOptions
      *
@@ -381,7 +384,7 @@ final class WebService implements WebContract
      * @param bool $settleAnimations When true, waits briefly for CSS and transition animations to settle before extracting each crawled page. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
      * @param bool $shortenBase64Images Truncate base64-encoded image data in the Markdown output
      * @param int $stopAfterMs Soft time budget for the crawl in milliseconds. After each scrape, the crawler checks the elapsed time and, if exceeded, returns the pages collected so far instead of continuing. Min: 10000 (10s). Max: 110000 (110s). Default: 80000 (80s).
-     * @param list<string> $tags Optional caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param string $urlRegex Regex pattern. Only URLs matching this pattern will be followed and scraped.
      * @param bool $useMainContentOnly Extract only the main content, stripping headers, footers, sidebars, and navigation
