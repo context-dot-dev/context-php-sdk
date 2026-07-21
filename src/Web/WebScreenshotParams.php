@@ -15,6 +15,7 @@ use ContextDev\Web\WebScreenshotParams\HandleCookiePopup;
 use ContextDev\Web\WebScreenshotParams\HandleCookiePopup\UnionMember1;
 use ContextDev\Web\WebScreenshotParams\Page;
 use ContextDev\Web\WebScreenshotParams\Viewport;
+use ContextDev\Web\WebScreenshotParams\Zdr;
 
 /**
  * Capture a screenshot of a website.
@@ -39,6 +40,7 @@ use ContextDev\Web\WebScreenshotParams\Viewport;
  *   timeoutMs?: int|null,
  *   viewport?: null|Viewport|ViewportShape,
  *   waitForMs?: int|null,
+ *   zdr?: null|Zdr|value-of<Zdr>,
  * }
  */
 final class WebScreenshotParams implements BaseModel
@@ -137,6 +139,14 @@ final class WebScreenshotParams implements BaseModel
     #[Optional(nullable: true)]
     public ?int $waitForMs;
 
+    /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @var value-of<Zdr>|null $zdr
+     */
+    #[Optional(enum: Zdr::class)]
+    public ?string $zdr;
+
     public function __construct()
     {
         $this->initialize();
@@ -154,6 +164,7 @@ final class WebScreenshotParams implements BaseModel
      * @param Page|value-of<Page>|null $page
      * @param list<string>|null $tags
      * @param Viewport|ViewportShape|null $viewport
+     * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
         ColorScheme|string|null $colorScheme = null,
@@ -169,6 +180,7 @@ final class WebScreenshotParams implements BaseModel
         ?int $timeoutMs = null,
         Viewport|array|null $viewport = null,
         ?int $waitForMs = null,
+        Zdr|string|null $zdr = null,
     ): self {
         $self = new self;
 
@@ -185,6 +197,7 @@ final class WebScreenshotParams implements BaseModel
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
         null !== $viewport && $self['viewport'] = $viewport;
         null !== $waitForMs && $self['waitForMs'] = $waitForMs;
+        null !== $zdr && $self['zdr'] = $zdr;
 
         return $self;
     }
@@ -344,6 +357,19 @@ final class WebScreenshotParams implements BaseModel
     {
         $self = clone $this;
         $self['waitForMs'] = $waitForMs;
+
+        return $self;
+    }
+
+    /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @param Zdr|value-of<Zdr> $zdr
+     */
+    public function withZdr(Zdr|string $zdr): self
+    {
+        $self = clone $this;
+        $self['zdr'] = $zdr;
 
         return $self;
     }

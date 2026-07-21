@@ -9,6 +9,7 @@ use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebWebScrapeSitemapParams\Zdr;
 
 /**
  * Crawl an entire website's sitemap and return all discovered page URLs.
@@ -23,6 +24,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   tags?: list<string>|null,
  *   timeoutMs?: int|null,
  *   urlRegex?: string|null,
+ *   zdr?: null|Zdr|value-of<Zdr>,
  * }
  */
 final class WebWebScrapeSitemapParams implements BaseModel
@@ -78,6 +80,14 @@ final class WebWebScrapeSitemapParams implements BaseModel
     public ?string $urlRegex;
 
     /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @var value-of<Zdr>|null $zdr
+     */
+    #[Optional(enum: Zdr::class)]
+    public ?string $zdr;
+
+    /**
      * `new WebWebScrapeSitemapParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -103,6 +113,7 @@ final class WebWebScrapeSitemapParams implements BaseModel
      *
      * @param array<string,string>|null $headers
      * @param list<string>|null $tags
+     * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
         string $domain,
@@ -112,6 +123,7 @@ final class WebWebScrapeSitemapParams implements BaseModel
         ?array $tags = null,
         ?int $timeoutMs = null,
         ?string $urlRegex = null,
+        Zdr|string|null $zdr = null,
     ): self {
         $self = new self;
 
@@ -123,6 +135,7 @@ final class WebWebScrapeSitemapParams implements BaseModel
         null !== $tags && $self['tags'] = $tags;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
         null !== $urlRegex && $self['urlRegex'] = $urlRegex;
+        null !== $zdr && $self['zdr'] = $zdr;
 
         return $self;
     }
@@ -204,6 +217,19 @@ final class WebWebScrapeSitemapParams implements BaseModel
     {
         $self = clone $this;
         $self['urlRegex'] = $urlRegex;
+
+        return $self;
+    }
+
+    /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @param Zdr|value-of<Zdr> $zdr
+     */
+    public function withZdr(Zdr|string $zdr): self
+    {
+        $self = clone $this;
+        $self['zdr'] = $zdr;
 
         return $self;
     }

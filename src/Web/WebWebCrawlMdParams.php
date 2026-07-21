@@ -11,6 +11,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebWebCrawlMdParams\Country;
 use ContextDev\Web\WebWebCrawlMdParams\Pdf;
+use ContextDev\Web\WebWebCrawlMdParams\Zdr;
 
 /**
  * Performs a crawl starting from a given URL, extracts page content as Markdown, and returns results for all crawled pages.
@@ -40,6 +41,7 @@ use ContextDev\Web\WebWebCrawlMdParams\Pdf;
  *   urlRegex?: string|null,
  *   useMainContentOnly?: bool|null,
  *   waitForMs?: int|null,
+ *   zdr?: null|Zdr|value-of<Zdr>,
  * }
  */
 final class WebWebCrawlMdParams implements BaseModel
@@ -177,6 +179,14 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?int $waitForMs;
 
     /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @var value-of<Zdr>|null $zdr
+     */
+    #[Optional(enum: Zdr::class)]
+    public ?string $zdr;
+
+    /**
      * `new WebWebCrawlMdParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -205,6 +215,7 @@ final class WebWebCrawlMdParams implements BaseModel
      * @param list<string>|null $includeSelectors
      * @param Pdf|PdfShape|null $pdf
      * @param list<string>|null $tags
+     * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
         string $url,
@@ -227,6 +238,7 @@ final class WebWebCrawlMdParams implements BaseModel
         ?string $urlRegex = null,
         ?bool $useMainContentOnly = null,
         ?int $waitForMs = null,
+        Zdr|string|null $zdr = null,
     ): self {
         $self = new self;
 
@@ -251,6 +263,7 @@ final class WebWebCrawlMdParams implements BaseModel
         null !== $urlRegex && $self['urlRegex'] = $urlRegex;
         null !== $useMainContentOnly && $self['useMainContentOnly'] = $useMainContentOnly;
         null !== $waitForMs && $self['waitForMs'] = $waitForMs;
+        null !== $zdr && $self['zdr'] = $zdr;
 
         return $self;
     }
@@ -481,6 +494,19 @@ final class WebWebCrawlMdParams implements BaseModel
     {
         $self = clone $this;
         $self['waitForMs'] = $waitForMs;
+
+        return $self;
+    }
+
+    /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @param Zdr|value-of<Zdr> $zdr
+     */
+    public function withZdr(Zdr|string $zdr): self
+    {
+        $self = clone $this;
+        $self['zdr'] = $zdr;
 
         return $self;
     }

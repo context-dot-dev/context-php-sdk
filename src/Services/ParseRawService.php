@@ -11,6 +11,7 @@ use ContextDev\Core\FileParam;
 use ContextDev\Parse\ParseHandleParams;
 use ContextDev\Parse\ParseHandleParams\Extension;
 use ContextDev\Parse\ParseHandleParams\Pdf;
+use ContextDev\Parse\ParseHandleParams\Zdr;
 use ContextDev\Parse\ParseHandleResponse;
 use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\ParseRawContract;
@@ -48,6 +49,7 @@ final class ParseRawService implements ParseRawContract
      *   shortenBase64Images?: ShortenBase64ImagesShape,
      *   tags?: list<string>,
      *   useMainContentOnly?: UseMainContentOnlyShape,
+     *   zdr?: Zdr|value-of<Zdr>,
      * }|ParseHandleParams $params
      * @param RequestOpts|null $requestOptions
      *

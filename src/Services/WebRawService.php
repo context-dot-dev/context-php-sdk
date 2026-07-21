@@ -25,6 +25,7 @@ use ContextDev\Web\WebScreenshotParams\Country;
 use ContextDev\Web\WebScreenshotParams\FullScreenshot;
 use ContextDev\Web\WebScreenshotParams\Page;
 use ContextDev\Web\WebScreenshotParams\Viewport;
+use ContextDev\Web\WebScreenshotParams\Zdr;
 use ContextDev\Web\WebScreenshotResponse;
 use ContextDev\Web\WebSearchParams;
 use ContextDev\Web\WebSearchParams\Freshness;
@@ -251,6 +252,7 @@ final class WebRawService implements WebRawContract
      *   timeoutMs?: int,
      *   viewport?: Viewport|ViewportShape,
      *   waitForMs?: int|null,
+     *   zdr?: Zdr|value-of<Zdr>,
      * }|WebScreenshotParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -348,6 +350,7 @@ final class WebRawService implements WebRawContract
      *   urlRegex?: string,
      *   useMainContentOnly?: bool,
      *   waitForMs?: int,
+     *   zdr?: WebWebCrawlMdParams\Zdr|value-of<WebWebCrawlMdParams\Zdr>,
      * }|WebWebCrawlMdParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -393,6 +396,7 @@ final class WebRawService implements WebRawContract
      *   timeoutMs?: int,
      *   useMainContentOnly?: UseMainContentOnlyShape,
      *   waitForMs?: int|null,
+     *   zdr?: WebWebScrapeHTMLParams\Zdr|value-of<WebWebScrapeHTMLParams\Zdr>,
      * }|WebWebScrapeHTMLParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -494,6 +498,7 @@ final class WebRawService implements WebRawContract
      *   timeoutMs?: int,
      *   useMainContentOnly?: UseMainContentOnlyShape1,
      *   waitForMs?: int|null,
+     *   zdr?: WebWebScrapeMdParams\Zdr|value-of<WebWebScrapeMdParams\Zdr>,
      * }|WebWebScrapeMdParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -533,6 +538,7 @@ final class WebRawService implements WebRawContract
      *   tags?: list<string>,
      *   timeoutMs?: int,
      *   urlRegex?: string,
+     *   zdr?: WebWebScrapeSitemapParams\Zdr|value-of<WebWebScrapeSitemapParams\Zdr>,
      * }|WebWebScrapeSitemapParams $params
      * @param RequestOpts|null $requestOptions
      *

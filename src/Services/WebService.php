@@ -20,6 +20,7 @@ use ContextDev\Web\WebScreenshotParams\FullScreenshot;
 use ContextDev\Web\WebScreenshotParams\HandleCookiePopup\UnionMember1;
 use ContextDev\Web\WebScreenshotParams\Page;
 use ContextDev\Web\WebScreenshotParams\Viewport;
+use ContextDev\Web\WebScreenshotParams\Zdr;
 use ContextDev\Web\WebScreenshotResponse;
 use ContextDev\Web\WebSearchParams\Freshness;
 use ContextDev\Web\WebSearchParams\MarkdownOptions;
@@ -267,6 +268,7 @@ final class WebService implements WebContract
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param Viewport|ViewportShape $viewport Optional browser viewport dimensions for the screenshot. Defaults to 1920x1080.
      * @param int|null $waitForMs Optional browser wait time in milliseconds after initial page load before taking the screenshot. Min: 0. Max: 30000 (30 seconds). Defaults to 3000 ms when omitted.
+     * @param Zdr|value-of<Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -285,6 +287,7 @@ final class WebService implements WebContract
         ?int $timeoutMs = null,
         Viewport|array $viewport = ['width' => 1920, 'height' => 1080],
         ?int $waitForMs = 3000,
+        Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): WebScreenshotResponse {
         $params = Util::removeNulls(
@@ -302,6 +305,7 @@ final class WebService implements WebContract
                 'timeoutMs' => $timeoutMs,
                 'viewport' => $viewport,
                 'waitForMs' => $waitForMs,
+                'zdr' => $zdr,
             ],
         );
 
@@ -389,6 +393,7 @@ final class WebService implements WebContract
      * @param string $urlRegex Regex pattern. Only URLs matching this pattern will be followed and scraped.
      * @param bool $useMainContentOnly Extract only the main content, stripping headers, footers, sidebars, and navigation
      * @param int $waitForMs Optional browser wait time in milliseconds after initial page load for each crawled page. Min: 0. Max: 30000 (30 seconds).
+     * @param \ContextDev\Web\WebWebCrawlMdParams\Zdr|value-of<\ContextDev\Web\WebWebCrawlMdParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -416,6 +421,7 @@ final class WebService implements WebContract
         ?string $urlRegex = null,
         bool $useMainContentOnly = false,
         ?int $waitForMs = null,
+        \ContextDev\Web\WebWebCrawlMdParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): WebWebCrawlMdResponse {
         $params = Util::removeNulls(
@@ -440,6 +446,7 @@ final class WebService implements WebContract
                 'urlRegex' => $urlRegex,
                 'useMainContentOnly' => $useMainContentOnly,
                 'waitForMs' => $waitForMs,
+                'zdr' => $zdr,
             ],
         );
 
@@ -467,6 +474,7 @@ final class WebService implements WebContract
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param UseMainContentOnlyShape $useMainContentOnly when true, return only the page's main content in the HTML response, excluding headers, footers, sidebars, and navigation when detectable
      * @param int|null $waitForMs Optional browser wait time in milliseconds after initial page load. Min: 0. Max: 30000 (30 seconds).
+     * @param \ContextDev\Web\WebWebScrapeHTMLParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeHTMLParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -487,6 +495,7 @@ final class WebService implements WebContract
         ?int $timeoutMs = null,
         bool|\ContextDev\Web\WebWebScrapeHTMLParams\UseMainContentOnly\UnionMember1|string $useMainContentOnly = false,
         ?int $waitForMs = null,
+        \ContextDev\Web\WebWebScrapeHTMLParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): WebWebScrapeHTMLResponse {
         $params = Util::removeNulls(
@@ -504,6 +513,7 @@ final class WebService implements WebContract
                 'timeoutMs' => $timeoutMs,
                 'useMainContentOnly' => $useMainContentOnly,
                 'waitForMs' => $waitForMs,
+                'zdr' => $zdr,
             ],
         );
 
@@ -594,6 +604,7 @@ final class WebService implements WebContract
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param UseMainContentOnlyShape1 $useMainContentOnly Extract only the main content of the page, excluding headers, footers, sidebars, and navigation
      * @param int|null $waitForMs Optional browser wait time in milliseconds after initial page load before converting the page to Markdown. Min: 0. Max: 30000 (30 seconds).
+     * @param \ContextDev\Web\WebWebScrapeMdParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeMdParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -617,6 +628,7 @@ final class WebService implements WebContract
         ?int $timeoutMs = null,
         bool|\ContextDev\Web\WebWebScrapeMdParams\UseMainContentOnly\UnionMember1|string $useMainContentOnly = false,
         ?int $waitForMs = null,
+        \ContextDev\Web\WebWebScrapeMdParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): WebWebScrapeMdResponse {
         $params = Util::removeNulls(
@@ -637,6 +649,7 @@ final class WebService implements WebContract
                 'timeoutMs' => $timeoutMs,
                 'useMainContentOnly' => $useMainContentOnly,
                 'waitForMs' => $waitForMs,
+                'zdr' => $zdr,
             ],
         );
 
@@ -658,6 +671,7 @@ final class WebService implements WebContract
      * @param list<string> $tags Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param string $urlRegex Optional RE2-compatible regex pattern. Only URLs matching this pattern are returned and counted against maxLinks.
+     * @param \ContextDev\Web\WebWebScrapeSitemapParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeSitemapParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -670,6 +684,7 @@ final class WebService implements WebContract
         ?array $tags = null,
         ?int $timeoutMs = null,
         ?string $urlRegex = null,
+        \ContextDev\Web\WebWebScrapeSitemapParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): WebWebScrapeSitemapResponse {
         $params = Util::removeNulls(
@@ -681,6 +696,7 @@ final class WebService implements WebContract
                 'tags' => $tags,
                 'timeoutMs' => $timeoutMs,
                 'urlRegex' => $urlRegex,
+                'zdr' => $zdr,
             ],
         );
 
