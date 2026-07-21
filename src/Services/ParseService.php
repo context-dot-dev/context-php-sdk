@@ -11,6 +11,7 @@ use ContextDev\Core\Util;
 use ContextDev\Parse\ParseHandleParams\Extension;
 use ContextDev\Parse\ParseHandleParams\IncludeImages\UnionMember1;
 use ContextDev\Parse\ParseHandleParams\Pdf;
+use ContextDev\Parse\ParseHandleParams\Zdr;
 use ContextDev\Parse\ParseHandleResponse;
 use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\ParseContract;
@@ -54,6 +55,7 @@ final class ParseService implements ParseContract
      * @param ShortenBase64ImagesShape $shortenBase64Images Query param: Shorten base64-encoded image data in the Markdown output
      * @param list<string> $tags Query param: Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
      * @param UseMainContentOnlyShape $useMainContentOnly Query param: Extract only the main content from HTML-like inputs
+     * @param Zdr|value-of<Zdr> $zdr Query param: Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -69,6 +71,7 @@ final class ParseService implements ParseContract
         bool|\ContextDev\Parse\ParseHandleParams\ShortenBase64Images\UnionMember1|string $shortenBase64Images = true,
         ?array $tags = null,
         bool|\ContextDev\Parse\ParseHandleParams\UseMainContentOnly\UnionMember1|string $useMainContentOnly = false,
+        Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): ParseHandleResponse {
         $params = Util::removeNulls(
@@ -82,6 +85,7 @@ final class ParseService implements ParseContract
                 'shortenBase64Images' => $shortenBase64Images,
                 'tags' => $tags,
                 'useMainContentOnly' => $useMainContentOnly,
+                'zdr' => $zdr,
             ],
         );
 

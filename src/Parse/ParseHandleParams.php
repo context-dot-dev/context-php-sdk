@@ -16,6 +16,7 @@ use ContextDev\Parse\ParseHandleParams\Ocr;
 use ContextDev\Parse\ParseHandleParams\Pdf;
 use ContextDev\Parse\ParseHandleParams\ShortenBase64Images;
 use ContextDev\Parse\ParseHandleParams\UseMainContentOnly;
+use ContextDev\Parse\ParseHandleParams\Zdr;
 
 /**
  * Converts raw text, source code, web/data, PDF, Microsoft Office, and image bytes into LLM-usable Markdown.
@@ -44,6 +45,7 @@ use ContextDev\Parse\ParseHandleParams\UseMainContentOnly;
  *   shortenBase64Images?: ShortenBase64ImagesShape|null,
  *   tags?: list<string>|null,
  *   useMainContentOnly?: UseMainContentOnlyShape|null,
+ *   zdr?: null|Zdr|value-of<Zdr>,
  * }
  */
 final class ParseHandleParams implements BaseModel
@@ -120,6 +122,14 @@ final class ParseHandleParams implements BaseModel
     #[Optional(union: UseMainContentOnly::class)]
     public bool|string|null $useMainContentOnly;
 
+    /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @var value-of<Zdr>|null $zdr
+     */
+    #[Optional(enum: Zdr::class)]
+    public ?string $zdr;
+
     public function __construct()
     {
         $this->initialize();
@@ -138,6 +148,7 @@ final class ParseHandleParams implements BaseModel
      * @param ShortenBase64ImagesShape|null $shortenBase64Images
      * @param list<string>|null $tags
      * @param UseMainContentOnlyShape|null $useMainContentOnly
+     * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
         ?string $client = null,
@@ -149,6 +160,7 @@ final class ParseHandleParams implements BaseModel
         bool|ShortenBase64Images\UnionMember1|string|null $shortenBase64Images = null,
         ?array $tags = null,
         bool|UseMainContentOnly\UnionMember1|string|null $useMainContentOnly = null,
+        Zdr|string|null $zdr = null,
     ): self {
         $self = new self;
 
@@ -161,6 +173,7 @@ final class ParseHandleParams implements BaseModel
         null !== $shortenBase64Images && $self['shortenBase64Images'] = $shortenBase64Images;
         null !== $tags && $self['tags'] = $tags;
         null !== $useMainContentOnly && $self['useMainContentOnly'] = $useMainContentOnly;
+        null !== $zdr && $self['zdr'] = $zdr;
 
         return $self;
     }
@@ -281,6 +294,19 @@ final class ParseHandleParams implements BaseModel
     ): self {
         $self = clone $this;
         $self['useMainContentOnly'] = $useMainContentOnly;
+
+        return $self;
+    }
+
+    /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @param Zdr|value-of<Zdr> $zdr
+     */
+    public function withZdr(Zdr|string $zdr): self
+    {
+        $self = clone $this;
+        $self['zdr'] = $zdr;
 
         return $self;
     }

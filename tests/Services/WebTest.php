@@ -252,6 +252,7 @@ final class WebTest extends TestCase
             urlRegex: '^https?://[^/]+/blog/',
             useMainContentOnly: true,
             waitForMs: 0,
+            zdr: 'enabled',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -292,6 +293,7 @@ final class WebTest extends TestCase
             timeoutMs: 1,
             useMainContentOnly: 'true',
             waitForMs: 0,
+            zdr: 'enabled',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -375,6 +377,7 @@ final class WebTest extends TestCase
             timeoutMs: 1,
             useMainContentOnly: 'true',
             waitForMs: 0,
+            zdr: 'enabled',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -409,6 +412,7 @@ final class WebTest extends TestCase
             tags: ['production', 'team-alpha'],
             timeoutMs: 1,
             urlRegex: '^https?://[^/]+/blog/',
+            zdr: 'enabled',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

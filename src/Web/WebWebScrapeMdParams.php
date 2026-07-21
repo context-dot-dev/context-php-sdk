@@ -18,6 +18,7 @@ use ContextDev\Web\WebWebScrapeMdParams\Pdf;
 use ContextDev\Web\WebWebScrapeMdParams\SettleAnimations;
 use ContextDev\Web\WebWebScrapeMdParams\ShortenBase64Images;
 use ContextDev\Web\WebWebScrapeMdParams\UseMainContentOnly;
+use ContextDev\Web\WebWebScrapeMdParams\Zdr;
 
 /**
  * Scrapes the given URL into LLM usable Markdown. Inspect key_metadata on JSON responses from a recognized API key; use error_code to distinguish stable failure categories.
@@ -68,6 +69,7 @@ use ContextDev\Web\WebWebScrapeMdParams\UseMainContentOnly;
  *   timeoutMs?: int|null,
  *   useMainContentOnly?: UseMainContentOnlyShape|null,
  *   waitForMs?: int|null,
+ *   zdr?: null|Zdr|value-of<Zdr>,
  * }
  */
 final class WebWebScrapeMdParams implements BaseModel
@@ -195,6 +197,14 @@ final class WebWebScrapeMdParams implements BaseModel
     public ?int $waitForMs;
 
     /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @var value-of<Zdr>|null $zdr
+     */
+    #[Optional(enum: Zdr::class)]
+    public ?string $zdr;
+
+    /**
      * `new WebWebScrapeMdParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -230,6 +240,7 @@ final class WebWebScrapeMdParams implements BaseModel
      * @param ShortenBase64ImagesShape|null $shortenBase64Images
      * @param list<string>|null $tags
      * @param UseMainContentOnlyShape|null $useMainContentOnly
+     * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
         string $url,
@@ -248,6 +259,7 @@ final class WebWebScrapeMdParams implements BaseModel
         ?int $timeoutMs = null,
         bool|UseMainContentOnly\UnionMember1|string|null $useMainContentOnly = null,
         ?int $waitForMs = null,
+        Zdr|string|null $zdr = null,
     ): self {
         $self = new self;
 
@@ -268,6 +280,7 @@ final class WebWebScrapeMdParams implements BaseModel
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
         null !== $useMainContentOnly && $self['useMainContentOnly'] = $useMainContentOnly;
         null !== $waitForMs && $self['waitForMs'] = $waitForMs;
+        null !== $zdr && $self['zdr'] = $zdr;
 
         return $self;
     }
@@ -474,6 +487,19 @@ final class WebWebScrapeMdParams implements BaseModel
     {
         $self = clone $this;
         $self['waitForMs'] = $waitForMs;
+
+        return $self;
+    }
+
+    /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @param Zdr|value-of<Zdr> $zdr
+     */
+    public function withZdr(Zdr|string $zdr): self
+    {
+        $self = clone $this;
+        $self['zdr'] = $zdr;
 
         return $self;
     }
