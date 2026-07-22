@@ -17,6 +17,8 @@ use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsSitemapTarget;
 use ContextDev\Monitors\MonitorCreateParams\Webhook;
 use ContextDev\Monitors\MonitorDeleteResponse;
 use ContextDev\Monitors\MonitorGetChangeResponse;
+use ContextDev\Monitors\MonitorGetCreditUsageResponse;
+use ContextDev\Monitors\MonitorGetLimitsResponse;
 use ContextDev\Monitors\MonitorGetResponse;
 use ContextDev\Monitors\MonitorListAccountChangesResponse;
 use ContextDev\Monitors\MonitorListAccountRunsResponse;
@@ -236,6 +238,48 @@ final class MonitorsService implements MonitorsContract
     ): MonitorDeleteResponse {
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->delete($monitorID, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Returns credits charged per monitor over an optional [since, until] window, newest spenders first.
+     *
+     * @param \DateTimeInterface $since only include items at or after this ISO 8601 timestamp
+     * @param \DateTimeInterface $until only include items before this ISO 8601 timestamp
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function getCreditUsage(
+        ?\DateTimeInterface $since = null,
+        ?\DateTimeInterface $until = null,
+        RequestOptions|array|null $requestOptions = null,
+    ): MonitorGetCreditUsageResponse {
+        $params = Util::removeNulls(['since' => $since, 'until' => $until]);
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->getCreditUsage(params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Returns how many monitors the account has and the maximum it allows.
+     *
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function getLimits(
+        RequestOptions|array|null $requestOptions = null
+    ): MonitorGetLimitsResponse {
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->getLimits(requestOptions: $requestOptions);
 
         return $response->parse();
     }

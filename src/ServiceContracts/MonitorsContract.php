@@ -15,6 +15,8 @@ use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsSitemapTarget;
 use ContextDev\Monitors\MonitorCreateParams\Webhook;
 use ContextDev\Monitors\MonitorDeleteResponse;
 use ContextDev\Monitors\MonitorGetChangeResponse;
+use ContextDev\Monitors\MonitorGetCreditUsageResponse;
+use ContextDev\Monitors\MonitorGetLimitsResponse;
 use ContextDev\Monitors\MonitorGetResponse;
 use ContextDev\Monitors\MonitorListAccountChangesResponse;
 use ContextDev\Monitors\MonitorListAccountRunsResponse;
@@ -147,6 +149,32 @@ interface MonitorsContract
         string $monitorID,
         RequestOptions|array|null $requestOptions = null
     ): MonitorDeleteResponse;
+
+    /**
+     * @api
+     *
+     * @param \DateTimeInterface $since only include items at or after this ISO 8601 timestamp
+     * @param \DateTimeInterface $until only include items before this ISO 8601 timestamp
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function getCreditUsage(
+        ?\DateTimeInterface $since = null,
+        ?\DateTimeInterface $until = null,
+        RequestOptions|array|null $requestOptions = null,
+    ): MonitorGetCreditUsageResponse;
+
+    /**
+     * @api
+     *
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function getLimits(
+        RequestOptions|array|null $requestOptions = null
+    ): MonitorGetLimitsResponse;
 
     /**
      * @api
