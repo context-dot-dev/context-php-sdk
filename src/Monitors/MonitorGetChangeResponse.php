@@ -81,7 +81,7 @@ final class MonitorGetChangeResponse implements BaseModel
     public string $summary;
 
     /**
-     * User-defined tags for grouping and filtering monitors and their changes.
+     * User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
      *
      * @var list<string> $tags
      */
@@ -335,7 +335,7 @@ final class MonitorGetChangeResponse implements BaseModel
     }
 
     /**
-     * User-defined tags for grouping and filtering monitors and their changes.
+     * User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
      *
      * @param list<string> $tags
      */

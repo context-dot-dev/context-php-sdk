@@ -141,7 +141,7 @@ final class MonitorNewResponse implements BaseModel
     public ?\DateTimeInterface $nextRunAt;
 
     /**
-     * User-defined tags for grouping and filtering monitors and their changes.
+     * User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
      *
      * @var list<string>|null $tags
      */
@@ -408,7 +408,7 @@ final class MonitorNewResponse implements BaseModel
     }
 
     /**
-     * User-defined tags for grouping and filtering monitors and their changes.
+     * User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
      *
      * @param list<string> $tags
      */

@@ -36,7 +36,7 @@ final class MonitorsSitemapTarget implements BaseModel
     public string $url;
 
     /**
-     * URL path patterns to exclude.
+     * URL path patterns to exclude (max 50).
      *
      * @var list<string>|null $exclude
      */
@@ -44,7 +44,7 @@ final class MonitorsSitemapTarget implements BaseModel
     public ?array $exclude;
 
     /**
-     * URL path patterns to include.
+     * URL path patterns to include (max 50).
      *
      * @var list<string>|null $include
      */
@@ -124,7 +124,7 @@ final class MonitorsSitemapTarget implements BaseModel
     }
 
     /**
-     * URL path patterns to exclude.
+     * URL path patterns to exclude (max 50).
      *
      * @param list<string> $exclude
      */
@@ -137,7 +137,7 @@ final class MonitorsSitemapTarget implements BaseModel
     }
 
     /**
-     * URL path patterns to include.
+     * URL path patterns to include (max 50).
      *
      * @param list<string> $include
      */

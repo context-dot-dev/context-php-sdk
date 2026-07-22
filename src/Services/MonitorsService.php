@@ -73,7 +73,7 @@ final class MonitorsService implements MonitorsContract
      * @param Schedule|ScheduleShape $schedule Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
      * @param TargetShape $target discriminated union describing what the monitor watches
      * @param Mode|value-of<Mode> $mode Top-level monitor category. Always `web` today; the concrete behavior is described by `target` and `change_detection`.
-     * @param list<string> $tags user-defined tags for grouping and filtering monitors and their changes
+     * @param list<string> $tags User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
      * @param Webhook|WebhookShape|null $webhook
      * @param RequestOpts|null $requestOptions
      *
@@ -134,7 +134,7 @@ final class MonitorsService implements MonitorsContract
      * @param ChangeDetectionShape1 $changeDetection discriminated union describing how changes are detected
      * @param \ContextDev\Monitors\MonitorUpdateParams\Schedule|ScheduleShape1 $schedule Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
      * @param Status|value-of<Status> $status
-     * @param list<string> $tags user-defined tags for grouping and filtering monitors and their changes
+     * @param list<string> $tags User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
      * @param TargetShape1 $target discriminated union describing what the monitor watches
      * @param \ContextDev\Monitors\MonitorUpdateParams\Webhook|WebhookShape1|null $webhook set to null to remove the webhook
      * @param RequestOpts|null $requestOptions
