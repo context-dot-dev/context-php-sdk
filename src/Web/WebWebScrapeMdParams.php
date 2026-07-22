@@ -9,6 +9,7 @@ use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebWebScrapeMdParams\Action;
 use ContextDev\Web\WebWebScrapeMdParams\Country;
 use ContextDev\Web\WebWebScrapeMdParams\IncludeFrames;
 use ContextDev\Web\WebWebScrapeMdParams\IncludeFrames\UnionMember1;
@@ -27,7 +28,7 @@ use ContextDev\Web\WebWebScrapeMdParams\Zdr;
  *
  * | HTTP status | Billed? | Meaning |
  * | --- | --- | --- |
- * | 200 | Yes — 1 credit | Successful scrape, including a zero-length result when includeSelectors matched nothing |
+ * | 200 | Yes — 1 credit, or 2 credits with actions | Successful scrape, including a zero-length result when includeSelectors matched nothing |
  * | 400 | No | Invalid input, skipped PDF, or the page could not be scraped |
  * | 401 / 403 | No | Invalid/disabled key, insufficient permissions, or credits exhausted; inspect error_code |
  * | 404 | No | Target page returned or fingerprinted as not found |
@@ -38,12 +39,14 @@ use ContextDev\Web\WebWebScrapeMdParams\Zdr;
  *
  * @see ContextDev\Services\WebService::webScrapeMd()
  *
+ * @phpstan-import-type ActionVariants from \ContextDev\Web\WebWebScrapeMdParams\Action
  * @phpstan-import-type IncludeFramesVariants from \ContextDev\Web\WebWebScrapeMdParams\IncludeFrames
  * @phpstan-import-type IncludeImagesVariants from \ContextDev\Web\WebWebScrapeMdParams\IncludeImages
  * @phpstan-import-type IncludeLinksVariants from \ContextDev\Web\WebWebScrapeMdParams\IncludeLinks
  * @phpstan-import-type SettleAnimationsVariants from \ContextDev\Web\WebWebScrapeMdParams\SettleAnimations
  * @phpstan-import-type ShortenBase64ImagesVariants from \ContextDev\Web\WebWebScrapeMdParams\ShortenBase64Images
  * @phpstan-import-type UseMainContentOnlyVariants from \ContextDev\Web\WebWebScrapeMdParams\UseMainContentOnly
+ * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeMdParams\Action
  * @phpstan-import-type IncludeFramesShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeFrames
  * @phpstan-import-type IncludeImagesShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeImages
  * @phpstan-import-type IncludeLinksShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeLinks
@@ -54,6 +57,7 @@ use ContextDev\Web\WebWebScrapeMdParams\Zdr;
  *
  * @phpstan-type WebWebScrapeMdParamsShape = array{
  *   url: string,
+ *   actions?: list<ActionShape>|null,
  *   country?: null|Country|value-of<Country>,
  *   excludeSelectors?: list<string>|null,
  *   headers?: array<string,string>|null,
@@ -83,6 +87,14 @@ final class WebWebScrapeMdParams implements BaseModel
      */
     #[Required]
     public string $url;
+
+    /**
+     * Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
+     *
+     * @var list<ActionVariants>|null $actions
+     */
+    #[Optional(list: Action::class, nullable: true)]
+    public ?array $actions;
 
     /**
      * Two-letter ISO 3166-1 alpha-2 country code identifying a supported Context.dev residential proxy exit location. Must be one of Context.dev's supported countries. When provided, Context.dev fetches the target page from that country.
@@ -228,6 +240,7 @@ final class WebWebScrapeMdParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param list<ActionShape>|null $actions
      * @param Country|value-of<Country>|null $country
      * @param list<string>|null $excludeSelectors
      * @param array<string,string>|null $headers
@@ -244,6 +257,7 @@ final class WebWebScrapeMdParams implements BaseModel
      */
     public static function with(
         string $url,
+        ?array $actions = null,
         Country|string|null $country = null,
         ?array $excludeSelectors = null,
         ?array $headers = null,
@@ -265,6 +279,7 @@ final class WebWebScrapeMdParams implements BaseModel
 
         $self['url'] = $url;
 
+        null !== $actions && $self['actions'] = $actions;
         null !== $country && $self['country'] = $country;
         null !== $excludeSelectors && $self['excludeSelectors'] = $excludeSelectors;
         null !== $headers && $self['headers'] = $headers;
@@ -292,6 +307,19 @@ final class WebWebScrapeMdParams implements BaseModel
     {
         $self = clone $this;
         $self['url'] = $url;
+
+        return $self;
+    }
+
+    /**
+     * Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
+     *
+     * @param list<ActionShape>|null $actions
+     */
+    public function withActions(?array $actions): self
+    {
+        $self = clone $this;
+        $self['actions'] = $actions;
 
         return $self;
     }

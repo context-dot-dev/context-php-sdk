@@ -9,21 +9,25 @@ use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebWebScrapeImagesParams\Action;
 use ContextDev\Web\WebWebScrapeImagesParams\Dedupe;
 use ContextDev\Web\WebWebScrapeImagesParams\Dedupe\UnionMember1;
 use ContextDev\Web\WebWebScrapeImagesParams\Enrichment;
 
 /**
- * Extract image assets from a web page, including standard URLs, inline SVGs, data URIs, responsive image sources, metadata, CSS backgrounds, video posters, and embeds. The base request costs 1 credit. When enrichment is enabled, the entire call costs 5 credits.
+ * Extract image assets from a web page, including standard URLs, inline SVGs, data URIs, responsive image sources, metadata, CSS backgrounds, video posters, and embeds. The base request costs 1 credit, or 2 credits with browser actions. When enrichment is enabled, the entire call costs 5 credits, including requests that also use actions.
  *
  * @see ContextDev\Services\WebService::webScrapeImages()
  *
+ * @phpstan-import-type ActionVariants from \ContextDev\Web\WebWebScrapeImagesParams\Action
  * @phpstan-import-type DedupeVariants from \ContextDev\Web\WebWebScrapeImagesParams\Dedupe
+ * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeImagesParams\Action
  * @phpstan-import-type DedupeShape from \ContextDev\Web\WebWebScrapeImagesParams\Dedupe
  * @phpstan-import-type EnrichmentShape from \ContextDev\Web\WebWebScrapeImagesParams\Enrichment
  *
  * @phpstan-type WebWebScrapeImagesParamsShape = array{
  *   url: string,
+ *   actions?: list<ActionShape>|null,
  *   dedupe?: DedupeShape|null,
  *   enrichment?: null|Enrichment|EnrichmentShape,
  *   headers?: array<string,string>|null,
@@ -44,6 +48,14 @@ final class WebWebScrapeImagesParams implements BaseModel
      */
     #[Required]
     public string $url;
+
+    /**
+     * Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
+     *
+     * @var list<ActionVariants>|null $actions
+     */
+    #[Optional(list: Action::class, nullable: true)]
+    public ?array $actions;
 
     /**
      * When true, visually duplicate images are removed: every image is loaded and perceptually hashed, and only the highest-resolution copy of each duplicate group is kept. Images that cannot be downloaded or hashed are kept. Default: false.
@@ -117,6 +129,7 @@ final class WebWebScrapeImagesParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param list<ActionShape>|null $actions
      * @param DedupeShape|null $dedupe
      * @param Enrichment|EnrichmentShape|null $enrichment
      * @param array<string,string>|null $headers
@@ -124,6 +137,7 @@ final class WebWebScrapeImagesParams implements BaseModel
      */
     public static function with(
         string $url,
+        ?array $actions = null,
         bool|UnionMember1|string|null $dedupe = null,
         Enrichment|array|null $enrichment = null,
         ?array $headers = null,
@@ -136,6 +150,7 @@ final class WebWebScrapeImagesParams implements BaseModel
 
         $self['url'] = $url;
 
+        null !== $actions && $self['actions'] = $actions;
         null !== $dedupe && $self['dedupe'] = $dedupe;
         null !== $enrichment && $self['enrichment'] = $enrichment;
         null !== $headers && $self['headers'] = $headers;
@@ -154,6 +169,19 @@ final class WebWebScrapeImagesParams implements BaseModel
     {
         $self = clone $this;
         $self['url'] = $url;
+
+        return $self;
+    }
+
+    /**
+     * Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
+     *
+     * @param list<ActionShape>|null $actions
+     */
+    public function withActions(?array $actions): self
+    {
+        $self = clone $this;
+        $self['actions'] = $actions;
 
         return $self;
     }

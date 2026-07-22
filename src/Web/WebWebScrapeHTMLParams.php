@@ -9,6 +9,7 @@ use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebWebScrapeHTMLParams\Action;
 use ContextDev\Web\WebWebScrapeHTMLParams\Country;
 use ContextDev\Web\WebWebScrapeHTMLParams\IncludeFrames;
 use ContextDev\Web\WebWebScrapeHTMLParams\IncludeFrames\UnionMember1;
@@ -18,13 +19,15 @@ use ContextDev\Web\WebWebScrapeHTMLParams\UseMainContentOnly;
 use ContextDev\Web\WebWebScrapeHTMLParams\Zdr;
 
 /**
- * Scrapes the given URL and returns the raw HTML content of the page.
+ * Scrapes the given URL and returns the raw HTML content of the page. The base request costs 1 credit; requests with browser actions cost 2 credits.
  *
  * @see ContextDev\Services\WebService::webScrapeHTML()
  *
+ * @phpstan-import-type ActionVariants from \ContextDev\Web\WebWebScrapeHTMLParams\Action
  * @phpstan-import-type IncludeFramesVariants from \ContextDev\Web\WebWebScrapeHTMLParams\IncludeFrames
  * @phpstan-import-type SettleAnimationsVariants from \ContextDev\Web\WebWebScrapeHTMLParams\SettleAnimations
  * @phpstan-import-type UseMainContentOnlyVariants from \ContextDev\Web\WebWebScrapeHTMLParams\UseMainContentOnly
+ * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeHTMLParams\Action
  * @phpstan-import-type IncludeFramesShape from \ContextDev\Web\WebWebScrapeHTMLParams\IncludeFrames
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeHTMLParams\Pdf
  * @phpstan-import-type SettleAnimationsShape from \ContextDev\Web\WebWebScrapeHTMLParams\SettleAnimations
@@ -32,6 +35,7 @@ use ContextDev\Web\WebWebScrapeHTMLParams\Zdr;
  *
  * @phpstan-type WebWebScrapeHTMLParamsShape = array{
  *   url: string,
+ *   actions?: list<ActionShape>|null,
  *   country?: null|Country|value-of<Country>,
  *   excludeSelectors?: list<string>|null,
  *   headers?: array<string,string>|null,
@@ -58,6 +62,14 @@ final class WebWebScrapeHTMLParams implements BaseModel
      */
     #[Required]
     public string $url;
+
+    /**
+     * Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
+     *
+     * @var list<ActionVariants>|null $actions
+     */
+    #[Optional(list: Action::class, nullable: true)]
+    public ?array $actions;
 
     /**
      * Two-letter ISO 3166-1 alpha-2 country code identifying a supported Context.dev residential proxy exit location. Must be one of Context.dev's supported countries. When provided, Context.dev fetches the target page from that country.
@@ -179,6 +191,7 @@ final class WebWebScrapeHTMLParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param list<ActionShape>|null $actions
      * @param Country|value-of<Country>|null $country
      * @param list<string>|null $excludeSelectors
      * @param array<string,string>|null $headers
@@ -192,6 +205,7 @@ final class WebWebScrapeHTMLParams implements BaseModel
      */
     public static function with(
         string $url,
+        ?array $actions = null,
         Country|string|null $country = null,
         ?array $excludeSelectors = null,
         ?array $headers = null,
@@ -210,6 +224,7 @@ final class WebWebScrapeHTMLParams implements BaseModel
 
         $self['url'] = $url;
 
+        null !== $actions && $self['actions'] = $actions;
         null !== $country && $self['country'] = $country;
         null !== $excludeSelectors && $self['excludeSelectors'] = $excludeSelectors;
         null !== $headers && $self['headers'] = $headers;
@@ -234,6 +249,19 @@ final class WebWebScrapeHTMLParams implements BaseModel
     {
         $self = clone $this;
         $self['url'] = $url;
+
+        return $self;
+    }
+
+    /**
+     * Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
+     *
+     * @param list<ActionShape>|null $actions
+     */
+    public function withActions(?array $actions): self
+    {
+        $self = clone $this;
+        $self['actions'] = $actions;
 
         return $self;
     }

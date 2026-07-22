@@ -35,12 +35,15 @@ use ContextDev\Web\WebWebScrapeSitemapResponse;
  * @phpstan-import-type ViewportShape from \ContextDev\Web\WebScreenshotParams\Viewport
  * @phpstan-import-type MarkdownOptionsShape from \ContextDev\Web\WebSearchParams\MarkdownOptions
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebCrawlMdParams\Pdf as PdfShape1
+ * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeHTMLParams\Action
  * @phpstan-import-type IncludeFramesShape from \ContextDev\Web\WebWebScrapeHTMLParams\IncludeFrames
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeHTMLParams\Pdf as PdfShape2
  * @phpstan-import-type SettleAnimationsShape from \ContextDev\Web\WebWebScrapeHTMLParams\SettleAnimations
  * @phpstan-import-type UseMainContentOnlyShape from \ContextDev\Web\WebWebScrapeHTMLParams\UseMainContentOnly
+ * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeImagesParams\Action as ActionShape1
  * @phpstan-import-type DedupeShape from \ContextDev\Web\WebWebScrapeImagesParams\Dedupe
  * @phpstan-import-type EnrichmentShape from \ContextDev\Web\WebWebScrapeImagesParams\Enrichment
+ * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeMdParams\Action as ActionShape2
  * @phpstan-import-type IncludeFramesShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeFrames as IncludeFramesShape1
  * @phpstan-import-type IncludeImagesShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeImages
  * @phpstan-import-type IncludeLinksShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeLinks
@@ -285,6 +288,7 @@ interface WebContract
      * @api
      *
      * @param string $url Full URL to scrape (must include http:// or https:// protocol)
+     * @param list<ActionShape>|null $actions Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
      * @param \ContextDev\Web\WebWebScrapeHTMLParams\Country|value-of<\ContextDev\Web\WebWebScrapeHTMLParams\Country> $country Two-letter ISO 3166-1 alpha-2 country code identifying a supported Context.dev residential proxy exit location. Must be one of Context.dev's supported countries. When provided, Context.dev fetches the target page from that country.
      * @param list<string>|null $excludeSelectors CSS selectors to remove from the result. Applied after includeSelectors. Exclusion takes precedence: an element matching both is removed. Examples: "nav", "footer", ".ad-banner", "[aria-hidden=true]".
      * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
@@ -304,6 +308,7 @@ interface WebContract
      */
     public function webScrapeHTML(
         string $url,
+        ?array $actions = null,
         \ContextDev\Web\WebWebScrapeHTMLParams\Country|string|null $country = null,
         ?array $excludeSelectors = null,
         ?array $headers = null,
@@ -326,6 +331,7 @@ interface WebContract
      * @api
      *
      * @param string $url Page URL to inspect. Must include http:// or https://.
+     * @param list<ActionShape1>|null $actions Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
      * @param DedupeShape $dedupe When true, visually duplicate images are removed: every image is loaded and perceptually hashed, and only the highest-resolution copy of each duplicate group is kept. Images that cannot be downloaded or hashed are kept. Default: false.
      * @param Enrichment|EnrichmentShape|null $enrichment optional per-image processing, sent as deep-object query params such as enrichment[resolution]=true
      * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
@@ -339,6 +345,7 @@ interface WebContract
      */
     public function webScrapeImages(
         string $url,
+        ?array $actions = null,
         bool|\ContextDev\Web\WebWebScrapeImagesParams\Dedupe\UnionMember1|string $dedupe = false,
         Enrichment|array|null $enrichment = null,
         ?array $headers = null,
@@ -353,6 +360,7 @@ interface WebContract
      * @api
      *
      * @param string $url Full URL to scrape into LLM usable Markdown (must include http:// or https:// protocol)
+     * @param list<ActionShape2>|null $actions Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
      * @param \ContextDev\Web\WebWebScrapeMdParams\Country|value-of<\ContextDev\Web\WebWebScrapeMdParams\Country> $country Two-letter ISO 3166-1 alpha-2 country code identifying a supported Context.dev residential proxy exit location. Must be one of Context.dev's supported countries. When provided, Context.dev fetches the target page from that country.
      * @param list<string>|null $excludeSelectors CSS selectors to remove before conversion to Markdown. Applied after includeSelectors. Exclusion takes precedence: an element matching both is removed. Examples: "nav", "footer", ".ad-banner", "[aria-hidden=true]".
      * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
@@ -375,6 +383,7 @@ interface WebContract
      */
     public function webScrapeMd(
         string $url,
+        ?array $actions = null,
         \ContextDev\Web\WebWebScrapeMdParams\Country|string|null $country = null,
         ?array $excludeSelectors = null,
         ?array $headers = null,
