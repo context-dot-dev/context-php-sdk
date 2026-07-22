@@ -9,6 +9,9 @@ use ContextDev\Core\Exceptions\APIException;
 use ContextDev\Monitors\MonitorCreateParams;
 use ContextDev\Monitors\MonitorDeleteResponse;
 use ContextDev\Monitors\MonitorGetChangeResponse;
+use ContextDev\Monitors\MonitorGetCreditUsageParams;
+use ContextDev\Monitors\MonitorGetCreditUsageResponse;
+use ContextDev\Monitors\MonitorGetLimitsResponse;
 use ContextDev\Monitors\MonitorGetResponse;
 use ContextDev\Monitors\MonitorListAccountChangesParams;
 use ContextDev\Monitors\MonitorListAccountChangesResponse;
@@ -102,6 +105,34 @@ interface MonitorsRawContract
      */
     public function delete(
         string $monitorID,
+        RequestOptions|array|null $requestOptions = null
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param array<string,mixed>|MonitorGetCreditUsageParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<MonitorGetCreditUsageResponse>
+     *
+     * @throws APIException
+     */
+    public function getCreditUsage(
+        array|MonitorGetCreditUsageParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<MonitorGetLimitsResponse>
+     *
+     * @throws APIException
+     */
+    public function getLimits(
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse;
 
