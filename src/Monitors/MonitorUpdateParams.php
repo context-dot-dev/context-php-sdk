@@ -69,7 +69,7 @@ final class MonitorUpdateParams implements BaseModel
     public ?string $status;
 
     /**
-     * User-defined tags for grouping and filtering monitors and their changes.
+     * User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
      *
      * @var list<string>|null $tags
      */
@@ -176,7 +176,7 @@ final class MonitorUpdateParams implements BaseModel
     }
 
     /**
-     * User-defined tags for grouping and filtering monitors and their changes.
+     * User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
      *
      * @param list<string> $tags
      */
