@@ -82,7 +82,9 @@ final class WebTest extends TestCase
             maxDepth: 0,
             maxPages: 1,
             pdf: ['end' => 1, 'shouldParse' => true, 'start' => 1],
+            settleAnimations: true,
             stopAfterMs: 10000,
+            tags: ['production', 'team-alpha'],
             timeoutMs: 1000,
             waitForMs: 0,
         );
@@ -114,7 +116,8 @@ final class WebTest extends TestCase
         $result = $this->client->web->extractCompetitors(
             domain: 'xxx',
             numCompetitors: 1,
-            timeoutMs: 1000
+            tags: ['production', 'team-alpha'],
+            timeoutMs: 1000,
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -200,6 +203,7 @@ final class WebTest extends TestCase
             ],
             numResults: 10,
             queryFanout: true,
+            tags: ['production', 'team-alpha'],
             timeoutMs: 1000,
         );
 
@@ -243,10 +247,12 @@ final class WebTest extends TestCase
             settleAnimations: true,
             shortenBase64Images: true,
             stopAfterMs: 10000,
+            tags: ['production', 'team-alpha'],
             timeoutMs: 1000,
             urlRegex: '^https?://[^/]+/blog/',
             useMainContentOnly: true,
             waitForMs: 0,
+            zdr: 'enabled',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -275,17 +281,20 @@ final class WebTest extends TestCase
 
         $result = $this->client->web->webScrapeHTML(
             url: 'https://example.com',
+            actions: [['do' => 'wait', 'timeMs' => 0]],
             country: 'de',
-            excludeSelectors: ['string'],
+            excludeSelectors: ['x'],
             headers: ['foo' => 'J!'],
-            includeFrames: true,
-            includeSelectors: ['string'],
+            includeFrames: 'true',
+            includeSelectors: ['x'],
             maxAgeMs: 0,
-            pdf: ['end' => 1, 'ocr' => true, 'shouldParse' => true, 'start' => 1],
-            settleAnimations: true,
-            timeoutMs: 1000,
-            useMainContentOnly: true,
+            pdf: ['end' => 1, 'ocr' => 'true', 'shouldParse' => 'true', 'start' => 1],
+            settleAnimations: 'true',
+            tags: ['production', 'team-alpha'],
+            timeoutMs: 1,
+            useMainContentOnly: 'true',
             waitForMs: 0,
+            zdr: 'enabled',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -314,16 +323,18 @@ final class WebTest extends TestCase
 
         $result = $this->client->web->webScrapeImages(
             url: 'https://example.com',
-            dedupe: true,
+            actions: [['do' => 'wait', 'timeMs' => 0]],
+            dedupe: 'true',
             enrichment: [
-                'classification' => true,
-                'hostedURL' => true,
+                'classification' => 'true',
+                'hostedURL' => 'true',
                 'maxTimePerMs' => 1,
-                'resolution' => true,
+                'resolution' => 'true',
             ],
             headers: ['foo' => 'J!'],
             maxAgeMs: 0,
-            timeoutMs: 1000,
+            tags: ['production', 'team-alpha'],
+            timeoutMs: 1,
             waitForMs: 0,
         );
 
@@ -353,20 +364,23 @@ final class WebTest extends TestCase
 
         $result = $this->client->web->webScrapeMd(
             url: 'https://example.com',
+            actions: [['do' => 'wait', 'timeMs' => 0]],
             country: 'de',
-            excludeSelectors: ['string'],
+            excludeSelectors: ['x'],
             headers: ['foo' => 'J!'],
-            includeFrames: true,
-            includeImages: true,
-            includeLinks: true,
-            includeSelectors: ['string'],
+            includeFrames: 'true',
+            includeImages: 'true',
+            includeLinks: 'true',
+            includeSelectors: ['x'],
             maxAgeMs: 0,
-            pdf: ['end' => 1, 'ocr' => true, 'shouldParse' => true, 'start' => 1],
-            settleAnimations: true,
-            shortenBase64Images: true,
-            timeoutMs: 1000,
-            useMainContentOnly: true,
+            pdf: ['end' => 1, 'ocr' => 'true', 'shouldParse' => 'true', 'start' => 1],
+            settleAnimations: 'true',
+            shortenBase64Images: 'true',
+            tags: ['production', 'team-alpha'],
+            timeoutMs: 1,
+            useMainContentOnly: 'true',
             waitForMs: 0,
+            zdr: 'enabled',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -380,7 +394,7 @@ final class WebTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->web->webScrapeSitemap(domain: 'domain');
+        $result = $this->client->web->webScrapeSitemap(domain: 'xxx');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(WebWebScrapeSitemapResponse::class, $result);
@@ -394,11 +408,14 @@ final class WebTest extends TestCase
         }
 
         $result = $this->client->web->webScrapeSitemap(
-            domain: 'domain',
+            domain: 'xxx',
             headers: ['foo' => 'J!'],
             maxLinks: 1,
-            timeoutMs: 1000,
+            sitemapURL: 'https://example.com',
+            tags: ['production', 'team-alpha'],
+            timeoutMs: 1,
             urlRegex: '^https?://[^/]+/blog/',
+            zdr: 'enabled',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

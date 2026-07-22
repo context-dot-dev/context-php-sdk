@@ -31,7 +31,10 @@ final class UtilityRawService implements UtilityRawContract
      * Signal that you may fetch brand data soon to improve latency. The type field selects what to prefetch (currently only 'brand') and identifier carries exactly one lookup key: a domain, or an email whose domain is extracted and validated (free email providers and disposable email addresses are not allowed).
      *
      * @param array{
-     *   identifier: IdentifierShape, type: Type|value-of<Type>, timeoutMs?: int
+     *   identifier: IdentifierShape,
+     *   type: Type|value-of<Type>,
+     *   tags?: list<string>,
+     *   timeoutMs?: int,
      * }|UtilityPrefetchParams $params
      * @param RequestOpts|null $requestOptions
      *

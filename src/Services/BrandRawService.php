@@ -10,6 +10,7 @@ use ContextDev\Brand\BrandRetrieveParams;
 use ContextDev\Brand\BrandRetrieveParams\ForceLanguage;
 use ContextDev\Brand\BrandRetrieveParams\Type;
 use ContextDev\Brand\BrandRetrieveSimplifiedParams;
+use ContextDev\Brand\BrandRetrieveSimplifiedParams\Theme;
 use ContextDev\Client;
 use ContextDev\Core\Contracts\BaseResponse;
 use ContextDev\Core\Exceptions\APIException;
@@ -18,6 +19,8 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\BrandRawContract;
 
 /**
+ * @phpstan-import-type MccShape from \ContextDev\Brand\BrandRetrieveParams\Mcc
+ * @phpstan-import-type PhoneShape from \ContextDev\Brand\BrandRetrieveParams\Phone
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class BrandRawService implements BrandRawContract
@@ -39,6 +42,7 @@ final class BrandRawService implements BrandRawContract
      *   forceLanguage?: value-of<ForceLanguage>,
      *   maxAgeMs?: int,
      *   maxSpeed?: bool,
+     *   tags?: list<string>,
      *   timeoutMs?: int,
      *   name: string,
      *   countryGl?: string,
@@ -49,8 +53,8 @@ final class BrandRawService implements BrandRawContract
      *   transactionInfo: string,
      *   city?: string,
      *   highConfidenceOnly?: bool,
-     *   mcc?: int,
-     *   phone?: float,
+     *   mcc?: MccShape,
+     *   phone?: PhoneShape,
      * }|BrandRetrieveParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -83,7 +87,11 @@ final class BrandRawService implements BrandRawContract
      * Returns a simplified version of brand data containing only essential information: domain, title, colors, logos, and backdrops. Optimized for faster responses and reduced data transfer.
      *
      * @param array{
-     *   domain: string, maxAgeMs?: int, timeoutMs?: int
+     *   domain: string,
+     *   maxAgeMs?: int|null,
+     *   tags?: list<string>,
+     *   theme?: Theme|value-of<Theme>,
+     *   timeoutMs?: int,
      * }|BrandRetrieveSimplifiedParams $params
      * @param RequestOpts|null $requestOptions
      *

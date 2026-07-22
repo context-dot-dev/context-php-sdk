@@ -19,6 +19,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   input: string,
  *   maxResults?: int|null,
  *   minResults?: int|null,
+ *   tags?: list<string>|null,
  *   timeoutMs?: int|null,
  * }
  */
@@ -45,6 +46,14 @@ final class IndustryRetrieveNaicsParams implements BaseModel
      */
     #[Optional]
     public ?int $minResults;
+
+    /**
+     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @var list<string>|null $tags
+     */
+    #[Optional(list: 'string')]
+    public ?array $tags;
 
     /**
      * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
@@ -75,11 +84,14 @@ final class IndustryRetrieveNaicsParams implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param list<string>|null $tags
      */
     public static function with(
         string $input,
         ?int $maxResults = null,
         ?int $minResults = null,
+        ?array $tags = null,
         ?int $timeoutMs = null,
     ): self {
         $self = new self;
@@ -88,6 +100,7 @@ final class IndustryRetrieveNaicsParams implements BaseModel
 
         null !== $maxResults && $self['maxResults'] = $maxResults;
         null !== $minResults && $self['minResults'] = $minResults;
+        null !== $tags && $self['tags'] = $tags;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
 
         return $self;
@@ -122,6 +135,19 @@ final class IndustryRetrieveNaicsParams implements BaseModel
     {
         $self = clone $this;
         $self['minResults'] = $minResults;
+
+        return $self;
+    }
+
+    /**
+     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @param list<string> $tags
+     */
+    public function withTags(array $tags): self
+    {
+        $self = clone $this;
+        $self['tags'] = $tags;
 
         return $self;
     }

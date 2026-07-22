@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.5.0 (2026-07-22)
+
+Full Changelog: [v2.4.0...v2.5.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.4.0...v2.5.0)
+
+### Features
+
+* **api:** api update ([010f4c0](https://github.com/context-dot-dev/context-php-sdk/commit/010f4c0c535137516b46f722b1d768422d4107b8))
+* **api:** api update ([b81393a](https://github.com/context-dot-dev/context-php-sdk/commit/b81393a0e2ad8b2e184555a4cbefff55c9f78085))
+* **api:** api update ([31e96ec](https://github.com/context-dot-dev/context-php-sdk/commit/31e96ec38f5746807e2d0bb2a58d5fee86e628c9))
+* **api:** api update ([c0beeca](https://github.com/context-dot-dev/context-php-sdk/commit/c0beecafa76546b693bc4fc21ba2a5d866c3a800))
+* **api:** api update ([4545026](https://github.com/context-dot-dev/context-php-sdk/commit/454502638c42c3f616a4b05182ccfadbedc4094e))
+* **api:** api update ([ea009c4](https://github.com/context-dot-dev/context-php-sdk/commit/ea009c4ebae36d4f2fbe2bf2bccce55f0148dfe8))
+* **api:** api update ([8e18458](https://github.com/context-dot-dev/context-php-sdk/commit/8e18458a35402f1b085547b472601a563c77ae5b))
+* **api:** manual updates ([e6af5a4](https://github.com/context-dot-dev/context-php-sdk/commit/e6af5a4a974d252d12b03fa44e0e4258dd217412))
+* **stlc:** configurable CI runner and private-production-repo support in workflow templates ([ffd1499](https://github.com/context-dot-dev/context-php-sdk/commit/ffd14997114f4bfc701996334a6d39a479f17b2f))
+
 ## 2.4.0 (2026-07-12)
 
 Full Changelog: [v2.3.0...v2.4.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.3.0...v2.4.0)

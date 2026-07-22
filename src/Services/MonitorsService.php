@@ -17,6 +17,8 @@ use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsSitemapTarget;
 use ContextDev\Monitors\MonitorCreateParams\Webhook;
 use ContextDev\Monitors\MonitorDeleteResponse;
 use ContextDev\Monitors\MonitorGetChangeResponse;
+use ContextDev\Monitors\MonitorGetCreditUsageResponse;
+use ContextDev\Monitors\MonitorGetLimitsResponse;
 use ContextDev\Monitors\MonitorGetResponse;
 use ContextDev\Monitors\MonitorListAccountChangesResponse;
 use ContextDev\Monitors\MonitorListAccountRunsResponse;
@@ -71,7 +73,7 @@ final class MonitorsService implements MonitorsContract
      * @param Schedule|ScheduleShape $schedule Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
      * @param TargetShape $target discriminated union describing what the monitor watches
      * @param Mode|value-of<Mode> $mode Top-level monitor category. Always `web` today; the concrete behavior is described by `target` and `change_detection`.
-     * @param list<string> $tags user-defined tags for grouping and filtering monitors and their changes
+     * @param list<string> $tags User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
      * @param Webhook|WebhookShape|null $webhook
      * @param RequestOpts|null $requestOptions
      *
@@ -132,7 +134,7 @@ final class MonitorsService implements MonitorsContract
      * @param ChangeDetectionShape1 $changeDetection discriminated union describing how changes are detected
      * @param \ContextDev\Monitors\MonitorUpdateParams\Schedule|ScheduleShape1 $schedule Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
      * @param Status|value-of<Status> $status
-     * @param list<string> $tags user-defined tags for grouping and filtering monitors and their changes
+     * @param list<string> $tags User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
      * @param TargetShape1 $target discriminated union describing what the monitor watches
      * @param \ContextDev\Monitors\MonitorUpdateParams\Webhook|WebhookShape1|null $webhook set to null to remove the webhook
      * @param RequestOpts|null $requestOptions
@@ -173,14 +175,16 @@ final class MonitorsService implements MonitorsContract
      *
      * Lists monitors for the authenticated organization. Supports free-text search (`q` over `search_by` fields, `prefix` or `exact` via `search_type`) plus status/type/tag filters. Results are paginated via the opaque `cursor`.
      *
-     * @param ChangeDetectionType|value-of<ChangeDetectionType> $changeDetectionType
+     * @param ChangeDetectionType|value-of<ChangeDetectionType> $changeDetectionType filter by change detection type
+     * @param string $cursor opaque pagination cursor from a previous response
+     * @param int $limit Maximum number of items to return per page (1-100). Defaults to 25.
      * @param string $q free-text search term, matched against the fields named in `search_by`
-     * @param list<SearchBy|value-of<SearchBy>> $searchBy Comma-separated fields to search with `q`. Defaults to all of them. Note `instructions` only exists on extract monitors.
+     * @param list<SearchBy|value-of<SearchBy>>|null $searchBy Comma-separated fields to search with `q`. Defaults to all of them. Note `instructions` only exists on extract monitors.
      * @param SearchType|value-of<SearchType> $searchType `prefix` for as-you-type prefix matching (default), `exact` for full-token matching
-     * @param \ContextDev\Monitors\MonitorListParams\Status|value-of<\ContextDev\Monitors\MonitorListParams\Status> $status Monitor lifecycle status. `failed` means the most recent run failed (see the monitor's `last_error`); failed monitors keep running on schedule and flip back to `active` on the next successful run. Monitors are auto-`paused` after repeated consecutive failures or insufficient-credit skips; resume by PATCHing status to `active`.
+     * @param \ContextDev\Monitors\MonitorListParams\Status|value-of<\ContextDev\Monitors\MonitorListParams\Status> $status filter monitors by lifecycle status
      * @param string $tag filter to items that have this tag
-     * @param list<string> $tags comma-separated list of tags to filter by (matches monitors having any of them)
-     * @param TargetType|value-of<TargetType> $targetType
+     * @param list<string>|null $tags comma-separated list of tags to filter by (matches monitors having any of them)
+     * @param TargetType|value-of<TargetType> $targetType filter by target type
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -188,10 +192,10 @@ final class MonitorsService implements MonitorsContract
     public function list(
         ChangeDetectionType|string|null $changeDetectionType = null,
         ?string $cursor = null,
-        int $limit = 25,
+        ?int $limit = null,
         ?string $q = null,
         ?array $searchBy = null,
-        SearchType|string $searchType = 'prefix',
+        SearchType|string|null $searchType = null,
         \ContextDev\Monitors\MonitorListParams\Status|string|null $status = null,
         ?string $tag = null,
         ?array $tags = null,
@@ -241,11 +245,58 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
+     * Returns credits charged per monitor over an optional [since, until] window, newest spenders first.
+     *
+     * @param \DateTimeInterface $since only include items at or after this ISO 8601 timestamp
+     * @param \DateTimeInterface $until only include items before this ISO 8601 timestamp
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function getCreditUsage(
+        ?\DateTimeInterface $since = null,
+        ?\DateTimeInterface $until = null,
+        RequestOptions|array|null $requestOptions = null,
+    ): MonitorGetCreditUsageResponse {
+        $params = Util::removeNulls(['since' => $since, 'until' => $until]);
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->getCreditUsage(params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Returns how many monitors the account has and the maximum it allows.
+     *
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function getLimits(
+        RequestOptions|array|null $requestOptions = null
+    ): MonitorGetLimitsResponse {
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->getLimits(requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
      * Returns an account-wide feed of detected changes across monitors.
      *
-     * @param \ContextDev\Monitors\MonitorListAccountChangesParams\ChangeDetectionType|value-of<\ContextDev\Monitors\MonitorListAccountChangesParams\ChangeDetectionType> $changeDetectionType
+     * @param \ContextDev\Monitors\MonitorListAccountChangesParams\ChangeDetectionType|value-of<\ContextDev\Monitors\MonitorListAccountChangesParams\ChangeDetectionType> $changeDetectionType filter by change detection type
+     * @param string $cursor opaque pagination cursor from a previous response
+     * @param int $limit Maximum number of items to return per page (1-100). Defaults to 25.
+     * @param string $monitorID filter changes to a single monitor
+     * @param \DateTimeInterface $since only include items at or after this ISO 8601 timestamp
      * @param string $tag filter to items that have this tag
-     * @param \ContextDev\Monitors\MonitorListAccountChangesParams\TargetType|value-of<\ContextDev\Monitors\MonitorListAccountChangesParams\TargetType> $targetType
+     * @param \ContextDev\Monitors\MonitorListAccountChangesParams\TargetType|value-of<\ContextDev\Monitors\MonitorListAccountChangesParams\TargetType> $targetType filter by target type
+     * @param \DateTimeInterface $until only include items before this ISO 8601 timestamp
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -253,7 +304,7 @@ final class MonitorsService implements MonitorsContract
     public function listAccountChanges(
         \ContextDev\Monitors\MonitorListAccountChangesParams\ChangeDetectionType|string|null $changeDetectionType = null,
         ?string $cursor = null,
-        int $limit = 25,
+        ?int $limit = null,
         ?string $monitorID = null,
         ?\DateTimeInterface $since = null,
         ?string $tag = null,
@@ -285,14 +336,16 @@ final class MonitorsService implements MonitorsContract
      *
      * Returns an account-wide feed of monitor runs across all monitors.
      *
-     * @param \ContextDev\Monitors\MonitorListAccountRunsParams\Status|value-of<\ContextDev\Monitors\MonitorListAccountRunsParams\Status> $status Lifecycle status of a run. `skipped` runs never executed — see `skip_reason` (insufficient credits, monitor paused, or superseded by a concurrent run).
+     * @param string $cursor opaque pagination cursor from a previous response
+     * @param int $limit Maximum number of items to return per page (1-100). Defaults to 25.
+     * @param \ContextDev\Monitors\MonitorListAccountRunsParams\Status|value-of<\ContextDev\Monitors\MonitorListAccountRunsParams\Status> $status filter runs by lifecycle status
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function listAccountRuns(
         ?string $cursor = null,
-        int $limit = 25,
+        ?int $limit = null,
         \ContextDev\Monitors\MonitorListAccountRunsParams\Status|string|null $status = null,
         RequestOptions|array|null $requestOptions = null,
     ): MonitorListAccountRunsResponse {
@@ -311,7 +364,11 @@ final class MonitorsService implements MonitorsContract
      *
      * List changes for a monitor
      *
+     * @param string $cursor opaque pagination cursor from a previous response
+     * @param int $limit Maximum number of items to return per page (1-100). Defaults to 25.
+     * @param \DateTimeInterface $since only include items at or after this ISO 8601 timestamp
      * @param string $tag filter to items that have this tag
+     * @param \DateTimeInterface $until only include items before this ISO 8601 timestamp
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -319,7 +376,7 @@ final class MonitorsService implements MonitorsContract
     public function listChanges(
         string $monitorID,
         ?string $cursor = null,
-        int $limit = 25,
+        ?int $limit = null,
         ?\DateTimeInterface $since = null,
         ?string $tag = null,
         ?\DateTimeInterface $until = null,
@@ -346,7 +403,9 @@ final class MonitorsService implements MonitorsContract
      *
      * List monitor runs
      *
-     * @param \ContextDev\Monitors\MonitorListRunsParams\Status|value-of<\ContextDev\Monitors\MonitorListRunsParams\Status> $status Lifecycle status of a run. `skipped` runs never executed — see `skip_reason` (insufficient credits, monitor paused, or superseded by a concurrent run).
+     * @param string $cursor opaque pagination cursor from a previous response
+     * @param int $limit Maximum number of items to return per page (1-100). Defaults to 25.
+     * @param \ContextDev\Monitors\MonitorListRunsParams\Status|value-of<\ContextDev\Monitors\MonitorListRunsParams\Status> $status filter runs by lifecycle status
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -354,7 +413,7 @@ final class MonitorsService implements MonitorsContract
     public function listRuns(
         string $monitorID,
         ?string $cursor = null,
-        int $limit = 25,
+        ?int $limit = null,
         \ContextDev\Monitors\MonitorListRunsParams\Status|string|null $status = null,
         RequestOptions|array|null $requestOptions = null,
     ): MonitorListRunsResponse {

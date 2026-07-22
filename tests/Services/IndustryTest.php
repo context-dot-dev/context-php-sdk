@@ -36,7 +36,7 @@ final class IndustryTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->industry->retrieveNaics(input: 'input');
+        $result = $this->client->industry->retrieveNaics(input: 'xxxx');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(IndustryGetNaicsResponse::class, $result);
@@ -50,10 +50,11 @@ final class IndustryTest extends TestCase
         }
 
         $result = $this->client->industry->retrieveNaics(
-            input: 'input',
+            input: 'xxxx',
             maxResults: 1,
             minResults: 1,
-            timeoutMs: 1000
+            tags: ['production', 'team-alpha'],
+            timeoutMs: 1000,
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -67,7 +68,7 @@ final class IndustryTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->industry->retrieveSic(input: 'input');
+        $result = $this->client->industry->retrieveSic(input: 'xxxx');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(IndustryGetSicResponse::class, $result);
@@ -81,9 +82,10 @@ final class IndustryTest extends TestCase
         }
 
         $result = $this->client->industry->retrieveSic(
-            input: 'input',
+            input: 'xxxx',
             maxResults: 1,
             minResults: 1,
+            tags: ['production', 'team-alpha'],
             timeoutMs: 1000,
             type: 'original_sic',
         );

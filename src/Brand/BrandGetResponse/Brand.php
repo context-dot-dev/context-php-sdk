@@ -126,7 +126,7 @@ final class Brand implements BaseModel
     public ?string $phone;
 
     /**
-     * The primary language of the brand's website content. Detected from the HTML lang tag, page content analysis, or social media descriptions.
+     * Language to force for the retrieved brand data.
      *
      * @var value-of<PrimaryLanguage>|null $primaryLanguage
      */
@@ -353,7 +353,7 @@ final class Brand implements BaseModel
     }
 
     /**
-     * The primary language of the brand's website content. Detected from the HTML lang tag, page content analysis, or social media descriptions.
+     * Language to force for the retrieved brand data.
      *
      * @param PrimaryLanguage|value-of<PrimaryLanguage>|null $primaryLanguage
      */

@@ -11,6 +11,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebWebCrawlMdParams\Country;
 use ContextDev\Web\WebWebCrawlMdParams\Pdf;
+use ContextDev\Web\WebWebCrawlMdParams\Zdr;
 
 /**
  * Performs a crawl starting from a given URL, extracts page content as Markdown, and returns results for all crawled pages.
@@ -35,10 +36,12 @@ use ContextDev\Web\WebWebCrawlMdParams\Pdf;
  *   settleAnimations?: bool|null,
  *   shortenBase64Images?: bool|null,
  *   stopAfterMs?: int|null,
+ *   tags?: list<string>|null,
  *   timeoutMs?: int|null,
  *   urlRegex?: string|null,
  *   useMainContentOnly?: bool|null,
  *   waitForMs?: int|null,
+ *   zdr?: null|Zdr|value-of<Zdr>,
  * }
  */
 final class WebWebCrawlMdParams implements BaseModel
@@ -144,6 +147,14 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?int $stopAfterMs;
 
     /**
+     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     *
+     * @var list<string>|null $tags
+     */
+    #[Optional(list: 'string')]
+    public ?array $tags;
+
+    /**
      * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      */
     #[Optional('timeoutMS')]
@@ -166,6 +177,14 @@ final class WebWebCrawlMdParams implements BaseModel
      */
     #[Optional]
     public ?int $waitForMs;
+
+    /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @var value-of<Zdr>|null $zdr
+     */
+    #[Optional(enum: Zdr::class)]
+    public ?string $zdr;
 
     /**
      * `new WebWebCrawlMdParams()` is missing required properties by the API.
@@ -195,6 +214,8 @@ final class WebWebCrawlMdParams implements BaseModel
      * @param list<string>|null $excludeSelectors
      * @param list<string>|null $includeSelectors
      * @param Pdf|PdfShape|null $pdf
+     * @param list<string>|null $tags
+     * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
         string $url,
@@ -212,10 +233,12 @@ final class WebWebCrawlMdParams implements BaseModel
         ?bool $settleAnimations = null,
         ?bool $shortenBase64Images = null,
         ?int $stopAfterMs = null,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         ?string $urlRegex = null,
         ?bool $useMainContentOnly = null,
         ?int $waitForMs = null,
+        Zdr|string|null $zdr = null,
     ): self {
         $self = new self;
 
@@ -235,10 +258,12 @@ final class WebWebCrawlMdParams implements BaseModel
         null !== $settleAnimations && $self['settleAnimations'] = $settleAnimations;
         null !== $shortenBase64Images && $self['shortenBase64Images'] = $shortenBase64Images;
         null !== $stopAfterMs && $self['stopAfterMs'] = $stopAfterMs;
+        null !== $tags && $self['tags'] = $tags;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
         null !== $urlRegex && $self['urlRegex'] = $urlRegex;
         null !== $useMainContentOnly && $self['useMainContentOnly'] = $useMainContentOnly;
         null !== $waitForMs && $self['waitForMs'] = $waitForMs;
+        null !== $zdr && $self['zdr'] = $zdr;
 
         return $self;
     }
@@ -417,6 +442,19 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
+     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     *
+     * @param list<string> $tags
+     */
+    public function withTags(array $tags): self
+    {
+        $self = clone $this;
+        $self['tags'] = $tags;
+
+        return $self;
+    }
+
+    /**
      * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      */
     public function withTimeoutMs(int $timeoutMs): self
@@ -456,6 +494,19 @@ final class WebWebCrawlMdParams implements BaseModel
     {
         $self = clone $this;
         $self['waitForMs'] = $waitForMs;
+
+        return $self;
+    }
+
+    /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @param Zdr|value-of<Zdr> $zdr
+     */
+    public function withZdr(Zdr|string $zdr): self
+    {
+        $self = clone $this;
+        $self['zdr'] = $zdr;
 
         return $self;
     }

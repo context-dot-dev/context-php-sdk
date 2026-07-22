@@ -37,7 +37,7 @@ final class BrandTest extends TestCase
         }
 
         $result = $this->client->brand->retrieve(
-            domain: 'domain',
+            domain: 'xxx',
             type: 'by_transaction',
             name: 'xxx',
             email: 'dev@stainless.com',
@@ -58,11 +58,12 @@ final class BrandTest extends TestCase
         }
 
         $result = $this->client->brand->retrieve(
-            domain: 'domain',
+            domain: 'xxx',
             type: 'by_transaction',
             forceLanguage: 'afrikaans',
             maxAgeMs: 0,
             maxSpeed: true,
+            tags: ['production', 'team-alpha'],
             timeoutMs: 1000,
             name: 'xxx',
             countryGl: 'country_gl',
@@ -73,8 +74,8 @@ final class BrandTest extends TestCase
             transactionInfo: 'xxx',
             city: 'city',
             highConfidenceOnly: true,
-            mcc: 0,
-            phone: 0,
+            mcc: 'string',
+            phone: 'string',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -88,7 +89,7 @@ final class BrandTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->brand->retrieveSimplified(domain: 'domain');
+        $result = $this->client->brand->retrieveSimplified(domain: 'xxx');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(BrandGetSimplifiedResponse::class, $result);
@@ -102,9 +103,11 @@ final class BrandTest extends TestCase
         }
 
         $result = $this->client->brand->retrieveSimplified(
-            domain: 'domain',
-            maxAgeMs: 86400000,
-            timeoutMs: 1000
+            domain: 'xxx',
+            maxAgeMs: 0,
+            tags: ['production', 'team-alpha'],
+            theme: 'light',
+            timeoutMs: 1000,
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

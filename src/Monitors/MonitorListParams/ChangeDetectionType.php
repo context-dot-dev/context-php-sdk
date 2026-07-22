@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace ContextDev\Monitors\MonitorListParams;
 
+/**
+ * Filter by change detection type.
+ */
 enum ChangeDetectionType: string
 {
     case EXACT = 'exact';

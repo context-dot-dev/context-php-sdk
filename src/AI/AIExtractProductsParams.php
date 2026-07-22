@@ -19,6 +19,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   domain: string,
  *   maxAgeMs?: int|null,
  *   maxProducts?: int|null,
+ *   tags?: list<string>|null,
  *   timeoutMs?: int|null,
  *   directURL: string,
  * }
@@ -46,6 +47,14 @@ final class AIExtractProductsParams implements BaseModel
      */
     #[Optional]
     public ?int $maxProducts;
+
+    /**
+     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     *
+     * @var list<string>|null $tags
+     */
+    #[Optional(list: 'string')]
+    public ?array $tags;
 
     /**
      * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
@@ -82,12 +91,15 @@ final class AIExtractProductsParams implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param list<string>|null $tags
      */
     public static function with(
         string $domain,
         string $directURL,
         ?int $maxAgeMs = null,
         ?int $maxProducts = null,
+        ?array $tags = null,
         ?int $timeoutMs = null,
     ): self {
         $self = new self;
@@ -97,6 +109,7 @@ final class AIExtractProductsParams implements BaseModel
 
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
         null !== $maxProducts && $self['maxProducts'] = $maxProducts;
+        null !== $tags && $self['tags'] = $tags;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
 
         return $self;
@@ -131,6 +144,19 @@ final class AIExtractProductsParams implements BaseModel
     {
         $self = clone $this;
         $self['maxProducts'] = $maxProducts;
+
+        return $self;
+    }
+
+    /**
+     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     *
+     * @param list<string> $tags
+     */
+    public function withTags(array $tags): self
+    {
+        $self = clone $this;
+        $self['tags'] = $tags;
 
         return $self;
     }

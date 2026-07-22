@@ -11,12 +11,18 @@ use ContextDev\Core\FileParam;
 use ContextDev\Parse\ParseHandleParams;
 use ContextDev\Parse\ParseHandleParams\Extension;
 use ContextDev\Parse\ParseHandleParams\Pdf;
+use ContextDev\Parse\ParseHandleParams\Zdr;
 use ContextDev\Parse\ParseHandleResponse;
 use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\ParseRawContract;
 
 /**
+ * @phpstan-import-type IncludeImagesShape from \ContextDev\Parse\ParseHandleParams\IncludeImages
+ * @phpstan-import-type IncludeLinksShape from \ContextDev\Parse\ParseHandleParams\IncludeLinks
+ * @phpstan-import-type OcrShape from \ContextDev\Parse\ParseHandleParams\Ocr
  * @phpstan-import-type PdfShape from \ContextDev\Parse\ParseHandleParams\Pdf
+ * @phpstan-import-type ShortenBase64ImagesShape from \ContextDev\Parse\ParseHandleParams\ShortenBase64Images
+ * @phpstan-import-type UseMainContentOnlyShape from \ContextDev\Parse\ParseHandleParams\UseMainContentOnly
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class ParseRawService implements ParseRawContract
@@ -30,17 +36,20 @@ final class ParseRawService implements ParseRawContract
     /**
      * @api
      *
-     * Converts raw text, source code, web/data, PDF, Microsoft Office, and image bytes into LLM-usable Markdown. The base request costs 1 credit. When OCR runs (requires ocr=true), the entire call costs 5 credits; ocr=true requests where no OCR ends up running still cost 1 credit.
+     * Converts raw text, source code, web/data, PDF, Microsoft Office, and image bytes into LLM-usable Markdown.
      *
      * @param string|FileParam $body Body param
      * @param array{
+     *   client?: string,
      *   extension?: value-of<Extension>,
-     *   includeImages?: bool,
-     *   includeLinks?: bool,
-     *   ocr?: bool,
+     *   includeImages?: IncludeImagesShape,
+     *   includeLinks?: IncludeLinksShape,
+     *   ocr?: OcrShape,
      *   pdf?: Pdf|PdfShape,
-     *   shortenBase64Images?: bool,
-     *   useMainContentOnly?: bool,
+     *   shortenBase64Images?: ShortenBase64ImagesShape,
+     *   tags?: list<string>,
+     *   useMainContentOnly?: UseMainContentOnlyShape,
+     *   zdr?: Zdr|value-of<Zdr>,
      * }|ParseHandleParams $params
      * @param RequestOpts|null $requestOptions
      *

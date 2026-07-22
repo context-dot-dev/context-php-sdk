@@ -12,14 +12,18 @@ use ContextDev\Web\WebScreenshotParams\ColorScheme;
 use ContextDev\Web\WebScreenshotParams\Country;
 use ContextDev\Web\WebScreenshotParams\FullScreenshot;
 use ContextDev\Web\WebScreenshotParams\HandleCookiePopup;
+use ContextDev\Web\WebScreenshotParams\HandleCookiePopup\UnionMember1;
 use ContextDev\Web\WebScreenshotParams\Page;
 use ContextDev\Web\WebScreenshotParams\Viewport;
+use ContextDev\Web\WebScreenshotParams\Zdr;
 
 /**
  * Capture a screenshot of a website.
  *
  * @see ContextDev\Services\WebService::screenshot()
  *
+ * @phpstan-import-type HandleCookiePopupVariants from \ContextDev\Web\WebScreenshotParams\HandleCookiePopup
+ * @phpstan-import-type HandleCookiePopupShape from \ContextDev\Web\WebScreenshotParams\HandleCookiePopup
  * @phpstan-import-type ViewportShape from \ContextDev\Web\WebScreenshotParams\Viewport
  *
  * @phpstan-type WebScreenshotParamsShape = array{
@@ -28,13 +32,15 @@ use ContextDev\Web\WebScreenshotParams\Viewport;
  *   directURL?: string|null,
  *   domain?: string|null,
  *   fullScreenshot?: null|FullScreenshot|value-of<FullScreenshot>,
- *   handleCookiePopup?: null|HandleCookiePopup|value-of<HandleCookiePopup>,
+ *   handleCookiePopup?: HandleCookiePopupShape|null,
  *   maxAgeMs?: int|null,
  *   page?: null|Page|value-of<Page>,
  *   scrollOffset?: int|null,
+ *   tags?: list<string>|null,
  *   timeoutMs?: int|null,
  *   viewport?: null|Viewport|ViewportShape,
  *   waitForMs?: int|null,
+ *   zdr?: null|Zdr|value-of<Zdr>,
  * }
  */
 final class WebScreenshotParams implements BaseModel
@@ -52,7 +58,7 @@ final class WebScreenshotParams implements BaseModel
     public ?string $colorScheme;
 
     /**
-     * Two-letter ISO 3166-1 alpha-2 country code for the website request location. When provided, Context.dev fetches the target page from that country.
+     * Two-letter ISO 3166-1 alpha-2 country code identifying a supported Context.dev residential proxy exit location. Must be one of Context.dev's supported countries. When provided, Context.dev fetches the target page from that country.
      *
      * @var value-of<Country>|null $country
      */
@@ -82,15 +88,15 @@ final class WebScreenshotParams implements BaseModel
     /**
      * Optional parameter to control cookie/consent popup handling. If 'true', we dismiss cookie banner before capture. If 'false' or not provided, captures the page without that step.
      *
-     * @var value-of<HandleCookiePopup>|null $handleCookiePopup
+     * @var HandleCookiePopupVariants|null $handleCookiePopup
      */
-    #[Optional(enum: HandleCookiePopup::class)]
-    public ?string $handleCookiePopup;
+    #[Optional(union: HandleCookiePopup::class)]
+    public bool|string|null $handleCookiePopup;
 
     /**
      * Return a cached screenshot if a prior screenshot for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always capture fresh.
      */
-    #[Optional]
+    #[Optional(nullable: true)]
     public ?int $maxAgeMs;
 
     /**
@@ -104,8 +110,16 @@ final class WebScreenshotParams implements BaseModel
     /**
      * Optional vertical scroll offset in pixels for capturing a long page in viewport-sized chunks. When provided, the full page is captured once and the returned image is the viewport-sized slice that begins at this Y offset (e.g. request scrollOffset=0, then 1080, then 2160 to walk a 1920x1080 landing page top to bottom). The final slice may be shorter than the viewport height. Takes precedence over fullScreenshot. Max: 100000.
      */
-    #[Optional]
+    #[Optional(nullable: true)]
     public ?int $scrollOffset;
+
+    /**
+     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @var list<string>|null $tags
+     */
+    #[Optional(list: 'string')]
+    public ?array $tags;
 
     /**
      * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
@@ -120,10 +134,18 @@ final class WebScreenshotParams implements BaseModel
     public ?Viewport $viewport;
 
     /**
-     * Optional browser wait time in milliseconds after initial page load before taking the screenshot. Min: 0. Max: 30000 (30 seconds).  Defaults to 3000 ms when omitted.
+     * Optional browser wait time in milliseconds after initial page load before taking the screenshot. Min: 0. Max: 30000 (30 seconds). Defaults to 3000 ms when omitted.
      */
-    #[Optional]
+    #[Optional(nullable: true)]
     public ?int $waitForMs;
+
+    /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @var value-of<Zdr>|null $zdr
+     */
+    #[Optional(enum: Zdr::class)]
+    public ?string $zdr;
 
     public function __construct()
     {
@@ -138,9 +160,11 @@ final class WebScreenshotParams implements BaseModel
      * @param ColorScheme|value-of<ColorScheme>|null $colorScheme
      * @param Country|value-of<Country>|null $country
      * @param FullScreenshot|value-of<FullScreenshot>|null $fullScreenshot
-     * @param HandleCookiePopup|value-of<HandleCookiePopup>|null $handleCookiePopup
+     * @param HandleCookiePopupShape|null $handleCookiePopup
      * @param Page|value-of<Page>|null $page
+     * @param list<string>|null $tags
      * @param Viewport|ViewportShape|null $viewport
+     * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
         ColorScheme|string|null $colorScheme = null,
@@ -148,13 +172,15 @@ final class WebScreenshotParams implements BaseModel
         ?string $directURL = null,
         ?string $domain = null,
         FullScreenshot|string|null $fullScreenshot = null,
-        HandleCookiePopup|string|null $handleCookiePopup = null,
+        bool|UnionMember1|string|null $handleCookiePopup = null,
         ?int $maxAgeMs = null,
         Page|string|null $page = null,
         ?int $scrollOffset = null,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         Viewport|array|null $viewport = null,
         ?int $waitForMs = null,
+        Zdr|string|null $zdr = null,
     ): self {
         $self = new self;
 
@@ -167,9 +193,11 @@ final class WebScreenshotParams implements BaseModel
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
         null !== $page && $self['page'] = $page;
         null !== $scrollOffset && $self['scrollOffset'] = $scrollOffset;
+        null !== $tags && $self['tags'] = $tags;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
         null !== $viewport && $self['viewport'] = $viewport;
         null !== $waitForMs && $self['waitForMs'] = $waitForMs;
+        null !== $zdr && $self['zdr'] = $zdr;
 
         return $self;
     }
@@ -188,7 +216,7 @@ final class WebScreenshotParams implements BaseModel
     }
 
     /**
-     * Two-letter ISO 3166-1 alpha-2 country code for the website request location. When provided, Context.dev fetches the target page from that country.
+     * Two-letter ISO 3166-1 alpha-2 country code identifying a supported Context.dev residential proxy exit location. Must be one of Context.dev's supported countries. When provided, Context.dev fetches the target page from that country.
      *
      * @param Country|value-of<Country> $country
      */
@@ -239,10 +267,10 @@ final class WebScreenshotParams implements BaseModel
     /**
      * Optional parameter to control cookie/consent popup handling. If 'true', we dismiss cookie banner before capture. If 'false' or not provided, captures the page without that step.
      *
-     * @param HandleCookiePopup|value-of<HandleCookiePopup> $handleCookiePopup
+     * @param HandleCookiePopupShape $handleCookiePopup
      */
     public function withHandleCookiePopup(
-        HandleCookiePopup|string $handleCookiePopup
+        bool|UnionMember1|string $handleCookiePopup
     ): self {
         $self = clone $this;
         $self['handleCookiePopup'] = $handleCookiePopup;
@@ -253,7 +281,7 @@ final class WebScreenshotParams implements BaseModel
     /**
      * Return a cached screenshot if a prior screenshot for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always capture fresh.
      */
-    public function withMaxAgeMs(int $maxAgeMs): self
+    public function withMaxAgeMs(?int $maxAgeMs): self
     {
         $self = clone $this;
         $self['maxAgeMs'] = $maxAgeMs;
@@ -277,10 +305,23 @@ final class WebScreenshotParams implements BaseModel
     /**
      * Optional vertical scroll offset in pixels for capturing a long page in viewport-sized chunks. When provided, the full page is captured once and the returned image is the viewport-sized slice that begins at this Y offset (e.g. request scrollOffset=0, then 1080, then 2160 to walk a 1920x1080 landing page top to bottom). The final slice may be shorter than the viewport height. Takes precedence over fullScreenshot. Max: 100000.
      */
-    public function withScrollOffset(int $scrollOffset): self
+    public function withScrollOffset(?int $scrollOffset): self
     {
         $self = clone $this;
         $self['scrollOffset'] = $scrollOffset;
+
+        return $self;
+    }
+
+    /**
+     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @param list<string> $tags
+     */
+    public function withTags(array $tags): self
+    {
+        $self = clone $this;
+        $self['tags'] = $tags;
 
         return $self;
     }
@@ -310,12 +351,25 @@ final class WebScreenshotParams implements BaseModel
     }
 
     /**
-     * Optional browser wait time in milliseconds after initial page load before taking the screenshot. Min: 0. Max: 30000 (30 seconds).  Defaults to 3000 ms when omitted.
+     * Optional browser wait time in milliseconds after initial page load before taking the screenshot. Min: 0. Max: 30000 (30 seconds). Defaults to 3000 ms when omitted.
      */
-    public function withWaitForMs(int $waitForMs): self
+    public function withWaitForMs(?int $waitForMs): self
     {
         $self = clone $this;
         $self['waitForMs'] = $waitForMs;
+
+        return $self;
+    }
+
+    /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @param Zdr|value-of<Zdr> $zdr
+     */
+    public function withZdr(Zdr|string $zdr): self
+    {
+        $self = clone $this;
+        $self['zdr'] = $zdr;
 
         return $self;
     }

@@ -17,12 +17,18 @@ use ContextDev\Core\Contracts\BaseModel;
  *
  * @see ContextDev\Services\BrandService::retrieve()
  *
+ * @phpstan-import-type MccVariants from \ContextDev\Brand\BrandRetrieveParams\Mcc
+ * @phpstan-import-type PhoneVariants from \ContextDev\Brand\BrandRetrieveParams\Phone
+ * @phpstan-import-type MccShape from \ContextDev\Brand\BrandRetrieveParams\Mcc
+ * @phpstan-import-type PhoneShape from \ContextDev\Brand\BrandRetrieveParams\Phone
+ *
  * @phpstan-type BrandRetrieveParamsShape = array{
  *   domain: string,
  *   type: Type|value-of<Type>,
  *   forceLanguage?: null|ForceLanguage|value-of<ForceLanguage>,
  *   maxAgeMs?: int|null,
  *   maxSpeed?: bool|null,
+ *   tags?: list<string>|null,
  *   timeoutMs?: int|null,
  *   name: string,
  *   countryGl?: string|null,
@@ -33,8 +39,8 @@ use ContextDev\Core\Contracts\BaseModel;
  *   transactionInfo: string,
  *   city?: string|null,
  *   highConfidenceOnly?: bool|null,
- *   mcc?: int|null,
- *   phone?: float|null,
+ *   mcc?: MccShape|null,
+ *   phone?: PhoneShape|null,
  * }
  */
 final class BrandRetrieveParams implements BaseModel
@@ -58,7 +64,7 @@ final class BrandRetrieveParams implements BaseModel
     public string $type;
 
     /** @var value-of<ForceLanguage>|null $forceLanguage */
-    #[Optional('force_language', enum: ForceLanguage::class)]
+    #[Optional('force_language', enum: ForceLanguage::class, nullable: true)]
     public ?string $forceLanguage;
 
     /**
@@ -72,6 +78,14 @@ final class BrandRetrieveParams implements BaseModel
      */
     #[Optional]
     public ?bool $maxSpeed;
+
+    /**
+     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     *
+     * @var list<string>|null $tags
+     */
+    #[Optional(list: 'string')]
+    public ?array $tags;
 
     /**
      * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
@@ -135,15 +149,19 @@ final class BrandRetrieveParams implements BaseModel
 
     /**
      * Optional Merchant Category Code (MCC) to help identify the business category or industry.
+     *
+     * @var MccVariants|null $mcc
      */
     #[Optional]
-    public ?int $mcc;
+    public string|float|null $mcc;
 
     /**
      * Optional phone number from the transaction to help verify brand match.
+     *
+     * @var PhoneVariants|null $phone
      */
     #[Optional]
-    public ?float $phone;
+    public string|float|null $phone;
 
     /**
      * `new BrandRetrieveParams()` is missing required properties by the API.
@@ -186,6 +204,9 @@ final class BrandRetrieveParams implements BaseModel
      *
      * @param Type|value-of<Type> $type
      * @param ForceLanguage|value-of<ForceLanguage>|null $forceLanguage
+     * @param list<string>|null $tags
+     * @param MccShape|null $mcc
+     * @param PhoneShape|null $phone
      */
     public static function with(
         string $domain,
@@ -198,13 +219,14 @@ final class BrandRetrieveParams implements BaseModel
         ForceLanguage|string|null $forceLanguage = null,
         ?int $maxAgeMs = null,
         ?bool $maxSpeed = null,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         ?string $countryGl = null,
         ?string $tickerExchange = null,
         ?string $city = null,
         ?bool $highConfidenceOnly = null,
-        ?int $mcc = null,
-        ?float $phone = null,
+        string|float|null $mcc = null,
+        string|float|null $phone = null,
     ): self {
         $self = new self;
 
@@ -219,6 +241,7 @@ final class BrandRetrieveParams implements BaseModel
         null !== $forceLanguage && $self['forceLanguage'] = $forceLanguage;
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
         null !== $maxSpeed && $self['maxSpeed'] = $maxSpeed;
+        null !== $tags && $self['tags'] = $tags;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
         null !== $countryGl && $self['countryGl'] = $countryGl;
         null !== $tickerExchange && $self['tickerExchange'] = $tickerExchange;
@@ -255,10 +278,11 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * @param ForceLanguage|value-of<ForceLanguage> $forceLanguage
+     * @param ForceLanguage|value-of<ForceLanguage>|null $forceLanguage
      */
-    public function withForceLanguage(ForceLanguage|string $forceLanguage): self
-    {
+    public function withForceLanguage(
+        ForceLanguage|string|null $forceLanguage
+    ): self {
         $self = clone $this;
         $self['forceLanguage'] = $forceLanguage;
 
@@ -283,6 +307,19 @@ final class BrandRetrieveParams implements BaseModel
     {
         $self = clone $this;
         $self['maxSpeed'] = $maxSpeed;
+
+        return $self;
+    }
+
+    /**
+     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     *
+     * @param list<string> $tags
+     */
+    public function withTags(array $tags): self
+    {
+        $self = clone $this;
+        $self['tags'] = $tags;
 
         return $self;
     }
@@ -399,8 +436,10 @@ final class BrandRetrieveParams implements BaseModel
 
     /**
      * Optional Merchant Category Code (MCC) to help identify the business category or industry.
+     *
+     * @param MccShape $mcc
      */
-    public function withMcc(int $mcc): self
+    public function withMcc(string|float $mcc): self
     {
         $self = clone $this;
         $self['mcc'] = $mcc;
@@ -410,8 +449,10 @@ final class BrandRetrieveParams implements BaseModel
 
     /**
      * Optional phone number from the transaction to help verify brand match.
+     *
+     * @param PhoneShape $phone
      */
-    public function withPhone(float $phone): self
+    public function withPhone(string|float $phone): self
     {
         $self = clone $this;
         $self['phone'] = $phone;

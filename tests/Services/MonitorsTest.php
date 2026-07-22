@@ -6,6 +6,8 @@ use ContextDev\Client;
 use ContextDev\Core\Util;
 use ContextDev\Monitors\MonitorDeleteResponse;
 use ContextDev\Monitors\MonitorGetChangeResponse;
+use ContextDev\Monitors\MonitorGetCreditUsageResponse;
+use ContextDev\Monitors\MonitorGetLimitsResponse;
 use ContextDev\Monitors\MonitorGetResponse;
 use ContextDev\Monitors\MonitorListAccountChangesResponse;
 use ContextDev\Monitors\MonitorListAccountRunsResponse;
@@ -134,6 +136,32 @@ final class MonitorsTest extends TestCase
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(MonitorDeleteResponse::class, $result);
+    }
+
+    #[Test]
+    public function testGetCreditUsage(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->monitors->getCreditUsage();
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(MonitorGetCreditUsageResponse::class, $result);
+    }
+
+    #[Test]
+    public function testGetLimits(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->monitors->getLimits();
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(MonitorGetLimitsResponse::class, $result);
     }
 
     #[Test]

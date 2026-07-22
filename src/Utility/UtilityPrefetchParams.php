@@ -22,7 +22,10 @@ use ContextDev\Utility\UtilityPrefetchParams\Type;
  * @phpstan-import-type IdentifierShape from \ContextDev\Utility\UtilityPrefetchParams\Identifier
  *
  * @phpstan-type UtilityPrefetchParamsShape = array{
- *   identifier: IdentifierShape, type: Type|value-of<Type>, timeoutMs?: int|null
+ *   identifier: IdentifierShape,
+ *   type: Type|value-of<Type>,
+ *   tags?: list<string>|null,
+ *   timeoutMs?: int|null,
  * }
  */
 final class UtilityPrefetchParams implements BaseModel
@@ -46,6 +49,14 @@ final class UtilityPrefetchParams implements BaseModel
      */
     #[Required(enum: Type::class)]
     public string $type;
+
+    /**
+     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     *
+     * @var list<string>|null $tags
+     */
+    #[Optional(list: 'string')]
+    public ?array $tags;
 
     /**
      * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
@@ -79,10 +90,12 @@ final class UtilityPrefetchParams implements BaseModel
      *
      * @param IdentifierShape $identifier
      * @param Type|value-of<Type> $type
+     * @param list<string>|null $tags
      */
     public static function with(
         UtilityPrefetchDomainIdentifier|array|UtilityPrefetchEmailIdentifier $identifier,
         Type|string $type,
+        ?array $tags = null,
         ?int $timeoutMs = null,
     ): self {
         $self = new self;
@@ -90,6 +103,7 @@ final class UtilityPrefetchParams implements BaseModel
         $self['identifier'] = $identifier;
         $self['type'] = $type;
 
+        null !== $tags && $self['tags'] = $tags;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
 
         return $self;
@@ -118,6 +132,19 @@ final class UtilityPrefetchParams implements BaseModel
     {
         $self = clone $this;
         $self['type'] = $type;
+
+        return $self;
+    }
+
+    /**
+     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     *
+     * @param list<string> $tags
+     */
+    public function withTags(array $tags): self
+    {
+        $self = clone $this;
+        $self['tags'] = $tags;
 
         return $self;
     }

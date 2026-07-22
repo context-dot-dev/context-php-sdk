@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * PDF page-range controls. Use start/end to limit parsing (and OCR when ocr=true) to an inclusive 1-based page range.
+ * PDF page-range options as a JSON object, e.g. {"start": 2, "end": 5}.
  *
  * @phpstan-type PdfShape = array{end?: int|null, start?: int|null}
  */

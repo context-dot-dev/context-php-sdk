@@ -33,7 +33,7 @@ class ClientTest extends TestCase
         );
 
         $client->brand->retrieve(
-            domain: 'domain',
+            domain: 'xxx',
             type: 'by_transaction',
             name: 'xxx',
             email: 'dev@stainless.com',

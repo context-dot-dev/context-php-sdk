@@ -14,6 +14,9 @@ use ContextDev\Monitors\MonitorCreateParams\Schedule;
 use ContextDev\Monitors\MonitorCreateParams\Webhook;
 use ContextDev\Monitors\MonitorDeleteResponse;
 use ContextDev\Monitors\MonitorGetChangeResponse;
+use ContextDev\Monitors\MonitorGetCreditUsageParams;
+use ContextDev\Monitors\MonitorGetCreditUsageResponse;
+use ContextDev\Monitors\MonitorGetLimitsResponse;
 use ContextDev\Monitors\MonitorGetResponse;
 use ContextDev\Monitors\MonitorListAccountChangesParams;
 use ContextDev\Monitors\MonitorListAccountChangesResponse;
@@ -171,11 +174,11 @@ final class MonitorsRawService implements MonitorsRawContract
      *   cursor?: string,
      *   limit?: int,
      *   q?: string,
-     *   searchBy?: list<SearchBy|value-of<SearchBy>>,
+     *   searchBy?: list<SearchBy|value-of<SearchBy>>|null,
      *   searchType?: SearchType|value-of<SearchType>,
      *   status?: MonitorListParams\Status|value-of<MonitorListParams\Status>,
      *   tag?: string,
-     *   tags?: list<string>,
+     *   tags?: list<string>|null,
      *   targetType?: TargetType|value-of<TargetType>,
      * }|MonitorListParams $params
      * @param RequestOpts|null $requestOptions
@@ -232,6 +235,62 @@ final class MonitorsRawService implements MonitorsRawContract
             path: ['monitors/%1$s', $monitorID],
             options: $requestOptions,
             convert: MonitorDeleteResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Returns credits charged per monitor over an optional [since, until] window, newest spenders first.
+     *
+     * @param array{
+     *   since?: \DateTimeInterface, until?: \DateTimeInterface
+     * }|MonitorGetCreditUsageParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<MonitorGetCreditUsageResponse>
+     *
+     * @throws APIException
+     */
+    public function getCreditUsage(
+        array|MonitorGetCreditUsageParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = MonitorGetCreditUsageParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: 'monitors/credit-usage',
+            query: $parsed,
+            options: $options,
+            convert: MonitorGetCreditUsageResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Returns how many monitors the account has and the maximum it allows.
+     *
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<MonitorGetLimitsResponse>
+     *
+     * @throws APIException
+     */
+    public function getLimits(
+        RequestOptions|array|null $requestOptions = null
+    ): BaseResponse {
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: 'monitors/limits',
+            options: $requestOptions,
+            convert: MonitorGetLimitsResponse::class,
         );
     }
 

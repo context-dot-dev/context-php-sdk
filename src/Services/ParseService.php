@@ -9,13 +9,20 @@ use ContextDev\Core\Exceptions\APIException;
 use ContextDev\Core\FileParam;
 use ContextDev\Core\Util;
 use ContextDev\Parse\ParseHandleParams\Extension;
+use ContextDev\Parse\ParseHandleParams\IncludeImages\UnionMember1;
 use ContextDev\Parse\ParseHandleParams\Pdf;
+use ContextDev\Parse\ParseHandleParams\Zdr;
 use ContextDev\Parse\ParseHandleResponse;
 use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\ParseContract;
 
 /**
+ * @phpstan-import-type IncludeImagesShape from \ContextDev\Parse\ParseHandleParams\IncludeImages
+ * @phpstan-import-type IncludeLinksShape from \ContextDev\Parse\ParseHandleParams\IncludeLinks
+ * @phpstan-import-type OcrShape from \ContextDev\Parse\ParseHandleParams\Ocr
  * @phpstan-import-type PdfShape from \ContextDev\Parse\ParseHandleParams\Pdf
+ * @phpstan-import-type ShortenBase64ImagesShape from \ContextDev\Parse\ParseHandleParams\ShortenBase64Images
+ * @phpstan-import-type UseMainContentOnlyShape from \ContextDev\Parse\ParseHandleParams\UseMainContentOnly
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class ParseService implements ParseContract
@@ -36,40 +43,49 @@ final class ParseService implements ParseContract
     /**
      * @api
      *
-     * Converts raw text, source code, web/data, PDF, Microsoft Office, and image bytes into LLM-usable Markdown. The base request costs 1 credit. When OCR runs (requires ocr=true), the entire call costs 5 credits; ocr=true requests where no OCR ends up running still cost 1 credit.
+     * Converts raw text, source code, web/data, PDF, Microsoft Office, and image bytes into LLM-usable Markdown.
      *
      * @param string|FileParam $body Body param
-     * @param Extension|value-of<Extension> $extension Query param: Optional file extension hint. Case-insensitive; a leading dot is accepted (e.g. ".pdf").
-     * @param bool $includeImages Query param: Include image references in Markdown output
-     * @param bool $includeLinks Query param: Preserve hyperlinks in Markdown output
-     * @param bool $ocr Query param: Gates all OCR. When true, PDFs get embedded-image OCR (recognized text inserted at each image's position in page reading order, preserving the text layer; pdf.start/pdf.end limit the page range), scanned PDFs with no text layer get full-document OCR, and raster images get their visible text transcribed. When false, no OCR runs: scanned PDFs may yield no content and images return only format/dimension metadata. Calls where OCR actually runs cost 5 credits instead of 1.
-     * @param Pdf|PdfShape $pdf Query param: PDF page-range controls. Use start/end to limit parsing (and OCR when ocr=true) to an inclusive 1-based page range.
-     * @param bool $shortenBase64Images Query param: Shorten base64-encoded image data in the Markdown output
-     * @param bool $useMainContentOnly Query param: Extract only the main content from HTML-like inputs
+     * @param string $client query param: Optional client identifier used for usage attribution
+     * @param Extension|value-of<Extension> $extension query param: Optional file extension hint, such as pdf, docx, xlsx, pptx, html, json, csv, md, py, rtf, jpg, png, or txt
+     * @param IncludeImagesShape $includeImages Query param: Include image references in Markdown output
+     * @param IncludeLinksShape $includeLinks Query param: Preserve hyperlinks in Markdown output
+     * @param OcrShape $ocr Query param: When true for PDF inputs, detect and OCR images embedded in the selected pages, inserting recognized text at each image's position in page reading order while preserving the PDF text layer. pdf.start/pdf.end limit the inclusive page range. When false, all OCR is disabled, including the automatic scanned-PDF fallback.
+     * @param Pdf|PdfShape $pdf Query param: PDF page-range options as a JSON object, e.g. {"start": 2, "end": 5}.
+     * @param ShortenBase64ImagesShape $shortenBase64Images Query param: Shorten base64-encoded image data in the Markdown output
+     * @param list<string> $tags Query param: Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     * @param UseMainContentOnlyShape $useMainContentOnly Query param: Extract only the main content from HTML-like inputs
+     * @param Zdr|value-of<Zdr> $zdr Query param: Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function handle(
         string|FileParam $body,
+        ?string $client = null,
         Extension|string|null $extension = null,
-        bool $includeImages = false,
-        bool $includeLinks = true,
-        bool $ocr = false,
+        bool|UnionMember1|string $includeImages = false,
+        bool|\ContextDev\Parse\ParseHandleParams\IncludeLinks\UnionMember1|string $includeLinks = true,
+        bool|\ContextDev\Parse\ParseHandleParams\Ocr\UnionMember1|string $ocr = false,
         Pdf|array $pdf = (object) [],
-        bool $shortenBase64Images = true,
-        bool $useMainContentOnly = false,
+        bool|\ContextDev\Parse\ParseHandleParams\ShortenBase64Images\UnionMember1|string $shortenBase64Images = true,
+        ?array $tags = null,
+        bool|\ContextDev\Parse\ParseHandleParams\UseMainContentOnly\UnionMember1|string $useMainContentOnly = false,
+        Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): ParseHandleResponse {
         $params = Util::removeNulls(
             [
+                'client' => $client,
                 'extension' => $extension,
                 'includeImages' => $includeImages,
                 'includeLinks' => $includeLinks,
                 'ocr' => $ocr,
                 'pdf' => $pdf,
                 'shortenBase64Images' => $shortenBase64Images,
+                'tags' => $tags,
                 'useMainContentOnly' => $useMainContentOnly,
+                'zdr' => $zdr,
             ],
         );
 

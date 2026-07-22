@@ -36,7 +36,7 @@ final class UtilityTest extends TestCase
         }
 
         $result = $this->client->utility->prefetch(
-            identifier: ['domain' => 'domain'],
+            identifier: ['domain' => 'xxx'],
             type: 'brand'
         );
 
@@ -52,9 +52,10 @@ final class UtilityTest extends TestCase
         }
 
         $result = $this->client->utility->prefetch(
-            identifier: ['domain' => 'domain'],
+            identifier: ['domain' => 'xxx'],
             type: 'brand',
-            timeoutMs: 1000
+            tags: ['production', 'team-alpha'],
+            timeoutMs: 1000,
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

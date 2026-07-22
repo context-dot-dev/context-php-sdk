@@ -9,6 +9,7 @@ use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebWebScrapeSitemapParams\Zdr;
 
 /**
  * Crawl an entire website's sitemap and return all discovered page URLs.
@@ -19,8 +20,11 @@ use ContextDev\Core\Contracts\BaseModel;
  *   domain: string,
  *   headers?: array<string,string>|null,
  *   maxLinks?: int|null,
+ *   sitemapURL?: string|null,
+ *   tags?: list<string>|null,
  *   timeoutMs?: int|null,
  *   urlRegex?: string|null,
+ *   zdr?: null|Zdr|value-of<Zdr>,
  * }
  */
 final class WebWebScrapeSitemapParams implements BaseModel
@@ -50,6 +54,20 @@ final class WebWebScrapeSitemapParams implements BaseModel
     public ?int $maxLinks;
 
     /**
+     * Optional explicit sitemap URL. When provided, exactly this sitemap is crawled instead of discovering the domain's sitemaps.
+     */
+    #[Optional]
+    public ?string $sitemapURL;
+
+    /**
+     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @var list<string>|null $tags
+     */
+    #[Optional(list: 'string')]
+    public ?array $tags;
+
+    /**
      * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      */
     #[Optional]
@@ -60,6 +78,14 @@ final class WebWebScrapeSitemapParams implements BaseModel
      */
     #[Optional]
     public ?string $urlRegex;
+
+    /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @var value-of<Zdr>|null $zdr
+     */
+    #[Optional(enum: Zdr::class)]
+    public ?string $zdr;
 
     /**
      * `new WebWebScrapeSitemapParams()` is missing required properties by the API.
@@ -86,13 +112,18 @@ final class WebWebScrapeSitemapParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param array<string,string>|null $headers
+     * @param list<string>|null $tags
+     * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
         string $domain,
         ?array $headers = null,
         ?int $maxLinks = null,
+        ?string $sitemapURL = null,
+        ?array $tags = null,
         ?int $timeoutMs = null,
         ?string $urlRegex = null,
+        Zdr|string|null $zdr = null,
     ): self {
         $self = new self;
 
@@ -100,8 +131,11 @@ final class WebWebScrapeSitemapParams implements BaseModel
 
         null !== $headers && $self['headers'] = $headers;
         null !== $maxLinks && $self['maxLinks'] = $maxLinks;
+        null !== $sitemapURL && $self['sitemapURL'] = $sitemapURL;
+        null !== $tags && $self['tags'] = $tags;
         null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
         null !== $urlRegex && $self['urlRegex'] = $urlRegex;
+        null !== $zdr && $self['zdr'] = $zdr;
 
         return $self;
     }
@@ -142,6 +176,30 @@ final class WebWebScrapeSitemapParams implements BaseModel
     }
 
     /**
+     * Optional explicit sitemap URL. When provided, exactly this sitemap is crawled instead of discovering the domain's sitemaps.
+     */
+    public function withSitemapURL(string $sitemapURL): self
+    {
+        $self = clone $this;
+        $self['sitemapURL'] = $sitemapURL;
+
+        return $self;
+    }
+
+    /**
+     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     *
+     * @param list<string> $tags
+     */
+    public function withTags(array $tags): self
+    {
+        $self = clone $this;
+        $self['tags'] = $tags;
+
+        return $self;
+    }
+
+    /**
      * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      */
     public function withTimeoutMs(int $timeoutMs): self
@@ -159,6 +217,19 @@ final class WebWebScrapeSitemapParams implements BaseModel
     {
         $self = clone $this;
         $self['urlRegex'] = $urlRegex;
+
+        return $self;
+    }
+
+    /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @param Zdr|value-of<Zdr> $zdr
+     */
+    public function withZdr(Zdr|string $zdr): self
+    {
+        $self = clone $this;
+        $self['zdr'] = $zdr;
 
         return $self;
     }
