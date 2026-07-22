@@ -49,12 +49,15 @@ use ContextDev\Web\WebWebScrapeSitemapResponse;
  * @phpstan-import-type ViewportShape from \ContextDev\Web\WebScreenshotParams\Viewport
  * @phpstan-import-type MarkdownOptionsShape from \ContextDev\Web\WebSearchParams\MarkdownOptions
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebCrawlMdParams\Pdf as PdfShape1
+ * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeHTMLParams\Action
  * @phpstan-import-type IncludeFramesShape from \ContextDev\Web\WebWebScrapeHTMLParams\IncludeFrames
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeHTMLParams\Pdf as PdfShape2
  * @phpstan-import-type SettleAnimationsShape from \ContextDev\Web\WebWebScrapeHTMLParams\SettleAnimations
  * @phpstan-import-type UseMainContentOnlyShape from \ContextDev\Web\WebWebScrapeHTMLParams\UseMainContentOnly
+ * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeImagesParams\Action as ActionShape1
  * @phpstan-import-type DedupeShape from \ContextDev\Web\WebWebScrapeImagesParams\Dedupe
  * @phpstan-import-type EnrichmentShape from \ContextDev\Web\WebWebScrapeImagesParams\Enrichment
+ * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeMdParams\Action as ActionShape2
  * @phpstan-import-type IncludeFramesShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeFrames as IncludeFramesShape1
  * @phpstan-import-type IncludeImagesShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeImages
  * @phpstan-import-type IncludeLinksShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeLinks
@@ -380,10 +383,11 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Scrapes the given URL and returns the raw HTML content of the page.
+     * Scrapes the given URL and returns the raw HTML content of the page. The base request costs 1 credit; requests with browser actions cost 2 credits.
      *
      * @param array{
      *   url: string,
+     *   actions?: list<ActionShape>|null,
      *   country?: value-of<WebWebScrapeHTMLParams\Country>,
      *   excludeSelectors?: list<string>|null,
      *   headers?: array<string,string>,
@@ -426,10 +430,11 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Extract image assets from a web page, including standard URLs, inline SVGs, data URIs, responsive image sources, metadata, CSS backgrounds, video posters, and embeds. The base request costs 1 credit. When enrichment is enabled, the entire call costs 5 credits.
+     * Extract image assets from a web page, including standard URLs, inline SVGs, data URIs, responsive image sources, metadata, CSS backgrounds, video posters, and embeds. The base request costs 1 credit, or 2 credits with browser actions. When enrichment is enabled, the entire call costs 5 credits, including requests that also use actions.
      *
      * @param array{
      *   url: string,
+     *   actions?: list<ActionShape1>|null,
      *   dedupe?: DedupeShape,
      *   enrichment?: Enrichment|EnrichmentShape|null,
      *   headers?: array<string,string>,
@@ -472,7 +477,7 @@ final class WebRawService implements WebRawContract
      *
      * | HTTP status | Billed? | Meaning |
      * | --- | --- | --- |
-     * | 200 | Yes — 1 credit | Successful scrape, including a zero-length result when includeSelectors matched nothing |
+     * | 200 | Yes — 1 credit, or 2 credits with actions | Successful scrape, including a zero-length result when includeSelectors matched nothing |
      * | 400 | No | Invalid input, skipped PDF, or the page could not be scraped |
      * | 401 / 403 | No | Invalid/disabled key, insufficient permissions, or credits exhausted; inspect error_code |
      * | 404 | No | Target page returned or fingerprinted as not found |
@@ -483,6 +488,7 @@ final class WebRawService implements WebRawContract
      *
      * @param array{
      *   url: string,
+     *   actions?: list<ActionShape2>|null,
      *   country?: value-of<WebWebScrapeMdParams\Country>,
      *   excludeSelectors?: list<string>|null,
      *   headers?: array<string,string>,

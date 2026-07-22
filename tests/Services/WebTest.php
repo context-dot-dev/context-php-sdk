@@ -281,6 +281,7 @@ final class WebTest extends TestCase
 
         $result = $this->client->web->webScrapeHTML(
             url: 'https://example.com',
+            actions: [['do' => 'wait', 'timeMs' => 0]],
             country: 'de',
             excludeSelectors: ['x'],
             headers: ['foo' => 'J!'],
@@ -322,6 +323,7 @@ final class WebTest extends TestCase
 
         $result = $this->client->web->webScrapeImages(
             url: 'https://example.com',
+            actions: [['do' => 'wait', 'timeMs' => 0]],
             dedupe: 'true',
             enrichment: [
                 'classification' => 'true',
@@ -362,6 +364,7 @@ final class WebTest extends TestCase
 
         $result = $this->client->web->webScrapeMd(
             url: 'https://example.com',
+            actions: [['do' => 'wait', 'timeMs' => 0]],
             country: 'de',
             excludeSelectors: ['x'],
             headers: ['foo' => 'J!'],
