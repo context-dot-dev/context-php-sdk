@@ -14,13 +14,11 @@ use ContextDev\Monitors\MonitorListRunsResponse\Data\RunType;
 use ContextDev\Monitors\MonitorListRunsResponse\Data\SkipReason;
 use ContextDev\Monitors\MonitorListRunsResponse\Data\Status;
 use ContextDev\Monitors\MonitorListRunsResponse\Data\TargetType;
-use ContextDev\Monitors\MonitorListRunsResponse\Data\WebhookDelivery;
-use ContextDev\Monitors\MonitorListRunsResponse\Data\WebhookDelivery1;
+use ContextDev\Monitors\WebhookDelivery;
 
 /**
  * @phpstan-import-type ErrorShape from \ContextDev\Monitors\MonitorListRunsResponse\Data\Error
- * @phpstan-import-type WebhookDelivery1Shape from \ContextDev\Monitors\MonitorListRunsResponse\Data\WebhookDelivery1
- * @phpstan-import-type WebhookDeliveryShape from \ContextDev\Monitors\MonitorListRunsResponse\Data\WebhookDelivery
+ * @phpstan-import-type WebhookDeliveryShape from \ContextDev\Monitors\WebhookDelivery
  *
  * @phpstan-type DataShape = array{
  *   id: string,
@@ -37,7 +35,7 @@ use ContextDev\Monitors\MonitorListRunsResponse\Data\WebhookDelivery1;
  *   error?: null|Error|ErrorShape,
  *   skipReason?: null|SkipReason|value-of<SkipReason>,
  *   startedAt?: \DateTimeInterface|null,
- *   webhookDeliveries?: list<WebhookDelivery1|WebhookDelivery1Shape>|null,
+ *   webhookDeliveries?: list<WebhookDelivery|WebhookDeliveryShape>|null,
  *   webhookDelivery?: null|WebhookDelivery|WebhookDeliveryShape,
  * }
  */
@@ -114,9 +112,9 @@ final class Data implements BaseModel
     /**
      * All webhook deliveries attempted by this run — one per subscribed event that fired. Omitted when no webhook was attempted, including runs created before event selection was added.
      *
-     * @var list<WebhookDelivery1>|null $webhookDeliveries
+     * @var list<WebhookDelivery>|null $webhookDeliveries
      */
-    #[Optional('webhook_deliveries', list: WebhookDelivery1::class)]
+    #[Optional('webhook_deliveries', list: WebhookDelivery::class)]
     public ?array $webhookDeliveries;
 
     /**
@@ -176,7 +174,7 @@ final class Data implements BaseModel
      * @param TargetType|value-of<TargetType> $targetType
      * @param Error|ErrorShape|null $error
      * @param SkipReason|value-of<SkipReason>|null $skipReason
-     * @param list<WebhookDelivery1|WebhookDelivery1Shape>|null $webhookDeliveries
+     * @param list<WebhookDelivery|WebhookDeliveryShape>|null $webhookDeliveries
      * @param WebhookDelivery|WebhookDeliveryShape|null $webhookDelivery
      */
     public static function with(
@@ -366,7 +364,7 @@ final class Data implements BaseModel
     /**
      * All webhook deliveries attempted by this run — one per subscribed event that fired. Omitted when no webhook was attempted, including runs created before event selection was added.
      *
-     * @param list<WebhookDelivery1|WebhookDelivery1Shape> $webhookDeliveries
+     * @param list<WebhookDelivery|WebhookDeliveryShape> $webhookDeliveries
      */
     public function withWebhookDeliveries(array $webhookDeliveries): self
     {

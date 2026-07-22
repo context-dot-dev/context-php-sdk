@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ContextDev\Monitors\MonitorListRunsResponse\Data\WebhookDelivery;
+namespace ContextDev\Monitors\WebhookDelivery;
 
 /**
  * The event this delivery carried. Deliveries recorded before event selection existed report change.detected.
