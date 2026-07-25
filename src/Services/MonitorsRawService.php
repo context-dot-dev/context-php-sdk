@@ -43,9 +43,9 @@ use ContextDev\ServiceContracts\MonitorsRawContract;
 /**
  * Monitor pages, sitemaps, and extracted website data for exact or semantic changes. Webhook payloads are documented by the MonitorsChangeDetectedWebhookPayload and MonitorsRunCompletedWebhookPayload schemas.
  *
+ * @phpstan-import-type TargetShape from \ContextDev\Monitors\MonitorCreateParams\Target
  * @phpstan-import-type ChangeDetectionShape from \ContextDev\Monitors\MonitorCreateParams\ChangeDetection
  * @phpstan-import-type ScheduleShape from \ContextDev\Monitors\MonitorCreateParams\Schedule
- * @phpstan-import-type TargetShape from \ContextDev\Monitors\MonitorCreateParams\Target
  * @phpstan-import-type WebhookShape from \ContextDev\Monitors\MonitorCreateParams\Webhook
  * @phpstan-import-type ChangeDetectionShape from \ContextDev\Monitors\MonitorUpdateParams\ChangeDetection as ChangeDetectionShape1
  * @phpstan-import-type ScheduleShape from \ContextDev\Monitors\MonitorUpdateParams\Schedule as ScheduleShape1
@@ -67,11 +67,11 @@ final class MonitorsRawService implements MonitorsRawContract
      * Creates a monitor. The request body is a union of the supported target/change detection combinations. The monitor runs immediately after creation to create its initial baseline.
      *
      * @param array{
-     *   changeDetection: ChangeDetectionShape,
      *   name: string,
-     *   schedule: Schedule|ScheduleShape,
      *   target: TargetShape,
+     *   changeDetection?: ChangeDetectionShape,
      *   mode?: Mode|value-of<Mode>,
+     *   schedule?: Schedule|ScheduleShape,
      *   tags?: list<string>,
      *   webhook?: Webhook|WebhookShape|null,
      * }|MonitorCreateParams $params

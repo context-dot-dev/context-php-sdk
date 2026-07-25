@@ -25,19 +25,19 @@ use ContextDev\Monitors\MonitorCreateParams\Webhook;
  *
  * @see ContextDev\Services\MonitorsService::create()
  *
- * @phpstan-import-type ChangeDetectionVariants from \ContextDev\Monitors\MonitorCreateParams\ChangeDetection
  * @phpstan-import-type TargetVariants from \ContextDev\Monitors\MonitorCreateParams\Target
+ * @phpstan-import-type ChangeDetectionVariants from \ContextDev\Monitors\MonitorCreateParams\ChangeDetection
+ * @phpstan-import-type TargetShape from \ContextDev\Monitors\MonitorCreateParams\Target
  * @phpstan-import-type ChangeDetectionShape from \ContextDev\Monitors\MonitorCreateParams\ChangeDetection
  * @phpstan-import-type ScheduleShape from \ContextDev\Monitors\MonitorCreateParams\Schedule
- * @phpstan-import-type TargetShape from \ContextDev\Monitors\MonitorCreateParams\Target
  * @phpstan-import-type WebhookShape from \ContextDev\Monitors\MonitorCreateParams\Webhook
  *
  * @phpstan-type MonitorCreateParamsShape = array{
- *   changeDetection: ChangeDetectionShape,
  *   name: string,
- *   schedule: Schedule|ScheduleShape,
  *   target: TargetShape,
+ *   changeDetection?: ChangeDetectionShape|null,
  *   mode?: null|Mode|value-of<Mode>,
+ *   schedule?: null|Schedule|ScheduleShape,
  *   tags?: list<string>|null,
  *   webhook?: null|Webhook|WebhookShape,
  * }
@@ -48,22 +48,8 @@ final class MonitorCreateParams implements BaseModel
     use SdkModel;
     use SdkParams;
 
-    /**
-     * Discriminated union describing how changes are detected.
-     *
-     * @var ChangeDetectionVariants $changeDetection
-     */
-    #[Required('change_detection', union: ChangeDetection::class)]
-    public MonitorsExactChangeDetection|MonitorsSemanticChangeDetection $changeDetection;
-
     #[Required]
     public string $name;
-
-    /**
-     * Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
-     */
-    #[Required]
-    public Schedule $schedule;
 
     /**
      * Discriminated union describing what the monitor watches.
@@ -74,12 +60,26 @@ final class MonitorCreateParams implements BaseModel
     public MonitorsPageTarget|MonitorsSitemapTarget|MonitorsExtractTarget $target;
 
     /**
+     * Discriminated union describing how changes are detected.
+     *
+     * @var ChangeDetectionVariants|null $changeDetection
+     */
+    #[Optional('change_detection', union: ChangeDetection::class)]
+    public MonitorsExactChangeDetection|MonitorsSemanticChangeDetection|null $changeDetection;
+
+    /**
      * Top-level monitor category. Always `web` today; the concrete behavior is described by `target` and `change_detection`.
      *
      * @var value-of<Mode>|null $mode
      */
     #[Optional(enum: Mode::class)]
     public ?string $mode;
+
+    /**
+     * Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
+     */
+    #[Optional]
+    public ?Schedule $schedule;
 
     /**
      * User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
@@ -97,19 +97,13 @@ final class MonitorCreateParams implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * MonitorCreateParams::with(
-     *   changeDetection: ..., name: ..., schedule: ..., target: ...
-     * )
+     * MonitorCreateParams::with(name: ..., target: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new MonitorCreateParams)
-     *   ->withChangeDetection(...)
-     *   ->withName(...)
-     *   ->withSchedule(...)
-     *   ->withTarget(...)
+     * (new MonitorCreateParams)->withName(...)->withTarget(...)
      * ```
      */
     public function __construct()
@@ -122,46 +116,32 @@ final class MonitorCreateParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param ChangeDetectionShape $changeDetection
-     * @param Schedule|ScheduleShape $schedule
      * @param TargetShape $target
+     * @param ChangeDetectionShape|null $changeDetection
      * @param Mode|value-of<Mode>|null $mode
+     * @param Schedule|ScheduleShape|null $schedule
      * @param list<string>|null $tags
      * @param Webhook|WebhookShape|null $webhook
      */
     public static function with(
-        MonitorsExactChangeDetection|array|MonitorsSemanticChangeDetection $changeDetection,
         string $name,
-        Schedule|array $schedule,
         MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget $target,
+        MonitorsExactChangeDetection|array|MonitorsSemanticChangeDetection|null $changeDetection = null,
         Mode|string|null $mode = null,
+        Schedule|array|null $schedule = null,
         ?array $tags = null,
         Webhook|array|null $webhook = null,
     ): self {
         $self = new self;
 
-        $self['changeDetection'] = $changeDetection;
         $self['name'] = $name;
-        $self['schedule'] = $schedule;
         $self['target'] = $target;
 
+        null !== $changeDetection && $self['changeDetection'] = $changeDetection;
         null !== $mode && $self['mode'] = $mode;
+        null !== $schedule && $self['schedule'] = $schedule;
         null !== $tags && $self['tags'] = $tags;
         null !== $webhook && $self['webhook'] = $webhook;
-
-        return $self;
-    }
-
-    /**
-     * Discriminated union describing how changes are detected.
-     *
-     * @param ChangeDetectionShape $changeDetection
-     */
-    public function withChangeDetection(
-        MonitorsExactChangeDetection|array|MonitorsSemanticChangeDetection $changeDetection,
-    ): self {
-        $self = clone $this;
-        $self['changeDetection'] = $changeDetection;
 
         return $self;
     }
@@ -170,19 +150,6 @@ final class MonitorCreateParams implements BaseModel
     {
         $self = clone $this;
         $self['name'] = $name;
-
-        return $self;
-    }
-
-    /**
-     * Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
-     *
-     * @param Schedule|ScheduleShape $schedule
-     */
-    public function withSchedule(Schedule|array $schedule): self
-    {
-        $self = clone $this;
-        $self['schedule'] = $schedule;
 
         return $self;
     }
@@ -202,6 +169,20 @@ final class MonitorCreateParams implements BaseModel
     }
 
     /**
+     * Discriminated union describing how changes are detected.
+     *
+     * @param ChangeDetectionShape $changeDetection
+     */
+    public function withChangeDetection(
+        MonitorsExactChangeDetection|array|MonitorsSemanticChangeDetection $changeDetection,
+    ): self {
+        $self = clone $this;
+        $self['changeDetection'] = $changeDetection;
+
+        return $self;
+    }
+
+    /**
      * Top-level monitor category. Always `web` today; the concrete behavior is described by `target` and `change_detection`.
      *
      * @param Mode|value-of<Mode> $mode
@@ -210,6 +191,19 @@ final class MonitorCreateParams implements BaseModel
     {
         $self = clone $this;
         $self['mode'] = $mode;
+
+        return $self;
+    }
+
+    /**
+     * Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
+     *
+     * @param Schedule|ScheduleShape $schedule
+     */
+    public function withSchedule(Schedule|array $schedule): self
+    {
+        $self = clone $this;
+        $self['schedule'] = $schedule;
 
         return $self;
     }
