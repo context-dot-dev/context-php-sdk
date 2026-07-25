@@ -48,9 +48,7 @@ final class MonitorsTest extends TestCase
         }
 
         $result = $this->client->monitors->create(
-            changeDetection: ['type' => 'exact'],
             name: 'Acme pricing page',
-            schedule: ['frequency' => 6, 'type' => 'interval', 'unit' => 'hours'],
             target: ['type' => 'page', 'url' => 'https://acme.com/pricing'],
         );
 
@@ -66,15 +64,15 @@ final class MonitorsTest extends TestCase
         }
 
         $result = $this->client->monitors->create(
-            changeDetection: ['type' => 'exact'],
             name: 'Acme pricing page',
-            schedule: ['frequency' => 6, 'type' => 'interval', 'unit' => 'hours'],
             target: [
                 'type' => 'page',
                 'url' => 'https://acme.com/pricing',
                 'normalizeWhitespace' => true,
             ],
+            changeDetection: ['type' => 'exact'],
             mode: 'web',
+            schedule: ['frequency' => 6, 'type' => 'interval', 'unit' => 'hours'],
             tags: ['pricing', 'competitor'],
             webhook: [
                 'url' => 'https://example.com/webhook',
