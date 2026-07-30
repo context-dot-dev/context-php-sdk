@@ -8,6 +8,7 @@ use ContextDev\Core\BaseClient;
 use ContextDev\Core\Implementation\StreamingHttpClient;
 use ContextDev\Core\Util;
 use ContextDev\Services\AIService;
+use ContextDev\Services\BatchService;
 use ContextDev\Services\BrandService;
 use ContextDev\Services\IndustryService;
 use ContextDev\Services\MonitorsService;
@@ -59,6 +60,11 @@ class Client extends BaseClient
      * @api
      */
     public MonitorsService $monitors;
+
+    /**
+     * @api
+     */
+    public BatchService $batch;
 
     /**
      * @param RequestOpts|null $requestOptions
@@ -125,6 +131,7 @@ class Client extends BaseClient
         $this->industry = new IndustryService($this);
         $this->utility = new UtilityService($this);
         $this->monitors = new MonitorsService($this);
+        $this->batch = new BatchService($this);
     }
 
     /** @return array<string,string> */
