@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace ContextDev\Services;
 
-use ContextDev\Batch\BatchCancelParams;
 use ContextDev\Batch\BatchCancelResponse;
 use ContextDev\Batch\BatchGetResponse;
 use ContextDev\Batch\BatchGetResultsParams;
 use ContextDev\Batch\BatchGetResultsResponse;
 use ContextDev\Batch\BatchListParams;
+use ContextDev\Batch\BatchListParams\SearchType;
 use ContextDev\Batch\BatchListParams\Status;
 use ContextDev\Batch\BatchListResponse;
-use ContextDev\Batch\BatchRetrieveParams;
 use ContextDev\Batch\BatchSubmitParams;
 use ContextDev\Batch\BatchSubmitParams\Identifiers;
 use ContextDev\Batch\BatchSubmitResponse;
 use ContextDev\Client;
 use ContextDev\Core\Contracts\BaseResponse;
 use ContextDev\Core\Exceptions\APIException;
+use ContextDev\Core\Util;
 use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\BatchRawContract;
 
@@ -40,7 +40,6 @@ final class BatchRawService implements BatchRawContract
      * Check progress and get download links when the batch finishes. Also returns the rejected-URL list and webhook signing secret from submission, so nothing is lost if the submit response was dropped.
      *
      * @param string $batchID ID of the batch to retrieve or cancel
-     * @param array{tags?: list<string>}|BatchRetrieveParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<BatchGetResponse>
@@ -49,20 +48,13 @@ final class BatchRawService implements BatchRawContract
      */
     public function retrieve(
         string $batchID,
-        array|BatchRetrieveParams $params,
-        RequestOptions|array|null $requestOptions = null,
+        RequestOptions|array|null $requestOptions = null
     ): BaseResponse {
-        [$parsed, $options] = BatchRetrieveParams::parseRequest(
-            $params,
-            $requestOptions,
-        );
-
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'get',
             path: ['batch/%1$s', $batchID],
-            query: $parsed,
-            options: $options,
+            options: $requestOptions,
             convert: BatchGetResponse::class,
         );
     }
@@ -75,8 +67,10 @@ final class BatchRawService implements BatchRawContract
      * @param array{
      *   cursor?: string,
      *   limit?: int,
+     *   q?: string,
+     *   searchType?: SearchType|value-of<SearchType>,
      *   status?: Status|value-of<Status>,
-     *   tags?: list<string>,
+     *   tags?: string,
      * }|BatchListParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -97,7 +91,10 @@ final class BatchRawService implements BatchRawContract
         return $this->client->request(
             method: 'get',
             path: 'batch/list',
-            query: $parsed,
+            query: Util::array_transform_keys(
+                $parsed,
+                ['searchType' => 'search_type']
+            ),
             options: $options,
             convert: BatchListResponse::class,
         );
@@ -109,7 +106,6 @@ final class BatchRawService implements BatchRawContract
      * Stop a batch from starting new pages. In-progress pages finish, and unused credits are refunded.
      *
      * @param string $batchID ID of the batch to retrieve or cancel
-     * @param array{tags?: list<string>}|BatchCancelParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<BatchCancelResponse>
@@ -118,20 +114,13 @@ final class BatchRawService implements BatchRawContract
      */
     public function cancel(
         string $batchID,
-        array|BatchCancelParams $params,
-        RequestOptions|array|null $requestOptions = null,
+        RequestOptions|array|null $requestOptions = null
     ): BaseResponse {
-        [$parsed, $options] = BatchCancelParams::parseRequest(
-            $params,
-            $requestOptions,
-        );
-
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'post',
             path: ['batch/%1$s/cancel', $batchID],
-            query: $parsed,
-            options: $options,
+            options: $requestOptions,
             convert: BatchCancelResponse::class,
         );
     }
@@ -142,9 +131,7 @@ final class BatchRawService implements BatchRawContract
      * Page through the result records of a finished batch as JSON, in the same order as the downloadable result files. Use this instead of downloading and parsing the NDJSON files yourself.
      *
      * @param string $batchID ID of the batch to retrieve or cancel
-     * @param array{
-     *   cursor?: string, limit?: int, tags?: list<string>
-     * }|BatchGetResultsParams $params
+     * @param array{cursor?: string, limit?: int}|BatchGetResultsParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<BatchGetResultsResponse>

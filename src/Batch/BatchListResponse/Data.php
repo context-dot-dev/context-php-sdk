@@ -39,6 +39,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   progress: Progress|ProgressShape,
  *   results: null|Results|ResultsShape,
  *   status: Status|value-of<Status>,
+ *   tags: list<string>,
  *   timing: Timing|TimingShape,
  *   type: Type|value-of<Type>,
  * }
@@ -108,6 +109,14 @@ final class Data implements BaseModel
     #[Required(enum: Status::class)]
     public string $status;
 
+    /**
+     * Tags stored on the batch at submission.
+     *
+     * @var list<string> $tags
+     */
+    #[Required(list: 'string')]
+    public array $tags;
+
     #[Required]
     public Timing $timing;
 
@@ -134,6 +143,7 @@ final class Data implements BaseModel
      *   progress: ...,
      *   results: ...,
      *   status: ...,
+     *   tags: ...,
      *   timing: ...,
      *   type: ...,
      * )
@@ -152,6 +162,7 @@ final class Data implements BaseModel
      *   ->withProgress(...)
      *   ->withResults(...)
      *   ->withStatus(...)
+     *   ->withTags(...)
      *   ->withTiming(...)
      *   ->withType(...)
      * ```
@@ -174,6 +185,7 @@ final class Data implements BaseModel
      * @param Progress|ProgressShape $progress
      * @param Results|ResultsShape|null $results
      * @param Status|value-of<Status> $status
+     * @param list<string> $tags
      * @param Timing|TimingShape $timing
      * @param Type|value-of<Type> $type
      */
@@ -187,6 +199,7 @@ final class Data implements BaseModel
         Progress|array $progress,
         Results|array|null $results,
         Status|string $status,
+        array $tags,
         Timing|array $timing,
         Type|string $type,
     ): self {
@@ -201,6 +214,7 @@ final class Data implements BaseModel
         $self['progress'] = $progress;
         $self['results'] = $results;
         $self['status'] = $status;
+        $self['tags'] = $tags;
         $self['timing'] = $timing;
         $self['type'] = $type;
 
@@ -318,6 +332,19 @@ final class Data implements BaseModel
     {
         $self = clone $this;
         $self['status'] = $status;
+
+        return $self;
+    }
+
+    /**
+     * Tags stored on the batch at submission.
+     *
+     * @param list<string> $tags
+     */
+    public function withTags(array $tags): self
+    {
+        $self = clone $this;
+        $self['tags'] = $tags;
 
         return $self;
     }

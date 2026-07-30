@@ -15,7 +15,7 @@ use ContextDev\Core\Contracts\BaseModel;
  * @see ContextDev\Services\BatchService::getResults()
  *
  * @phpstan-type BatchGetResultsParamsShape = array{
- *   cursor?: string|null, limit?: int|null, tags?: list<string>|null
+ *   cursor?: string|null, limit?: int|null
  * }
  */
 final class BatchGetResultsParams implements BaseModel
@@ -36,14 +36,6 @@ final class BatchGetResultsParams implements BaseModel
     #[Optional]
     public ?int $limit;
 
-    /**
-     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
-     *
-     * @var list<string>|null $tags
-     */
-    #[Optional(list: 'string')]
-    public ?array $tags;
-
     public function __construct()
     {
         $this->initialize();
@@ -53,19 +45,13 @@ final class BatchGetResultsParams implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
-     *
-     * @param list<string>|null $tags
      */
-    public static function with(
-        ?string $cursor = null,
-        ?int $limit = null,
-        ?array $tags = null
-    ): self {
+    public static function with(?string $cursor = null, ?int $limit = null): self
+    {
         $self = new self;
 
         null !== $cursor && $self['cursor'] = $cursor;
         null !== $limit && $self['limit'] = $limit;
-        null !== $tags && $self['tags'] = $tags;
 
         return $self;
     }
@@ -88,19 +74,6 @@ final class BatchGetResultsParams implements BaseModel
     {
         $self = clone $this;
         $self['limit'] = $limit;
-
-        return $self;
-    }
-
-    /**
-     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
-     *
-     * @param list<string> $tags
-     */
-    public function withTags(array $tags): self
-    {
-        $self = clone $this;
-        $self['tags'] = $tags;
 
         return $self;
     }

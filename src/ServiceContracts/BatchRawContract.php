@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace ContextDev\ServiceContracts;
 
-use ContextDev\Batch\BatchCancelParams;
 use ContextDev\Batch\BatchCancelResponse;
 use ContextDev\Batch\BatchGetResponse;
 use ContextDev\Batch\BatchGetResultsParams;
 use ContextDev\Batch\BatchGetResultsResponse;
 use ContextDev\Batch\BatchListParams;
 use ContextDev\Batch\BatchListResponse;
-use ContextDev\Batch\BatchRetrieveParams;
 use ContextDev\Batch\BatchSubmitParams;
 use ContextDev\Batch\BatchSubmitResponse;
 use ContextDev\Core\Contracts\BaseResponse;
@@ -27,7 +25,6 @@ interface BatchRawContract
      * @api
      *
      * @param string $batchID ID of the batch to retrieve or cancel
-     * @param array<string,mixed>|BatchRetrieveParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<BatchGetResponse>
@@ -36,8 +33,7 @@ interface BatchRawContract
      */
     public function retrieve(
         string $batchID,
-        array|BatchRetrieveParams $params,
-        RequestOptions|array|null $requestOptions = null,
+        RequestOptions|array|null $requestOptions = null
     ): BaseResponse;
 
     /**
@@ -59,7 +55,6 @@ interface BatchRawContract
      * @api
      *
      * @param string $batchID ID of the batch to retrieve or cancel
-     * @param array<string,mixed>|BatchCancelParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<BatchCancelResponse>
@@ -68,8 +63,7 @@ interface BatchRawContract
      */
     public function cancel(
         string $batchID,
-        array|BatchCancelParams $params,
-        RequestOptions|array|null $requestOptions = null,
+        RequestOptions|array|null $requestOptions = null
     ): BaseResponse;
 
     /**
