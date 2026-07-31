@@ -5,19 +5,9 @@ declare(strict_types=1);
 namespace ContextDev\Batch\BatchCancelResponse;
 
 /**
- * Current state. `completed`, `cancelled`, and `failed` are final.
+ * Always `cancelling`. Work already in flight finishes; the batch reaches `cancelled` shortly after.
  */
 enum Status: string
 {
-    case QUEUED = 'queued';
-
-    case RUNNING = 'running';
-
     case CANCELLING = 'cancelling';
-
-    case COMPLETED = 'completed';
-
-    case CANCELLED = 'cancelled';
-
-    case FAILED = 'failed';
 }

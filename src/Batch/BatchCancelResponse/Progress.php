@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Pages attempted so far. Use `status` to check completion.
+ * How far the batch got before cancellation.
  *
  * @phpstan-type ProgressShape = array{failed: int, pending: int, succeeded: int}
  */
@@ -19,19 +19,19 @@ final class Progress implements BaseModel
     use SdkModel;
 
     /**
-     * Pages that could not be scraped.
+     * Pages that could not be scraped before the request landed.
      */
     #[Required]
     public int $failed;
 
     /**
-     * Reserved pages not yet attempted. A cancelled batch keeps reporting the URLs it never reached; a crawl whose `input.reserved_is_ceiling` is true reports 0 once final, because its unspent budget was never real pages.
+     * Reserved pages that will now be skipped, and refunded when the batch settles.
      */
     #[Required]
     public int $pending;
 
     /**
-     * Pages scraped successfully.
+     * Pages scraped successfully before the request landed.
      */
     #[Required]
     public int $succeeded;
@@ -72,7 +72,7 @@ final class Progress implements BaseModel
     }
 
     /**
-     * Pages that could not be scraped.
+     * Pages that could not be scraped before the request landed.
      */
     public function withFailed(int $failed): self
     {
@@ -83,7 +83,7 @@ final class Progress implements BaseModel
     }
 
     /**
-     * Reserved pages not yet attempted. A cancelled batch keeps reporting the URLs it never reached; a crawl whose `input.reserved_is_ceiling` is true reports 0 once final, because its unspent budget was never real pages.
+     * Reserved pages that will now be skipped, and refunded when the batch settles.
      */
     public function withPending(int $pending): self
     {
@@ -94,7 +94,7 @@ final class Progress implements BaseModel
     }
 
     /**
-     * Pages scraped successfully.
+     * Pages scraped successfully before the request landed.
      */
     public function withSucceeded(int $succeeded): self
     {

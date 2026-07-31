@@ -9,20 +9,14 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * @phpstan-type TimingShape = array{
- *   completedAt: string|null, createdAt: string, startedAt: string|null
- * }
+ * There is no finish time yet — the batch is still winding down.
+ *
+ * @phpstan-type TimingShape = array{createdAt: string, startedAt: string|null}
  */
 final class Timing implements BaseModel
 {
     /** @use SdkModel<TimingShape> */
     use SdkModel;
-
-    /**
-     * When processing finished. Null while active.
-     */
-    #[Required('completed_at')]
-    public ?string $completedAt;
 
     /**
      * When the batch was created.
@@ -31,7 +25,7 @@ final class Timing implements BaseModel
     public string $createdAt;
 
     /**
-     * When processing started. Null while queued.
+     * When processing started. Null if it was cancelled while still queued.
      */
     #[Required('started_at')]
     public ?string $startedAt;
@@ -41,13 +35,13 @@ final class Timing implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * Timing::with(completedAt: ..., createdAt: ..., startedAt: ...)
+     * Timing::with(createdAt: ..., startedAt: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new Timing)->withCompletedAt(...)->withCreatedAt(...)->withStartedAt(...)
+     * (new Timing)->withCreatedAt(...)->withStartedAt(...)
      * ```
      */
     public function __construct()
@@ -60,27 +54,12 @@ final class Timing implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(
-        ?string $completedAt,
-        string $createdAt,
-        ?string $startedAt
-    ): self {
+    public static function with(string $createdAt, ?string $startedAt): self
+    {
         $self = new self;
 
-        $self['completedAt'] = $completedAt;
         $self['createdAt'] = $createdAt;
         $self['startedAt'] = $startedAt;
-
-        return $self;
-    }
-
-    /**
-     * When processing finished. Null while active.
-     */
-    public function withCompletedAt(?string $completedAt): self
-    {
-        $self = clone $this;
-        $self['completedAt'] = $completedAt;
 
         return $self;
     }
@@ -97,7 +76,7 @@ final class Timing implements BaseModel
     }
 
     /**
-     * When processing started. Null while queued.
+     * When processing started. Null if it was cancelled while still queued.
      */
     public function withStartedAt(?string $startedAt): self
     {
