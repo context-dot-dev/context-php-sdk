@@ -2,44 +2,46 @@
 
 declare(strict_types=1);
 
-namespace ContextDev\Batch\BatchListResponse\Data;
+namespace ContextDev\Batch;
 
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * @phpstan-type Error1Shape = array{code: string, count: int}
+ * Why the batch failed.
+ *
+ * @phpstan-type ErrorShape = array{code: string, message: string}
  */
-final class Error1 implements BaseModel
+final class Error implements BaseModel
 {
-    /** @use SdkModel<Error1Shape> */
+    /** @use SdkModel<ErrorShape> */
     use SdkModel;
 
     /**
-     * Error code for these failures.
+     * Batch error code.
      */
     #[Required]
     public string $code;
 
     /**
-     * Pages that failed with this code.
+     * Batch error message.
      */
     #[Required]
-    public int $count;
+    public string $message;
 
     /**
-     * `new Error1()` is missing required properties by the API.
+     * `new Error()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * Error1::with(code: ..., count: ...)
+     * Error::with(code: ..., message: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new Error1)->withCode(...)->withCount(...)
+     * (new Error)->withCode(...)->withMessage(...)
      * ```
      */
     public function __construct()
@@ -52,18 +54,18 @@ final class Error1 implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(string $code, int $count): self
+    public static function with(string $code, string $message): self
     {
         $self = new self;
 
         $self['code'] = $code;
-        $self['count'] = $count;
+        $self['message'] = $message;
 
         return $self;
     }
 
     /**
-     * Error code for these failures.
+     * Batch error code.
      */
     public function withCode(string $code): self
     {
@@ -74,12 +76,12 @@ final class Error1 implements BaseModel
     }
 
     /**
-     * Pages that failed with this code.
+     * Batch error message.
      */
-    public function withCount(int $count): self
+    public function withMessage(string $message): self
     {
         $self = clone $this;
-        $self['count'] = $count;
+        $self['message'] = $message;
 
         return $self;
     }
