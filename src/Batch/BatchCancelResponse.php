@@ -9,7 +9,6 @@ use ContextDev\Batch\BatchCancelResponse\Format;
 use ContextDev\Batch\BatchCancelResponse\KeyMetadata;
 use ContextDev\Batch\BatchCancelResponse\Mode;
 use ContextDev\Batch\BatchCancelResponse\Progress;
-use ContextDev\Batch\BatchCancelResponse\Results;
 use ContextDev\Batch\BatchCancelResponse\Status;
 use ContextDev\Batch\BatchCancelResponse\Timing;
 use ContextDev\Core\Attributes\Optional;
@@ -20,11 +19,9 @@ use ContextDev\Core\Contracts\BaseModel;
 /**
  * @phpstan-import-type CrawlControlsShape from \ContextDev\Batch\CrawlControls
  * @phpstan-import-type CreditsShape from \ContextDev\Batch\BatchCancelResponse\Credits
- * @phpstan-import-type FailureShape from \ContextDev\Batch\Failure
  * @phpstan-import-type IntakeShape from \ContextDev\Batch\Intake
  * @phpstan-import-type PageErrorCountShape from \ContextDev\Batch\PageErrorCount
  * @phpstan-import-type ProgressShape from \ContextDev\Batch\BatchCancelResponse\Progress
- * @phpstan-import-type ResultsShape from \ContextDev\Batch\BatchCancelResponse\Results
  * @phpstan-import-type TimingShape from \ContextDev\Batch\BatchCancelResponse\Timing
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Batch\BatchCancelResponse\KeyMetadata
  *
@@ -32,13 +29,11 @@ use ContextDev\Core\Contracts\BaseModel;
  *   id: string,
  *   crawl: null|CrawlControls|CrawlControlsShape,
  *   credits: Credits|CreditsShape,
- *   failure: null|Failure|FailureShape,
  *   format: Format|value-of<Format>,
  *   input: Intake|IntakeShape,
  *   mode: Mode|value-of<Mode>,
  *   pageErrors: list<PageErrorCount|PageErrorCountShape>,
  *   progress: Progress|ProgressShape,
- *   results: null|Results|ResultsShape,
  *   status: Status|value-of<Status>,
  *   tags: list<string>,
  *   timing: Timing|TimingShape,
@@ -51,7 +46,7 @@ final class BatchCancelResponse implements BaseModel
     use SdkModel;
 
     /**
-     * Batch ID used to retrieve or cancel the job.
+     * Batch ID.
      */
     #[Required]
     public string $id;
@@ -63,19 +58,13 @@ final class BatchCancelResponse implements BaseModel
     public ?CrawlControls $crawl;
 
     /**
-     * What this batch has done to your credit balance.
+     * What this batch cost so far.
      */
     #[Required]
     public Credits $credits;
 
     /**
-     * A failure of the batch as a whole, distinct from the per-page failures in `page_errors`.
-     */
-    #[Required]
-    public ?Failure $failure;
-
-    /**
-     * What each page is returned as. Matches `input.data.format` on the submit request.
+     * What each page is returned as.
      *
      * @var value-of<Format> $format
      */
@@ -89,7 +78,7 @@ final class BatchCancelResponse implements BaseModel
     public Intake $input;
 
     /**
-     * How pages were selected. Matches `input.mode` on the submit request.
+     * How pages were selected.
      *
      * @var value-of<Mode> $mode
      */
@@ -97,7 +86,7 @@ final class BatchCancelResponse implements BaseModel
     public string $mode;
 
     /**
-     * Individual page failures grouped by error code, sorted by count. Unrelated to `failure`, which is the batch itself failing.
+     * Page failures so far, grouped by error code and sorted by count.
      *
      * @var list<PageErrorCount> $pageErrors
      */
@@ -105,19 +94,13 @@ final class BatchCancelResponse implements BaseModel
     public array $pageErrors;
 
     /**
-     * Pages attempted so far. Use `status` to check completion.
+     * How far the batch got before cancellation.
      */
     #[Required]
     public Progress $progress;
 
     /**
-     * Download links, available once the batch reaches a final status and null before then. GET /batch/{batch_id}/results serves the same records as paginated JSON.
-     */
-    #[Required]
-    public ?Results $results;
-
-    /**
-     * Current state. `completed`, `cancelled`, and `failed` are final.
+     * Always `cancelling`. Work already in flight finishes; the batch reaches `cancelled` shortly after.
      *
      * @var value-of<Status> $status
      */
@@ -132,6 +115,9 @@ final class BatchCancelResponse implements BaseModel
     #[Required(list: 'string')]
     public array $tags;
 
+    /**
+     * There is no finish time yet — the batch is still winding down.
+     */
     #[Required]
     public Timing $timing;
 
@@ -150,13 +136,11 @@ final class BatchCancelResponse implements BaseModel
      *   id: ...,
      *   crawl: ...,
      *   credits: ...,
-     *   failure: ...,
      *   format: ...,
      *   input: ...,
      *   mode: ...,
      *   pageErrors: ...,
      *   progress: ...,
-     *   results: ...,
      *   status: ...,
      *   tags: ...,
      *   timing: ...,
@@ -170,13 +154,11 @@ final class BatchCancelResponse implements BaseModel
      *   ->withID(...)
      *   ->withCrawl(...)
      *   ->withCredits(...)
-     *   ->withFailure(...)
      *   ->withFormat(...)
      *   ->withInput(...)
      *   ->withMode(...)
      *   ->withPageErrors(...)
      *   ->withProgress(...)
-     *   ->withResults(...)
      *   ->withStatus(...)
      *   ->withTags(...)
      *   ->withTiming(...)
@@ -194,13 +176,11 @@ final class BatchCancelResponse implements BaseModel
      *
      * @param CrawlControls|CrawlControlsShape|null $crawl
      * @param Credits|CreditsShape $credits
-     * @param Failure|FailureShape|null $failure
      * @param Format|value-of<Format> $format
      * @param Intake|IntakeShape $input
      * @param Mode|value-of<Mode> $mode
      * @param list<PageErrorCount|PageErrorCountShape> $pageErrors
      * @param Progress|ProgressShape $progress
-     * @param Results|ResultsShape|null $results
      * @param Status|value-of<Status> $status
      * @param list<string> $tags
      * @param Timing|TimingShape $timing
@@ -210,13 +190,11 @@ final class BatchCancelResponse implements BaseModel
         string $id,
         CrawlControls|array|null $crawl,
         Credits|array $credits,
-        Failure|array|null $failure,
         Format|string $format,
         Intake|array $input,
         Mode|string $mode,
         array $pageErrors,
         Progress|array $progress,
-        Results|array|null $results,
         Status|string $status,
         array $tags,
         Timing|array $timing,
@@ -227,13 +205,11 @@ final class BatchCancelResponse implements BaseModel
         $self['id'] = $id;
         $self['crawl'] = $crawl;
         $self['credits'] = $credits;
-        $self['failure'] = $failure;
         $self['format'] = $format;
         $self['input'] = $input;
         $self['mode'] = $mode;
         $self['pageErrors'] = $pageErrors;
         $self['progress'] = $progress;
-        $self['results'] = $results;
         $self['status'] = $status;
         $self['tags'] = $tags;
         $self['timing'] = $timing;
@@ -244,7 +220,7 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
-     * Batch ID used to retrieve or cancel the job.
+     * Batch ID.
      */
     public function withID(string $id): self
     {
@@ -268,7 +244,7 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
-     * What this batch has done to your credit balance.
+     * What this batch cost so far.
      *
      * @param Credits|CreditsShape $credits
      */
@@ -281,20 +257,7 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
-     * A failure of the batch as a whole, distinct from the per-page failures in `page_errors`.
-     *
-     * @param Failure|FailureShape|null $failure
-     */
-    public function withFailure(Failure|array|null $failure): self
-    {
-        $self = clone $this;
-        $self['failure'] = $failure;
-
-        return $self;
-    }
-
-    /**
-     * What each page is returned as. Matches `input.data.format` on the submit request.
+     * What each page is returned as.
      *
      * @param Format|value-of<Format> $format
      */
@@ -320,7 +283,7 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
-     * How pages were selected. Matches `input.mode` on the submit request.
+     * How pages were selected.
      *
      * @param Mode|value-of<Mode> $mode
      */
@@ -333,7 +296,7 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
-     * Individual page failures grouped by error code, sorted by count. Unrelated to `failure`, which is the batch itself failing.
+     * Page failures so far, grouped by error code and sorted by count.
      *
      * @param list<PageErrorCount|PageErrorCountShape> $pageErrors
      */
@@ -346,7 +309,7 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
-     * Pages attempted so far. Use `status` to check completion.
+     * How far the batch got before cancellation.
      *
      * @param Progress|ProgressShape $progress
      */
@@ -359,20 +322,7 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
-     * Download links, available once the batch reaches a final status and null before then. GET /batch/{batch_id}/results serves the same records as paginated JSON.
-     *
-     * @param Results|ResultsShape|null $results
-     */
-    public function withResults(Results|array|null $results): self
-    {
-        $self = clone $this;
-        $self['results'] = $results;
-
-        return $self;
-    }
-
-    /**
-     * Current state. `completed`, `cancelled`, and `failed` are final.
+     * Always `cancelling`. Work already in flight finishes; the batch reaches `cancelled` shortly after.
      *
      * @param Status|value-of<Status> $status
      */
@@ -398,6 +348,8 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
+     * There is no finish time yet — the batch is still winding down.
+     *
      * @param Timing|TimingShape $timing
      */
     public function withTiming(Timing|array $timing): self
