@@ -40,7 +40,7 @@ final class BatchService implements BatchContract
     /**
      * @api
      *
-     * Check progress and get download links when the batch finishes. Also returns the rejected-URL list and webhook signing secret from submission, so nothing is lost if the submit response was dropped.
+     * Check progress and get download links when the batch finishes. Also returns the rejected-URL list from submission. The webhook signing secret is not repeated here — it is returned once, by the submit response.
      *
      * @param string $batchID ID of the batch to retrieve or cancel
      * @param RequestOpts|null $requestOptions

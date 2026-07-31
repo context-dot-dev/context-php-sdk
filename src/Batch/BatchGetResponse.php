@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Batch;
 
 use ContextDev\Batch\BatchGetResponse\Credits;
-use ContextDev\Batch\BatchGetResponse\Input;
+use ContextDev\Batch\BatchGetResponse\Format;
 use ContextDev\Batch\BatchGetResponse\InvalidURL;
 use ContextDev\Batch\BatchGetResponse\KeyMetadata;
 use ContextDev\Batch\BatchGetResponse\Mode;
@@ -13,18 +13,18 @@ use ContextDev\Batch\BatchGetResponse\Progress;
 use ContextDev\Batch\BatchGetResponse\Results;
 use ContextDev\Batch\BatchGetResponse\Status;
 use ContextDev\Batch\BatchGetResponse\Timing;
-use ContextDev\Batch\BatchGetResponse\Type;
 use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
+ * @phpstan-import-type CrawlControlsShape from \ContextDev\Batch\CrawlControls
  * @phpstan-import-type CreditsShape from \ContextDev\Batch\BatchGetResponse\Credits
- * @phpstan-import-type ErrorShape from \ContextDev\Batch\Error
- * @phpstan-import-type ErrorCountShape from \ContextDev\Batch\ErrorCount
- * @phpstan-import-type InputShape from \ContextDev\Batch\BatchGetResponse\Input
+ * @phpstan-import-type FailureShape from \ContextDev\Batch\Failure
+ * @phpstan-import-type IntakeShape from \ContextDev\Batch\Intake
  * @phpstan-import-type InvalidURLShape from \ContextDev\Batch\BatchGetResponse\InvalidURL
+ * @phpstan-import-type PageErrorCountShape from \ContextDev\Batch\PageErrorCount
  * @phpstan-import-type ProgressShape from \ContextDev\Batch\BatchGetResponse\Progress
  * @phpstan-import-type ResultsShape from \ContextDev\Batch\BatchGetResponse\Results
  * @phpstan-import-type TimingShape from \ContextDev\Batch\BatchGetResponse\Timing
@@ -32,20 +32,20 @@ use ContextDev\Core\Contracts\BaseModel;
  *
  * @phpstan-type BatchGetResponseShape = array{
  *   id: string,
+ *   crawl: null|CrawlControls|CrawlControlsShape,
  *   credits: Credits|CreditsShape,
- *   error: null|Error|ErrorShape,
- *   errors: list<ErrorCount|ErrorCountShape>,
- *   input: Input|InputShape,
+ *   failure: null|Failure|FailureShape,
+ *   format: Format|value-of<Format>,
+ *   input: Intake|IntakeShape,
  *   invalidURLs: list<InvalidURL|InvalidURLShape>,
  *   mode: Mode|value-of<Mode>,
+ *   pageErrors: list<PageErrorCount|PageErrorCountShape>,
  *   progress: Progress|ProgressShape,
  *   results: null|Results|ResultsShape,
  *   status: Status|value-of<Status>,
  *   tags: list<string>,
  *   timing: Timing|TimingShape,
- *   type: Type|value-of<Type>,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
- *   webhookSecret?: string|null,
  * }
  */
 final class BatchGetResponse implements BaseModel
@@ -60,30 +60,36 @@ final class BatchGetResponse implements BaseModel
     public string $id;
 
     /**
-     * Reserved and used credits.
+     * The crawl controls as submitted, so the limits requested can be compared against what the crawl reached.
+     */
+    #[Required]
+    public ?CrawlControls $crawl;
+
+    /**
+     * What this batch has done to your credit balance.
      */
     #[Required]
     public Credits $credits;
 
     /**
-     * Why the batch failed.
+     * A failure of the batch as a whole, distinct from the per-page failures in `page_errors`.
      */
     #[Required]
-    public ?Error $error;
+    public ?Failure $failure;
 
     /**
-     * Page failures grouped by error code.
+     * What each page is returned as. Matches `input.data.format` on the submit request.
      *
-     * @var list<ErrorCount> $errors
+     * @var value-of<Format> $format
      */
-    #[Required(list: ErrorCount::class)]
-    public array $errors;
+    #[Required(enum: Format::class)]
+    public string $format;
 
     /**
-     * Submission counts.
+     * What submission took in, and what it charged for.
      */
     #[Required]
-    public Input $input;
+    public Intake $input;
 
     /**
      * Rejected URLs, up to 100. These are not charged.
@@ -94,7 +100,7 @@ final class BatchGetResponse implements BaseModel
     public array $invalidURLs;
 
     /**
-     * How pages are selected.
+     * How pages were selected. Matches `input.mode` on the submit request.
      *
      * @var value-of<Mode> $mode
      */
@@ -102,13 +108,21 @@ final class BatchGetResponse implements BaseModel
     public string $mode;
 
     /**
-     * Current processing counts. Use `status` to check completion.
+     * Individual page failures grouped by error code, sorted by count. Unrelated to `failure`, which is the batch itself failing.
+     *
+     * @var list<PageErrorCount> $pageErrors
+     */
+    #[Required('page_errors', list: PageErrorCount::class)]
+    public array $pageErrors;
+
+    /**
+     * Pages attempted so far. Use `status` to check completion.
      */
     #[Required]
     public Progress $progress;
 
     /**
-     * Download links available when the batch finishes. GET /batch/{batch_id}/results serves the same records as paginated JSON.
+     * Download links, available once the batch reaches a final status and null before then. GET /batch/{batch_id}/results serves the same records as paginated JSON.
      */
     #[Required]
     public ?Results $results;
@@ -133,24 +147,10 @@ final class BatchGetResponse implements BaseModel
     public Timing $timing;
 
     /**
-     * Output format.
-     *
-     * @var value-of<Type> $type
-     */
-    #[Required(enum: Type::class)]
-    public string $type;
-
-    /**
      * API key usage for this request.
      */
     #[Optional('key_metadata')]
     public ?KeyMetadata $keyMetadata;
-
-    /**
-     * Webhook signing secret. Also returned by GET /batch/{batch_id}.
-     */
-    #[Optional('webhook_secret')]
-    public ?string $webhookSecret;
 
     /**
      * `new BatchGetResponse()` is missing required properties by the API.
@@ -159,18 +159,19 @@ final class BatchGetResponse implements BaseModel
      * ```
      * BatchGetResponse::with(
      *   id: ...,
+     *   crawl: ...,
      *   credits: ...,
-     *   error: ...,
-     *   errors: ...,
+     *   failure: ...,
+     *   format: ...,
      *   input: ...,
      *   invalidURLs: ...,
      *   mode: ...,
+     *   pageErrors: ...,
      *   progress: ...,
      *   results: ...,
      *   status: ...,
      *   tags: ...,
      *   timing: ...,
-     *   type: ...,
      * )
      * ```
      *
@@ -179,18 +180,19 @@ final class BatchGetResponse implements BaseModel
      * ```
      * (new BatchGetResponse)
      *   ->withID(...)
+     *   ->withCrawl(...)
      *   ->withCredits(...)
-     *   ->withError(...)
-     *   ->withErrors(...)
+     *   ->withFailure(...)
+     *   ->withFormat(...)
      *   ->withInput(...)
      *   ->withInvalidURLs(...)
      *   ->withMode(...)
+     *   ->withPageErrors(...)
      *   ->withProgress(...)
      *   ->withResults(...)
      *   ->withStatus(...)
      *   ->withTags(...)
      *   ->withTiming(...)
-     *   ->withType(...)
      * ```
      */
     public function __construct()
@@ -203,55 +205,56 @@ final class BatchGetResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param CrawlControls|CrawlControlsShape|null $crawl
      * @param Credits|CreditsShape $credits
-     * @param Error|ErrorShape|null $error
-     * @param list<ErrorCount|ErrorCountShape> $errors
-     * @param Input|InputShape $input
+     * @param Failure|FailureShape|null $failure
+     * @param Format|value-of<Format> $format
+     * @param Intake|IntakeShape $input
      * @param list<InvalidURL|InvalidURLShape> $invalidURLs
      * @param Mode|value-of<Mode> $mode
+     * @param list<PageErrorCount|PageErrorCountShape> $pageErrors
      * @param Progress|ProgressShape $progress
      * @param Results|ResultsShape|null $results
      * @param Status|value-of<Status> $status
      * @param list<string> $tags
      * @param Timing|TimingShape $timing
-     * @param Type|value-of<Type> $type
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
     public static function with(
         string $id,
+        CrawlControls|array|null $crawl,
         Credits|array $credits,
-        Error|array|null $error,
-        array $errors,
-        Input|array $input,
+        Failure|array|null $failure,
+        Format|string $format,
+        Intake|array $input,
         array $invalidURLs,
         Mode|string $mode,
+        array $pageErrors,
         Progress|array $progress,
         Results|array|null $results,
         Status|string $status,
         array $tags,
         Timing|array $timing,
-        Type|string $type,
         KeyMetadata|array|null $keyMetadata = null,
-        ?string $webhookSecret = null,
     ): self {
         $self = new self;
 
         $self['id'] = $id;
+        $self['crawl'] = $crawl;
         $self['credits'] = $credits;
-        $self['error'] = $error;
-        $self['errors'] = $errors;
+        $self['failure'] = $failure;
+        $self['format'] = $format;
         $self['input'] = $input;
         $self['invalidURLs'] = $invalidURLs;
         $self['mode'] = $mode;
+        $self['pageErrors'] = $pageErrors;
         $self['progress'] = $progress;
         $self['results'] = $results;
         $self['status'] = $status;
         $self['tags'] = $tags;
         $self['timing'] = $timing;
-        $self['type'] = $type;
 
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
-        null !== $webhookSecret && $self['webhookSecret'] = $webhookSecret;
 
         return $self;
     }
@@ -268,7 +271,20 @@ final class BatchGetResponse implements BaseModel
     }
 
     /**
-     * Reserved and used credits.
+     * The crawl controls as submitted, so the limits requested can be compared against what the crawl reached.
+     *
+     * @param CrawlControls|CrawlControlsShape|null $crawl
+     */
+    public function withCrawl(CrawlControls|array|null $crawl): self
+    {
+        $self = clone $this;
+        $self['crawl'] = $crawl;
+
+        return $self;
+    }
+
+    /**
+     * What this batch has done to your credit balance.
      *
      * @param Credits|CreditsShape $credits
      */
@@ -281,37 +297,37 @@ final class BatchGetResponse implements BaseModel
     }
 
     /**
-     * Why the batch failed.
+     * A failure of the batch as a whole, distinct from the per-page failures in `page_errors`.
      *
-     * @param Error|ErrorShape|null $error
+     * @param Failure|FailureShape|null $failure
      */
-    public function withError(Error|array|null $error): self
+    public function withFailure(Failure|array|null $failure): self
     {
         $self = clone $this;
-        $self['error'] = $error;
+        $self['failure'] = $failure;
 
         return $self;
     }
 
     /**
-     * Page failures grouped by error code.
+     * What each page is returned as. Matches `input.data.format` on the submit request.
      *
-     * @param list<ErrorCount|ErrorCountShape> $errors
+     * @param Format|value-of<Format> $format
      */
-    public function withErrors(array $errors): self
+    public function withFormat(Format|string $format): self
     {
         $self = clone $this;
-        $self['errors'] = $errors;
+        $self['format'] = $format;
 
         return $self;
     }
 
     /**
-     * Submission counts.
+     * What submission took in, and what it charged for.
      *
-     * @param Input|InputShape $input
+     * @param Intake|IntakeShape $input
      */
-    public function withInput(Input|array $input): self
+    public function withInput(Intake|array $input): self
     {
         $self = clone $this;
         $self['input'] = $input;
@@ -333,7 +349,7 @@ final class BatchGetResponse implements BaseModel
     }
 
     /**
-     * How pages are selected.
+     * How pages were selected. Matches `input.mode` on the submit request.
      *
      * @param Mode|value-of<Mode> $mode
      */
@@ -346,7 +362,20 @@ final class BatchGetResponse implements BaseModel
     }
 
     /**
-     * Current processing counts. Use `status` to check completion.
+     * Individual page failures grouped by error code, sorted by count. Unrelated to `failure`, which is the batch itself failing.
+     *
+     * @param list<PageErrorCount|PageErrorCountShape> $pageErrors
+     */
+    public function withPageErrors(array $pageErrors): self
+    {
+        $self = clone $this;
+        $self['pageErrors'] = $pageErrors;
+
+        return $self;
+    }
+
+    /**
+     * Pages attempted so far. Use `status` to check completion.
      *
      * @param Progress|ProgressShape $progress
      */
@@ -359,7 +388,7 @@ final class BatchGetResponse implements BaseModel
     }
 
     /**
-     * Download links available when the batch finishes. GET /batch/{batch_id}/results serves the same records as paginated JSON.
+     * Download links, available once the batch reaches a final status and null before then. GET /batch/{batch_id}/results serves the same records as paginated JSON.
      *
      * @param Results|ResultsShape|null $results
      */
@@ -409,19 +438,6 @@ final class BatchGetResponse implements BaseModel
     }
 
     /**
-     * Output format.
-     *
-     * @param Type|value-of<Type> $type
-     */
-    public function withType(Type|string $type): self
-    {
-        $self = clone $this;
-        $self['type'] = $type;
-
-        return $self;
-    }
-
-    /**
      * API key usage for this request.
      *
      * @param KeyMetadata|KeyMetadataShape $keyMetadata
@@ -430,17 +446,6 @@ final class BatchGetResponse implements BaseModel
     {
         $self = clone $this;
         $self['keyMetadata'] = $keyMetadata;
-
-        return $self;
-    }
-
-    /**
-     * Webhook signing secret. Also returned by GET /batch/{batch_id}.
-     */
-    public function withWebhookSecret(string $webhookSecret): self
-    {
-        $self = clone $this;
-        $self['webhookSecret'] = $webhookSecret;
 
         return $self;
     }
