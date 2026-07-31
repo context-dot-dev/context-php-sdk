@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace ContextDev\Batch;
 
 use ContextDev\Batch\BatchCancelResponse\Credits;
-use ContextDev\Batch\BatchCancelResponse\Error;
-use ContextDev\Batch\BatchCancelResponse\Error1;
 use ContextDev\Batch\BatchCancelResponse\Input;
 use ContextDev\Batch\BatchCancelResponse\KeyMetadata;
 use ContextDev\Batch\BatchCancelResponse\Mode;
@@ -22,8 +20,8 @@ use ContextDev\Core\Contracts\BaseModel;
 
 /**
  * @phpstan-import-type CreditsShape from \ContextDev\Batch\BatchCancelResponse\Credits
- * @phpstan-import-type ErrorShape from \ContextDev\Batch\BatchCancelResponse\Error
- * @phpstan-import-type Error1Shape from \ContextDev\Batch\BatchCancelResponse\Error1
+ * @phpstan-import-type ErrorShape from \ContextDev\Batch\Error
+ * @phpstan-import-type ErrorCountShape from \ContextDev\Batch\ErrorCount
  * @phpstan-import-type InputShape from \ContextDev\Batch\BatchCancelResponse\Input
  * @phpstan-import-type ProgressShape from \ContextDev\Batch\BatchCancelResponse\Progress
  * @phpstan-import-type ResultsShape from \ContextDev\Batch\BatchCancelResponse\Results
@@ -34,7 +32,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   id: string,
  *   credits: Credits|CreditsShape,
  *   error: null|Error|ErrorShape,
- *   errors: list<Error1|Error1Shape>,
+ *   errors: list<ErrorCount|ErrorCountShape>,
  *   input: Input|InputShape,
  *   mode: Mode|value-of<Mode>,
  *   progress: Progress|ProgressShape,
@@ -64,7 +62,7 @@ final class BatchCancelResponse implements BaseModel
     public Credits $credits;
 
     /**
-     * Batch-level error. Null unless `status` is `failed`.
+     * Why the batch failed.
      */
     #[Required]
     public ?Error $error;
@@ -72,9 +70,9 @@ final class BatchCancelResponse implements BaseModel
     /**
      * Page failures grouped by error code.
      *
-     * @var list<Error1> $errors
+     * @var list<ErrorCount> $errors
      */
-    #[Required(list: Error1::class)]
+    #[Required(list: ErrorCount::class)]
     public array $errors;
 
     /**
@@ -187,7 +185,7 @@ final class BatchCancelResponse implements BaseModel
      *
      * @param Credits|CreditsShape $credits
      * @param Error|ErrorShape|null $error
-     * @param list<Error1|Error1Shape> $errors
+     * @param list<ErrorCount|ErrorCountShape> $errors
      * @param Input|InputShape $input
      * @param Mode|value-of<Mode> $mode
      * @param Progress|ProgressShape $progress
@@ -258,7 +256,7 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
-     * Batch-level error. Null unless `status` is `failed`.
+     * Why the batch failed.
      *
      * @param Error|ErrorShape|null $error
      */
@@ -273,7 +271,7 @@ final class BatchCancelResponse implements BaseModel
     /**
      * Page failures grouped by error code.
      *
-     * @param list<Error1|Error1Shape> $errors
+     * @param list<ErrorCount|ErrorCountShape> $errors
      */
     public function withErrors(array $errors): self
     {

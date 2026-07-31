@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace ContextDev\Batch;
 
 use ContextDev\Batch\BatchGetResponse\Credits;
-use ContextDev\Batch\BatchGetResponse\Error;
-use ContextDev\Batch\BatchGetResponse\Error1;
 use ContextDev\Batch\BatchGetResponse\Input;
 use ContextDev\Batch\BatchGetResponse\InvalidURL;
 use ContextDev\Batch\BatchGetResponse\KeyMetadata;
@@ -23,8 +21,8 @@ use ContextDev\Core\Contracts\BaseModel;
 
 /**
  * @phpstan-import-type CreditsShape from \ContextDev\Batch\BatchGetResponse\Credits
- * @phpstan-import-type ErrorShape from \ContextDev\Batch\BatchGetResponse\Error
- * @phpstan-import-type Error1Shape from \ContextDev\Batch\BatchGetResponse\Error1
+ * @phpstan-import-type ErrorShape from \ContextDev\Batch\Error
+ * @phpstan-import-type ErrorCountShape from \ContextDev\Batch\ErrorCount
  * @phpstan-import-type InputShape from \ContextDev\Batch\BatchGetResponse\Input
  * @phpstan-import-type InvalidURLShape from \ContextDev\Batch\BatchGetResponse\InvalidURL
  * @phpstan-import-type ProgressShape from \ContextDev\Batch\BatchGetResponse\Progress
@@ -36,7 +34,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   id: string,
  *   credits: Credits|CreditsShape,
  *   error: null|Error|ErrorShape,
- *   errors: list<Error1|Error1Shape>,
+ *   errors: list<ErrorCount|ErrorCountShape>,
  *   input: Input|InputShape,
  *   invalidURLs: list<InvalidURL|InvalidURLShape>,
  *   mode: Mode|value-of<Mode>,
@@ -68,7 +66,7 @@ final class BatchGetResponse implements BaseModel
     public Credits $credits;
 
     /**
-     * Batch-level error. Null unless `status` is `failed`.
+     * Why the batch failed.
      */
     #[Required]
     public ?Error $error;
@@ -76,9 +74,9 @@ final class BatchGetResponse implements BaseModel
     /**
      * Page failures grouped by error code.
      *
-     * @var list<Error1> $errors
+     * @var list<ErrorCount> $errors
      */
-    #[Required(list: Error1::class)]
+    #[Required(list: ErrorCount::class)]
     public array $errors;
 
     /**
@@ -207,7 +205,7 @@ final class BatchGetResponse implements BaseModel
      *
      * @param Credits|CreditsShape $credits
      * @param Error|ErrorShape|null $error
-     * @param list<Error1|Error1Shape> $errors
+     * @param list<ErrorCount|ErrorCountShape> $errors
      * @param Input|InputShape $input
      * @param list<InvalidURL|InvalidURLShape> $invalidURLs
      * @param Mode|value-of<Mode> $mode
@@ -283,7 +281,7 @@ final class BatchGetResponse implements BaseModel
     }
 
     /**
-     * Batch-level error. Null unless `status` is `failed`.
+     * Why the batch failed.
      *
      * @param Error|ErrorShape|null $error
      */
@@ -298,7 +296,7 @@ final class BatchGetResponse implements BaseModel
     /**
      * Page failures grouped by error code.
      *
-     * @param list<Error1|Error1Shape> $errors
+     * @param list<ErrorCount|ErrorCountShape> $errors
      */
     public function withErrors(array $errors): self
     {

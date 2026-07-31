@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace ContextDev\Batch\BatchListResponse;
 
 use ContextDev\Batch\BatchListResponse\Data\Credits;
-use ContextDev\Batch\BatchListResponse\Data\Error;
-use ContextDev\Batch\BatchListResponse\Data\Error1;
 use ContextDev\Batch\BatchListResponse\Data\Input;
 use ContextDev\Batch\BatchListResponse\Data\Mode;
 use ContextDev\Batch\BatchListResponse\Data\Progress;
@@ -14,6 +12,8 @@ use ContextDev\Batch\BatchListResponse\Data\Results;
 use ContextDev\Batch\BatchListResponse\Data\Status;
 use ContextDev\Batch\BatchListResponse\Data\Timing;
 use ContextDev\Batch\BatchListResponse\Data\Type;
+use ContextDev\Batch\Error;
+use ContextDev\Batch\ErrorCount;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
@@ -22,8 +22,8 @@ use ContextDev\Core\Contracts\BaseModel;
  * An asynchronous web scraping job.
  *
  * @phpstan-import-type CreditsShape from \ContextDev\Batch\BatchListResponse\Data\Credits
- * @phpstan-import-type ErrorShape from \ContextDev\Batch\BatchListResponse\Data\Error
- * @phpstan-import-type Error1Shape from \ContextDev\Batch\BatchListResponse\Data\Error1
+ * @phpstan-import-type ErrorShape from \ContextDev\Batch\Error
+ * @phpstan-import-type ErrorCountShape from \ContextDev\Batch\ErrorCount
  * @phpstan-import-type InputShape from \ContextDev\Batch\BatchListResponse\Data\Input
  * @phpstan-import-type ProgressShape from \ContextDev\Batch\BatchListResponse\Data\Progress
  * @phpstan-import-type ResultsShape from \ContextDev\Batch\BatchListResponse\Data\Results
@@ -33,7 +33,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   id: string,
  *   credits: Credits|CreditsShape,
  *   error: null|Error|ErrorShape,
- *   errors: list<Error1|Error1Shape>,
+ *   errors: list<ErrorCount|ErrorCountShape>,
  *   input: Input|InputShape,
  *   mode: Mode|value-of<Mode>,
  *   progress: Progress|ProgressShape,
@@ -62,7 +62,7 @@ final class Data implements BaseModel
     public Credits $credits;
 
     /**
-     * Batch-level error. Null unless `status` is `failed`.
+     * Why the batch failed.
      */
     #[Required]
     public ?Error $error;
@@ -70,9 +70,9 @@ final class Data implements BaseModel
     /**
      * Page failures grouped by error code.
      *
-     * @var list<Error1> $errors
+     * @var list<ErrorCount> $errors
      */
-    #[Required(list: Error1::class)]
+    #[Required(list: ErrorCount::class)]
     public array $errors;
 
     /**
@@ -179,7 +179,7 @@ final class Data implements BaseModel
      *
      * @param Credits|CreditsShape $credits
      * @param Error|ErrorShape|null $error
-     * @param list<Error1|Error1Shape> $errors
+     * @param list<ErrorCount|ErrorCountShape> $errors
      * @param Input|InputShape $input
      * @param Mode|value-of<Mode> $mode
      * @param Progress|ProgressShape $progress
@@ -246,7 +246,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Batch-level error. Null unless `status` is `failed`.
+     * Why the batch failed.
      *
      * @param Error|ErrorShape|null $error
      */
@@ -261,7 +261,7 @@ final class Data implements BaseModel
     /**
      * Page failures grouped by error code.
      *
-     * @param list<Error1|Error1Shape> $errors
+     * @param list<ErrorCount|ErrorCountShape> $errors
      */
     public function withErrors(array $errors): self
     {

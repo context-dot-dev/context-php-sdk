@@ -2,18 +2,20 @@
 
 declare(strict_types=1);
 
-namespace ContextDev\Batch\BatchGetResponse;
+namespace ContextDev\Batch;
 
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * @phpstan-type Error1Shape = array{code: string, count: int}
+ * Page failures sharing one error code.
+ *
+ * @phpstan-type ErrorCountShape = array{code: string, count: int}
  */
-final class Error1 implements BaseModel
+final class ErrorCount implements BaseModel
 {
-    /** @use SdkModel<Error1Shape> */
+    /** @use SdkModel<ErrorCountShape> */
     use SdkModel;
 
     /**
@@ -29,17 +31,17 @@ final class Error1 implements BaseModel
     public int $count;
 
     /**
-     * `new Error1()` is missing required properties by the API.
+     * `new ErrorCount()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * Error1::with(code: ..., count: ...)
+     * ErrorCount::with(code: ..., count: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new Error1)->withCode(...)->withCount(...)
+     * (new ErrorCount)->withCode(...)->withCount(...)
      * ```
      */
     public function __construct()
