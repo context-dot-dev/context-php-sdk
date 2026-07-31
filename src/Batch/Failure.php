@@ -9,39 +9,39 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Page failures sharing one error code.
+ * A failure of the batch as a whole, distinct from the per-page failures in `page_errors`.
  *
- * @phpstan-type ErrorCountShape = array{code: string, count: int}
+ * @phpstan-type FailureShape = array{code: string, message: string}
  */
-final class ErrorCount implements BaseModel
+final class Failure implements BaseModel
 {
-    /** @use SdkModel<ErrorCountShape> */
+    /** @use SdkModel<FailureShape> */
     use SdkModel;
 
     /**
-     * Error code for these failures.
+     * Why the batch itself stopped.
      */
     #[Required]
     public string $code;
 
     /**
-     * Pages that failed with this code.
+     * Human-readable explanation.
      */
     #[Required]
-    public int $count;
+    public string $message;
 
     /**
-     * `new ErrorCount()` is missing required properties by the API.
+     * `new Failure()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * ErrorCount::with(code: ..., count: ...)
+     * Failure::with(code: ..., message: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new ErrorCount)->withCode(...)->withCount(...)
+     * (new Failure)->withCode(...)->withMessage(...)
      * ```
      */
     public function __construct()
@@ -54,18 +54,18 @@ final class ErrorCount implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(string $code, int $count): self
+    public static function with(string $code, string $message): self
     {
         $self = new self;
 
         $self['code'] = $code;
-        $self['count'] = $count;
+        $self['message'] = $message;
 
         return $self;
     }
 
     /**
-     * Error code for these failures.
+     * Why the batch itself stopped.
      */
     public function withCode(string $code): self
     {
@@ -76,12 +76,12 @@ final class ErrorCount implements BaseModel
     }
 
     /**
-     * Pages that failed with this code.
+     * Human-readable explanation.
      */
-    public function withCount(int $count): self
+    public function withMessage(string $message): self
     {
         $self = clone $this;
-        $self['count'] = $count;
+        $self['message'] = $message;
 
         return $self;
     }

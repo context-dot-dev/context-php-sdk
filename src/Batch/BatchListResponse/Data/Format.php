@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace ContextDev\Batch\BatchListResponse\Data;
 
 /**
- * Output format.
+ * What each page is returned as. Matches `input.data.format` on the submit request.
  */
-enum Type: string
+enum Format: string
 {
     case MARKDOWN = 'markdown';
 
