@@ -26,7 +26,7 @@ use ContextDev\Monitors\MonitorNewResponse\Webhook;
 use ContextDev\Monitors\MonitorNewResponse\WebhookFailure;
 
 /**
- * A web monitor. `mode` is the constant `web`; behavior is described by `target` (page/sitemap/extract) and `change_detection` (exact/semantic).
+ * A newly created monitor plus `initial_run_id`, the id of the baseline run queued at creation.
  *
  * @phpstan-import-type ChangeDetectionVariants from \ContextDev\Monitors\MonitorNewResponse\ChangeDetection
  * @phpstan-import-type TargetVariants from \ContextDev\Monitors\MonitorNewResponse\Target
@@ -43,6 +43,7 @@ use ContextDev\Monitors\MonitorNewResponse\WebhookFailure;
  *   id: string,
  *   changeDetection: ChangeDetectionShape,
  *   createdAt: \DateTimeInterface,
+ *   initialRunID: string|null,
  *   mode: Mode|value-of<Mode>,
  *   name: string,
  *   schedule: Schedule|ScheduleShape,
@@ -77,6 +78,12 @@ final class MonitorNewResponse implements BaseModel
 
     #[Required('created_at')]
     public \DateTimeInterface $createdAt;
+
+    /**
+     * The baseline run queued by this create call, or null if it could not be queued immediately (in which case the baseline runs on the next scheduled tick). Poll GET /monitors/{monitor_id}/runs/{run_id}.
+     */
+    #[Required('initial_run_id')]
+    public ?string $initialRunID;
 
     /**
      * Top-level monitor category. Always `web` today; the concrete behavior is described by `target` and `change_detection`.
@@ -166,6 +173,7 @@ final class MonitorNewResponse implements BaseModel
      *   id: ...,
      *   changeDetection: ...,
      *   createdAt: ...,
+     *   initialRunID: ...,
      *   mode: ...,
      *   name: ...,
      *   schedule: ...,
@@ -182,6 +190,7 @@ final class MonitorNewResponse implements BaseModel
      *   ->withID(...)
      *   ->withChangeDetection(...)
      *   ->withCreatedAt(...)
+     *   ->withInitialRunID(...)
      *   ->withMode(...)
      *   ->withName(...)
      *   ->withSchedule(...)
@@ -215,6 +224,7 @@ final class MonitorNewResponse implements BaseModel
         string $id,
         MonitorsExactChangeDetection|array|MonitorsSemanticChangeDetection $changeDetection,
         \DateTimeInterface $createdAt,
+        ?string $initialRunID,
         Mode|string $mode,
         string $name,
         Schedule|array $schedule,
@@ -235,6 +245,7 @@ final class MonitorNewResponse implements BaseModel
         $self['id'] = $id;
         $self['changeDetection'] = $changeDetection;
         $self['createdAt'] = $createdAt;
+        $self['initialRunID'] = $initialRunID;
         $self['mode'] = $mode;
         $self['name'] = $name;
         $self['schedule'] = $schedule;
@@ -280,6 +291,17 @@ final class MonitorNewResponse implements BaseModel
     {
         $self = clone $this;
         $self['createdAt'] = $createdAt;
+
+        return $self;
+    }
+
+    /**
+     * The baseline run queued by this create call, or null if it could not be queued immediately (in which case the baseline runs on the next scheduled tick). Poll GET /monitors/{monitor_id}/runs/{run_id}.
+     */
+    public function withInitialRunID(?string $initialRunID): self
+    {
+        $self = clone $this;
+        $self['initialRunID'] = $initialRunID;
 
         return $self;
     }

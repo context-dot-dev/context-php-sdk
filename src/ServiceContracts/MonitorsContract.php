@@ -34,9 +34,9 @@ use ContextDev\Monitors\MonitorUpdateResponse;
 use ContextDev\RequestOptions;
 
 /**
+ * @phpstan-import-type TargetShape from \ContextDev\Monitors\MonitorCreateParams\Target
  * @phpstan-import-type ChangeDetectionShape from \ContextDev\Monitors\MonitorCreateParams\ChangeDetection
  * @phpstan-import-type ScheduleShape from \ContextDev\Monitors\MonitorCreateParams\Schedule
- * @phpstan-import-type TargetShape from \ContextDev\Monitors\MonitorCreateParams\Target
  * @phpstan-import-type WebhookShape from \ContextDev\Monitors\MonitorCreateParams\Webhook
  * @phpstan-import-type ChangeDetectionShape from \ContextDev\Monitors\MonitorUpdateParams\ChangeDetection as ChangeDetectionShape1
  * @phpstan-import-type ScheduleShape from \ContextDev\Monitors\MonitorUpdateParams\Schedule as ScheduleShape1
@@ -49,10 +49,10 @@ interface MonitorsContract
     /**
      * @api
      *
-     * @param ChangeDetectionShape $changeDetection discriminated union describing how changes are detected
-     * @param Schedule|ScheduleShape $schedule Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
      * @param TargetShape $target discriminated union describing what the monitor watches
+     * @param ChangeDetectionShape $changeDetection discriminated union describing how changes are detected
      * @param Mode|value-of<Mode> $mode Top-level monitor category. Always `web` today; the concrete behavior is described by `target` and `change_detection`.
+     * @param Schedule|ScheduleShape $schedule Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
      * @param list<string> $tags User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
      * @param Webhook|WebhookShape|null $webhook
      * @param RequestOpts|null $requestOptions
@@ -60,11 +60,11 @@ interface MonitorsContract
      * @throws APIException
      */
     public function create(
-        MonitorsExactChangeDetection|array|MonitorsSemanticChangeDetection $changeDetection,
         string $name,
-        Schedule|array $schedule,
         MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget $target,
+        MonitorsExactChangeDetection|array|MonitorsSemanticChangeDetection|null $changeDetection = null,
         Mode|string|null $mode = null,
+        Schedule|array|null $schedule = null,
         ?array $tags = null,
         Webhook|array|null $webhook = null,
         RequestOptions|array|null $requestOptions = null,

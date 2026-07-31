@@ -10,10 +10,13 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Watch a single web page.
+ * Watch a single web page. Exact detection reports visible-text diffs; semantic detection judges confirmed stable diffs against `instructions`.
  *
  * @phpstan-type MonitorsPageTargetShape = array{
- *   type: 'page', url: string, normalizeWhitespace?: bool|null
+ *   type: 'page',
+ *   url: string,
+ *   instructions?: string|null,
+ *   normalizeWhitespace?: bool|null,
  * }
  */
 final class MonitorsPageTarget implements BaseModel
@@ -27,6 +30,12 @@ final class MonitorsPageTarget implements BaseModel
 
     #[Required]
     public string $url;
+
+    /**
+     * Plain-language goal describing which page changes matter. When provided without change_detection, semantic detection is inferred.
+     */
+    #[Optional]
+    public ?string $instructions;
 
     /**
      * Normalize whitespace before comparing or analyzing text.
@@ -60,12 +69,14 @@ final class MonitorsPageTarget implements BaseModel
      */
     public static function with(
         string $url,
+        ?string $instructions = null,
         ?bool $normalizeWhitespace = null
     ): self {
         $self = new self;
 
         $self['url'] = $url;
 
+        null !== $instructions && $self['instructions'] = $instructions;
         null !== $normalizeWhitespace && $self['normalizeWhitespace'] = $normalizeWhitespace;
 
         return $self;
@@ -86,6 +97,17 @@ final class MonitorsPageTarget implements BaseModel
     {
         $self = clone $this;
         $self['url'] = $url;
+
+        return $self;
+    }
+
+    /**
+     * Plain-language goal describing which page changes matter. When provided without change_detection, semantic detection is inferred.
+     */
+    public function withInstructions(string $instructions): self
+    {
+        $self = clone $this;
+        $self['instructions'] = $instructions;
 
         return $self;
     }

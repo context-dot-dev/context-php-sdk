@@ -8,11 +8,13 @@ use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebWebScrapeMdResponse\ActionsApplied;
 use ContextDev\Web\WebWebScrapeMdResponse\KeyMetadata;
 use ContextDev\Web\WebWebScrapeMdResponse\Metadata;
 
 /**
  * @phpstan-import-type MetadataShape from \ContextDev\Web\WebWebScrapeMdResponse\Metadata
+ * @phpstan-import-type ActionsAppliedShape from \ContextDev\Web\WebWebScrapeMdResponse\ActionsApplied
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Web\WebWebScrapeMdResponse\KeyMetadata
  *
  * @phpstan-type WebWebScrapeMdResponseShape = array{
@@ -21,6 +23,8 @@ use ContextDev\Web\WebWebScrapeMdResponse\Metadata;
  *   metadata: Metadata|MetadataShape,
  *   success: bool,
  *   url: string,
+ *   actionsApplied?: list<ActionsApplied|ActionsAppliedShape>|null,
+ *   actionsHTMLStale?: bool|null,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  * }
  */
@@ -60,6 +64,20 @@ final class WebWebScrapeMdResponse implements BaseModel
     public string $url;
 
     /**
+     * One verified outcome per requested browser action, in request order.
+     *
+     * @var list<ActionsApplied>|null $actionsApplied
+     */
+    #[Optional(list: ActionsApplied::class)]
+    public ?array $actionsApplied;
+
+    /**
+     * True when an action was applied but the returned content could not be refreshed afterward.
+     */
+    #[Optional('actionsHtmlStale')]
+    public ?bool $actionsHTMLStale;
+
+    /**
      * Metadata about the API key used for the request. Included in every response whenever a valid API key is provided, even when the response status is not 200.
      */
     #[Optional('key_metadata')]
@@ -97,6 +115,7 @@ final class WebWebScrapeMdResponse implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param Metadata|MetadataShape $metadata
+     * @param list<ActionsApplied|ActionsAppliedShape>|null $actionsApplied
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
     public static function with(
@@ -105,6 +124,8 @@ final class WebWebScrapeMdResponse implements BaseModel
         Metadata|array $metadata,
         bool $success,
         string $url,
+        ?array $actionsApplied = null,
+        ?bool $actionsHTMLStale = null,
         KeyMetadata|array|null $keyMetadata = null,
     ): self {
         $self = new self;
@@ -115,6 +136,8 @@ final class WebWebScrapeMdResponse implements BaseModel
         $self['success'] = $success;
         $self['url'] = $url;
 
+        null !== $actionsApplied && $self['actionsApplied'] = $actionsApplied;
+        null !== $actionsHTMLStale && $self['actionsHTMLStale'] = $actionsHTMLStale;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
 
         return $self;
@@ -173,6 +196,30 @@ final class WebWebScrapeMdResponse implements BaseModel
     {
         $self = clone $this;
         $self['url'] = $url;
+
+        return $self;
+    }
+
+    /**
+     * One verified outcome per requested browser action, in request order.
+     *
+     * @param list<ActionsApplied|ActionsAppliedShape> $actionsApplied
+     */
+    public function withActionsApplied(array $actionsApplied): self
+    {
+        $self = clone $this;
+        $self['actionsApplied'] = $actionsApplied;
+
+        return $self;
+    }
+
+    /**
+     * True when an action was applied but the returned content could not be refreshed afterward.
+     */
+    public function withActionsHTMLStale(bool $actionsHTMLStale): self
+    {
+        $self = clone $this;
+        $self['actionsHTMLStale'] = $actionsHTMLStale;
 
         return $self;
     }
