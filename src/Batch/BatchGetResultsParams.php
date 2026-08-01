@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Page through the result records of a finished batch as JSON, in the same order as the downloadable result files. Use this instead of downloading and parsing the NDJSON files yourself.
+ * Page through a finished batch's results as JSON instead of downloading the NDJSON files.
  *
  * @see ContextDev\Services\BatchService::getResults()
  *
