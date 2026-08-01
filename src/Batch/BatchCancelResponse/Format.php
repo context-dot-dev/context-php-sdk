@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace ContextDev\Batch\BatchCancelResponse;
 
 /**
- * Output format.
+ * What each page is returned as.
  */
-enum Type: string
+enum Format: string
 {
     case MARKDOWN = 'markdown';
 

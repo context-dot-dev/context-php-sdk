@@ -37,7 +37,7 @@ final class BatchRawService implements BatchRawContract
     /**
      * @api
      *
-     * Check progress and get download links when the batch finishes. Also returns the rejected-URL list and webhook signing secret from submission, so nothing is lost if the submit response was dropped.
+     * Check progress, and get download links once the batch finishes.
      *
      * @param string $batchID ID of the batch to retrieve or cancel
      * @param RequestOpts|null $requestOptions
@@ -128,7 +128,7 @@ final class BatchRawService implements BatchRawContract
     /**
      * @api
      *
-     * Page through the result records of a finished batch as JSON, in the same order as the downloadable result files. Use this instead of downloading and parsing the NDJSON files yourself.
+     * Page through a finished batch's results as JSON instead of downloading the NDJSON files.
      *
      * @param string $batchID ID of the batch to retrieve or cancel
      * @param array{cursor?: string, limit?: int}|BatchGetResultsParams $params

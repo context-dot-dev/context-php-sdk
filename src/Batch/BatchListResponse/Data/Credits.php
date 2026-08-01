@@ -9,9 +9,9 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Reserved and used credits.
+ * What this batch has done to your credit balance.
  *
- * @phpstan-type CreditsShape = array{charged: int, estimated: int}
+ * @phpstan-type CreditsShape = array{net: int, refunded: int, reserved: int}
  */
 final class Credits implements BaseModel
 {
@@ -19,29 +19,35 @@ final class Credits implements BaseModel
     use SdkModel;
 
     /**
-     * Credits used by successful pages.
+     * `reserved` minus `refunded` — what the batch has cost so far. Equal to `reserved` until the batch settles.
      */
     #[Required]
-    public int $charged;
+    public int $net;
 
     /**
-     * Credits reserved when the batch was accepted.
+     * Credits returned for pages that did not succeed. Stays 0 until the batch reaches a final status, then settles in one movement.
      */
     #[Required]
-    public int $estimated;
+    public int $refunded;
+
+    /**
+     * Credits debited from your balance the moment the batch was accepted. This is a charge, not a forecast — the whole amount leaves the balance up front.
+     */
+    #[Required]
+    public int $reserved;
 
     /**
      * `new Credits()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * Credits::with(charged: ..., estimated: ...)
+     * Credits::with(net: ..., refunded: ..., reserved: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new Credits)->withCharged(...)->withEstimated(...)
+     * (new Credits)->withNet(...)->withRefunded(...)->withReserved(...)
      * ```
      */
     public function __construct()
@@ -54,34 +60,46 @@ final class Credits implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(int $charged, int $estimated): self
+    public static function with(int $net, int $refunded, int $reserved): self
     {
         $self = new self;
 
-        $self['charged'] = $charged;
-        $self['estimated'] = $estimated;
+        $self['net'] = $net;
+        $self['refunded'] = $refunded;
+        $self['reserved'] = $reserved;
 
         return $self;
     }
 
     /**
-     * Credits used by successful pages.
+     * `reserved` minus `refunded` — what the batch has cost so far. Equal to `reserved` until the batch settles.
      */
-    public function withCharged(int $charged): self
+    public function withNet(int $net): self
     {
         $self = clone $this;
-        $self['charged'] = $charged;
+        $self['net'] = $net;
 
         return $self;
     }
 
     /**
-     * Credits reserved when the batch was accepted.
+     * Credits returned for pages that did not succeed. Stays 0 until the batch reaches a final status, then settles in one movement.
      */
-    public function withEstimated(int $estimated): self
+    public function withRefunded(int $refunded): self
     {
         $self = clone $this;
-        $self['estimated'] = $estimated;
+        $self['refunded'] = $refunded;
+
+        return $self;
+    }
+
+    /**
+     * Credits debited from your balance the moment the batch was accepted. This is a charge, not a forecast — the whole amount leaves the balance up front.
+     */
+    public function withReserved(int $reserved): self
+    {
+        $self = clone $this;
+        $self['reserved'] = $reserved;
 
         return $self;
     }

@@ -9,9 +9,9 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Reserved and used credits.
+ * What this batch cost so far.
  *
- * @phpstan-type CreditsShape = array{charged: int, estimated: int}
+ * @phpstan-type CreditsShape = array{reserved: int}
  */
 final class Credits implements BaseModel
 {
@@ -19,29 +19,23 @@ final class Credits implements BaseModel
     use SdkModel;
 
     /**
-     * Credits used by successful pages.
+     * Credits debited at submission. The unspent remainder is refunded once the batch settles — read `credits.refunded` from GET /batch/{batch_id} then.
      */
     #[Required]
-    public int $charged;
-
-    /**
-     * Credits reserved when the batch was accepted.
-     */
-    #[Required]
-    public int $estimated;
+    public int $reserved;
 
     /**
      * `new Credits()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * Credits::with(charged: ..., estimated: ...)
+     * Credits::with(reserved: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new Credits)->withCharged(...)->withEstimated(...)
+     * (new Credits)->withReserved(...)
      * ```
      */
     public function __construct()
@@ -54,34 +48,22 @@ final class Credits implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(int $charged, int $estimated): self
+    public static function with(int $reserved): self
     {
         $self = new self;
 
-        $self['charged'] = $charged;
-        $self['estimated'] = $estimated;
+        $self['reserved'] = $reserved;
 
         return $self;
     }
 
     /**
-     * Credits used by successful pages.
+     * Credits debited at submission. The unspent remainder is refunded once the batch settles — read `credits.refunded` from GET /batch/{batch_id} then.
      */
-    public function withCharged(int $charged): self
+    public function withReserved(int $reserved): self
     {
         $self = clone $this;
-        $self['charged'] = $charged;
-
-        return $self;
-    }
-
-    /**
-     * Credits reserved when the batch was accepted.
-     */
-    public function withEstimated(int $estimated): self
-    {
-        $self = clone $this;
-        $self['estimated'] = $estimated;
+        $self['reserved'] = $reserved;
 
         return $self;
     }

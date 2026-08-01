@@ -9,39 +9,39 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Why the batch failed.
+ * Page failures sharing one error code.
  *
- * @phpstan-type ErrorShape = array{code: string, message: string}
+ * @phpstan-type PageErrorCountShape = array{code: string, count: int}
  */
-final class Error implements BaseModel
+final class PageErrorCount implements BaseModel
 {
-    /** @use SdkModel<ErrorShape> */
+    /** @use SdkModel<PageErrorCountShape> */
     use SdkModel;
 
     /**
-     * Batch error code.
+     * Error code for these failures.
      */
     #[Required]
     public string $code;
 
     /**
-     * Batch error message.
+     * Pages that failed with this code.
      */
     #[Required]
-    public string $message;
+    public int $count;
 
     /**
-     * `new Error()` is missing required properties by the API.
+     * `new PageErrorCount()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * Error::with(code: ..., message: ...)
+     * PageErrorCount::with(code: ..., count: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new Error)->withCode(...)->withMessage(...)
+     * (new PageErrorCount)->withCode(...)->withCount(...)
      * ```
      */
     public function __construct()
@@ -54,18 +54,18 @@ final class Error implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(string $code, string $message): self
+    public static function with(string $code, int $count): self
     {
         $self = new self;
 
         $self['code'] = $code;
-        $self['message'] = $message;
+        $self['count'] = $count;
 
         return $self;
     }
 
     /**
-     * Batch error code.
+     * Error code for these failures.
      */
     public function withCode(string $code): self
     {
@@ -76,12 +76,12 @@ final class Error implements BaseModel
     }
 
     /**
-     * Batch error message.
+     * Pages that failed with this code.
      */
-    public function withMessage(string $message): self
+    public function withCount(int $count): self
     {
         $self = clone $this;
-        $self['message'] = $message;
+        $self['count'] = $count;
 
         return $self;
     }

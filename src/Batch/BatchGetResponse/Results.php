@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Download links available when the batch finishes. GET /batch/{batch_id}/results serves the same records as paginated JSON.
+ * Download links, available once the batch reaches a final status and null before then. GET /batch/{batch_id}/results serves the same records as paginated JSON.
  *
  * @phpstan-import-type FileShape from \ContextDev\Batch\BatchGetResponse\Results\File
  *

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Batch\BatchCancelResponse;
 
 /**
- * How pages are selected.
+ * How pages were selected.
  */
 enum Mode: string
 {
