@@ -8,6 +8,8 @@ use ContextDev\Brand\BrandGetResponse;
 use ContextDev\Brand\BrandGetSimplifiedResponse;
 use ContextDev\Brand\BrandRetrieveParams;
 use ContextDev\Brand\BrandRetrieveSimplifiedParams;
+use ContextDev\Brand\BrandSearchParams;
+use ContextDev\Brand\BrandSearchResponse;
 use ContextDev\Core\Contracts\BaseResponse;
 use ContextDev\Core\Exceptions\APIException;
 use ContextDev\RequestOptions;
@@ -44,6 +46,21 @@ interface BrandRawContract
      */
     public function retrieveSimplified(
         array|BrandRetrieveSimplifiedParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param array<string,mixed>|BrandSearchParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<BrandSearchResponse>
+     *
+     * @throws APIException
+     */
+    public function search(
+        array|BrandSearchParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;
 }

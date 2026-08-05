@@ -4,6 +4,7 @@ namespace Tests\Services;
 
 use ContextDev\Brand\BrandGetResponse;
 use ContextDev\Brand\BrandGetSimplifiedResponse;
+use ContextDev\Brand\BrandSearchResponse;
 use ContextDev\Client;
 use ContextDev\Core\Util;
 use PHPUnit\Framework\Attributes\CoversNothing;
@@ -112,5 +113,34 @@ final class BrandTest extends TestCase
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(BrandGetSimplifiedResponse::class, $result);
+    }
+
+    #[Test]
+    public function testSearch(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->brand->search(query: 'x');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(BrandSearchResponse::class, $result);
+    }
+
+    #[Test]
+    public function testSearchWithOptionalParams(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->brand->search(
+            query: 'x',
+            tags: ['production', 'team-alpha']
+        );
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(BrandSearchResponse::class, $result);
     }
 }
