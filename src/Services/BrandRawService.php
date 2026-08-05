@@ -11,6 +11,8 @@ use ContextDev\Brand\BrandRetrieveParams\ForceLanguage;
 use ContextDev\Brand\BrandRetrieveParams\Type;
 use ContextDev\Brand\BrandRetrieveSimplifiedParams;
 use ContextDev\Brand\BrandRetrieveSimplifiedParams\Theme;
+use ContextDev\Brand\BrandSearchParams;
+use ContextDev\Brand\BrandSearchResponse;
 use ContextDev\Client;
 use ContextDev\Core\Contracts\BaseResponse;
 use ContextDev\Core\Exceptions\APIException;
@@ -115,6 +117,37 @@ final class BrandRawService implements BrandRawContract
             query: Util::array_transform_keys($parsed, ['timeoutMs' => 'timeoutMS']),
             options: $options,
             convert: BrandGetSimplifiedResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Search brands by name or domain and get back up to 10 lightweight matches (domain, name, logo), most popular first: by Tranco rank, then market cap for brands outside the Tranco list, with text relevance breaking ties. Matching is prefix-based with no typo tolerance, so it is suited to autocomplete. Only brands already in the Context.dev index are returned — use /brand/retrieve to fetch (and index) a specific domain. Free on Pro and Scale plans; costs 1 credit per request on the Free and Starter plans.
+     *
+     * @param array{query: string, tags?: list<string>}|BrandSearchParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<BrandSearchResponse>
+     *
+     * @throws APIException
+     */
+    public function search(
+        array|BrandSearchParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = BrandSearchParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: 'brand/search',
+            query: $parsed,
+            options: $options,
+            convert: BrandSearchResponse::class,
         );
     }
 }
