@@ -46,7 +46,7 @@ final class Pdf implements BaseModel
     public bool|string|null $ocr;
 
     /**
-     * When true, PDF URLs are fetched and parsed. When false, PDF URLs are skipped and a 400 WEBSITE_ACCESS_ERROR is returned.
+     * When true, PDF URLs are fetched and parsed. When false, PDF URLs are skipped and a 400 PDF_SKIPPED is returned.
      *
      * @var ShouldParseVariants|null $shouldParse
      */
@@ -113,7 +113,7 @@ final class Pdf implements BaseModel
     }
 
     /**
-     * When true, PDF URLs are fetched and parsed. When false, PDF URLs are skipped and a 400 WEBSITE_ACCESS_ERROR is returned.
+     * When true, PDF URLs are fetched and parsed. When false, PDF URLs are skipped and a 400 PDF_SKIPPED is returned.
      *
      * @param ShouldParseShape $shouldParse
      */
