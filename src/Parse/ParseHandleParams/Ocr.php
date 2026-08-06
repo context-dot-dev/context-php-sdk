@@ -10,7 +10,7 @@ use ContextDev\Core\Conversion\Contracts\ConverterSource;
 use ContextDev\Parse\ParseHandleParams\Ocr\UnionMember1;
 
 /**
- * When true for PDF inputs, detect and OCR images embedded in the selected pages, inserting recognized text at each image's position in page reading order while preserving the PDF text layer. pdf.start/pdf.end limit the inclusive page range. When false, no OCR runs.
+ * When true for PDF inputs, OCR the selected pages that have no usable text layer (scans), replacing each recovered page's text with the OCR result while pages with a real text layer keep it. pdf.start/pdf.end limit the inclusive page range. Billed at 1 credit per page OCR actually recovered, on top of the base request cost. When false, no OCR runs.
  *
  * @phpstan-type OcrVariants = bool|value-of<UnionMember1>
  * @phpstan-type OcrShape = OcrVariants
