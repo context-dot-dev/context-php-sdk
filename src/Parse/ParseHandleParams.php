@@ -85,7 +85,7 @@ final class ParseHandleParams implements BaseModel
     public bool|string|null $includeLinks;
 
     /**
-     * When true for PDF inputs, detect and OCR images embedded in the selected pages, inserting recognized text at each image's position in page reading order while preserving the PDF text layer. pdf.start/pdf.end limit the inclusive page range. When false, all OCR is disabled, including the automatic scanned-PDF fallback.
+     * When true for PDF inputs, detect and OCR images embedded in the selected pages, inserting recognized text at each image's position in page reading order while preserving the PDF text layer. pdf.start/pdf.end limit the inclusive page range. When false, no OCR runs.
      *
      * @var OcrVariants|null $ocr
      */
@@ -231,7 +231,7 @@ final class ParseHandleParams implements BaseModel
     }
 
     /**
-     * When true for PDF inputs, detect and OCR images embedded in the selected pages, inserting recognized text at each image's position in page reading order while preserving the PDF text layer. pdf.start/pdf.end limit the inclusive page range. When false, all OCR is disabled, including the automatic scanned-PDF fallback.
+     * When true for PDF inputs, detect and OCR images embedded in the selected pages, inserting recognized text at each image's position in page reading order while preserving the PDF text layer. pdf.start/pdf.end limit the inclusive page range. When false, no OCR runs.
      *
      * @param OcrShape $ocr
      */
