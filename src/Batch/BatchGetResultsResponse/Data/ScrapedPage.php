@@ -25,6 +25,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   itemID?: string|null,
  *   markdown?: string|null,
  *   meta?: array<string,mixed>|null,
+ *   ocrPages?: int|null,
  * }
  */
 final class ScrapedPage implements BaseModel
@@ -91,6 +92,12 @@ final class ScrapedPage implements BaseModel
     public ?array $meta;
 
     /**
+     * PDF pages of this document recovered by OCR (pdf.ocr=true). Each recovered page bills 1 credit on top of the page base credit; absent when no OCR ran.
+     */
+    #[Optional('ocr_pages')]
+    public ?int $ocrPages;
+
+    /**
      * `new ScrapedPage()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -130,6 +137,7 @@ final class ScrapedPage implements BaseModel
         ?string $itemID = null,
         ?string $markdown = null,
         ?array $meta = null,
+        ?int $ocrPages = null,
     ): self {
         $self = new self;
 
@@ -142,6 +150,7 @@ final class ScrapedPage implements BaseModel
         null !== $itemID && $self['itemID'] = $itemID;
         null !== $markdown && $self['markdown'] = $markdown;
         null !== $meta && $self['meta'] = $meta;
+        null !== $ocrPages && $self['ocrPages'] = $ocrPages;
 
         return $self;
     }
@@ -247,6 +256,17 @@ final class ScrapedPage implements BaseModel
     {
         $self = clone $this;
         $self['meta'] = $meta;
+
+        return $self;
+    }
+
+    /**
+     * PDF pages of this document recovered by OCR (pdf.ocr=true). Each recovered page bills 1 credit on top of the page base credit; absent when no OCR ran.
+     */
+    public function withOcrPages(int $ocrPages): self
+    {
+        $self = clone $this;
+        $self['ocrPages'] = $ocrPages;
 
         return $self;
     }

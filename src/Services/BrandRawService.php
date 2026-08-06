@@ -123,7 +123,7 @@ final class BrandRawService implements BrandRawContract
     /**
      * @api
      *
-     * Search brands by name or domain and get back up to 10 lightweight matches (domain, name, logo), most popular first: by Tranco rank, then market cap for brands outside the Tranco list, with text relevance breaking ties. Matching is prefix-based with no typo tolerance, so it is suited to autocomplete. Only brands already in the Context.dev index are returned — use /brand/retrieve to fetch (and index) a specific domain. Free on Pro and Scale plans; costs 1 credit per request on the Free and Starter plans.
+     * Search brands by name or domain and get back up to 10 lightweight matches (domain, name, logo). Name matches rank ahead of domain matches; within each group the most popular brands come first: by Tranco rank, then market cap for brands outside the Tranco list, with text relevance breaking ties. Matching is prefix-based with no typo tolerance, so it is suited to autocomplete. Only brands already in the Context.dev index are returned — use /brand/retrieve to fetch (and index) a specific domain. Free on Pro and Scale plans; costs 1 credit per request on the Free and Starter plans.
      *
      * @param array{query: string, tags?: list<string>}|BrandSearchParams $params
      * @param RequestOpts|null $requestOptions

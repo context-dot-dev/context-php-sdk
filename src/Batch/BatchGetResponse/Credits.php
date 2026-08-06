@@ -11,7 +11,9 @@ use ContextDev\Core\Contracts\BaseModel;
 /**
  * What this batch has done to your credit balance.
  *
- * @phpstan-type CreditsShape = array{net: int, refunded: int, reserved: int}
+ * @phpstan-type CreditsShape = array{
+ *   net: int, ocrCharged: int, refunded: int, reserved: int
+ * }
  */
 final class Credits implements BaseModel
 {
@@ -19,10 +21,16 @@ final class Credits implements BaseModel
     use SdkModel;
 
     /**
-     * `reserved` minus `refunded` — what the batch has cost so far. Equal to `reserved` until the batch settles.
+     * `reserved` minus `refunded` plus `ocr_charged` — what the batch has cost so far. Equal to `reserved` until the batch settles.
      */
     #[Required]
     public int $net;
+
+    /**
+     * Credits charged for PDF pages recovered by OCR (pdf.ocr=true), 1 per recovered page, on top of `reserved`. Stays 0 until the batch settles.
+     */
+    #[Required('ocr_charged')]
+    public int $ocrCharged;
 
     /**
      * Credits returned for pages that did not succeed. Stays 0 until the batch reaches a final status, then settles in one movement.
@@ -41,13 +49,17 @@ final class Credits implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * Credits::with(net: ..., refunded: ..., reserved: ...)
+     * Credits::with(net: ..., ocrCharged: ..., refunded: ..., reserved: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new Credits)->withNet(...)->withRefunded(...)->withReserved(...)
+     * (new Credits)
+     *   ->withNet(...)
+     *   ->withOcrCharged(...)
+     *   ->withRefunded(...)
+     *   ->withReserved(...)
      * ```
      */
     public function __construct()
@@ -60,11 +72,16 @@ final class Credits implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(int $net, int $refunded, int $reserved): self
-    {
+    public static function with(
+        int $net,
+        int $ocrCharged,
+        int $refunded,
+        int $reserved
+    ): self {
         $self = new self;
 
         $self['net'] = $net;
+        $self['ocrCharged'] = $ocrCharged;
         $self['refunded'] = $refunded;
         $self['reserved'] = $reserved;
 
@@ -72,12 +89,23 @@ final class Credits implements BaseModel
     }
 
     /**
-     * `reserved` minus `refunded` — what the batch has cost so far. Equal to `reserved` until the batch settles.
+     * `reserved` minus `refunded` plus `ocr_charged` — what the batch has cost so far. Equal to `reserved` until the batch settles.
      */
     public function withNet(int $net): self
     {
         $self = clone $this;
         $self['net'] = $net;
+
+        return $self;
+    }
+
+    /**
+     * Credits charged for PDF pages recovered by OCR (pdf.ocr=true), 1 per recovered page, on top of `reserved`. Stays 0 until the batch settles.
+     */
+    public function withOcrCharged(int $ocrCharged): self
+    {
+        $self = clone $this;
+        $self['ocrCharged'] = $ocrCharged;
 
         return $self;
     }
