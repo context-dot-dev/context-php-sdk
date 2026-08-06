@@ -411,6 +411,7 @@ final class WebTest extends TestCase
             domain: 'xxx',
             headers: ['foo' => 'J!'],
             maxLinks: 1,
+            search: 'help center and troubleshooting articles',
             sitemapURL: 'https://example.com',
             tags: ['production', 'team-alpha'],
             timeoutMs: 1,
