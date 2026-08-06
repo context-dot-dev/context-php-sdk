@@ -10,7 +10,7 @@ use ContextDev\Core\Conversion\Contracts\ConverterSource;
 use ContextDev\Web\WebWebScrapeHTMLParams\Pdf\ShouldParse\UnionMember1;
 
 /**
- * When true, PDF URLs are fetched and parsed. When false, PDF URLs are skipped and a 400 WEBSITE_ACCESS_ERROR is returned.
+ * When true, PDF URLs are fetched and parsed. When false, PDF URLs are skipped and a 400 PDF_SKIPPED is returned.
  *
  * @phpstan-type ShouldParseVariants = bool|value-of<UnionMember1>
  * @phpstan-type ShouldParseShape = ShouldParseVariants
