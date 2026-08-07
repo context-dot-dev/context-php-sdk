@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace ContextDev\Batch;
 
-use ContextDev\Batch\BatchSubmitResponse\Code;
+use ContextDev\Batch\BatchSubmitResponse\Credits;
+use ContextDev\Batch\BatchSubmitResponse\Format;
+use ContextDev\Batch\BatchSubmitResponse\InvalidURL;
 use ContextDev\Batch\BatchSubmitResponse\KeyMetadata;
-use ContextDev\Batch\BatchSubmitResponse\Metadata;
-use ContextDev\Batch\BatchSubmitResponse\Person;
+use ContextDev\Batch\BatchSubmitResponse\Mode;
 use ContextDev\Batch\BatchSubmitResponse\Status;
 use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
@@ -15,16 +16,25 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * @phpstan-import-type MetadataShape from \ContextDev\Batch\BatchSubmitResponse\Metadata
- * @phpstan-import-type PersonShape from \ContextDev\Batch\BatchSubmitResponse\Person
+ * @phpstan-import-type CrawlControlsShape from \ContextDev\Batch\CrawlControls
+ * @phpstan-import-type CreditsShape from \ContextDev\Batch\BatchSubmitResponse\Credits
+ * @phpstan-import-type IntakeShape from \ContextDev\Batch\Intake
+ * @phpstan-import-type InvalidURLShape from \ContextDev\Batch\BatchSubmitResponse\InvalidURL
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Batch\BatchSubmitResponse\KeyMetadata
  *
  * @phpstan-type BatchSubmitResponseShape = array{
- *   code: Code|value-of<Code>,
- *   metadata: Metadata|MetadataShape,
- *   person: Person|PersonShape,
+ *   id: string,
+ *   crawl: null|CrawlControls|CrawlControlsShape,
+ *   createdAt: string,
+ *   credits: Credits|CreditsShape,
+ *   format: Format|value-of<Format>,
+ *   input: Intake|IntakeShape,
+ *   invalidURLs: list<InvalidURL|InvalidURLShape>,
+ *   mode: Mode|value-of<Mode>,
  *   status: Status|value-of<Status>,
+ *   tags: list<string>,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
+ *   webhookSecret?: string|null,
  * }
  */
 final class BatchSubmitResponse implements BaseModel
@@ -33,27 +43,61 @@ final class BatchSubmitResponse implements BaseModel
     use SdkModel;
 
     /**
-     * HTTP status code.
+     * Batch ID. Poll GET /batch/{batch_id} with it.
+     */
+    #[Required]
+    public string $id;
+
+    /**
+     * The crawl controls as submitted, so the limits requested can be compared against what the crawl reached.
+     */
+    #[Required]
+    public ?CrawlControls $crawl;
+
+    /**
+     * When the batch was created.
+     */
+    #[Required('created_at')]
+    public string $createdAt;
+
+    /**
+     * What accepting this batch cost.
+     */
+    #[Required]
+    public Credits $credits;
+
+    /**
+     * What each page will be returned as.
      *
-     * @var value-of<Code> $code
+     * @var value-of<Format> $format
      */
-    #[Required(enum: Code::class)]
-    public int $code;
+    #[Required(enum: Format::class)]
+    public string $format;
 
     /**
-     * Additional response details.
-     */
-    #[Required]
-    public Metadata $metadata;
-
-    /**
-     * Retrieved person profile.
+     * What submission took in, and what it charged for.
      */
     #[Required]
-    public Person $person;
+    public Intake $input;
 
     /**
-     * Response status.
+     * Rejected URLs, up to 100. These are not charged.
+     *
+     * @var list<InvalidURL> $invalidURLs
+     */
+    #[Required('invalid_urls', list: InvalidURL::class)]
+    public array $invalidURLs;
+
+    /**
+     * How pages will be selected.
+     *
+     * @var value-of<Mode> $mode
+     */
+    #[Required(enum: Mode::class)]
+    public string $mode;
+
+    /**
+     * Always `queued`. An accepted batch has not started yet.
      *
      * @var value-of<Status> $status
      */
@@ -61,27 +105,58 @@ final class BatchSubmitResponse implements BaseModel
     public string $status;
 
     /**
-     * Metadata about the API key used for the request. Included in every response whenever a valid API key is provided, even when the response status is not 200.
+     * Tags stored on the batch.
+     *
+     * @var list<string> $tags
+     */
+    #[Required(list: 'string')]
+    public array $tags;
+
+    /**
+     * API key usage for this request.
      */
     #[Optional('key_metadata')]
     public ?KeyMetadata $keyMetadata;
+
+    /**
+     * Signing secret for the completion webhook, returned only here and never again. Store it now; it is not repeated by GET /batch/{batch_id}.
+     */
+    #[Optional('webhook_secret')]
+    public ?string $webhookSecret;
 
     /**
      * `new BatchSubmitResponse()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * BatchSubmitResponse::with(code: ..., metadata: ..., person: ..., status: ...)
+     * BatchSubmitResponse::with(
+     *   id: ...,
+     *   crawl: ...,
+     *   createdAt: ...,
+     *   credits: ...,
+     *   format: ...,
+     *   input: ...,
+     *   invalidURLs: ...,
+     *   mode: ...,
+     *   status: ...,
+     *   tags: ...,
+     * )
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
      * (new BatchSubmitResponse)
-     *   ->withCode(...)
-     *   ->withMetadata(...)
-     *   ->withPerson(...)
+     *   ->withID(...)
+     *   ->withCrawl(...)
+     *   ->withCreatedAt(...)
+     *   ->withCredits(...)
+     *   ->withFormat(...)
+     *   ->withInput(...)
+     *   ->withInvalidURLs(...)
+     *   ->withMode(...)
      *   ->withStatus(...)
+     *   ->withTags(...)
      * ```
      */
     public function __construct()
@@ -94,72 +169,151 @@ final class BatchSubmitResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param Code|value-of<Code> $code
-     * @param Metadata|MetadataShape $metadata
-     * @param Person|PersonShape $person
+     * @param CrawlControls|CrawlControlsShape|null $crawl
+     * @param Credits|CreditsShape $credits
+     * @param Format|value-of<Format> $format
+     * @param Intake|IntakeShape $input
+     * @param list<InvalidURL|InvalidURLShape> $invalidURLs
+     * @param Mode|value-of<Mode> $mode
      * @param Status|value-of<Status> $status
+     * @param list<string> $tags
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
     public static function with(
-        Code|int $code,
-        Metadata|array $metadata,
-        Person|array $person,
+        string $id,
+        CrawlControls|array|null $crawl,
+        string $createdAt,
+        Credits|array $credits,
+        Format|string $format,
+        Intake|array $input,
+        array $invalidURLs,
+        Mode|string $mode,
         Status|string $status,
+        array $tags,
         KeyMetadata|array|null $keyMetadata = null,
+        ?string $webhookSecret = null,
     ): self {
         $self = new self;
 
-        $self['code'] = $code;
-        $self['metadata'] = $metadata;
-        $self['person'] = $person;
+        $self['id'] = $id;
+        $self['crawl'] = $crawl;
+        $self['createdAt'] = $createdAt;
+        $self['credits'] = $credits;
+        $self['format'] = $format;
+        $self['input'] = $input;
+        $self['invalidURLs'] = $invalidURLs;
+        $self['mode'] = $mode;
         $self['status'] = $status;
+        $self['tags'] = $tags;
 
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
+        null !== $webhookSecret && $self['webhookSecret'] = $webhookSecret;
 
         return $self;
     }
 
     /**
-     * HTTP status code.
-     *
-     * @param Code|value-of<Code> $code
+     * Batch ID. Poll GET /batch/{batch_id} with it.
      */
-    public function withCode(Code|int $code): self
+    public function withID(string $id): self
     {
         $self = clone $this;
-        $self['code'] = $code;
+        $self['id'] = $id;
 
         return $self;
     }
 
     /**
-     * Additional response details.
+     * The crawl controls as submitted, so the limits requested can be compared against what the crawl reached.
      *
-     * @param Metadata|MetadataShape $metadata
+     * @param CrawlControls|CrawlControlsShape|null $crawl
      */
-    public function withMetadata(Metadata|array $metadata): self
+    public function withCrawl(CrawlControls|array|null $crawl): self
     {
         $self = clone $this;
-        $self['metadata'] = $metadata;
+        $self['crawl'] = $crawl;
 
         return $self;
     }
 
     /**
-     * Retrieved person profile.
-     *
-     * @param Person|PersonShape $person
+     * When the batch was created.
      */
-    public function withPerson(Person|array $person): self
+    public function withCreatedAt(string $createdAt): self
     {
         $self = clone $this;
-        $self['person'] = $person;
+        $self['createdAt'] = $createdAt;
 
         return $self;
     }
 
     /**
-     * Response status.
+     * What accepting this batch cost.
+     *
+     * @param Credits|CreditsShape $credits
+     */
+    public function withCredits(Credits|array $credits): self
+    {
+        $self = clone $this;
+        $self['credits'] = $credits;
+
+        return $self;
+    }
+
+    /**
+     * What each page will be returned as.
+     *
+     * @param Format|value-of<Format> $format
+     */
+    public function withFormat(Format|string $format): self
+    {
+        $self = clone $this;
+        $self['format'] = $format;
+
+        return $self;
+    }
+
+    /**
+     * What submission took in, and what it charged for.
+     *
+     * @param Intake|IntakeShape $input
+     */
+    public function withInput(Intake|array $input): self
+    {
+        $self = clone $this;
+        $self['input'] = $input;
+
+        return $self;
+    }
+
+    /**
+     * Rejected URLs, up to 100. These are not charged.
+     *
+     * @param list<InvalidURL|InvalidURLShape> $invalidURLs
+     */
+    public function withInvalidURLs(array $invalidURLs): self
+    {
+        $self = clone $this;
+        $self['invalidURLs'] = $invalidURLs;
+
+        return $self;
+    }
+
+    /**
+     * How pages will be selected.
+     *
+     * @param Mode|value-of<Mode> $mode
+     */
+    public function withMode(Mode|string $mode): self
+    {
+        $self = clone $this;
+        $self['mode'] = $mode;
+
+        return $self;
+    }
+
+    /**
+     * Always `queued`. An accepted batch has not started yet.
      *
      * @param Status|value-of<Status> $status
      */
@@ -172,7 +326,20 @@ final class BatchSubmitResponse implements BaseModel
     }
 
     /**
-     * Metadata about the API key used for the request. Included in every response whenever a valid API key is provided, even when the response status is not 200.
+     * Tags stored on the batch.
+     *
+     * @param list<string> $tags
+     */
+    public function withTags(array $tags): self
+    {
+        $self = clone $this;
+        $self['tags'] = $tags;
+
+        return $self;
+    }
+
+    /**
+     * API key usage for this request.
      *
      * @param KeyMetadata|KeyMetadataShape $keyMetadata
      */
@@ -180,6 +347,17 @@ final class BatchSubmitResponse implements BaseModel
     {
         $self = clone $this;
         $self['keyMetadata'] = $keyMetadata;
+
+        return $self;
+    }
+
+    /**
+     * Signing secret for the completion webhook, returned only here and never again. Store it now; it is not repeated by GET /batch/{batch_id}.
+     */
+    public function withWebhookSecret(string $webhookSecret): self
+    {
+        $self = clone $this;
+        $self['webhookSecret'] = $webhookSecret;
 
         return $self;
     }

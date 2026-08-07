@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\ServiceContracts;
 
 use ContextDev\Batch\BatchCancelResponse;
+use ContextDev\Batch\BatchDeleteResponse;
 use ContextDev\Batch\BatchGetResponse;
 use ContextDev\Batch\BatchGetResultsParams;
 use ContextDev\Batch\BatchGetResultsResponse;
@@ -49,6 +50,21 @@ interface BatchRawContract
     public function list(
         array|BatchListParams $params,
         RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param string $batchID ID of the batch to retrieve or cancel
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<BatchDeleteResponse>
+     *
+     * @throws APIException
+     */
+    public function delete(
+        string $batchID,
+        RequestOptions|array|null $requestOptions = null
     ): BaseResponse;
 
     /**
