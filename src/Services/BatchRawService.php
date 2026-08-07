@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Services;
 
 use ContextDev\Batch\BatchCancelResponse;
+use ContextDev\Batch\BatchDeleteResponse;
 use ContextDev\Batch\BatchGetResponse;
 use ContextDev\Batch\BatchGetResultsParams;
 use ContextDev\Batch\BatchGetResultsResponse;
@@ -13,7 +14,6 @@ use ContextDev\Batch\BatchListParams\SearchType;
 use ContextDev\Batch\BatchListParams\Status;
 use ContextDev\Batch\BatchListResponse;
 use ContextDev\Batch\BatchSubmitParams;
-use ContextDev\Batch\BatchSubmitParams\Identifiers;
 use ContextDev\Batch\BatchSubmitResponse;
 use ContextDev\Client;
 use ContextDev\Core\Contracts\BaseResponse;
@@ -23,7 +23,9 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\BatchRawContract;
 
 /**
- * @phpstan-import-type IdentifiersShape from \ContextDev\Batch\BatchSubmitParams\Identifiers
+ * Scrape many pages or crawl a site asynchronously.
+ *
+ * @phpstan-import-type InputShape from \ContextDev\Batch\BatchSubmitParams\Input
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class BatchRawService implements BatchRawContract
@@ -103,6 +105,31 @@ final class BatchRawService implements BatchRawContract
     /**
      * @api
      *
+     * Permanently delete a finished batch and its stored results. Active batches must settle first.
+     *
+     * @param string $batchID ID of the batch to retrieve or cancel
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<BatchDeleteResponse>
+     *
+     * @throws APIException
+     */
+    public function delete(
+        string $batchID,
+        RequestOptions|array|null $requestOptions = null
+    ): BaseResponse {
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'delete',
+            path: ['batch/%1$s', $batchID],
+            options: $requestOptions,
+            convert: BatchDeleteResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
      * Stop a batch from starting new pages. In-progress pages finish, and unused credits are refunded.
      *
      * @param string $batchID ID of the batch to retrieve or cancel
@@ -161,12 +188,13 @@ final class BatchRawService implements BatchRawContract
     /**
      * @api
      *
-     * Retrieve and normalize a person profile from identifiers.
+     * Scrape 25K URLs or crawl large websites asynchronously.
      *
      * @param array{
-     *   identifiers: Identifiers|IdentifiersShape,
+     *   input: InputShape,
      *   tags?: list<string>,
-     *   timeoutMs?: int,
+     *   webhookURL?: string,
+     *   idempotencyKey?: string,
      * }|BatchSubmitParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -182,12 +210,20 @@ final class BatchRawService implements BatchRawContract
             $params,
             $requestOptions,
         );
+        $header_params = ['idempotencyKey' => 'Idempotency-Key'];
 
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'post',
-            path: 'people/retrieve',
-            body: (object) $parsed,
+            path: 'batch/submit',
+            headers: Util::array_transform_keys(
+                array_intersect_key($parsed, array_flip(array_keys($header_params))),
+                $header_params,
+            ),
+            body: (object) array_diff_key(
+                $parsed,
+                array_flip(array_keys($header_params))
+            ),
             options: $options,
             convert: BatchSubmitResponse::class,
         );

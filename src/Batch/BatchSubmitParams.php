@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace ContextDev\Batch;
 
-use ContextDev\Batch\BatchSubmitParams\Identifiers;
+use ContextDev\Batch\BatchSubmitParams\Input;
+use ContextDev\Batch\BatchSubmitParams\Input\Crawl;
+use ContextDev\Batch\BatchSubmitParams\Input\Scrape;
 use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
@@ -12,16 +14,18 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Retrieve and normalize a person profile from identifiers.
+ * Scrape 25K URLs or crawl large websites asynchronously.
  *
  * @see ContextDev\Services\BatchService::submit()
  *
- * @phpstan-import-type IdentifiersShape from \ContextDev\Batch\BatchSubmitParams\Identifiers
+ * @phpstan-import-type InputVariants from \ContextDev\Batch\BatchSubmitParams\Input
+ * @phpstan-import-type InputShape from \ContextDev\Batch\BatchSubmitParams\Input
  *
  * @phpstan-type BatchSubmitParamsShape = array{
- *   identifiers: Identifiers|IdentifiersShape,
+ *   input: InputShape,
  *   tags?: list<string>|null,
- *   timeoutMs?: int|null,
+ *   webhookURL?: string|null,
+ *   idempotencyKey?: string|null,
  * }
  */
 final class BatchSubmitParams implements BaseModel
@@ -31,13 +35,15 @@ final class BatchSubmitParams implements BaseModel
     use SdkParams;
 
     /**
-     * Known identifiers for the person. At least one identifier is required.
+     * Choose a URL list or a site crawl.
+     *
+     * @var InputVariants $input
      */
-    #[Required]
-    public Identifiers $identifiers;
+    #[Required(union: Input::class)]
+    public Scrape|Crawl $input;
 
     /**
-     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * Tags stored on the batch. Filter the batch list by them later.
      *
      * @var list<string>|null $tags
      */
@@ -45,23 +51,29 @@ final class BatchSubmitParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * URL notified when the batch finishes.
      */
-    #[Optional('timeoutMS')]
-    public ?int $timeoutMs;
+    #[Optional('webhookUrl')]
+    public ?string $webhookURL;
+
+    /**
+     * Any string unique to this submission. Retries with the same key return the original batch.
+     */
+    #[Optional]
+    public ?string $idempotencyKey;
 
     /**
      * `new BatchSubmitParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * BatchSubmitParams::with(identifiers: ...)
+     * BatchSubmitParams::with(input: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new BatchSubmitParams)->withIdentifiers(...)
+     * (new BatchSubmitParams)->withInput(...)
      * ```
      */
     public function __construct()
@@ -74,39 +86,41 @@ final class BatchSubmitParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param Identifiers|IdentifiersShape $identifiers
+     * @param InputShape $input
      * @param list<string>|null $tags
      */
     public static function with(
-        Identifiers|array $identifiers,
+        Scrape|array|Crawl $input,
         ?array $tags = null,
-        ?int $timeoutMs = null
+        ?string $webhookURL = null,
+        ?string $idempotencyKey = null,
     ): self {
         $self = new self;
 
-        $self['identifiers'] = $identifiers;
+        $self['input'] = $input;
 
         null !== $tags && $self['tags'] = $tags;
-        null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
+        null !== $webhookURL && $self['webhookURL'] = $webhookURL;
+        null !== $idempotencyKey && $self['idempotencyKey'] = $idempotencyKey;
 
         return $self;
     }
 
     /**
-     * Known identifiers for the person. At least one identifier is required.
+     * Choose a URL list or a site crawl.
      *
-     * @param Identifiers|IdentifiersShape $identifiers
+     * @param InputShape $input
      */
-    public function withIdentifiers(Identifiers|array $identifiers): self
+    public function withInput(Scrape|array|Crawl $input): self
     {
         $self = clone $this;
-        $self['identifiers'] = $identifiers;
+        $self['input'] = $input;
 
         return $self;
     }
 
     /**
-     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * Tags stored on the batch. Filter the batch list by them later.
      *
      * @param list<string> $tags
      */
@@ -119,12 +133,23 @@ final class BatchSubmitParams implements BaseModel
     }
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * URL notified when the batch finishes.
      */
-    public function withTimeoutMs(int $timeoutMs): self
+    public function withWebhookURL(string $webhookURL): self
     {
         $self = clone $this;
-        $self['timeoutMs'] = $timeoutMs;
+        $self['webhookURL'] = $webhookURL;
+
+        return $self;
+    }
+
+    /**
+     * Any string unique to this submission. Retries with the same key return the original batch.
+     */
+    public function withIdempotencyKey(string $idempotencyKey): self
+    {
+        $self = clone $this;
+        $self['idempotencyKey'] = $idempotencyKey;
 
         return $self;
     }

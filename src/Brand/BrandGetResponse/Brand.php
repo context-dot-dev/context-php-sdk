@@ -7,6 +7,7 @@ namespace ContextDev\Brand\BrandGetResponse;
 use ContextDev\Brand\BrandGetResponse\Brand\Address;
 use ContextDev\Brand\BrandGetResponse\Brand\Backdrop;
 use ContextDev\Brand\BrandGetResponse\Brand\Color;
+use ContextDev\Brand\BrandGetResponse\Brand\Employees;
 use ContextDev\Brand\BrandGetResponse\Brand\Industries;
 use ContextDev\Brand\BrandGetResponse\Brand\Links;
 use ContextDev\Brand\BrandGetResponse\Brand\Logo;
@@ -23,6 +24,7 @@ use ContextDev\Core\Contracts\BaseModel;
  * @phpstan-import-type AddressShape from \ContextDev\Brand\BrandGetResponse\Brand\Address
  * @phpstan-import-type BackdropShape from \ContextDev\Brand\BrandGetResponse\Brand\Backdrop
  * @phpstan-import-type ColorShape from \ContextDev\Brand\BrandGetResponse\Brand\Color
+ * @phpstan-import-type EmployeesShape from \ContextDev\Brand\BrandGetResponse\Brand\Employees
  * @phpstan-import-type IndustriesShape from \ContextDev\Brand\BrandGetResponse\Brand\Industries
  * @phpstan-import-type LinksShape from \ContextDev\Brand\BrandGetResponse\Brand\Links
  * @phpstan-import-type LogoShape from \ContextDev\Brand\BrandGetResponse\Brand\Logo
@@ -36,6 +38,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   description?: string|null,
  *   domain?: string|null,
  *   email?: string|null,
+ *   employees?: null|Employees|EmployeesShape,
  *   industries?: null|Industries|IndustriesShape,
  *   isNsfw?: bool|null,
  *   links?: null|Links|LinksShape,
@@ -92,6 +95,12 @@ final class Brand implements BaseModel
      */
     #[Optional]
     public ?string $email;
+
+    /**
+     * Employee headcount information for the brand (will be null if unknown).
+     */
+    #[Optional]
+    public ?Employees $employees;
 
     /**
      * Industry classification information for the brand.
@@ -172,6 +181,7 @@ final class Brand implements BaseModel
      * @param Address|AddressShape|null $address
      * @param list<Backdrop|BackdropShape>|null $backdrops
      * @param list<Color|ColorShape>|null $colors
+     * @param Employees|EmployeesShape|null $employees
      * @param Industries|IndustriesShape|null $industries
      * @param Links|LinksShape|null $links
      * @param list<Logo|LogoShape>|null $logos
@@ -186,6 +196,7 @@ final class Brand implements BaseModel
         ?string $description = null,
         ?string $domain = null,
         ?string $email = null,
+        Employees|array|null $employees = null,
         Industries|array|null $industries = null,
         ?bool $isNsfw = null,
         Links|array|null $links = null,
@@ -205,6 +216,7 @@ final class Brand implements BaseModel
         null !== $description && $self['description'] = $description;
         null !== $domain && $self['domain'] = $domain;
         null !== $email && $self['email'] = $email;
+        null !== $employees && $self['employees'] = $employees;
         null !== $industries && $self['industries'] = $industries;
         null !== $isNsfw && $self['isNsfw'] = $isNsfw;
         null !== $links && $self['links'] = $links;
@@ -287,6 +299,19 @@ final class Brand implements BaseModel
     {
         $self = clone $this;
         $self['email'] = $email;
+
+        return $self;
+    }
+
+    /**
+     * Employee headcount information for the brand (will be null if unknown).
+     *
+     * @param Employees|EmployeesShape $employees
+     */
+    public function withEmployees(Employees|array $employees): self
+    {
+        $self = clone $this;
+        $self['employees'] = $employees;
 
         return $self;
     }

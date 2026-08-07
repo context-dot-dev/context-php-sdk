@@ -584,6 +584,10 @@ final class WebService implements WebContract
      *
      * Scrapes the given URL into LLM usable Markdown. Inspect key_metadata on JSON responses from a recognized API key; use error_code to distinguish stable failure categories.
      *
+     * ### YouTube
+     *
+     * YouTube URLs return the video or channel itself rather than the surrounding player and navigation chrome. A URL addressing a single video (`/watch`, `youtu.be`, `/shorts`, `/embed`, `/live`) returns its title, channel, duration, view count, keywords, full description, and the transcript when the video has captions that can be retrieved; videos without captions return everything except the transcript. A channel URL (`/channel/UC…`, `/@handle`, `/c/…`, `/user/…`) returns its name, handle, subscriber count, video count, and full description. When `includeImages=true`, video responses also include the thumbnail and channel responses include the avatar. Costs the same as any other scrape.
+     *
      * ### Billing & errors
      *
      * | HTTP status | Billed? | Meaning |
@@ -593,6 +597,7 @@ final class WebService implements WebContract
      * | 401 / 403 | No | Invalid/disabled key, insufficient permissions, or credits exhausted; inspect error_code |
      * | 404 | No | Target page returned or fingerprinted as not found |
      * | 408 | No | Request timed out |
+     * | 413 | No | Target content exceeds the maximum supported size (20 MB) |
      * | 415 | No | Unsupported content type |
      * | 429 | No | Per-minute rate limit exceeded; honor Retry-After |
      * | 500 | No | Internal error |
@@ -674,11 +679,12 @@ final class WebService implements WebContract
     /**
      * @api
      *
-     * Crawl an entire website's sitemap and return all discovered page URLs.
+     * Crawl an entire website's sitemap and return all discovered page URLs. Pass `search` to have the crawled sitemap filtered down to the pages about a phrase (for example `pricing and plans` or `api authentication docs`), most relevant first — a searched crawl scans the whole sitemap and costs 2 credits instead of 1.
      *
      * @param string $domain Domain to build a sitemap for
      * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
      * @param int $maxLinks Maximum number of links to return from the sitemap crawl. Defaults to 10,000. Minimum is 1, maximum is 100,000.
+     * @param string $search Optional search phrase. When provided, the crawled sitemap is filtered to the pages whose URLs are about that phrase, most relevant first, and the request costs 2 credits instead of 1.
      * @param string $sitemapURL Optional explicit sitemap URL. When provided, exactly this sitemap is crawled instead of discovering the domain's sitemaps.
      * @param list<string> $tags Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
@@ -692,6 +698,7 @@ final class WebService implements WebContract
         string $domain,
         ?array $headers = null,
         int $maxLinks = 10000,
+        ?string $search = null,
         ?string $sitemapURL = null,
         ?array $tags = null,
         ?int $timeoutMs = null,
@@ -704,6 +711,7 @@ final class WebService implements WebContract
                 'domain' => $domain,
                 'headers' => $headers,
                 'maxLinks' => $maxLinks,
+                'search' => $search,
                 'sitemapURL' => $sitemapURL,
                 'tags' => $tags,
                 'timeoutMs' => $timeoutMs,

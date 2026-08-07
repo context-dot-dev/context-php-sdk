@@ -3,6 +3,7 @@
 namespace Tests\Services;
 
 use ContextDev\Batch\BatchCancelResponse;
+use ContextDev\Batch\BatchDeleteResponse;
 use ContextDev\Batch\BatchGetResponse;
 use ContextDev\Batch\BatchGetResultsResponse;
 use ContextDev\Batch\BatchListResponse;
@@ -59,6 +60,19 @@ final class BatchTest extends TestCase
     }
 
     #[Test]
+    public function testDelete(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->batch->delete('batch_9f2c8a');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(BatchDeleteResponse::class, $result);
+    }
+
+    #[Test]
     public function testCancel(): void
     {
         if (UnsupportedMockTests::$skip) {
@@ -91,7 +105,18 @@ final class BatchTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->batch->submit(identifiers: []);
+        $result = $this->client->batch->submit(
+            input: [
+                'data' => [
+                    'format' => 'markdown',
+                    'urls' => [
+                        ['url' => 'https://example.com/products/anvil'],
+                        ['url' => 'https://example.com/products/hammer'],
+                    ],
+                ],
+                'mode' => 'scrape',
+            ],
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(BatchSubmitResponse::class, $result);
@@ -105,11 +130,42 @@ final class BatchTest extends TestCase
         }
 
         $result = $this->client->batch->submit(
-            identifiers: [
-                'linkedinURL' => 'https://www.linkedin.com/in/yahia-bakour/',
+            input: [
+                'data' => [
+                    'format' => 'markdown',
+                    'urls' => [
+                        [
+                            'url' => 'https://example.com/products/anvil',
+                            'itemID' => 'sku-1',
+                            'meta' => ['category' => 'bar'],
+                        ],
+                        [
+                            'url' => 'https://example.com/products/hammer',
+                            'itemID' => 'sku-2',
+                            'meta' => ['foo' => 'bar'],
+                        ],
+                    ],
+                    'options' => [
+                        'country' => 'de',
+                        'excludeSelectors' => ['x'],
+                        'includeImages' => true,
+                        'includeLinks' => true,
+                        'includeSelectors' => ['x'],
+                        'maxAgeMs' => 0,
+                        'pdf' => [
+                            'end' => 1, 'ocr' => 'true', 'shouldParse' => 'true', 'start' => 1,
+                        ],
+                        'settleAnimations' => true,
+                        'shortenBase64Images' => true,
+                        'useMainContentOnly' => true,
+                        'waitForMs' => 0,
+                    ],
+                ],
+                'mode' => 'scrape',
             ],
-            tags: ['production', 'team-alpha'],
-            timeoutMs: 1000,
+            tags: ['docs', 'competitor'],
+            webhookURL: 'webhookUrl',
+            idempotencyKey: 'Idempotency-Key',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

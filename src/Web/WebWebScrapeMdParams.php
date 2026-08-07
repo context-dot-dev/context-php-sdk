@@ -24,6 +24,10 @@ use ContextDev\Web\WebWebScrapeMdParams\Zdr;
 /**
  * Scrapes the given URL into LLM usable Markdown. Inspect key_metadata on JSON responses from a recognized API key; use error_code to distinguish stable failure categories.
  *
+ * ### YouTube
+ *
+ * YouTube URLs return the video or channel itself rather than the surrounding player and navigation chrome. A URL addressing a single video (`/watch`, `youtu.be`, `/shorts`, `/embed`, `/live`) returns its title, channel, duration, view count, keywords, full description, and the transcript when the video has captions that can be retrieved; videos without captions return everything except the transcript. A channel URL (`/channel/UC…`, `/@handle`, `/c/…`, `/user/…`) returns its name, handle, subscriber count, video count, and full description. When `includeImages=true`, video responses also include the thumbnail and channel responses include the avatar. Costs the same as any other scrape.
+ *
  * ### Billing & errors
  *
  * | HTTP status | Billed? | Meaning |
@@ -33,6 +37,7 @@ use ContextDev\Web\WebWebScrapeMdParams\Zdr;
  * | 401 / 403 | No | Invalid/disabled key, insufficient permissions, or credits exhausted; inspect error_code |
  * | 404 | No | Target page returned or fingerprinted as not found |
  * | 408 | No | Request timed out |
+ * | 413 | No | Target content exceeds the maximum supported size (20 MB) |
  * | 415 | No | Unsupported content type |
  * | 429 | No | Per-minute rate limit exceeded; honor Retry-After |
  * | 500 | No | Internal error |

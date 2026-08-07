@@ -38,7 +38,7 @@ final class Pdf implements BaseModel
     public ?int $end;
 
     /**
-     * When true, detect and OCR images embedded in the selected PDF pages, inserting recognized text at each image's position in page reading order while preserving the PDF text layer. This is separate from automatic scanned-PDF OCR fallback.
+     * When true, OCR the selected PDF pages that have no usable text layer (scans), replacing each recovered page's text with the OCR result while pages with a real text layer keep it. Billed at 1 credit per page OCR actually recovered, on top of the base request cost. When false, no OCR runs.
      *
      * @var OcrVariants|null $ocr
      */
@@ -46,7 +46,7 @@ final class Pdf implements BaseModel
     public bool|string|null $ocr;
 
     /**
-     * When true, PDF URLs are fetched and parsed. When false, PDF URLs are skipped and a 400 WEBSITE_ACCESS_ERROR is returned.
+     * When true, PDF URLs are fetched and parsed. When false, PDF URLs are skipped and a 400 PDF_SKIPPED is returned.
      *
      * @var ShouldParseVariants|null $shouldParse
      */
@@ -100,7 +100,7 @@ final class Pdf implements BaseModel
     }
 
     /**
-     * When true, detect and OCR images embedded in the selected PDF pages, inserting recognized text at each image's position in page reading order while preserving the PDF text layer. This is separate from automatic scanned-PDF OCR fallback.
+     * When true, OCR the selected PDF pages that have no usable text layer (scans), replacing each recovered page's text with the OCR result while pages with a real text layer keep it. Billed at 1 credit per page OCR actually recovered, on top of the base request cost. When false, no OCR runs.
      *
      * @param OcrShape $ocr
      */
@@ -113,7 +113,7 @@ final class Pdf implements BaseModel
     }
 
     /**
-     * When true, PDF URLs are fetched and parsed. When false, PDF URLs are skipped and a 400 WEBSITE_ACCESS_ERROR is returned.
+     * When true, PDF URLs are fetched and parsed. When false, PDF URLs are skipped and a 400 PDF_SKIPPED is returned.
      *
      * @param ShouldParseShape $shouldParse
      */

@@ -47,7 +47,7 @@ final class WebWebScrapeSitemapResponse implements BaseModel
     public bool $success;
 
     /**
-     * Array of discovered page URLs from the sitemap (max 500).
+     * Discovered page URLs from the sitemap, up to `maxLinks`. When `search` is set these are only the matching pages, most relevant first.
      *
      * @var list<string> $urls
      */
@@ -149,7 +149,7 @@ final class WebWebScrapeSitemapResponse implements BaseModel
     }
 
     /**
-     * Array of discovered page URLs from the sitemap (max 500).
+     * Discovered page URLs from the sitemap, up to `maxLinks`. When `search` is set these are only the matching pages, most relevant first.
      *
      * @param list<string> $urls
      */

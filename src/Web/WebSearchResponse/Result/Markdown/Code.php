@@ -15,6 +15,8 @@ enum Code: string
 
     case TIMEOUT = 'TIMEOUT';
 
+    case CONTENT_TOO_LARGE = 'CONTENT_TOO_LARGE';
+
     case WEBSITE_ACCESS_ERROR = 'WEBSITE_ACCESS_ERROR';
 
     case ERROR = 'ERROR';
