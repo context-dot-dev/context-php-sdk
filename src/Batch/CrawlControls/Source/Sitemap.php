@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace ContextDev\Batch\CrawlControls\Source;
 
-use ContextDev\Batch\CrawlControls\Source\UnionMember1\Type;
+use ContextDev\Batch\CrawlControls\Source\Sitemap\Type;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * @phpstan-type UnionMember1Shape = array{
- *   domain: string, type: Type|value-of<Type>
- * }
+ * The crawl scraped the pages listed in the domain's sitemap.
+ *
+ * @phpstan-type SitemapShape = array{domain: string, type: Type|value-of<Type>}
  */
-final class UnionMember1 implements BaseModel
+final class Sitemap implements BaseModel
 {
-    /** @use SdkModel<UnionMember1Shape> */
+    /** @use SdkModel<SitemapShape> */
     use SdkModel;
 
     /**
@@ -30,17 +30,17 @@ final class UnionMember1 implements BaseModel
     public string $type;
 
     /**
-     * `new UnionMember1()` is missing required properties by the API.
+     * `new Sitemap()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * UnionMember1::with(domain: ..., type: ...)
+     * Sitemap::with(domain: ..., type: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new UnionMember1)->withDomain(...)->withType(...)
+     * (new Sitemap)->withDomain(...)->withType(...)
      * ```
      */
     public function __construct()

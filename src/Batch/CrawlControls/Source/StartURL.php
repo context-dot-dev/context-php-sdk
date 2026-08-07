@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace ContextDev\Batch\CrawlControls\Source;
 
-use ContextDev\Batch\CrawlControls\Source\UnionMember0\Type;
+use ContextDev\Batch\CrawlControls\Source\StartURL\Type;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * @phpstan-type UnionMember0Shape = array{type: Type|value-of<Type>, url: string}
+ * The crawl discovered pages by following links from one URL.
+ *
+ * @phpstan-type StartURLShape = array{type: Type|value-of<Type>, url: string}
  */
-final class UnionMember0 implements BaseModel
+final class StartURL implements BaseModel
 {
-    /** @use SdkModel<UnionMember0Shape> */
+    /** @use SdkModel<StartURLShape> */
     use SdkModel;
 
     /** @var value-of<Type> $type */
@@ -28,17 +30,17 @@ final class UnionMember0 implements BaseModel
     public string $url;
 
     /**
-     * `new UnionMember0()` is missing required properties by the API.
+     * `new StartURL()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * UnionMember0::with(type: ..., url: ...)
+     * StartURL::with(type: ..., url: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new UnionMember0)->withType(...)->withURL(...)
+     * (new StartURL)->withType(...)->withURL(...)
      * ```
      */
     public function __construct()
