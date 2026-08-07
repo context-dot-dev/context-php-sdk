@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace ContextDev\Batch;
 
-use ContextDev\Batch\CrawlControls\Source\UnionMember0;
-use ContextDev\Batch\CrawlControls\Source\UnionMember1;
+use ContextDev\Batch\CrawlControls\Source\Sitemap;
+use ContextDev\Batch\CrawlControls\Source\StartURL;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
@@ -53,7 +53,7 @@ final class CrawlControls implements BaseModel
      * @var SourceVariants $source
      */
     #[Required]
-    public UnionMember0|UnionMember1 $source;
+    public StartURL|Sitemap $source;
 
     /**
      * RE2 pattern URLs had to match to be crawled. Null when the crawl set none.
@@ -102,7 +102,7 @@ final class CrawlControls implements BaseModel
         bool $followSubdomains,
         ?int $maxDepth,
         int $maxPages,
-        UnionMember0|array|UnionMember1 $source,
+        StartURL|array|Sitemap $source,
         ?string $urlPattern,
     ): self {
         $self = new self;
@@ -154,7 +154,7 @@ final class CrawlControls implements BaseModel
      *
      * @param SourceShape $source
      */
-    public function withSource(UnionMember0|array|UnionMember1 $source): self
+    public function withSource(StartURL|array|Sitemap $source): self
     {
         $self = clone $this;
         $self['source'] = $source;
