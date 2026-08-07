@@ -5,18 +5,20 @@ declare(strict_types=1);
 namespace ContextDev\ServiceContracts;
 
 use ContextDev\Batch\BatchCancelResponse;
+use ContextDev\Batch\BatchDeleteResponse;
 use ContextDev\Batch\BatchGetResponse;
 use ContextDev\Batch\BatchGetResultsResponse;
 use ContextDev\Batch\BatchListParams\SearchType;
 use ContextDev\Batch\BatchListParams\Status;
 use ContextDev\Batch\BatchListResponse;
-use ContextDev\Batch\BatchSubmitParams\Identifiers;
+use ContextDev\Batch\BatchSubmitParams\Input\Crawl;
+use ContextDev\Batch\BatchSubmitParams\Input\Scrape;
 use ContextDev\Batch\BatchSubmitResponse;
 use ContextDev\Core\Exceptions\APIException;
 use ContextDev\RequestOptions;
 
 /**
- * @phpstan-import-type IdentifiersShape from \ContextDev\Batch\BatchSubmitParams\Identifiers
+ * @phpstan-import-type InputShape from \ContextDev\Batch\BatchSubmitParams\Input
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 interface BatchContract
@@ -65,6 +67,19 @@ interface BatchContract
      *
      * @throws APIException
      */
+    public function delete(
+        string $batchID,
+        RequestOptions|array|null $requestOptions = null
+    ): BatchDeleteResponse;
+
+    /**
+     * @api
+     *
+     * @param string $batchID ID of the batch to retrieve or cancel
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
     public function cancel(
         string $batchID,
         RequestOptions|array|null $requestOptions = null
@@ -90,17 +105,19 @@ interface BatchContract
     /**
      * @api
      *
-     * @param Identifiers|IdentifiersShape $identifiers Known identifiers for the person. At least one identifier is required.
-     * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
-     * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * @param InputShape $input body param: Choose a URL list or a site crawl
+     * @param list<string> $tags Body param: Tags stored on the batch. Filter the batch list by them later.
+     * @param string $webhookURL body param: URL notified when the batch finishes
+     * @param string $idempotencyKey Header param: Any string unique to this submission. Retries with the same key return the original batch.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function submit(
-        Identifiers|array $identifiers,
+        Scrape|array|Crawl $input,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        ?string $webhookURL = null,
+        ?string $idempotencyKey = null,
         RequestOptions|array|null $requestOptions = null,
     ): BatchSubmitResponse;
 }

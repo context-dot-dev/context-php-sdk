@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Metadata about the API key used for the request. Included in every response whenever a valid API key is provided, even when the response status is not 200.
+ * API key usage for this request.
  *
  * @phpstan-type KeyMetadataShape = array{
  *   creditsConsumed: int, creditsRemaining: int

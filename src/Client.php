@@ -13,6 +13,7 @@ use ContextDev\Services\BrandService;
 use ContextDev\Services\IndustryService;
 use ContextDev\Services\MonitorsService;
 use ContextDev\Services\ParseService;
+use ContextDev\Services\PeopleService;
 use ContextDev\Services\UtilityService;
 use ContextDev\Services\WebService;
 use Http\Discovery\Psr17FactoryDiscovery;
@@ -65,6 +66,11 @@ class Client extends BaseClient
      * @api
      */
     public BatchService $batch;
+
+    /**
+     * @api
+     */
+    public PeopleService $people;
 
     /**
      * @param RequestOpts|null $requestOptions
@@ -132,6 +138,7 @@ class Client extends BaseClient
         $this->utility = new UtilityService($this);
         $this->monitors = new MonitorsService($this);
         $this->batch = new BatchService($this);
+        $this->people = new PeopleService($this);
     }
 
     /** @return array<string,string> */
