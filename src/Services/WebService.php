@@ -593,7 +593,7 @@ final class WebService implements WebContract
      * | HTTP status | Billed? | Meaning |
      * | --- | --- | --- |
      * | 200 | Yes — 1 credit, or 2 credits with actions | Successful scrape, including a zero-length result when includeSelectors matched nothing |
-     * | 400 | No | Invalid input, skipped PDF, or the page could not be scraped |
+     * | 400 | No | Invalid input, skipped PDF, or the page could not be scraped. error_code WEBSITE_BLOCKED specifically means the site answered with an anti-bot challenge, CAPTCHA wall, or login shell instead of the page (even when the site returned HTTP 200) — retrying later or from another country sometimes succeeds |
      * | 401 / 403 | No | Invalid/disabled key, insufficient permissions, or credits exhausted; inspect error_code |
      * | 404 | No | Target page returned or fingerprinted as not found |
      * | 408 | No | Request timed out |
