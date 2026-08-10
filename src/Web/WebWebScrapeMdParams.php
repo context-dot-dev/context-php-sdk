@@ -13,6 +13,7 @@ use ContextDev\Web\WebWebScrapeMdParams\Action;
 use ContextDev\Web\WebWebScrapeMdParams\Country;
 use ContextDev\Web\WebWebScrapeMdParams\IncludeFrames;
 use ContextDev\Web\WebWebScrapeMdParams\IncludeFrames\UnionMember1;
+use ContextDev\Web\WebWebScrapeMdParams\IncludeHTML;
 use ContextDev\Web\WebWebScrapeMdParams\IncludeImages;
 use ContextDev\Web\WebWebScrapeMdParams\IncludeLinks;
 use ContextDev\Web\WebWebScrapeMdParams\Pdf;
@@ -46,6 +47,7 @@ use ContextDev\Web\WebWebScrapeMdParams\Zdr;
  *
  * @phpstan-import-type ActionVariants from \ContextDev\Web\WebWebScrapeMdParams\Action
  * @phpstan-import-type IncludeFramesVariants from \ContextDev\Web\WebWebScrapeMdParams\IncludeFrames
+ * @phpstan-import-type IncludeHTMLVariants from \ContextDev\Web\WebWebScrapeMdParams\IncludeHTML
  * @phpstan-import-type IncludeImagesVariants from \ContextDev\Web\WebWebScrapeMdParams\IncludeImages
  * @phpstan-import-type IncludeLinksVariants from \ContextDev\Web\WebWebScrapeMdParams\IncludeLinks
  * @phpstan-import-type SettleAnimationsVariants from \ContextDev\Web\WebWebScrapeMdParams\SettleAnimations
@@ -53,6 +55,7 @@ use ContextDev\Web\WebWebScrapeMdParams\Zdr;
  * @phpstan-import-type UseMainContentOnlyVariants from \ContextDev\Web\WebWebScrapeMdParams\UseMainContentOnly
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeMdParams\Action
  * @phpstan-import-type IncludeFramesShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeFrames
+ * @phpstan-import-type IncludeHTMLShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeHTML
  * @phpstan-import-type IncludeImagesShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeImages
  * @phpstan-import-type IncludeLinksShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeLinks
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeMdParams\Pdf
@@ -67,6 +70,7 @@ use ContextDev\Web\WebWebScrapeMdParams\Zdr;
  *   excludeSelectors?: list<string>|null,
  *   headers?: array<string,string>|null,
  *   includeFrames?: IncludeFramesShape|null,
+ *   includeHTML?: IncludeHTMLShape|null,
  *   includeImages?: IncludeImagesShape|null,
  *   includeLinks?: IncludeLinksShape|null,
  *   includeSelectors?: list<string>|null,
@@ -132,6 +136,14 @@ final class WebWebScrapeMdParams implements BaseModel
      */
     #[Optional(union: IncludeFrames::class)]
     public bool|string|null $includeFrames;
+
+    /**
+     * When true, the response also includes an `html` field with the page HTML the Markdown was converted from — the same body the Scrape HTML endpoint returns for the equivalent request.
+     *
+     * @var IncludeHTMLVariants|null $includeHTML
+     */
+    #[Optional(union: IncludeHTML::class)]
+    public bool|string|null $includeHTML;
 
     /**
      * Include image references in Markdown output.
@@ -250,6 +262,7 @@ final class WebWebScrapeMdParams implements BaseModel
      * @param list<string>|null $excludeSelectors
      * @param array<string,string>|null $headers
      * @param IncludeFramesShape|null $includeFrames
+     * @param IncludeHTMLShape|null $includeHTML
      * @param IncludeImagesShape|null $includeImages
      * @param IncludeLinksShape|null $includeLinks
      * @param list<string>|null $includeSelectors
@@ -267,6 +280,7 @@ final class WebWebScrapeMdParams implements BaseModel
         ?array $excludeSelectors = null,
         ?array $headers = null,
         bool|UnionMember1|string|null $includeFrames = null,
+        bool|IncludeHTML\UnionMember1|string|null $includeHTML = null,
         bool|IncludeImages\UnionMember1|string|null $includeImages = null,
         bool|IncludeLinks\UnionMember1|string|null $includeLinks = null,
         ?array $includeSelectors = null,
@@ -289,6 +303,7 @@ final class WebWebScrapeMdParams implements BaseModel
         null !== $excludeSelectors && $self['excludeSelectors'] = $excludeSelectors;
         null !== $headers && $self['headers'] = $headers;
         null !== $includeFrames && $self['includeFrames'] = $includeFrames;
+        null !== $includeHTML && $self['includeHTML'] = $includeHTML;
         null !== $includeImages && $self['includeImages'] = $includeImages;
         null !== $includeLinks && $self['includeLinks'] = $includeLinks;
         null !== $includeSelectors && $self['includeSelectors'] = $includeSelectors;
@@ -378,6 +393,20 @@ final class WebWebScrapeMdParams implements BaseModel
     ): self {
         $self = clone $this;
         $self['includeFrames'] = $includeFrames;
+
+        return $self;
+    }
+
+    /**
+     * When true, the response also includes an `html` field with the page HTML the Markdown was converted from — the same body the Scrape HTML endpoint returns for the equivalent request.
+     *
+     * @param IncludeHTMLShape $includeHTML
+     */
+    public function withIncludeHTML(
+        bool|IncludeHTML\UnionMember1|string $includeHTML,
+    ): self {
+        $self = clone $this;
+        $self['includeHTML'] = $includeHTML;
 
         return $self;
     }

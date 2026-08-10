@@ -59,6 +59,7 @@ use ContextDev\Web\WebWebScrapeSitemapResponse;
  * @phpstan-import-type EnrichmentShape from \ContextDev\Web\WebWebScrapeImagesParams\Enrichment
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeMdParams\Action as ActionShape2
  * @phpstan-import-type IncludeFramesShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeFrames as IncludeFramesShape1
+ * @phpstan-import-type IncludeHTMLShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeHTML
  * @phpstan-import-type IncludeImagesShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeImages
  * @phpstan-import-type IncludeLinksShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeLinks
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeMdParams\Pdf as PdfShape3
@@ -498,6 +499,7 @@ final class WebRawService implements WebRawContract
      *   excludeSelectors?: list<string>|null,
      *   headers?: array<string,string>,
      *   includeFrames?: IncludeFramesShape1,
+     *   includeHTML?: IncludeHTMLShape,
      *   includeImages?: IncludeImagesShape,
      *   includeLinks?: IncludeLinksShape,
      *   includeSelectors?: list<string>|null,

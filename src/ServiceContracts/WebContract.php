@@ -45,6 +45,7 @@ use ContextDev\Web\WebWebScrapeSitemapResponse;
  * @phpstan-import-type EnrichmentShape from \ContextDev\Web\WebWebScrapeImagesParams\Enrichment
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeMdParams\Action as ActionShape2
  * @phpstan-import-type IncludeFramesShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeFrames as IncludeFramesShape1
+ * @phpstan-import-type IncludeHTMLShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeHTML
  * @phpstan-import-type IncludeImagesShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeImages
  * @phpstan-import-type IncludeLinksShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeLinks
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeMdParams\Pdf as PdfShape3
@@ -365,6 +366,7 @@ interface WebContract
      * @param list<string>|null $excludeSelectors CSS selectors to remove before conversion to Markdown. Applied after includeSelectors. Exclusion takes precedence: an element matching both is removed. Examples: "nav", "footer", ".ad-banner", "[aria-hidden=true]".
      * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
      * @param IncludeFramesShape1 $includeFrames when true, the contents of iframes are rendered to Markdown
+     * @param IncludeHTMLShape $includeHTML when true, the response also includes an `html` field with the page HTML the Markdown was converted from — the same body the Scrape HTML endpoint returns for the equivalent request
      * @param IncludeImagesShape $includeImages Include image references in Markdown output
      * @param IncludeLinksShape $includeLinks Preserve hyperlinks in Markdown output
      * @param list<string>|null $includeSelectors CSS selectors. When provided, only matching HTML subtrees (and their descendants) are kept before conversion to Markdown. When omitted, the entire document is kept. Examples: "article.main", "#content", "[role=main]".
@@ -388,6 +390,7 @@ interface WebContract
         ?array $excludeSelectors = null,
         ?array $headers = null,
         bool|\ContextDev\Web\WebWebScrapeMdParams\IncludeFrames\UnionMember1|string $includeFrames = false,
+        bool|\ContextDev\Web\WebWebScrapeMdParams\IncludeHTML\UnionMember1|string $includeHTML = false,
         bool|\ContextDev\Web\WebWebScrapeMdParams\IncludeImages\UnionMember1|string $includeImages = false,
         bool|\ContextDev\Web\WebWebScrapeMdParams\IncludeLinks\UnionMember1|string $includeLinks = true,
         ?array $includeSelectors = null,

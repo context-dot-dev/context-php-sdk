@@ -66,7 +66,7 @@ final class ScrapedPage implements BaseModel
     public string $url;
 
     /**
-     * Raw page HTML. Present on html batches.
+     * Page HTML. Present on html batches, and on markdown batches submitted with `options.includeHTML`.
      */
     #[Optional]
     public ?string $html;
@@ -215,7 +215,7 @@ final class ScrapedPage implements BaseModel
     }
 
     /**
-     * Raw page HTML. Present on html batches.
+     * Page HTML. Present on html batches, and on markdown batches submitted with `options.includeHTML`.
      */
     public function withHTML(string $html): self
     {

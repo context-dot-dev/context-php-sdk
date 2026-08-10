@@ -25,6 +25,7 @@ use ContextDev\Web\WebWebScrapeMdResponse\Metadata;
  *   url: string,
  *   actionsApplied?: list<ActionsApplied|ActionsAppliedShape>|null,
  *   actionsHTMLStale?: bool|null,
+ *   html?: string|null,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  * }
  */
@@ -78,6 +79,12 @@ final class WebWebScrapeMdResponse implements BaseModel
     public ?bool $actionsHTMLStale;
 
     /**
+     * Only present when includeHTML=true: the page HTML the Markdown was converted from — the same body the Scrape HTML endpoint returns for the equivalent request.
+     */
+    #[Optional]
+    public ?string $html;
+
+    /**
      * Metadata about the API key used for the request. Included in every response whenever a valid API key is provided, even when the response status is not 200.
      */
     #[Optional('key_metadata')]
@@ -126,6 +133,7 @@ final class WebWebScrapeMdResponse implements BaseModel
         string $url,
         ?array $actionsApplied = null,
         ?bool $actionsHTMLStale = null,
+        ?string $html = null,
         KeyMetadata|array|null $keyMetadata = null,
     ): self {
         $self = new self;
@@ -138,6 +146,7 @@ final class WebWebScrapeMdResponse implements BaseModel
 
         null !== $actionsApplied && $self['actionsApplied'] = $actionsApplied;
         null !== $actionsHTMLStale && $self['actionsHTMLStale'] = $actionsHTMLStale;
+        null !== $html && $self['html'] = $html;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
 
         return $self;
@@ -220,6 +229,17 @@ final class WebWebScrapeMdResponse implements BaseModel
     {
         $self = clone $this;
         $self['actionsHTMLStale'] = $actionsHTMLStale;
+
+        return $self;
+    }
+
+    /**
+     * Only present when includeHTML=true: the page HTML the Markdown was converted from — the same body the Scrape HTML endpoint returns for the equivalent request.
+     */
+    public function withHTML(string $html): self
+    {
+        $self = clone $this;
+        $self['html'] = $html;
 
         return $self;
     }

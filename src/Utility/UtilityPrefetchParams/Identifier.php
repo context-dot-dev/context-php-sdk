@@ -11,7 +11,7 @@ use ContextDev\Utility\UtilityPrefetchParams\Identifier\UtilityPrefetchDomainIde
 use ContextDev\Utility\UtilityPrefetchParams\Identifier\UtilityPrefetchEmailIdentifier;
 
 /**
- * Identifier of the brand to prefetch. Provide exactly one of domain or email.
+ * Identifier of the target to prefetch. Provide exactly one of domain or email.
  *
  * @phpstan-import-type UtilityPrefetchDomainIdentifierShape from \ContextDev\Utility\UtilityPrefetchParams\Identifier\UtilityPrefetchDomainIdentifier
  * @phpstan-import-type UtilityPrefetchEmailIdentifierShape from \ContextDev\Utility\UtilityPrefetchParams\Identifier\UtilityPrefetchEmailIdentifier
