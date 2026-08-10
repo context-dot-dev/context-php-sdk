@@ -148,6 +148,7 @@ final class BatchTest extends TestCase
                     'options' => [
                         'country' => 'de',
                         'excludeSelectors' => ['x'],
+                        'includeHTML' => true,
                         'includeImages' => true,
                         'includeLinks' => true,
                         'includeSelectors' => ['x'],

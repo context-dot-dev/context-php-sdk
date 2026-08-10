@@ -14,7 +14,7 @@ use ContextDev\Utility\UtilityPrefetchParams\Identifier\UtilityPrefetchEmailIden
 use ContextDev\Utility\UtilityPrefetchParams\Type;
 
 /**
- * Signal that you may fetch brand data soon to improve latency. The type field selects what to prefetch (currently only 'brand') and identifier carries exactly one lookup key: a domain, or an email whose domain is extracted and validated (free email providers and disposable email addresses are not allowed).
+ * Signal that you may fetch data soon to improve latency. The type field selects what to prefetch ('brand' queues a brand data fetch, 'styleguide' queues a styleguide extraction) and identifier carries exactly one lookup key: a domain, or an email whose domain is extracted and validated (free email providers and disposable email addresses are not allowed).
  *
  * @see ContextDev\Services\UtilityService::prefetch()
  *
@@ -35,7 +35,7 @@ final class UtilityPrefetchParams implements BaseModel
     use SdkParams;
 
     /**
-     * Identifier of the brand to prefetch. Provide exactly one of domain or email.
+     * Identifier of the target to prefetch. Provide exactly one of domain or email.
      *
      * @var IdentifierVariants $identifier
      */
@@ -43,7 +43,7 @@ final class UtilityPrefetchParams implements BaseModel
     public UtilityPrefetchDomainIdentifier|UtilityPrefetchEmailIdentifier $identifier;
 
     /**
-     * What to prefetch. Currently only 'brand' is supported.
+     * What to prefetch: 'brand' warms the brand data cache, 'styleguide' warms the styleguide cache.
      *
      * @var value-of<Type> $type
      */
@@ -110,7 +110,7 @@ final class UtilityPrefetchParams implements BaseModel
     }
 
     /**
-     * Identifier of the brand to prefetch. Provide exactly one of domain or email.
+     * Identifier of the target to prefetch. Provide exactly one of domain or email.
      *
      * @param IdentifierShape $identifier
      */
@@ -124,7 +124,7 @@ final class UtilityPrefetchParams implements BaseModel
     }
 
     /**
-     * What to prefetch. Currently only 'brand' is supported.
+     * What to prefetch: 'brand' warms the brand data cache, 'styleguide' warms the styleguide cache.
      *
      * @param Type|value-of<Type> $type
      */

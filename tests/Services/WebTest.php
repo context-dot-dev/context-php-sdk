@@ -369,6 +369,7 @@ final class WebTest extends TestCase
             excludeSelectors: ['x'],
             headers: ['foo' => 'J!'],
             includeFrames: 'true',
+            includeHTML: 'true',
             includeImages: 'true',
             includeLinks: 'true',
             includeSelectors: ['x'],

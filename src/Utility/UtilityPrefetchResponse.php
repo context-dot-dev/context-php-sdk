@@ -51,7 +51,7 @@ final class UtilityPrefetchResponse implements BaseModel
     public ?string $status;
 
     /**
-     * The type of prefetch that was queued, echoed from the request (currently always 'brand').
+     * The type of prefetch that was queued, echoed from the request.
      *
      * @var value-of<Type>|null $type
      */
@@ -136,7 +136,7 @@ final class UtilityPrefetchResponse implements BaseModel
     }
 
     /**
-     * The type of prefetch that was queued, echoed from the request (currently always 'brand').
+     * The type of prefetch that was queued, echoed from the request.
      *
      * @param Type|value-of<Type> $type
      */

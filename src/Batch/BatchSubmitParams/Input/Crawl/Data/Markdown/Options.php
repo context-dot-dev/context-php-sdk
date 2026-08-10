@@ -18,6 +18,7 @@ use ContextDev\Core\Contracts\BaseModel;
  * @phpstan-type OptionsShape = array{
  *   country?: null|Country|value-of<Country>,
  *   excludeSelectors?: list<string>|null,
+ *   includeHTML?: bool|null,
  *   includeImages?: bool|null,
  *   includeLinks?: bool|null,
  *   includeSelectors?: list<string>|null,
@@ -49,6 +50,12 @@ final class Options implements BaseModel
      */
     #[Optional(list: 'string', nullable: true)]
     public ?array $excludeSelectors;
+
+    /**
+     * Also include each page's HTML in its result record, as an `html` field alongside the Markdown.
+     */
+    #[Optional]
+    public ?bool $includeHTML;
 
     /**
      * Include image references in the Markdown.
@@ -124,6 +131,7 @@ final class Options implements BaseModel
     public static function with(
         Country|string|null $country = null,
         ?array $excludeSelectors = null,
+        ?bool $includeHTML = null,
         ?bool $includeImages = null,
         ?bool $includeLinks = null,
         ?array $includeSelectors = null,
@@ -138,6 +146,7 @@ final class Options implements BaseModel
 
         null !== $country && $self['country'] = $country;
         null !== $excludeSelectors && $self['excludeSelectors'] = $excludeSelectors;
+        null !== $includeHTML && $self['includeHTML'] = $includeHTML;
         null !== $includeImages && $self['includeImages'] = $includeImages;
         null !== $includeLinks && $self['includeLinks'] = $includeLinks;
         null !== $includeSelectors && $self['includeSelectors'] = $includeSelectors;
@@ -173,6 +182,17 @@ final class Options implements BaseModel
     {
         $self = clone $this;
         $self['excludeSelectors'] = $excludeSelectors;
+
+        return $self;
+    }
+
+    /**
+     * Also include each page's HTML in its result record, as an `html` field alongside the Markdown.
+     */
+    public function withIncludeHTML(bool $includeHTML): self
+    {
+        $self = clone $this;
+        $self['includeHTML'] = $includeHTML;
 
         return $self;
     }

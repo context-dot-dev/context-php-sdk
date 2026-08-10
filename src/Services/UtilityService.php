@@ -36,10 +36,10 @@ final class UtilityService implements UtilityContract
     /**
      * @api
      *
-     * Signal that you may fetch brand data soon to improve latency. The type field selects what to prefetch (currently only 'brand') and identifier carries exactly one lookup key: a domain, or an email whose domain is extracted and validated (free email providers and disposable email addresses are not allowed).
+     * Signal that you may fetch data soon to improve latency. The type field selects what to prefetch ('brand' queues a brand data fetch, 'styleguide' queues a styleguide extraction) and identifier carries exactly one lookup key: a domain, or an email whose domain is extracted and validated (free email providers and disposable email addresses are not allowed).
      *
-     * @param IdentifierShape $identifier Identifier of the brand to prefetch. Provide exactly one of domain or email.
-     * @param Type|value-of<Type> $type What to prefetch. Currently only 'brand' is supported.
+     * @param IdentifierShape $identifier Identifier of the target to prefetch. Provide exactly one of domain or email.
+     * @param Type|value-of<Type> $type what to prefetch: 'brand' warms the brand data cache, 'styleguide' warms the styleguide cache
      * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param RequestOpts|null $requestOptions
