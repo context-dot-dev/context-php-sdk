@@ -45,27 +45,15 @@ use ContextDev\Web\WebWebScrapeSitemapResponse;
 
 /**
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebExtractParams\Pdf
- * @phpstan-import-type HandleCookiePopupShape from \ContextDev\Web\WebScreenshotParams\HandleCookiePopup
  * @phpstan-import-type ViewportShape from \ContextDev\Web\WebScreenshotParams\Viewport
  * @phpstan-import-type MarkdownOptionsShape from \ContextDev\Web\WebSearchParams\MarkdownOptions
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebCrawlMdParams\Pdf as PdfShape1
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeHTMLParams\Action
- * @phpstan-import-type IncludeFramesShape from \ContextDev\Web\WebWebScrapeHTMLParams\IncludeFrames
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeHTMLParams\Pdf as PdfShape2
- * @phpstan-import-type SettleAnimationsShape from \ContextDev\Web\WebWebScrapeHTMLParams\SettleAnimations
- * @phpstan-import-type UseMainContentOnlyShape from \ContextDev\Web\WebWebScrapeHTMLParams\UseMainContentOnly
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeImagesParams\Action as ActionShape1
- * @phpstan-import-type DedupeShape from \ContextDev\Web\WebWebScrapeImagesParams\Dedupe
  * @phpstan-import-type EnrichmentShape from \ContextDev\Web\WebWebScrapeImagesParams\Enrichment
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeMdParams\Action as ActionShape2
- * @phpstan-import-type IncludeFramesShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeFrames as IncludeFramesShape1
- * @phpstan-import-type IncludeHTMLShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeHTML
- * @phpstan-import-type IncludeImagesShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeImages
- * @phpstan-import-type IncludeLinksShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeLinks
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeMdParams\Pdf as PdfShape3
- * @phpstan-import-type SettleAnimationsShape from \ContextDev\Web\WebWebScrapeMdParams\SettleAnimations as SettleAnimationsShape1
- * @phpstan-import-type ShortenBase64ImagesShape from \ContextDev\Web\WebWebScrapeMdParams\ShortenBase64Images
- * @phpstan-import-type UseMainContentOnlyShape from \ContextDev\Web\WebWebScrapeMdParams\UseMainContentOnly as UseMainContentOnlyShape1
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class WebRawService implements WebRawContract
@@ -248,7 +236,7 @@ final class WebRawService implements WebRawContract
      *   directURL?: string,
      *   domain?: string,
      *   fullScreenshot?: FullScreenshot|value-of<FullScreenshot>,
-     *   handleCookiePopup?: HandleCookiePopupShape,
+     *   handleCookiePopup?: bool,
      *   maxAgeMs?: int|null,
      *   page?: Page|value-of<Page>,
      *   scrollOffset?: int|null,
@@ -392,14 +380,14 @@ final class WebRawService implements WebRawContract
      *   country?: value-of<WebWebScrapeHTMLParams\Country>,
      *   excludeSelectors?: list<string>|null,
      *   headers?: array<string,string>,
-     *   includeFrames?: IncludeFramesShape,
+     *   includeFrames?: bool,
      *   includeSelectors?: list<string>|null,
      *   maxAgeMs?: int|null,
      *   pdf?: WebWebScrapeHTMLParams\Pdf|PdfShape2,
-     *   settleAnimations?: SettleAnimationsShape,
+     *   settleAnimations?: bool,
      *   tags?: list<string>,
      *   timeoutMs?: int,
-     *   useMainContentOnly?: UseMainContentOnlyShape,
+     *   useMainContentOnly?: bool,
      *   waitForMs?: int|null,
      *   zdr?: WebWebScrapeHTMLParams\Zdr|value-of<WebWebScrapeHTMLParams\Zdr>,
      * }|WebWebScrapeHTMLParams $params
@@ -436,7 +424,7 @@ final class WebRawService implements WebRawContract
      * @param array{
      *   url: string,
      *   actions?: list<ActionShape1>|null,
-     *   dedupe?: DedupeShape,
+     *   dedupe?: bool,
      *   enrichment?: Enrichment|EnrichmentShape|null,
      *   headers?: array<string,string>,
      *   maxAgeMs?: int|null,
@@ -498,18 +486,18 @@ final class WebRawService implements WebRawContract
      *   country?: value-of<WebWebScrapeMdParams\Country>,
      *   excludeSelectors?: list<string>|null,
      *   headers?: array<string,string>,
-     *   includeFrames?: IncludeFramesShape1,
-     *   includeHTML?: IncludeHTMLShape,
-     *   includeImages?: IncludeImagesShape,
-     *   includeLinks?: IncludeLinksShape,
+     *   includeFrames?: bool,
+     *   includeHTML?: bool,
+     *   includeImages?: bool,
+     *   includeLinks?: bool,
      *   includeSelectors?: list<string>|null,
      *   maxAgeMs?: int|null,
      *   pdf?: WebWebScrapeMdParams\Pdf|PdfShape3,
-     *   settleAnimations?: SettleAnimationsShape1,
-     *   shortenBase64Images?: ShortenBase64ImagesShape,
+     *   settleAnimations?: bool,
+     *   shortenBase64Images?: bool,
      *   tags?: list<string>,
      *   timeoutMs?: int,
-     *   useMainContentOnly?: UseMainContentOnlyShape1,
+     *   useMainContentOnly?: bool,
      *   waitForMs?: int|null,
      *   zdr?: WebWebScrapeMdParams\Zdr|value-of<WebWebScrapeMdParams\Zdr>,
      * }|WebWebScrapeMdParams $params

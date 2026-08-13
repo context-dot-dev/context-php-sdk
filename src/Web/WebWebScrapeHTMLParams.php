@@ -11,11 +11,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebWebScrapeHTMLParams\Action;
 use ContextDev\Web\WebWebScrapeHTMLParams\Country;
-use ContextDev\Web\WebWebScrapeHTMLParams\IncludeFrames;
-use ContextDev\Web\WebWebScrapeHTMLParams\IncludeFrames\UnionMember1;
 use ContextDev\Web\WebWebScrapeHTMLParams\Pdf;
-use ContextDev\Web\WebWebScrapeHTMLParams\SettleAnimations;
-use ContextDev\Web\WebWebScrapeHTMLParams\UseMainContentOnly;
 use ContextDev\Web\WebWebScrapeHTMLParams\Zdr;
 
 /**
@@ -24,14 +20,8 @@ use ContextDev\Web\WebWebScrapeHTMLParams\Zdr;
  * @see ContextDev\Services\WebService::webScrapeHTML()
  *
  * @phpstan-import-type ActionVariants from \ContextDev\Web\WebWebScrapeHTMLParams\Action
- * @phpstan-import-type IncludeFramesVariants from \ContextDev\Web\WebWebScrapeHTMLParams\IncludeFrames
- * @phpstan-import-type SettleAnimationsVariants from \ContextDev\Web\WebWebScrapeHTMLParams\SettleAnimations
- * @phpstan-import-type UseMainContentOnlyVariants from \ContextDev\Web\WebWebScrapeHTMLParams\UseMainContentOnly
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeHTMLParams\Action
- * @phpstan-import-type IncludeFramesShape from \ContextDev\Web\WebWebScrapeHTMLParams\IncludeFrames
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeHTMLParams\Pdf
- * @phpstan-import-type SettleAnimationsShape from \ContextDev\Web\WebWebScrapeHTMLParams\SettleAnimations
- * @phpstan-import-type UseMainContentOnlyShape from \ContextDev\Web\WebWebScrapeHTMLParams\UseMainContentOnly
  *
  * @phpstan-type WebWebScrapeHTMLParamsShape = array{
  *   url: string,
@@ -39,14 +29,14 @@ use ContextDev\Web\WebWebScrapeHTMLParams\Zdr;
  *   country?: null|Country|value-of<Country>,
  *   excludeSelectors?: list<string>|null,
  *   headers?: array<string,string>|null,
- *   includeFrames?: IncludeFramesShape|null,
+ *   includeFrames?: bool|null,
  *   includeSelectors?: list<string>|null,
  *   maxAgeMs?: int|null,
  *   pdf?: null|Pdf|PdfShape,
- *   settleAnimations?: SettleAnimationsShape|null,
+ *   settleAnimations?: bool|null,
  *   tags?: list<string>|null,
  *   timeoutMs?: int|null,
- *   useMainContentOnly?: UseMainContentOnlyShape|null,
+ *   useMainContentOnly?: bool|null,
  *   waitForMs?: int|null,
  *   zdr?: null|Zdr|value-of<Zdr>,
  * }
@@ -97,11 +87,9 @@ final class WebWebScrapeHTMLParams implements BaseModel
 
     /**
      * When true, iframes are rendered inline into the returned HTML.
-     *
-     * @var IncludeFramesVariants|null $includeFrames
      */
-    #[Optional(union: IncludeFrames::class)]
-    public bool|string|null $includeFrames;
+    #[Optional]
+    public ?bool $includeFrames;
 
     /**
      * CSS selectors. When provided, only matching subtrees (and their descendants) are kept and everything else is dropped. When omitted, the entire document is kept. Examples: "article.main", "#content", "[role=main]".
@@ -125,11 +113,9 @@ final class WebWebScrapeHTMLParams implements BaseModel
 
     /**
      * When true, waits briefly for CSS and transition animations to settle before extracting HTML. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
-     *
-     * @var SettleAnimationsVariants|null $settleAnimations
      */
-    #[Optional(union: SettleAnimations::class)]
-    public bool|string|null $settleAnimations;
+    #[Optional]
+    public ?bool $settleAnimations;
 
     /**
      * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
@@ -147,11 +133,9 @@ final class WebWebScrapeHTMLParams implements BaseModel
 
     /**
      * When true, return only the page's main content in the HTML response, excluding headers, footers, sidebars, and navigation when detectable.
-     *
-     * @var UseMainContentOnlyVariants|null $useMainContentOnly
      */
-    #[Optional(union: UseMainContentOnly::class)]
-    public bool|string|null $useMainContentOnly;
+    #[Optional]
+    public ?bool $useMainContentOnly;
 
     /**
      * Optional browser wait time in milliseconds after initial page load. Min: 0. Max: 30000 (30 seconds).
@@ -195,12 +179,9 @@ final class WebWebScrapeHTMLParams implements BaseModel
      * @param Country|value-of<Country>|null $country
      * @param list<string>|null $excludeSelectors
      * @param array<string,string>|null $headers
-     * @param IncludeFramesShape|null $includeFrames
      * @param list<string>|null $includeSelectors
      * @param Pdf|PdfShape|null $pdf
-     * @param SettleAnimationsShape|null $settleAnimations
      * @param list<string>|null $tags
-     * @param UseMainContentOnlyShape|null $useMainContentOnly
      * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
@@ -209,14 +190,14 @@ final class WebWebScrapeHTMLParams implements BaseModel
         Country|string|null $country = null,
         ?array $excludeSelectors = null,
         ?array $headers = null,
-        bool|UnionMember1|string|null $includeFrames = null,
+        ?bool $includeFrames = null,
         ?array $includeSelectors = null,
         ?int $maxAgeMs = null,
         Pdf|array|null $pdf = null,
-        bool|SettleAnimations\UnionMember1|string|null $settleAnimations = null,
+        ?bool $settleAnimations = null,
         ?array $tags = null,
         ?int $timeoutMs = null,
-        bool|UseMainContentOnly\UnionMember1|string|null $useMainContentOnly = null,
+        ?bool $useMainContentOnly = null,
         ?int $waitForMs = null,
         Zdr|string|null $zdr = null,
     ): self {
@@ -307,12 +288,9 @@ final class WebWebScrapeHTMLParams implements BaseModel
 
     /**
      * When true, iframes are rendered inline into the returned HTML.
-     *
-     * @param IncludeFramesShape $includeFrames
      */
-    public function withIncludeFrames(
-        bool|UnionMember1|string $includeFrames
-    ): self {
+    public function withIncludeFrames(bool $includeFrames): self
+    {
         $self = clone $this;
         $self['includeFrames'] = $includeFrames;
 
@@ -358,12 +336,9 @@ final class WebWebScrapeHTMLParams implements BaseModel
 
     /**
      * When true, waits briefly for CSS and transition animations to settle before extracting HTML. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
-     *
-     * @param SettleAnimationsShape $settleAnimations
      */
-    public function withSettleAnimations(
-        bool|SettleAnimations\UnionMember1|string $settleAnimations,
-    ): self {
+    public function withSettleAnimations(bool $settleAnimations): self
+    {
         $self = clone $this;
         $self['settleAnimations'] = $settleAnimations;
 
@@ -396,12 +371,9 @@ final class WebWebScrapeHTMLParams implements BaseModel
 
     /**
      * When true, return only the page's main content in the HTML response, excluding headers, footers, sidebars, and navigation when detectable.
-     *
-     * @param UseMainContentOnlyShape $useMainContentOnly
      */
-    public function withUseMainContentOnly(
-        bool|UseMainContentOnly\UnionMember1|string $useMainContentOnly,
-    ): self {
+    public function withUseMainContentOnly(bool $useMainContentOnly): self
+    {
         $self = clone $this;
         $self['useMainContentOnly'] = $useMainContentOnly;
 

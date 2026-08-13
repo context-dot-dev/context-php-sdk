@@ -7,23 +7,12 @@ namespace ContextDev\Web\WebWebScrapeMdParams;
 use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
-use ContextDev\Web\WebWebScrapeMdParams\Pdf\Ocr;
-use ContextDev\Web\WebWebScrapeMdParams\Pdf\Ocr\UnionMember1;
-use ContextDev\Web\WebWebScrapeMdParams\Pdf\ShouldParse;
 
 /**
  * PDF parsing controls. Use start/end to limit text extraction and embedded-image detection/OCR to an inclusive 1-based page range.
  *
- * @phpstan-import-type OcrVariants from \ContextDev\Web\WebWebScrapeMdParams\Pdf\Ocr
- * @phpstan-import-type ShouldParseVariants from \ContextDev\Web\WebWebScrapeMdParams\Pdf\ShouldParse
- * @phpstan-import-type OcrShape from \ContextDev\Web\WebWebScrapeMdParams\Pdf\Ocr
- * @phpstan-import-type ShouldParseShape from \ContextDev\Web\WebWebScrapeMdParams\Pdf\ShouldParse
- *
  * @phpstan-type PdfShape = array{
- *   end?: int|null,
- *   ocr?: OcrShape|null,
- *   shouldParse?: ShouldParseShape|null,
- *   start?: int|null,
+ *   end?: int|null, ocr?: bool|null, shouldParse?: bool|null, start?: int|null
  * }
  */
 final class Pdf implements BaseModel
@@ -39,19 +28,15 @@ final class Pdf implements BaseModel
 
     /**
      * When true, OCR the selected PDF pages that have no usable text layer (scans), replacing each recovered page's text with the OCR result while pages with a real text layer keep it. Billed at 1 credit per page OCR actually recovered, on top of the base request cost. When false, no OCR runs.
-     *
-     * @var OcrVariants|null $ocr
      */
-    #[Optional(union: Ocr::class)]
-    public bool|string|null $ocr;
+    #[Optional]
+    public ?bool $ocr;
 
     /**
      * When true, PDF URLs are fetched and parsed. When false, PDF URLs are skipped and a 400 PDF_SKIPPED is returned.
-     *
-     * @var ShouldParseVariants|null $shouldParse
      */
-    #[Optional(union: ShouldParse::class)]
-    public bool|string|null $shouldParse;
+    #[Optional]
+    public ?bool $shouldParse;
 
     /**
      * First 1-based PDF page to parse. When omitted, parsing starts at the first page.
@@ -68,14 +53,11 @@ final class Pdf implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
-     *
-     * @param OcrShape|null $ocr
-     * @param ShouldParseShape|null $shouldParse
      */
     public static function with(
         ?int $end = null,
-        bool|UnionMember1|string|null $ocr = null,
-        bool|ShouldParse\UnionMember1|string|null $shouldParse = null,
+        ?bool $ocr = null,
+        ?bool $shouldParse = null,
         ?int $start = null,
     ): self {
         $self = new self;
@@ -101,10 +83,8 @@ final class Pdf implements BaseModel
 
     /**
      * When true, OCR the selected PDF pages that have no usable text layer (scans), replacing each recovered page's text with the OCR result while pages with a real text layer keep it. Billed at 1 credit per page OCR actually recovered, on top of the base request cost. When false, no OCR runs.
-     *
-     * @param OcrShape $ocr
      */
-    public function withOcr(bool|UnionMember1|string $ocr): self
+    public function withOcr(bool $ocr): self
     {
         $self = clone $this;
         $self['ocr'] = $ocr;
@@ -114,12 +94,9 @@ final class Pdf implements BaseModel
 
     /**
      * When true, PDF URLs are fetched and parsed. When false, PDF URLs are skipped and a 400 PDF_SKIPPED is returned.
-     *
-     * @param ShouldParseShape $shouldParse
      */
-    public function withShouldParse(
-        bool|ShouldParse\UnionMember1|string $shouldParse,
-    ): self {
+    public function withShouldParse(bool $shouldParse): self
+    {
         $self = clone $this;
         $self['shouldParse'] = $shouldParse;
 
