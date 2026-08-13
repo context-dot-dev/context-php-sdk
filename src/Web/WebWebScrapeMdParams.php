@@ -11,15 +11,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebWebScrapeMdParams\Action;
 use ContextDev\Web\WebWebScrapeMdParams\Country;
-use ContextDev\Web\WebWebScrapeMdParams\IncludeFrames;
-use ContextDev\Web\WebWebScrapeMdParams\IncludeFrames\UnionMember1;
-use ContextDev\Web\WebWebScrapeMdParams\IncludeHTML;
-use ContextDev\Web\WebWebScrapeMdParams\IncludeImages;
-use ContextDev\Web\WebWebScrapeMdParams\IncludeLinks;
 use ContextDev\Web\WebWebScrapeMdParams\Pdf;
-use ContextDev\Web\WebWebScrapeMdParams\SettleAnimations;
-use ContextDev\Web\WebWebScrapeMdParams\ShortenBase64Images;
-use ContextDev\Web\WebWebScrapeMdParams\UseMainContentOnly;
 use ContextDev\Web\WebWebScrapeMdParams\Zdr;
 
 /**
@@ -46,22 +38,8 @@ use ContextDev\Web\WebWebScrapeMdParams\Zdr;
  * @see ContextDev\Services\WebService::webScrapeMd()
  *
  * @phpstan-import-type ActionVariants from \ContextDev\Web\WebWebScrapeMdParams\Action
- * @phpstan-import-type IncludeFramesVariants from \ContextDev\Web\WebWebScrapeMdParams\IncludeFrames
- * @phpstan-import-type IncludeHTMLVariants from \ContextDev\Web\WebWebScrapeMdParams\IncludeHTML
- * @phpstan-import-type IncludeImagesVariants from \ContextDev\Web\WebWebScrapeMdParams\IncludeImages
- * @phpstan-import-type IncludeLinksVariants from \ContextDev\Web\WebWebScrapeMdParams\IncludeLinks
- * @phpstan-import-type SettleAnimationsVariants from \ContextDev\Web\WebWebScrapeMdParams\SettleAnimations
- * @phpstan-import-type ShortenBase64ImagesVariants from \ContextDev\Web\WebWebScrapeMdParams\ShortenBase64Images
- * @phpstan-import-type UseMainContentOnlyVariants from \ContextDev\Web\WebWebScrapeMdParams\UseMainContentOnly
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeMdParams\Action
- * @phpstan-import-type IncludeFramesShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeFrames
- * @phpstan-import-type IncludeHTMLShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeHTML
- * @phpstan-import-type IncludeImagesShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeImages
- * @phpstan-import-type IncludeLinksShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeLinks
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeMdParams\Pdf
- * @phpstan-import-type SettleAnimationsShape from \ContextDev\Web\WebWebScrapeMdParams\SettleAnimations
- * @phpstan-import-type ShortenBase64ImagesShape from \ContextDev\Web\WebWebScrapeMdParams\ShortenBase64Images
- * @phpstan-import-type UseMainContentOnlyShape from \ContextDev\Web\WebWebScrapeMdParams\UseMainContentOnly
  *
  * @phpstan-type WebWebScrapeMdParamsShape = array{
  *   url: string,
@@ -69,18 +47,18 @@ use ContextDev\Web\WebWebScrapeMdParams\Zdr;
  *   country?: null|Country|value-of<Country>,
  *   excludeSelectors?: list<string>|null,
  *   headers?: array<string,string>|null,
- *   includeFrames?: IncludeFramesShape|null,
- *   includeHTML?: IncludeHTMLShape|null,
- *   includeImages?: IncludeImagesShape|null,
- *   includeLinks?: IncludeLinksShape|null,
+ *   includeFrames?: bool|null,
+ *   includeHTML?: bool|null,
+ *   includeImages?: bool|null,
+ *   includeLinks?: bool|null,
  *   includeSelectors?: list<string>|null,
  *   maxAgeMs?: int|null,
  *   pdf?: null|Pdf|PdfShape,
- *   settleAnimations?: SettleAnimationsShape|null,
- *   shortenBase64Images?: ShortenBase64ImagesShape|null,
+ *   settleAnimations?: bool|null,
+ *   shortenBase64Images?: bool|null,
  *   tags?: list<string>|null,
  *   timeoutMs?: int|null,
- *   useMainContentOnly?: UseMainContentOnlyShape|null,
+ *   useMainContentOnly?: bool|null,
  *   waitForMs?: int|null,
  *   zdr?: null|Zdr|value-of<Zdr>,
  * }
@@ -131,35 +109,27 @@ final class WebWebScrapeMdParams implements BaseModel
 
     /**
      * When true, the contents of iframes are rendered to Markdown.
-     *
-     * @var IncludeFramesVariants|null $includeFrames
      */
-    #[Optional(union: IncludeFrames::class)]
-    public bool|string|null $includeFrames;
+    #[Optional]
+    public ?bool $includeFrames;
 
     /**
      * When true, the response also includes an `html` field with the page HTML the Markdown was converted from — the same body the Scrape HTML endpoint returns for the equivalent request.
-     *
-     * @var IncludeHTMLVariants|null $includeHTML
      */
-    #[Optional(union: IncludeHTML::class)]
-    public bool|string|null $includeHTML;
+    #[Optional]
+    public ?bool $includeHTML;
 
     /**
      * Include image references in Markdown output.
-     *
-     * @var IncludeImagesVariants|null $includeImages
      */
-    #[Optional(union: IncludeImages::class)]
-    public bool|string|null $includeImages;
+    #[Optional]
+    public ?bool $includeImages;
 
     /**
      * Preserve hyperlinks in Markdown output.
-     *
-     * @var IncludeLinksVariants|null $includeLinks
      */
-    #[Optional(union: IncludeLinks::class)]
-    public bool|string|null $includeLinks;
+    #[Optional]
+    public ?bool $includeLinks;
 
     /**
      * CSS selectors. When provided, only matching HTML subtrees (and their descendants) are kept before conversion to Markdown. When omitted, the entire document is kept. Examples: "article.main", "#content", "[role=main]".
@@ -183,19 +153,15 @@ final class WebWebScrapeMdParams implements BaseModel
 
     /**
      * When true, waits briefly for CSS and transition animations to settle before converting to Markdown. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
-     *
-     * @var SettleAnimationsVariants|null $settleAnimations
      */
-    #[Optional(union: SettleAnimations::class)]
-    public bool|string|null $settleAnimations;
+    #[Optional]
+    public ?bool $settleAnimations;
 
     /**
      * Shorten base64-encoded image data in the Markdown output.
-     *
-     * @var ShortenBase64ImagesVariants|null $shortenBase64Images
      */
-    #[Optional(union: ShortenBase64Images::class)]
-    public bool|string|null $shortenBase64Images;
+    #[Optional]
+    public ?bool $shortenBase64Images;
 
     /**
      * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
@@ -213,11 +179,9 @@ final class WebWebScrapeMdParams implements BaseModel
 
     /**
      * Extract only the main content of the page, excluding headers, footers, sidebars, and navigation.
-     *
-     * @var UseMainContentOnlyVariants|null $useMainContentOnly
      */
-    #[Optional(union: UseMainContentOnly::class)]
-    public bool|string|null $useMainContentOnly;
+    #[Optional]
+    public ?bool $useMainContentOnly;
 
     /**
      * Optional browser wait time in milliseconds after initial page load before converting the page to Markdown. Min: 0. Max: 30000 (30 seconds).
@@ -261,16 +225,9 @@ final class WebWebScrapeMdParams implements BaseModel
      * @param Country|value-of<Country>|null $country
      * @param list<string>|null $excludeSelectors
      * @param array<string,string>|null $headers
-     * @param IncludeFramesShape|null $includeFrames
-     * @param IncludeHTMLShape|null $includeHTML
-     * @param IncludeImagesShape|null $includeImages
-     * @param IncludeLinksShape|null $includeLinks
      * @param list<string>|null $includeSelectors
      * @param Pdf|PdfShape|null $pdf
-     * @param SettleAnimationsShape|null $settleAnimations
-     * @param ShortenBase64ImagesShape|null $shortenBase64Images
      * @param list<string>|null $tags
-     * @param UseMainContentOnlyShape|null $useMainContentOnly
      * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
@@ -279,18 +236,18 @@ final class WebWebScrapeMdParams implements BaseModel
         Country|string|null $country = null,
         ?array $excludeSelectors = null,
         ?array $headers = null,
-        bool|UnionMember1|string|null $includeFrames = null,
-        bool|IncludeHTML\UnionMember1|string|null $includeHTML = null,
-        bool|IncludeImages\UnionMember1|string|null $includeImages = null,
-        bool|IncludeLinks\UnionMember1|string|null $includeLinks = null,
+        ?bool $includeFrames = null,
+        ?bool $includeHTML = null,
+        ?bool $includeImages = null,
+        ?bool $includeLinks = null,
         ?array $includeSelectors = null,
         ?int $maxAgeMs = null,
         Pdf|array|null $pdf = null,
-        bool|SettleAnimations\UnionMember1|string|null $settleAnimations = null,
-        bool|ShortenBase64Images\UnionMember1|string|null $shortenBase64Images = null,
+        ?bool $settleAnimations = null,
+        ?bool $shortenBase64Images = null,
         ?array $tags = null,
         ?int $timeoutMs = null,
-        bool|UseMainContentOnly\UnionMember1|string|null $useMainContentOnly = null,
+        ?bool $useMainContentOnly = null,
         ?int $waitForMs = null,
         Zdr|string|null $zdr = null,
     ): self {
@@ -385,12 +342,9 @@ final class WebWebScrapeMdParams implements BaseModel
 
     /**
      * When true, the contents of iframes are rendered to Markdown.
-     *
-     * @param IncludeFramesShape $includeFrames
      */
-    public function withIncludeFrames(
-        bool|UnionMember1|string $includeFrames
-    ): self {
+    public function withIncludeFrames(bool $includeFrames): self
+    {
         $self = clone $this;
         $self['includeFrames'] = $includeFrames;
 
@@ -399,12 +353,9 @@ final class WebWebScrapeMdParams implements BaseModel
 
     /**
      * When true, the response also includes an `html` field with the page HTML the Markdown was converted from — the same body the Scrape HTML endpoint returns for the equivalent request.
-     *
-     * @param IncludeHTMLShape $includeHTML
      */
-    public function withIncludeHTML(
-        bool|IncludeHTML\UnionMember1|string $includeHTML,
-    ): self {
+    public function withIncludeHTML(bool $includeHTML): self
+    {
         $self = clone $this;
         $self['includeHTML'] = $includeHTML;
 
@@ -413,12 +364,9 @@ final class WebWebScrapeMdParams implements BaseModel
 
     /**
      * Include image references in Markdown output.
-     *
-     * @param IncludeImagesShape $includeImages
      */
-    public function withIncludeImages(
-        bool|IncludeImages\UnionMember1|string $includeImages,
-    ): self {
+    public function withIncludeImages(bool $includeImages): self
+    {
         $self = clone $this;
         $self['includeImages'] = $includeImages;
 
@@ -427,12 +375,9 @@ final class WebWebScrapeMdParams implements BaseModel
 
     /**
      * Preserve hyperlinks in Markdown output.
-     *
-     * @param IncludeLinksShape $includeLinks
      */
-    public function withIncludeLinks(
-        bool|IncludeLinks\UnionMember1|string $includeLinks,
-    ): self {
+    public function withIncludeLinks(bool $includeLinks): self
+    {
         $self = clone $this;
         $self['includeLinks'] = $includeLinks;
 
@@ -478,12 +423,9 @@ final class WebWebScrapeMdParams implements BaseModel
 
     /**
      * When true, waits briefly for CSS and transition animations to settle before converting to Markdown. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
-     *
-     * @param SettleAnimationsShape $settleAnimations
      */
-    public function withSettleAnimations(
-        bool|SettleAnimations\UnionMember1|string $settleAnimations,
-    ): self {
+    public function withSettleAnimations(bool $settleAnimations): self
+    {
         $self = clone $this;
         $self['settleAnimations'] = $settleAnimations;
 
@@ -492,12 +434,9 @@ final class WebWebScrapeMdParams implements BaseModel
 
     /**
      * Shorten base64-encoded image data in the Markdown output.
-     *
-     * @param ShortenBase64ImagesShape $shortenBase64Images
      */
-    public function withShortenBase64Images(
-        bool|ShortenBase64Images\UnionMember1|string $shortenBase64Images,
-    ): self {
+    public function withShortenBase64Images(bool $shortenBase64Images): self
+    {
         $self = clone $this;
         $self['shortenBase64Images'] = $shortenBase64Images;
 
@@ -530,12 +469,9 @@ final class WebWebScrapeMdParams implements BaseModel
 
     /**
      * Extract only the main content of the page, excluding headers, footers, sidebars, and navigation.
-     *
-     * @param UseMainContentOnlyShape $useMainContentOnly
      */
-    public function withUseMainContentOnly(
-        bool|UseMainContentOnly\UnionMember1|string $useMainContentOnly,
-    ): self {
+    public function withUseMainContentOnly(bool $useMainContentOnly): self
+    {
         $self = clone $this;
         $self['useMainContentOnly'] = $useMainContentOnly;
 

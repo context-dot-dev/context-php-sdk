@@ -10,8 +10,6 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebWebScrapeImagesParams\Action;
-use ContextDev\Web\WebWebScrapeImagesParams\Dedupe;
-use ContextDev\Web\WebWebScrapeImagesParams\Dedupe\UnionMember1;
 use ContextDev\Web\WebWebScrapeImagesParams\Enrichment;
 
 /**
@@ -20,15 +18,13 @@ use ContextDev\Web\WebWebScrapeImagesParams\Enrichment;
  * @see ContextDev\Services\WebService::webScrapeImages()
  *
  * @phpstan-import-type ActionVariants from \ContextDev\Web\WebWebScrapeImagesParams\Action
- * @phpstan-import-type DedupeVariants from \ContextDev\Web\WebWebScrapeImagesParams\Dedupe
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeImagesParams\Action
- * @phpstan-import-type DedupeShape from \ContextDev\Web\WebWebScrapeImagesParams\Dedupe
  * @phpstan-import-type EnrichmentShape from \ContextDev\Web\WebWebScrapeImagesParams\Enrichment
  *
  * @phpstan-type WebWebScrapeImagesParamsShape = array{
  *   url: string,
  *   actions?: list<ActionShape>|null,
- *   dedupe?: DedupeShape|null,
+ *   dedupe?: bool|null,
  *   enrichment?: null|Enrichment|EnrichmentShape,
  *   headers?: array<string,string>|null,
  *   maxAgeMs?: int|null,
@@ -59,11 +55,9 @@ final class WebWebScrapeImagesParams implements BaseModel
 
     /**
      * When true, visually duplicate images are removed: every image is loaded and perceptually hashed, and only the highest-resolution copy of each duplicate group is kept. Images that cannot be downloaded or hashed are kept. Default: false.
-     *
-     * @var DedupeVariants|null $dedupe
      */
-    #[Optional(union: Dedupe::class)]
-    public bool|string|null $dedupe;
+    #[Optional]
+    public ?bool $dedupe;
 
     /**
      * Optional per-image processing, sent as deep-object query params such as enrichment[resolution]=true.
@@ -130,7 +124,6 @@ final class WebWebScrapeImagesParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param list<ActionShape>|null $actions
-     * @param DedupeShape|null $dedupe
      * @param Enrichment|EnrichmentShape|null $enrichment
      * @param array<string,string>|null $headers
      * @param list<string>|null $tags
@@ -138,7 +131,7 @@ final class WebWebScrapeImagesParams implements BaseModel
     public static function with(
         string $url,
         ?array $actions = null,
-        bool|UnionMember1|string|null $dedupe = null,
+        ?bool $dedupe = null,
         Enrichment|array|null $enrichment = null,
         ?array $headers = null,
         ?int $maxAgeMs = null,
@@ -188,10 +181,8 @@ final class WebWebScrapeImagesParams implements BaseModel
 
     /**
      * When true, visually duplicate images are removed: every image is loaded and perceptually hashed, and only the highest-resolution copy of each duplicate group is kept. Images that cannot be downloaded or hashed are kept. Default: false.
-     *
-     * @param DedupeShape $dedupe
      */
-    public function withDedupe(bool|UnionMember1|string $dedupe): self
+    public function withDedupe(bool $dedupe): self
     {
         $self = clone $this;
         $self['dedupe'] = $dedupe;
