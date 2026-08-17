@@ -10,6 +10,8 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\News\NewsSearchResponse\Data\Match_\Level;
 
 /**
+ * How the article relates to the company you searched for.
+ *
  * @phpstan-type MatchShape = array{
  *   confidence: float|null, level: Level|value-of<Level>
  * }
@@ -19,10 +21,17 @@ final class Match_ implements BaseModel
     /** @use SdkModel<MatchShape> */
     use SdkModel;
 
+    /**
+     * How confident the match is, from 0 to 1. Null when a score is unavailable.
+     */
     #[Required]
     public ?float $confidence;
 
-    /** @var value-of<Level> $level */
+    /**
+     * primary when the article is mainly about the company, secondary when the company is mentioned but is not the main subject.
+     *
+     * @var value-of<Level> $level
+     */
     #[Required(enum: Level::class)]
     public string $level;
 
@@ -62,6 +71,9 @@ final class Match_ implements BaseModel
         return $self;
     }
 
+    /**
+     * How confident the match is, from 0 to 1. Null when a score is unavailable.
+     */
     public function withConfidence(?float $confidence): self
     {
         $self = clone $this;
@@ -71,6 +83,8 @@ final class Match_ implements BaseModel
     }
 
     /**
+     * primary when the article is mainly about the company, secondary when the company is mentioned but is not the main subject.
+     *
      * @param Level|value-of<Level> $level
      */
     public function withLevel(Level|string $level): self
