@@ -11,6 +11,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Core\Conversion\MapOf;
 use ContextDev\Web\WebWebScrapeMdResponse\Metadata\AdditionalMeta;
 use ContextDev\Web\WebWebScrapeMdResponse\Metadata\Alternate;
+use ContextDev\Web\WebWebScrapeMdResponse\Metadata\Heading;
 use ContextDev\Web\WebWebScrapeMdResponse\Metadata\OpenGraph;
 use ContextDev\Web\WebWebScrapeMdResponse\Metadata\Twitter;
 
@@ -22,6 +23,7 @@ use ContextDev\Web\WebWebScrapeMdResponse\Metadata\Twitter;
  * @phpstan-import-type TwitterVariants from \ContextDev\Web\WebWebScrapeMdResponse\Metadata\Twitter
  * @phpstan-import-type AdditionalMetaShape from \ContextDev\Web\WebWebScrapeMdResponse\Metadata\AdditionalMeta
  * @phpstan-import-type AlternateShape from \ContextDev\Web\WebWebScrapeMdResponse\Metadata\Alternate
+ * @phpstan-import-type HeadingShape from \ContextDev\Web\WebWebScrapeMdResponse\Metadata\Heading
  * @phpstan-import-type OpenGraphShape from \ContextDev\Web\WebWebScrapeMdResponse\Metadata\OpenGraph
  * @phpstan-import-type TwitterShape from \ContextDev\Web\WebWebScrapeMdResponse\Metadata\Twitter
  *
@@ -34,6 +36,7 @@ use ContextDev\Web\WebWebScrapeMdResponse\Metadata\Twitter;
  *   canonicalURL?: string|null,
  *   description?: string|null,
  *   favicon?: string|null,
+ *   headings?: list<Heading|HeadingShape>|null,
  *   image?: string|null,
  *   jsonLd?: list<array<string,mixed>>|null,
  *   keywords?: list<string>|null,
@@ -103,6 +106,14 @@ final class Metadata implements BaseModel
      */
     #[Optional]
     public ?string $favicon;
+
+    /**
+     * Page headings (h1–h6) in document order, extracted from the unfiltered document. Capped at the first 500 headings. Omitted when the page has none.
+     *
+     * @var list<Heading>|null $headings
+     */
+    #[Optional(list: Heading::class)]
+    public ?array $headings;
 
     /**
      * Primary resolved preview image from Open Graph, Twitter, or image metadata.
@@ -204,6 +215,7 @@ final class Metadata implements BaseModel
      *
      * @param array<string,AdditionalMetaShape>|null $additionalMeta
      * @param list<Alternate|AlternateShape>|null $alternates
+     * @param list<Heading|HeadingShape>|null $headings
      * @param list<array<string,mixed>>|null $jsonLd
      * @param list<string>|null $keywords
      * @param array<string,OpenGraphShape>|null $openGraph
@@ -218,6 +230,7 @@ final class Metadata implements BaseModel
         ?string $canonicalURL = null,
         ?string $description = null,
         ?string $favicon = null,
+        ?array $headings = null,
         ?string $image = null,
         ?array $jsonLd = null,
         ?array $keywords = null,
@@ -241,6 +254,7 @@ final class Metadata implements BaseModel
         null !== $canonicalURL && $self['canonicalURL'] = $canonicalURL;
         null !== $description && $self['description'] = $description;
         null !== $favicon && $self['favicon'] = $favicon;
+        null !== $headings && $self['headings'] = $headings;
         null !== $image && $self['image'] = $image;
         null !== $jsonLd && $self['jsonLd'] = $jsonLd;
         null !== $keywords && $self['keywords'] = $keywords;
@@ -344,6 +358,19 @@ final class Metadata implements BaseModel
     {
         $self = clone $this;
         $self['favicon'] = $favicon;
+
+        return $self;
+    }
+
+    /**
+     * Page headings (h1–h6) in document order, extracted from the unfiltered document. Capped at the first 500 headings. Omitted when the page has none.
+     *
+     * @param list<Heading|HeadingShape> $headings
+     */
+    public function withHeadings(array $headings): self
+    {
+        $self = clone $this;
+        $self['headings'] = $headings;
 
         return $self;
     }

@@ -11,8 +11,6 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebScreenshotParams\ColorScheme;
 use ContextDev\Web\WebScreenshotParams\Country;
 use ContextDev\Web\WebScreenshotParams\FullScreenshot;
-use ContextDev\Web\WebScreenshotParams\HandleCookiePopup;
-use ContextDev\Web\WebScreenshotParams\HandleCookiePopup\UnionMember1;
 use ContextDev\Web\WebScreenshotParams\Page;
 use ContextDev\Web\WebScreenshotParams\Viewport;
 use ContextDev\Web\WebScreenshotParams\Zdr;
@@ -22,8 +20,6 @@ use ContextDev\Web\WebScreenshotParams\Zdr;
  *
  * @see ContextDev\Services\WebService::screenshot()
  *
- * @phpstan-import-type HandleCookiePopupVariants from \ContextDev\Web\WebScreenshotParams\HandleCookiePopup
- * @phpstan-import-type HandleCookiePopupShape from \ContextDev\Web\WebScreenshotParams\HandleCookiePopup
  * @phpstan-import-type ViewportShape from \ContextDev\Web\WebScreenshotParams\Viewport
  *
  * @phpstan-type WebScreenshotParamsShape = array{
@@ -32,7 +28,7 @@ use ContextDev\Web\WebScreenshotParams\Zdr;
  *   directURL?: string|null,
  *   domain?: string|null,
  *   fullScreenshot?: null|FullScreenshot|value-of<FullScreenshot>,
- *   handleCookiePopup?: HandleCookiePopupShape|null,
+ *   handleCookiePopup?: bool|null,
  *   maxAgeMs?: int|null,
  *   page?: null|Page|value-of<Page>,
  *   scrollOffset?: int|null,
@@ -87,11 +83,9 @@ final class WebScreenshotParams implements BaseModel
 
     /**
      * Optional parameter to control cookie/consent popup handling. If 'true', we dismiss cookie banner before capture. If 'false' or not provided, captures the page without that step.
-     *
-     * @var HandleCookiePopupVariants|null $handleCookiePopup
      */
-    #[Optional(union: HandleCookiePopup::class)]
-    public bool|string|null $handleCookiePopup;
+    #[Optional]
+    public ?bool $handleCookiePopup;
 
     /**
      * Return a cached screenshot if a prior screenshot for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always capture fresh.
@@ -160,7 +154,6 @@ final class WebScreenshotParams implements BaseModel
      * @param ColorScheme|value-of<ColorScheme>|null $colorScheme
      * @param Country|value-of<Country>|null $country
      * @param FullScreenshot|value-of<FullScreenshot>|null $fullScreenshot
-     * @param HandleCookiePopupShape|null $handleCookiePopup
      * @param Page|value-of<Page>|null $page
      * @param list<string>|null $tags
      * @param Viewport|ViewportShape|null $viewport
@@ -172,7 +165,7 @@ final class WebScreenshotParams implements BaseModel
         ?string $directURL = null,
         ?string $domain = null,
         FullScreenshot|string|null $fullScreenshot = null,
-        bool|UnionMember1|string|null $handleCookiePopup = null,
+        ?bool $handleCookiePopup = null,
         ?int $maxAgeMs = null,
         Page|string|null $page = null,
         ?int $scrollOffset = null,
@@ -266,12 +259,9 @@ final class WebScreenshotParams implements BaseModel
 
     /**
      * Optional parameter to control cookie/consent popup handling. If 'true', we dismiss cookie banner before capture. If 'false' or not provided, captures the page without that step.
-     *
-     * @param HandleCookiePopupShape $handleCookiePopup
      */
-    public function withHandleCookiePopup(
-        bool|UnionMember1|string $handleCookiePopup
-    ): self {
+    public function withHandleCookiePopup(bool $handleCookiePopup): self
+    {
         $self = clone $this;
         $self['handleCookiePopup'] = $handleCookiePopup;
 

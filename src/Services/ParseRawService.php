@@ -17,12 +17,7 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\ParseRawContract;
 
 /**
- * @phpstan-import-type IncludeImagesShape from \ContextDev\Parse\ParseHandleParams\IncludeImages
- * @phpstan-import-type IncludeLinksShape from \ContextDev\Parse\ParseHandleParams\IncludeLinks
- * @phpstan-import-type OcrShape from \ContextDev\Parse\ParseHandleParams\Ocr
  * @phpstan-import-type PdfShape from \ContextDev\Parse\ParseHandleParams\Pdf
- * @phpstan-import-type ShortenBase64ImagesShape from \ContextDev\Parse\ParseHandleParams\ShortenBase64Images
- * @phpstan-import-type UseMainContentOnlyShape from \ContextDev\Parse\ParseHandleParams\UseMainContentOnly
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class ParseRawService implements ParseRawContract
@@ -42,13 +37,13 @@ final class ParseRawService implements ParseRawContract
      * @param array{
      *   client?: string,
      *   extension?: value-of<Extension>,
-     *   includeImages?: IncludeImagesShape,
-     *   includeLinks?: IncludeLinksShape,
-     *   ocr?: OcrShape,
+     *   includeImages?: bool,
+     *   includeLinks?: bool,
+     *   ocr?: bool,
      *   pdf?: Pdf|PdfShape,
-     *   shortenBase64Images?: ShortenBase64ImagesShape,
+     *   shortenBase64Images?: bool,
      *   tags?: list<string>,
-     *   useMainContentOnly?: UseMainContentOnlyShape,
+     *   useMainContentOnly?: bool,
      *   zdr?: Zdr|value-of<Zdr>,
      * }|ParseHandleParams $params
      * @param RequestOpts|null $requestOptions

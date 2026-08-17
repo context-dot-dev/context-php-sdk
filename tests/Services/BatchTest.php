@@ -148,12 +148,13 @@ final class BatchTest extends TestCase
                     'options' => [
                         'country' => 'de',
                         'excludeSelectors' => ['x'],
+                        'includeHTML' => true,
                         'includeImages' => true,
                         'includeLinks' => true,
                         'includeSelectors' => ['x'],
                         'maxAgeMs' => 0,
                         'pdf' => [
-                            'end' => 1, 'ocr' => 'true', 'shouldParse' => 'true', 'start' => 1,
+                            'end' => 1, 'ocr' => true, 'shouldParse' => true, 'start' => 1,
                         ],
                         'settleAnimations' => true,
                         'shortenBase64Images' => true,

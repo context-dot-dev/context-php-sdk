@@ -14,7 +14,6 @@ use ContextDev\Web\WebExtractStyleguideParams\ColorScheme;
 use ContextDev\Web\WebExtractStyleguideResponse;
 use ContextDev\Web\WebScreenshotParams\Country;
 use ContextDev\Web\WebScreenshotParams\FullScreenshot;
-use ContextDev\Web\WebScreenshotParams\HandleCookiePopup\UnionMember1;
 use ContextDev\Web\WebScreenshotParams\Page;
 use ContextDev\Web\WebScreenshotParams\Viewport;
 use ContextDev\Web\WebScreenshotParams\Zdr;
@@ -31,26 +30,15 @@ use ContextDev\Web\WebWebScrapeSitemapResponse;
 
 /**
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebExtractParams\Pdf
- * @phpstan-import-type HandleCookiePopupShape from \ContextDev\Web\WebScreenshotParams\HandleCookiePopup
  * @phpstan-import-type ViewportShape from \ContextDev\Web\WebScreenshotParams\Viewport
  * @phpstan-import-type MarkdownOptionsShape from \ContextDev\Web\WebSearchParams\MarkdownOptions
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebCrawlMdParams\Pdf as PdfShape1
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeHTMLParams\Action
- * @phpstan-import-type IncludeFramesShape from \ContextDev\Web\WebWebScrapeHTMLParams\IncludeFrames
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeHTMLParams\Pdf as PdfShape2
- * @phpstan-import-type SettleAnimationsShape from \ContextDev\Web\WebWebScrapeHTMLParams\SettleAnimations
- * @phpstan-import-type UseMainContentOnlyShape from \ContextDev\Web\WebWebScrapeHTMLParams\UseMainContentOnly
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeImagesParams\Action as ActionShape1
- * @phpstan-import-type DedupeShape from \ContextDev\Web\WebWebScrapeImagesParams\Dedupe
  * @phpstan-import-type EnrichmentShape from \ContextDev\Web\WebWebScrapeImagesParams\Enrichment
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeMdParams\Action as ActionShape2
- * @phpstan-import-type IncludeFramesShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeFrames as IncludeFramesShape1
- * @phpstan-import-type IncludeImagesShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeImages
- * @phpstan-import-type IncludeLinksShape from \ContextDev\Web\WebWebScrapeMdParams\IncludeLinks
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeMdParams\Pdf as PdfShape3
- * @phpstan-import-type SettleAnimationsShape from \ContextDev\Web\WebWebScrapeMdParams\SettleAnimations as SettleAnimationsShape1
- * @phpstan-import-type ShortenBase64ImagesShape from \ContextDev\Web\WebWebScrapeMdParams\ShortenBase64Images
- * @phpstan-import-type UseMainContentOnlyShape from \ContextDev\Web\WebWebScrapeMdParams\UseMainContentOnly as UseMainContentOnlyShape1
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 interface WebContract
@@ -167,7 +155,7 @@ interface WebContract
      * @param string $directURL A specific URL to screenshot directly, bypassing domain resolution (e.g., 'https://example.com/pricing'). When provided, the screenshot is taken of this exact URL. You must provide either 'domain' or 'directUrl', but not both.
      * @param string $domain Domain name to take screenshot of (e.g., 'example.com', 'google.com'). The domain will be automatically normalized and validated. You must provide either 'domain' or 'directUrl', but not both.
      * @param FullScreenshot|value-of<FullScreenshot> $fullScreenshot Optional parameter to determine screenshot type. If 'true', takes a full page screenshot capturing all content. If 'false' or not provided, takes a viewport screenshot (standard browser view).
-     * @param HandleCookiePopupShape $handleCookiePopup Optional parameter to control cookie/consent popup handling. If 'true', we dismiss cookie banner before capture. If 'false' or not provided, captures the page without that step.
+     * @param bool $handleCookiePopup Optional parameter to control cookie/consent popup handling. If 'true', we dismiss cookie banner before capture. If 'false' or not provided, captures the page without that step.
      * @param int|null $maxAgeMs Return a cached screenshot if a prior screenshot for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always capture fresh.
      * @param Page|value-of<Page> $page Optional parameter to specify which page type to screenshot. If provided, the system will scrape the domain's links and use heuristics to find the most appropriate URL for the specified page type (30 supported languages). If not provided, screenshots the main domain landing page. Only applicable when using 'domain', not 'directUrl'.
      * @param int|null $scrollOffset Optional vertical scroll offset in pixels for capturing a long page in viewport-sized chunks. When provided, the full page is captured once and the returned image is the viewport-sized slice that begins at this Y offset (e.g. request scrollOffset=0, then 1080, then 2160 to walk a 1920x1080 landing page top to bottom). The final slice may be shorter than the viewport height. Takes precedence over fullScreenshot. Max: 100000.
@@ -186,7 +174,7 @@ interface WebContract
         ?string $directURL = null,
         ?string $domain = null,
         FullScreenshot|string|null $fullScreenshot = null,
-        bool|UnionMember1|string $handleCookiePopup = false,
+        bool $handleCookiePopup = false,
         ?int $maxAgeMs = 86400000,
         Page|string|null $page = null,
         ?int $scrollOffset = null,
@@ -292,14 +280,14 @@ interface WebContract
      * @param \ContextDev\Web\WebWebScrapeHTMLParams\Country|value-of<\ContextDev\Web\WebWebScrapeHTMLParams\Country> $country fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2)
      * @param list<string>|null $excludeSelectors CSS selectors to remove from the result. Applied after includeSelectors. Exclusion takes precedence: an element matching both is removed. Examples: "nav", "footer", ".ad-banner", "[aria-hidden=true]".
      * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
-     * @param IncludeFramesShape $includeFrames when true, iframes are rendered inline into the returned HTML
+     * @param bool $includeFrames when true, iframes are rendered inline into the returned HTML
      * @param list<string>|null $includeSelectors CSS selectors. When provided, only matching subtrees (and their descendants) are kept and everything else is dropped. When omitted, the entire document is kept. Examples: "article.main", "#content", "[role=main]".
      * @param int|null $maxAgeMs Return a cached result if a prior scrape for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always scrape fresh.
      * @param \ContextDev\Web\WebWebScrapeHTMLParams\Pdf|PdfShape2 $pdf PDF parsing controls. Use start/end to limit text extraction and embedded-image detection/OCR to an inclusive 1-based page range.
-     * @param SettleAnimationsShape $settleAnimations When true, waits briefly for CSS and transition animations to settle before extracting HTML. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
+     * @param bool $settleAnimations When true, waits briefly for CSS and transition animations to settle before extracting HTML. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
      * @param list<string> $tags Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
-     * @param UseMainContentOnlyShape $useMainContentOnly when true, return only the page's main content in the HTML response, excluding headers, footers, sidebars, and navigation when detectable
+     * @param bool $useMainContentOnly when true, return only the page's main content in the HTML response, excluding headers, footers, sidebars, and navigation when detectable
      * @param int|null $waitForMs Optional browser wait time in milliseconds after initial page load. Min: 0. Max: 30000 (30 seconds).
      * @param \ContextDev\Web\WebWebScrapeHTMLParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeHTMLParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
@@ -312,16 +300,16 @@ interface WebContract
         \ContextDev\Web\WebWebScrapeHTMLParams\Country|string|null $country = null,
         ?array $excludeSelectors = null,
         ?array $headers = null,
-        bool|\ContextDev\Web\WebWebScrapeHTMLParams\IncludeFrames\UnionMember1|string $includeFrames = false,
+        bool $includeFrames = false,
         ?array $includeSelectors = null,
         ?int $maxAgeMs = 86400000,
         \ContextDev\Web\WebWebScrapeHTMLParams\Pdf|array $pdf = [
             'shouldParse' => true, 'ocr' => false,
         ],
-        bool|\ContextDev\Web\WebWebScrapeHTMLParams\SettleAnimations\UnionMember1|string $settleAnimations = false,
+        bool $settleAnimations = false,
         ?array $tags = null,
         ?int $timeoutMs = null,
-        bool|\ContextDev\Web\WebWebScrapeHTMLParams\UseMainContentOnly\UnionMember1|string $useMainContentOnly = false,
+        bool $useMainContentOnly = false,
         ?int $waitForMs = null,
         \ContextDev\Web\WebWebScrapeHTMLParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
@@ -332,7 +320,7 @@ interface WebContract
      *
      * @param string $url Page URL to inspect. Must include http:// or https://.
      * @param list<ActionShape1>|null $actions Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
-     * @param DedupeShape $dedupe When true, visually duplicate images are removed: every image is loaded and perceptually hashed, and only the highest-resolution copy of each duplicate group is kept. Images that cannot be downloaded or hashed are kept. Default: false.
+     * @param bool $dedupe When true, visually duplicate images are removed: every image is loaded and perceptually hashed, and only the highest-resolution copy of each duplicate group is kept. Images that cannot be downloaded or hashed are kept. Default: false.
      * @param Enrichment|EnrichmentShape|null $enrichment optional per-image processing, sent as deep-object query params such as enrichment[resolution]=true
      * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
      * @param int|null $maxAgeMs Reuse a cached result this many milliseconds old or newer. Default: 86400000 (1 day). Set to 0 to bypass cache. Maximum: 2592000000 (30 days).
@@ -346,7 +334,7 @@ interface WebContract
     public function webScrapeImages(
         string $url,
         ?array $actions = null,
-        bool|\ContextDev\Web\WebWebScrapeImagesParams\Dedupe\UnionMember1|string $dedupe = false,
+        bool $dedupe = false,
         Enrichment|array|null $enrichment = null,
         ?array $headers = null,
         ?int $maxAgeMs = 86400000,
@@ -364,17 +352,18 @@ interface WebContract
      * @param \ContextDev\Web\WebWebScrapeMdParams\Country|value-of<\ContextDev\Web\WebWebScrapeMdParams\Country> $country fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2)
      * @param list<string>|null $excludeSelectors CSS selectors to remove before conversion to Markdown. Applied after includeSelectors. Exclusion takes precedence: an element matching both is removed. Examples: "nav", "footer", ".ad-banner", "[aria-hidden=true]".
      * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
-     * @param IncludeFramesShape1 $includeFrames when true, the contents of iframes are rendered to Markdown
-     * @param IncludeImagesShape $includeImages Include image references in Markdown output
-     * @param IncludeLinksShape $includeLinks Preserve hyperlinks in Markdown output
+     * @param bool $includeFrames when true, the contents of iframes are rendered to Markdown
+     * @param bool $includeHTML when true, the response also includes an `html` field with the page HTML the Markdown was converted from — the same body the Scrape HTML endpoint returns for the equivalent request
+     * @param bool $includeImages Include image references in Markdown output
+     * @param bool $includeLinks Preserve hyperlinks in Markdown output
      * @param list<string>|null $includeSelectors CSS selectors. When provided, only matching HTML subtrees (and their descendants) are kept before conversion to Markdown. When omitted, the entire document is kept. Examples: "article.main", "#content", "[role=main]".
      * @param int|null $maxAgeMs Return a cached result if a prior scrape for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always scrape fresh.
      * @param \ContextDev\Web\WebWebScrapeMdParams\Pdf|PdfShape3 $pdf PDF parsing controls. Use start/end to limit text extraction and embedded-image detection/OCR to an inclusive 1-based page range.
-     * @param SettleAnimationsShape1 $settleAnimations When true, waits briefly for CSS and transition animations to settle before converting to Markdown. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
-     * @param ShortenBase64ImagesShape $shortenBase64Images Shorten base64-encoded image data in the Markdown output
+     * @param bool $settleAnimations When true, waits briefly for CSS and transition animations to settle before converting to Markdown. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
+     * @param bool $shortenBase64Images Shorten base64-encoded image data in the Markdown output
      * @param list<string> $tags Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
-     * @param UseMainContentOnlyShape1 $useMainContentOnly Extract only the main content of the page, excluding headers, footers, sidebars, and navigation
+     * @param bool $useMainContentOnly Extract only the main content of the page, excluding headers, footers, sidebars, and navigation
      * @param int|null $waitForMs Optional browser wait time in milliseconds after initial page load before converting the page to Markdown. Min: 0. Max: 30000 (30 seconds).
      * @param \ContextDev\Web\WebWebScrapeMdParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeMdParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
@@ -387,19 +376,20 @@ interface WebContract
         \ContextDev\Web\WebWebScrapeMdParams\Country|string|null $country = null,
         ?array $excludeSelectors = null,
         ?array $headers = null,
-        bool|\ContextDev\Web\WebWebScrapeMdParams\IncludeFrames\UnionMember1|string $includeFrames = false,
-        bool|\ContextDev\Web\WebWebScrapeMdParams\IncludeImages\UnionMember1|string $includeImages = false,
-        bool|\ContextDev\Web\WebWebScrapeMdParams\IncludeLinks\UnionMember1|string $includeLinks = true,
+        bool $includeFrames = false,
+        bool $includeHTML = false,
+        bool $includeImages = false,
+        bool $includeLinks = true,
         ?array $includeSelectors = null,
         ?int $maxAgeMs = 86400000,
         \ContextDev\Web\WebWebScrapeMdParams\Pdf|array $pdf = [
             'shouldParse' => true, 'ocr' => false,
         ],
-        bool|\ContextDev\Web\WebWebScrapeMdParams\SettleAnimations\UnionMember1|string $settleAnimations = false,
-        bool|\ContextDev\Web\WebWebScrapeMdParams\ShortenBase64Images\UnionMember1|string $shortenBase64Images = true,
+        bool $settleAnimations = false,
+        bool $shortenBase64Images = true,
         ?array $tags = null,
         ?int $timeoutMs = null,
-        bool|\ContextDev\Web\WebWebScrapeMdParams\UseMainContentOnly\UnionMember1|string $useMainContentOnly = false,
+        bool $useMainContentOnly = false,
         ?int $waitForMs = null,
         \ContextDev\Web\WebWebScrapeMdParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,

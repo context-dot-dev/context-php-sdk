@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Prefetch brand data by domain.
+ * Prefetch by domain.
  *
  * @phpstan-type UtilityPrefetchDomainIdentifierShape = array{domain: string}
  */
@@ -19,7 +19,7 @@ final class UtilityPrefetchDomainIdentifier implements BaseModel
     use SdkModel;
 
     /**
-     * Domain name to prefetch brand data for.
+     * Domain name to prefetch data for.
      */
     #[Required]
     public string $domain;
@@ -58,7 +58,7 @@ final class UtilityPrefetchDomainIdentifier implements BaseModel
     }
 
     /**
-     * Domain name to prefetch brand data for.
+     * Domain name to prefetch data for.
      */
     public function withDomain(string $domain): self
     {
