@@ -137,7 +137,10 @@ final class BrandTest extends TestCase
 
         $result = $this->client->brand->search(
             query: 'x',
-            tags: ['production', 'team-alpha']
+            autocomplete: true,
+            queryBy: ['name'],
+            tags: ['production', 'team-alpha'],
+            typoTolerance: 0,
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
