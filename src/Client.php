@@ -12,6 +12,7 @@ use ContextDev\Services\BatchService;
 use ContextDev\Services\BrandService;
 use ContextDev\Services\IndustryService;
 use ContextDev\Services\MonitorsService;
+use ContextDev\Services\NewsService;
 use ContextDev\Services\ParseService;
 use ContextDev\Services\PeopleService;
 use ContextDev\Services\UtilityService;
@@ -71,6 +72,11 @@ class Client extends BaseClient
      * @api
      */
     public PeopleService $people;
+
+    /**
+     * @api
+     */
+    public NewsService $news;
 
     /**
      * @param RequestOpts|null $requestOptions
@@ -139,6 +145,7 @@ class Client extends BaseClient
         $this->monitors = new MonitorsService($this);
         $this->batch = new BatchService($this);
         $this->people = new PeopleService($this);
+        $this->news = new NewsService($this);
     }
 
     /** @return array<string,string> */
