@@ -23,6 +23,7 @@ use ContextDev\Web\WebScreenshotParams\Zdr;
  * @phpstan-import-type ViewportShape from \ContextDev\Web\WebScreenshotParams\Viewport
  *
  * @phpstan-type WebScreenshotParamsShape = array{
+ *   clearPopups?: bool|null,
  *   colorScheme?: null|ColorScheme|value-of<ColorScheme>,
  *   country?: null|Country|value-of<Country>,
  *   directURL?: string|null,
@@ -44,6 +45,12 @@ final class WebScreenshotParams implements BaseModel
     /** @use SdkModel<WebScreenshotParamsShape> */
     use SdkModel;
     use SdkParams;
+
+    /**
+     * Optional parameter for comprehensive popup cleanup. If 'true', the browser dismisses detected cookie/consent UI and clears other detected obstructive popups and overlays before capture. If 'false' or not provided, this parameter requests no cleanup; handleCookiePopup can still request cookie/consent handling independently.
+     */
+    #[Optional]
+    public ?bool $clearPopups;
 
     /**
      * Optional parameter to choose the site's visual theme in the screenshot. Use 'light' or 'dark' when the site offers both appearances.
@@ -160,6 +167,7 @@ final class WebScreenshotParams implements BaseModel
      * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
+        ?bool $clearPopups = null,
         ColorScheme|string|null $colorScheme = null,
         Country|string|null $country = null,
         ?string $directURL = null,
@@ -177,6 +185,7 @@ final class WebScreenshotParams implements BaseModel
     ): self {
         $self = new self;
 
+        null !== $clearPopups && $self['clearPopups'] = $clearPopups;
         null !== $colorScheme && $self['colorScheme'] = $colorScheme;
         null !== $country && $self['country'] = $country;
         null !== $directURL && $self['directURL'] = $directURL;
@@ -191,6 +200,17 @@ final class WebScreenshotParams implements BaseModel
         null !== $viewport && $self['viewport'] = $viewport;
         null !== $waitForMs && $self['waitForMs'] = $waitForMs;
         null !== $zdr && $self['zdr'] = $zdr;
+
+        return $self;
+    }
+
+    /**
+     * Optional parameter for comprehensive popup cleanup. If 'true', the browser dismisses detected cookie/consent UI and clears other detected obstructive popups and overlays before capture. If 'false' or not provided, this parameter requests no cleanup; handleCookiePopup can still request cookie/consent handling independently.
+     */
+    public function withClearPopups(bool $clearPopups): self
+    {
+        $self = clone $this;
+        $self['clearPopups'] = $clearPopups;
 
         return $self;
     }
