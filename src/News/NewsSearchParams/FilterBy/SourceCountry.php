@@ -20,6 +20,8 @@ enum SourceCountry: string
 
     case CL = 'cl';
 
+    case CZ = 'cz';
+
     case DE = 'de';
 
     case FI = 'fi';
