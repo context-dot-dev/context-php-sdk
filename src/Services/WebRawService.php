@@ -231,6 +231,7 @@ final class WebRawService implements WebRawContract
      * Capture a screenshot of a website.
      *
      * @param array{
+     *   clearPopups?: bool,
      *   colorScheme?: WebScreenshotParams\ColorScheme|value-of<WebScreenshotParams\ColorScheme>,
      *   country?: value-of<Country>,
      *   directURL?: string,
