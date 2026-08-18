@@ -9,6 +9,8 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
+ * The publication that published the article.
+ *
  * @phpstan-type SourceShape = array{direct: bool, domain: string, name: string}
  */
 final class Source implements BaseModel
@@ -22,9 +24,15 @@ final class Source implements BaseModel
     #[Required]
     public bool $direct;
 
+    /**
+     * Website domain of the publication.
+     */
     #[Required]
     public string $domain;
 
+    /**
+     * Name of the publication, such as Reuters.
+     */
     #[Required]
     public string $name;
 
@@ -77,6 +85,9 @@ final class Source implements BaseModel
         return $self;
     }
 
+    /**
+     * Website domain of the publication.
+     */
     public function withDomain(string $domain): self
     {
         $self = clone $this;
@@ -85,6 +96,9 @@ final class Source implements BaseModel
         return $self;
     }
 
+    /**
+     * Name of the publication, such as Reuters.
+     */
     public function withName(string $name): self
     {
         $self = clone $this;

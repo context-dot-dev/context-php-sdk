@@ -35,44 +35,79 @@ final class Data implements BaseModel
     /** @use SdkModel<DataShape> */
     use SdkModel;
 
+    /**
+     * Stable unique identifier for this article. Use it to deduplicate or reference an article across requests.
+     */
     #[Required]
     public string $id;
 
-    /** @var list<string> $authors */
+    /**
+     * Bylined authors. Empty when no byline is available.
+     *
+     * @var list<string> $authors
+     */
     #[Required(list: 'string')]
     public array $authors;
 
+    /**
+     * Short summary or excerpt of the article, when the publisher provides one.
+     */
     #[Required]
     public ?string $description;
 
+    /**
+     * Lead image for the article, when one is available.
+     */
     #[Required('image_url')]
     public ?string $imageURL;
 
+    /**
+     * Language the article is written in, as a lowercase ISO 639-1 code such as en. Null when unknown.
+     */
     #[Required]
     public ?string $language;
 
+    /**
+     * How the article relates to the company you searched for.
+     */
     #[Required]
     public Match_ $match;
 
+    /**
+     * When the article was published, as an ISO 8601 timestamp. Null when the publisher does not state a reliable date.
+     */
     #[Required('published_at')]
     public ?\DateTimeInterface $publishedAt;
 
+    /**
+     * The publication that published the article.
+     */
     #[Required]
     public Source $source;
 
     /**
-     * Groups matching normalized headlines published on the same UTC day.
+     * Shared by articles covering the same story on the same day. Use it to group or collapse syndicated copies of one announcement across outlets.
      */
     #[Required('story_id')]
     public string $storyID;
 
+    /**
+     * Article headline.
+     */
     #[Required]
     public string $title;
 
-    /** @var value-of<Type> $type */
+    /**
+     * Kind of coverage. Use it to separate independent reporting (editorial) from company-issued content (press_release, regulatory_filing, advisory).
+     *
+     * @var value-of<Type> $type
+     */
     #[Required(enum: Type::class)]
     public string $type;
 
+    /**
+     * Link to the article on the publisher site.
+     */
     #[Required]
     public string $url;
 
@@ -162,6 +197,9 @@ final class Data implements BaseModel
         return $self;
     }
 
+    /**
+     * Stable unique identifier for this article. Use it to deduplicate or reference an article across requests.
+     */
     public function withID(string $id): self
     {
         $self = clone $this;
@@ -171,6 +209,8 @@ final class Data implements BaseModel
     }
 
     /**
+     * Bylined authors. Empty when no byline is available.
+     *
      * @param list<string> $authors
      */
     public function withAuthors(array $authors): self
@@ -181,6 +221,9 @@ final class Data implements BaseModel
         return $self;
     }
 
+    /**
+     * Short summary or excerpt of the article, when the publisher provides one.
+     */
     public function withDescription(?string $description): self
     {
         $self = clone $this;
@@ -189,6 +232,9 @@ final class Data implements BaseModel
         return $self;
     }
 
+    /**
+     * Lead image for the article, when one is available.
+     */
     public function withImageURL(?string $imageURL): self
     {
         $self = clone $this;
@@ -197,6 +243,9 @@ final class Data implements BaseModel
         return $self;
     }
 
+    /**
+     * Language the article is written in, as a lowercase ISO 639-1 code such as en. Null when unknown.
+     */
     public function withLanguage(?string $language): self
     {
         $self = clone $this;
@@ -206,6 +255,8 @@ final class Data implements BaseModel
     }
 
     /**
+     * How the article relates to the company you searched for.
+     *
      * @param Match_|MatchShape $match
      */
     public function withMatch(Match_|array $match): self
@@ -216,6 +267,9 @@ final class Data implements BaseModel
         return $self;
     }
 
+    /**
+     * When the article was published, as an ISO 8601 timestamp. Null when the publisher does not state a reliable date.
+     */
     public function withPublishedAt(?\DateTimeInterface $publishedAt): self
     {
         $self = clone $this;
@@ -225,6 +279,8 @@ final class Data implements BaseModel
     }
 
     /**
+     * The publication that published the article.
+     *
      * @param Source|SourceShape $source
      */
     public function withSource(Source|array $source): self
@@ -236,7 +292,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Groups matching normalized headlines published on the same UTC day.
+     * Shared by articles covering the same story on the same day. Use it to group or collapse syndicated copies of one announcement across outlets.
      */
     public function withStoryID(string $storyID): self
     {
@@ -246,6 +302,9 @@ final class Data implements BaseModel
         return $self;
     }
 
+    /**
+     * Article headline.
+     */
     public function withTitle(string $title): self
     {
         $self = clone $this;
@@ -255,6 +314,8 @@ final class Data implements BaseModel
     }
 
     /**
+     * Kind of coverage. Use it to separate independent reporting (editorial) from company-issued content (press_release, regulatory_filing, advisory).
+     *
      * @param Type|value-of<Type> $type
      */
     public function withType(Type|string $type): self
@@ -265,6 +326,9 @@ final class Data implements BaseModel
         return $self;
     }
 
+    /**
+     * Link to the article on the publisher site.
+     */
     public function withURL(string $url): self
     {
         $self = clone $this;

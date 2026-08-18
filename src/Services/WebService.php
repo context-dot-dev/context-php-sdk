@@ -246,6 +246,7 @@ final class WebService implements WebContract
      *
      * Capture a screenshot of a website.
      *
+     * @param bool $clearPopups Optional parameter for comprehensive popup cleanup. If 'true', the browser dismisses detected cookie/consent UI and clears other detected obstructive popups and overlays before capture. If 'false' or not provided, this parameter requests no cleanup; handleCookiePopup can still request cookie/consent handling independently.
      * @param \ContextDev\Web\WebScreenshotParams\ColorScheme|value-of<\ContextDev\Web\WebScreenshotParams\ColorScheme> $colorScheme Optional parameter to choose the site's visual theme in the screenshot. Use 'light' or 'dark' when the site offers both appearances.
      * @param Country|value-of<Country> $country fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2)
      * @param string $directURL A specific URL to screenshot directly, bypassing domain resolution (e.g., 'https://example.com/pricing'). When provided, the screenshot is taken of this exact URL. You must provide either 'domain' or 'directUrl', but not both.
@@ -265,6 +266,7 @@ final class WebService implements WebContract
      * @throws APIException
      */
     public function screenshot(
+        bool $clearPopups = false,
         \ContextDev\Web\WebScreenshotParams\ColorScheme|string|null $colorScheme = null,
         Country|string|null $country = null,
         ?string $directURL = null,
@@ -283,6 +285,7 @@ final class WebService implements WebContract
     ): WebScreenshotResponse {
         $params = Util::removeNulls(
             [
+                'clearPopups' => $clearPopups,
                 'colorScheme' => $colorScheme,
                 'country' => $country,
                 'directURL' => $directURL,

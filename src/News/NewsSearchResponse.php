@@ -30,16 +30,29 @@ final class NewsSearchResponse implements BaseModel
     /** @use SdkModel<NewsSearchResponseShape> */
     use SdkModel;
 
-    /** @var list<Data> $data */
+    /**
+     * Articles matching the search, in the requested order.
+     *
+     * @var list<Data> $data
+     */
     #[Required(list: Data::class)]
     public array $data;
 
+    /**
+     * True when more results are available beyond this page.
+     */
     #[Required('has_more')]
     public bool $hasMore;
 
+    /**
+     * Summary information about this response.
+     */
     #[Required]
     public Meta $meta;
 
+    /**
+     * Pass as cursor in the next request to fetch the following page. Null when there are no more results.
+     */
     #[Required('next_cursor')]
     public ?string $nextCursor;
 
@@ -101,6 +114,8 @@ final class NewsSearchResponse implements BaseModel
     }
 
     /**
+     * Articles matching the search, in the requested order.
+     *
      * @param list<Data|DataShape> $data
      */
     public function withData(array $data): self
@@ -111,6 +126,9 @@ final class NewsSearchResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * True when more results are available beyond this page.
+     */
     public function withHasMore(bool $hasMore): self
     {
         $self = clone $this;
@@ -120,6 +138,8 @@ final class NewsSearchResponse implements BaseModel
     }
 
     /**
+     * Summary information about this response.
+     *
      * @param Meta|MetaShape $meta
      */
     public function withMeta(Meta|array $meta): self
@@ -130,6 +150,9 @@ final class NewsSearchResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Pass as cursor in the next request to fetch the following page. Null when there are no more results.
+     */
     public function withNextCursor(?string $nextCursor): self
     {
         $self = clone $this;
