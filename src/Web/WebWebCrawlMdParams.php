@@ -161,7 +161,7 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?int $timeoutMs;
 
     /**
-     * Regex pattern. Only URLs matching this pattern will be followed and scraped.
+     * Regex pattern. Only URLs matching this pattern will be followed and scraped. An automatic prefix scope in the form ^<starting URL> follows a redirect of the starting page.
      */
     #[Optional]
     public ?string $urlRegex;
@@ -173,7 +173,7 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?bool $useMainContentOnly;
 
     /**
-     * Optional browser wait time in milliseconds after initial page load for each crawled page. Min: 0. Max: 30000 (30 seconds).
+     * Browser wait time in milliseconds after initial page load for each crawled page. Defaults to 3500 (3.5 seconds). Min: 0. Max: 30000 (30 seconds).
      */
     #[Optional]
     public ?int $waitForMs;
@@ -466,7 +466,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Regex pattern. Only URLs matching this pattern will be followed and scraped.
+     * Regex pattern. Only URLs matching this pattern will be followed and scraped. An automatic prefix scope in the form ^<starting URL> follows a redirect of the starting page.
      */
     public function withURLRegex(string $urlRegex): self
     {
@@ -488,7 +488,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Optional browser wait time in milliseconds after initial page load for each crawled page. Min: 0. Max: 30000 (30 seconds).
+     * Browser wait time in milliseconds after initial page load for each crawled page. Defaults to 3500 (3.5 seconds). Min: 0. Max: 30000 (30 seconds).
      */
     public function withWaitForMs(int $waitForMs): self
     {
