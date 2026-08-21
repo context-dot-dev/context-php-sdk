@@ -44,15 +44,16 @@ use ContextDev\Web\WebWebScrapeSitemapParams;
 use ContextDev\Web\WebWebScrapeSitemapResponse;
 
 /**
+ * @phpstan-import-type ActionShape from \ContextDev\Web\WebExtractParams\Action
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebExtractParams\Pdf
  * @phpstan-import-type ViewportShape from \ContextDev\Web\WebScreenshotParams\Viewport
  * @phpstan-import-type MarkdownOptionsShape from \ContextDev\Web\WebSearchParams\MarkdownOptions
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebCrawlMdParams\Pdf as PdfShape1
- * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeHTMLParams\Action
+ * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeHTMLParams\Action as ActionShape1
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeHTMLParams\Pdf as PdfShape2
- * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeImagesParams\Action as ActionShape1
+ * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeImagesParams\Action as ActionShape2
  * @phpstan-import-type EnrichmentShape from \ContextDev\Web\WebWebScrapeImagesParams\Enrichment
- * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeMdParams\Action as ActionShape2
+ * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeMdParams\Action as ActionShape3
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeMdParams\Pdf as PdfShape3
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
@@ -72,6 +73,7 @@ final class WebRawService implements WebRawContract
      * @param array{
      *   schema: array<string,mixed>,
      *   url: string,
+     *   actions?: list<ActionShape>,
      *   factCheck?: bool,
      *   followSubdomains?: bool,
      *   includeFrames?: bool,
@@ -377,7 +379,7 @@ final class WebRawService implements WebRawContract
      *
      * @param array{
      *   url: string,
-     *   actions?: list<ActionShape>|null,
+     *   actions?: list<ActionShape1>|null,
      *   country?: value-of<WebWebScrapeHTMLParams\Country>,
      *   excludeSelectors?: list<string>|null,
      *   headers?: array<string,string>,
@@ -424,7 +426,7 @@ final class WebRawService implements WebRawContract
      *
      * @param array{
      *   url: string,
-     *   actions?: list<ActionShape1>|null,
+     *   actions?: list<ActionShape2>|null,
      *   dedupe?: bool,
      *   enrichment?: Enrichment|EnrichmentShape|null,
      *   headers?: array<string,string>,
@@ -483,7 +485,7 @@ final class WebRawService implements WebRawContract
      *
      * @param array{
      *   url: string,
-     *   actions?: list<ActionShape2>|null,
+     *   actions?: list<ActionShape3>|null,
      *   country?: value-of<WebWebScrapeMdParams\Country>,
      *   excludeSelectors?: list<string>|null,
      *   headers?: array<string,string>,
