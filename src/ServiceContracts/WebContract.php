@@ -29,15 +29,16 @@ use ContextDev\Web\WebWebScrapeMdResponse;
 use ContextDev\Web\WebWebScrapeSitemapResponse;
 
 /**
+ * @phpstan-import-type ActionShape from \ContextDev\Web\WebExtractParams\Action
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebExtractParams\Pdf
  * @phpstan-import-type ViewportShape from \ContextDev\Web\WebScreenshotParams\Viewport
  * @phpstan-import-type MarkdownOptionsShape from \ContextDev\Web\WebSearchParams\MarkdownOptions
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebCrawlMdParams\Pdf as PdfShape1
- * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeHTMLParams\Action
+ * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeHTMLParams\Action as ActionShape1
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeHTMLParams\Pdf as PdfShape2
- * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeImagesParams\Action as ActionShape1
+ * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeImagesParams\Action as ActionShape2
  * @phpstan-import-type EnrichmentShape from \ContextDev\Web\WebWebScrapeImagesParams\Enrichment
- * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeMdParams\Action as ActionShape2
+ * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeMdParams\Action as ActionShape3
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeMdParams\Pdf as PdfShape3
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
@@ -46,8 +47,9 @@ interface WebContract
     /**
      * @api
      *
-     * @param array<string,mixed> $schema JSON Schema for the returned data object. TypeScript Zod users can pass a JSON Schema generated from a Zod object; Python users can pass the equivalent JSON Schema object.
+     * @param array<string,mixed> $schema JSON Schema for the returned data object. Image fields such as `image_urls` or `product_photos` automatically make page image references available to extraction, so product data and photos can be returned in one call. TypeScript Zod users can pass a JSON Schema generated from a Zod object; Python users can pass the equivalent JSON Schema object.
      * @param string $url The starting website URL to crawl and extract from. Must include http:// or https://.
+     * @param list<ActionShape> $actions Optional browser actions executed in order on the requested page after it loads and before extraction. Requires a paid plan. When actions are provided and stopAfterMs is omitted, the crawl budget defaults to 110000 ms.
      * @param bool $factCheck When true, every returned value must be grounded in facts stated on the page; fields that cannot be supported by the page are returned as null/empty. When false (default), the model may make reasonable inferences and derivations from the page content (e.g. ideal customer, competitor analysis, recommendations) while keeping verifiable specifics (names, quotes, URLs, dates, metrics) faithful to the source.
      * @param bool $followSubdomains when true, follow links on subdomains of the starting URL's domain
      * @param bool $includeFrames when true, iframe contents are included in Markdown before extraction
@@ -57,7 +59,7 @@ interface WebContract
      * @param int $maxPages Maximum number of pages to analyze for extraction. Hard cap: 50. Defaults to 5.
      * @param Pdf|PdfShape $pdf
      * @param bool $settleAnimations When true, waits briefly for CSS and transition animations to settle before extracting each crawled page. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
-     * @param int $stopAfterMs Soft time budget for the crawl in milliseconds. Min: 10000 (10s). Max: 110000 (110s). Default: 80000 (80s).
+     * @param int $stopAfterMs Soft time budget for the crawl in milliseconds. Min: 10000 (10s). Max: 110000 (110s). Defaults to 80000 (80s), or 110000 (110s) when browser actions are provided.
      * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param int $waitForMs optional browser wait time in milliseconds after initial page load for each crawled page
@@ -68,6 +70,7 @@ interface WebContract
     public function extract(
         array $schema,
         string $url,
+        ?array $actions = null,
         bool $factCheck = false,
         bool $followSubdomains = false,
         bool $includeFrames = false,
@@ -278,7 +281,7 @@ interface WebContract
      * @api
      *
      * @param string $url Full URL to scrape (must include http:// or https:// protocol)
-     * @param list<ActionShape>|null $actions Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
+     * @param list<ActionShape1>|null $actions Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
      * @param \ContextDev\Web\WebWebScrapeHTMLParams\Country|value-of<\ContextDev\Web\WebWebScrapeHTMLParams\Country> $country fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2)
      * @param list<string>|null $excludeSelectors CSS selectors to remove from the result. Applied after includeSelectors. Exclusion takes precedence: an element matching both is removed. Examples: "nav", "footer", ".ad-banner", "[aria-hidden=true]".
      * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
@@ -321,7 +324,7 @@ interface WebContract
      * @api
      *
      * @param string $url Page URL to inspect. Must include http:// or https://.
-     * @param list<ActionShape1>|null $actions Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
+     * @param list<ActionShape2>|null $actions Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
      * @param bool $dedupe When true, visually duplicate images are removed: every image is loaded and perceptually hashed, and only the highest-resolution copy of each duplicate group is kept. Images that cannot be downloaded or hashed are kept. Default: false.
      * @param Enrichment|EnrichmentShape|null $enrichment optional per-image processing, sent as deep-object query params such as enrichment[resolution]=true
      * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
@@ -350,7 +353,7 @@ interface WebContract
      * @api
      *
      * @param string $url Full URL to scrape into LLM usable Markdown (must include http:// or https:// protocol)
-     * @param list<ActionShape2>|null $actions Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
+     * @param list<ActionShape3>|null $actions Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
      * @param \ContextDev\Web\WebWebScrapeMdParams\Country|value-of<\ContextDev\Web\WebWebScrapeMdParams\Country> $country fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2)
      * @param list<string>|null $excludeSelectors CSS selectors to remove before conversion to Markdown. Applied after includeSelectors. Exclusion takes precedence: an element matching both is removed. Examples: "nav", "footer", ".ad-banner", "[aria-hidden=true]".
      * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.

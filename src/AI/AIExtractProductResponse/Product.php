@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ContextDev\AI\AIExtractProductResponse;
 
+use ContextDev\AI\AIExtractProductResponse\Product\Availability;
 use ContextDev\AI\AIExtractProductResponse\Product\BillingFrequency;
 use ContextDev\AI\AIExtractProductResponse\Product\PricingModel;
 use ContextDev\Core\Attributes\Optional;
@@ -22,12 +23,15 @@ use ContextDev\Core\Contracts\BaseModel;
  *   sku: string|null,
  *   tags: list<string>,
  *   targetAudience: list<string>,
+ *   availability?: null|Availability|value-of<Availability>,
  *   billingFrequency?: null|BillingFrequency|value-of<BillingFrequency>,
  *   category?: string|null,
  *   currency?: string|null,
+ *   dimensions?: list<string>|null,
  *   imageURL?: string|null,
  *   price?: float|null,
  *   pricingModel?: null|PricingModel|value-of<PricingModel>,
+ *   regularPrice?: float|null,
  *   url?: string|null,
  * }
  */
@@ -87,6 +91,14 @@ final class Product implements BaseModel
     public array $targetAudience;
 
     /**
+     * Normalized stock or ordering availability.
+     *
+     * @var value-of<Availability>|null $availability
+     */
+    #[Optional(enum: Availability::class, nullable: true)]
+    public ?string $availability;
+
+    /**
      * Billing frequency for the product.
      *
      * @var value-of<BillingFrequency>|null $billingFrequency
@@ -111,6 +123,14 @@ final class Product implements BaseModel
     public ?string $currency;
 
     /**
+     * Dimension statements shown for the product, preserving labels, values, and units.
+     *
+     * @var list<string>|null $dimensions
+     */
+    #[Optional(list: 'string')]
+    public ?array $dimensions;
+
+    /**
      * URL to the product image.
      */
     #[Optional('image_url', nullable: true)]
@@ -129,6 +149,12 @@ final class Product implements BaseModel
      */
     #[Optional('pricing_model', enum: PricingModel::class, nullable: true)]
     public ?string $pricingModel;
+
+    /**
+     * Original or regular price before a displayed discount.
+     */
+    #[Optional('regular_price', nullable: true)]
+    public ?float $regularPrice;
 
     /**
      * URL to the product page.
@@ -179,7 +205,9 @@ final class Product implements BaseModel
      * @param list<string> $images
      * @param list<string> $tags
      * @param list<string> $targetAudience
+     * @param Availability|value-of<Availability>|null $availability
      * @param BillingFrequency|value-of<BillingFrequency>|null $billingFrequency
+     * @param list<string>|null $dimensions
      * @param PricingModel|value-of<PricingModel>|null $pricingModel
      */
     public static function with(
@@ -190,12 +218,15 @@ final class Product implements BaseModel
         ?string $sku,
         array $tags,
         array $targetAudience,
+        Availability|string|null $availability = null,
         BillingFrequency|string|null $billingFrequency = null,
         ?string $category = null,
         ?string $currency = null,
+        ?array $dimensions = null,
         ?string $imageURL = null,
         ?float $price = null,
         PricingModel|string|null $pricingModel = null,
+        ?float $regularPrice = null,
         ?string $url = null,
     ): self {
         $self = new self;
@@ -208,12 +239,15 @@ final class Product implements BaseModel
         $self['tags'] = $tags;
         $self['targetAudience'] = $targetAudience;
 
+        null !== $availability && $self['availability'] = $availability;
         null !== $billingFrequency && $self['billingFrequency'] = $billingFrequency;
         null !== $category && $self['category'] = $category;
         null !== $currency && $self['currency'] = $currency;
+        null !== $dimensions && $self['dimensions'] = $dimensions;
         null !== $imageURL && $self['imageURL'] = $imageURL;
         null !== $price && $self['price'] = $price;
         null !== $pricingModel && $self['pricingModel'] = $pricingModel;
+        null !== $regularPrice && $self['regularPrice'] = $regularPrice;
         null !== $url && $self['url'] = $url;
 
         return $self;
@@ -305,6 +339,20 @@ final class Product implements BaseModel
     }
 
     /**
+     * Normalized stock or ordering availability.
+     *
+     * @param Availability|value-of<Availability>|null $availability
+     */
+    public function withAvailability(
+        Availability|string|null $availability
+    ): self {
+        $self = clone $this;
+        $self['availability'] = $availability;
+
+        return $self;
+    }
+
+    /**
      * Billing frequency for the product.
      *
      * @param BillingFrequency|value-of<BillingFrequency>|null $billingFrequency
@@ -341,6 +389,19 @@ final class Product implements BaseModel
     }
 
     /**
+     * Dimension statements shown for the product, preserving labels, values, and units.
+     *
+     * @param list<string> $dimensions
+     */
+    public function withDimensions(array $dimensions): self
+    {
+        $self = clone $this;
+        $self['dimensions'] = $dimensions;
+
+        return $self;
+    }
+
+    /**
      * URL to the product image.
      */
     public function withImageURL(?string $imageURL): self
@@ -372,6 +433,17 @@ final class Product implements BaseModel
     ): self {
         $self = clone $this;
         $self['pricingModel'] = $pricingModel;
+
+        return $self;
+    }
+
+    /**
+     * Original or regular price before a displayed discount.
+     */
+    public function withRegularPrice(?float $regularPrice): self
+    {
+        $self = clone $this;
+        $self['regularPrice'] = $regularPrice;
 
         return $self;
     }

@@ -9,6 +9,7 @@ use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebExtractParams\Action;
 use ContextDev\Web\WebExtractParams\Pdf;
 
 /**
@@ -16,11 +17,14 @@ use ContextDev\Web\WebExtractParams\Pdf;
  *
  * @see ContextDev\Services\WebService::extract()
  *
+ * @phpstan-import-type ActionVariants from \ContextDev\Web\WebExtractParams\Action
+ * @phpstan-import-type ActionShape from \ContextDev\Web\WebExtractParams\Action
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebExtractParams\Pdf
  *
  * @phpstan-type WebExtractParamsShape = array{
  *   schema: array<string,mixed>,
  *   url: string,
+ *   actions?: list<ActionShape>|null,
  *   factCheck?: bool|null,
  *   followSubdomains?: bool|null,
  *   includeFrames?: bool|null,
@@ -43,7 +47,7 @@ final class WebExtractParams implements BaseModel
     use SdkParams;
 
     /**
-     * JSON Schema for the returned data object. TypeScript Zod users can pass a JSON Schema generated from a Zod object; Python users can pass the equivalent JSON Schema object.
+     * JSON Schema for the returned data object. Image fields such as `image_urls` or `product_photos` automatically make page image references available to extraction, so product data and photos can be returned in one call. TypeScript Zod users can pass a JSON Schema generated from a Zod object; Python users can pass the equivalent JSON Schema object.
      *
      * @var array<string,mixed> $schema
      */
@@ -55,6 +59,14 @@ final class WebExtractParams implements BaseModel
      */
     #[Required]
     public string $url;
+
+    /**
+     * Optional browser actions executed in order on the requested page after it loads and before extraction. Requires a paid plan. When actions are provided and stopAfterMs is omitted, the crawl budget defaults to 110000 ms.
+     *
+     * @var list<ActionVariants>|null $actions
+     */
+    #[Optional(list: Action::class)]
+    public ?array $actions;
 
     /**
      * When true, every returned value must be grounded in facts stated on the page; fields that cannot be supported by the page are returned as null/empty. When false (default), the model may make reasonable inferences and derivations from the page content (e.g. ideal customer, competitor analysis, recommendations) while keeping verifiable specifics (names, quotes, URLs, dates, metrics) faithful to the source.
@@ -108,7 +120,7 @@ final class WebExtractParams implements BaseModel
     public ?bool $settleAnimations;
 
     /**
-     * Soft time budget for the crawl in milliseconds. Min: 10000 (10s). Max: 110000 (110s). Default: 80000 (80s).
+     * Soft time budget for the crawl in milliseconds. Min: 10000 (10s). Max: 110000 (110s). Defaults to 80000 (80s), or 110000 (110s) when browser actions are provided.
      */
     #[Optional]
     public ?int $stopAfterMs;
@@ -158,12 +170,14 @@ final class WebExtractParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param array<string,mixed> $schema
+     * @param list<ActionShape>|null $actions
      * @param Pdf|PdfShape|null $pdf
      * @param list<string>|null $tags
      */
     public static function with(
         array $schema,
         string $url,
+        ?array $actions = null,
         ?bool $factCheck = null,
         ?bool $followSubdomains = null,
         ?bool $includeFrames = null,
@@ -183,6 +197,7 @@ final class WebExtractParams implements BaseModel
         $self['schema'] = $schema;
         $self['url'] = $url;
 
+        null !== $actions && $self['actions'] = $actions;
         null !== $factCheck && $self['factCheck'] = $factCheck;
         null !== $followSubdomains && $self['followSubdomains'] = $followSubdomains;
         null !== $includeFrames && $self['includeFrames'] = $includeFrames;
@@ -201,7 +216,7 @@ final class WebExtractParams implements BaseModel
     }
 
     /**
-     * JSON Schema for the returned data object. TypeScript Zod users can pass a JSON Schema generated from a Zod object; Python users can pass the equivalent JSON Schema object.
+     * JSON Schema for the returned data object. Image fields such as `image_urls` or `product_photos` automatically make page image references available to extraction, so product data and photos can be returned in one call. TypeScript Zod users can pass a JSON Schema generated from a Zod object; Python users can pass the equivalent JSON Schema object.
      *
      * @param array<string,mixed> $schema
      */
@@ -220,6 +235,19 @@ final class WebExtractParams implements BaseModel
     {
         $self = clone $this;
         $self['url'] = $url;
+
+        return $self;
+    }
+
+    /**
+     * Optional browser actions executed in order on the requested page after it loads and before extraction. Requires a paid plan. When actions are provided and stopAfterMs is omitted, the crawl budget defaults to 110000 ms.
+     *
+     * @param list<ActionShape> $actions
+     */
+    public function withActions(array $actions): self
+    {
+        $self = clone $this;
+        $self['actions'] = $actions;
 
         return $self;
     }
@@ -324,7 +352,7 @@ final class WebExtractParams implements BaseModel
     }
 
     /**
-     * Soft time budget for the crawl in milliseconds. Min: 10000 (10s). Max: 110000 (110s). Default: 80000 (80s).
+     * Soft time budget for the crawl in milliseconds. Min: 10000 (10s). Max: 110000 (110s). Defaults to 80000 (80s), or 110000 (110s) when browser actions are provided.
      */
     public function withStopAfterMs(int $stopAfterMs): self
     {

@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace ContextDev\Web\WebExtractResponse;
 
+use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebExtractResponse\Metadata\ActionsApplied;
 
 /**
+ * @phpstan-import-type ActionsAppliedShape from \ContextDev\Web\WebExtractResponse\Metadata\ActionsApplied
+ *
  * @phpstan-type MetadataShape = array{
  *   maxCrawlDepth: int,
  *   numBlocked: int,
@@ -16,6 +20,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   numSkipped: int,
  *   numSucceeded: int,
  *   numURLs: int,
+ *   actionsApplied?: list<ActionsApplied|ActionsAppliedShape>|null,
  * }
  */
 final class Metadata implements BaseModel
@@ -43,6 +48,14 @@ final class Metadata implements BaseModel
 
     #[Required('numUrls')]
     public int $numURLs;
+
+    /**
+     * One verified outcome per requested browser action, in request order.
+     *
+     * @var list<ActionsApplied>|null $actionsApplied
+     */
+    #[Optional(list: ActionsApplied::class)]
+    public ?array $actionsApplied;
 
     /**
      * `new Metadata()` is missing required properties by the API.
@@ -80,6 +93,8 @@ final class Metadata implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param list<ActionsApplied|ActionsAppliedShape>|null $actionsApplied
      */
     public static function with(
         int $maxCrawlDepth,
@@ -88,6 +103,7 @@ final class Metadata implements BaseModel
         int $numSkipped,
         int $numSucceeded,
         int $numURLs,
+        ?array $actionsApplied = null,
     ): self {
         $self = new self;
 
@@ -97,6 +113,8 @@ final class Metadata implements BaseModel
         $self['numSkipped'] = $numSkipped;
         $self['numSucceeded'] = $numSucceeded;
         $self['numURLs'] = $numURLs;
+
+        null !== $actionsApplied && $self['actionsApplied'] = $actionsApplied;
 
         return $self;
     }
@@ -148,6 +166,19 @@ final class Metadata implements BaseModel
     {
         $self = clone $this;
         $self['numURLs'] = $numURLs;
+
+        return $self;
+    }
+
+    /**
+     * One verified outcome per requested browser action, in request order.
+     *
+     * @param list<ActionsApplied|ActionsAppliedShape> $actionsApplied
+     */
+    public function withActionsApplied(array $actionsApplied): self
+    {
+        $self = clone $this;
+        $self['actionsApplied'] = $actionsApplied;
 
         return $self;
     }

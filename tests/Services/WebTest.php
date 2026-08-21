@@ -74,6 +74,7 @@ final class WebTest extends TestCase
                 'additionalProperties' => 'bar',
             ],
             url: 'https://example.com',
+            actions: [['do' => 'wait', 'timeMs' => 0]],
             factCheck: true,
             followSubdomains: true,
             includeFrames: true,
