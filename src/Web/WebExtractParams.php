@@ -61,7 +61,7 @@ final class WebExtractParams implements BaseModel
     public string $url;
 
     /**
-     * Optional browser actions executed in order on the requested page after it loads and before extraction. Requires a paid plan. When actions are provided and stopAfterMs is omitted, the crawl budget defaults to 110000 ms.
+     * Optional browser actions executed in order on the requested page after it loads, before links are discovered or additional pages are crawled. Requires a paid plan. When actions are provided and stopAfterMs is omitted, the crawl budget defaults to 110000 ms.
      *
      * @var list<ActionVariants>|null $actions
      */
@@ -240,7 +240,7 @@ final class WebExtractParams implements BaseModel
     }
 
     /**
-     * Optional browser actions executed in order on the requested page after it loads and before extraction. Requires a paid plan. When actions are provided and stopAfterMs is omitted, the crawl budget defaults to 110000 ms.
+     * Optional browser actions executed in order on the requested page after it loads, before links are discovered or additional pages are crawled. Requires a paid plan. When actions are provided and stopAfterMs is omitted, the crawl budget defaults to 110000 ms.
      *
      * @param list<ActionShape> $actions
      */

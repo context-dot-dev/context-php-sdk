@@ -8,17 +8,20 @@ use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebWebScrapeImagesResponse\ActionsApplied;
 use ContextDev\Web\WebWebScrapeImagesResponse\Image;
 use ContextDev\Web\WebWebScrapeImagesResponse\KeyMetadata;
 
 /**
  * @phpstan-import-type ImageShape from \ContextDev\Web\WebWebScrapeImagesResponse\Image
+ * @phpstan-import-type ActionsAppliedShape from \ContextDev\Web\WebWebScrapeImagesResponse\ActionsApplied
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Web\WebWebScrapeImagesResponse\KeyMetadata
  *
  * @phpstan-type WebWebScrapeImagesResponseShape = array{
  *   images: list<Image|ImageShape>,
  *   success: bool,
  *   url: string,
+ *   actionsApplied?: list<ActionsApplied|ActionsAppliedShape>|null,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  * }
  */
@@ -46,6 +49,14 @@ final class WebWebScrapeImagesResponse implements BaseModel
      */
     #[Required]
     public string $url;
+
+    /**
+     * One verified outcome per requested browser action, in request order.
+     *
+     * @var list<ActionsApplied>|null $actionsApplied
+     */
+    #[Optional(list: ActionsApplied::class)]
+    public ?array $actionsApplied;
 
     /**
      * Metadata about the API key used for the request. Included in every response whenever a valid API key is provided, even when the response status is not 200.
@@ -81,12 +92,14 @@ final class WebWebScrapeImagesResponse implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param list<Image|ImageShape> $images
+     * @param list<ActionsApplied|ActionsAppliedShape>|null $actionsApplied
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
     public static function with(
         array $images,
         bool $success,
         string $url,
+        ?array $actionsApplied = null,
         KeyMetadata|array|null $keyMetadata = null,
     ): self {
         $self = new self;
@@ -95,6 +108,7 @@ final class WebWebScrapeImagesResponse implements BaseModel
         $self['success'] = $success;
         $self['url'] = $url;
 
+        null !== $actionsApplied && $self['actionsApplied'] = $actionsApplied;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
 
         return $self;
@@ -131,6 +145,19 @@ final class WebWebScrapeImagesResponse implements BaseModel
     {
         $self = clone $this;
         $self['url'] = $url;
+
+        return $self;
+    }
+
+    /**
+     * One verified outcome per requested browser action, in request order.
+     *
+     * @param list<ActionsApplied|ActionsAppliedShape> $actionsApplied
+     */
+    public function withActionsApplied(array $actionsApplied): self
+    {
+        $self = clone $this;
+        $self['actionsApplied'] = $actionsApplied;
 
         return $self;
     }

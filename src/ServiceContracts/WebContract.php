@@ -49,7 +49,7 @@ interface WebContract
      *
      * @param array<string,mixed> $schema JSON Schema for the returned data object. Image fields such as `image_urls` or `product_photos` automatically make page image references available to extraction, so product data and photos can be returned in one call. TypeScript Zod users can pass a JSON Schema generated from a Zod object; Python users can pass the equivalent JSON Schema object.
      * @param string $url The starting website URL to crawl and extract from. Must include http:// or https://.
-     * @param list<ActionShape> $actions Optional browser actions executed in order on the requested page after it loads and before extraction. Requires a paid plan. When actions are provided and stopAfterMs is omitted, the crawl budget defaults to 110000 ms.
+     * @param list<ActionShape> $actions Optional browser actions executed in order on the requested page after it loads, before links are discovered or additional pages are crawled. Requires a paid plan. When actions are provided and stopAfterMs is omitted, the crawl budget defaults to 110000 ms.
      * @param bool $factCheck When true, every returned value must be grounded in facts stated on the page; fields that cannot be supported by the page are returned as null/empty. When false (default), the model may make reasonable inferences and derivations from the page content (e.g. ideal customer, competitor analysis, recommendations) while keeping verifiable specifics (names, quotes, URLs, dates, metrics) faithful to the source.
      * @param bool $followSubdomains when true, follow links on subdomains of the starting URL's domain
      * @param bool $includeFrames when true, iframe contents are included in Markdown before extraction
