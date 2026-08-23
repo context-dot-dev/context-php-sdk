@@ -32,15 +32,16 @@ use ContextDev\Web\WebWebScrapeMdResponse;
 use ContextDev\Web\WebWebScrapeSitemapResponse;
 
 /**
+ * @phpstan-import-type ActionShape from \ContextDev\Web\WebExtractParams\Action
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebExtractParams\Pdf
  * @phpstan-import-type ViewportShape from \ContextDev\Web\WebScreenshotParams\Viewport
  * @phpstan-import-type MarkdownOptionsShape from \ContextDev\Web\WebSearchParams\MarkdownOptions
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebCrawlMdParams\Pdf as PdfShape1
- * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeHTMLParams\Action
+ * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeHTMLParams\Action as ActionShape1
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeHTMLParams\Pdf as PdfShape2
- * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeImagesParams\Action as ActionShape1
+ * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeImagesParams\Action as ActionShape2
  * @phpstan-import-type EnrichmentShape from \ContextDev\Web\WebWebScrapeImagesParams\Enrichment
- * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeMdParams\Action as ActionShape2
+ * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeMdParams\Action as ActionShape3
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeMdParams\Pdf as PdfShape3
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
@@ -64,8 +65,9 @@ final class WebService implements WebContract
      *
      * Crawl a website, use the provided JSON Schema and instructions to prioritize relevant internal links, and extract structured data from the selected pages.
      *
-     * @param array<string,mixed> $schema JSON Schema for the returned data object. TypeScript Zod users can pass a JSON Schema generated from a Zod object; Python users can pass the equivalent JSON Schema object.
+     * @param array<string,mixed> $schema JSON Schema for the returned data object. Image fields such as `image_urls` or `product_photos` automatically make page image references available to extraction, so product data and photos can be returned in one call. TypeScript Zod users can pass a JSON Schema generated from a Zod object; Python users can pass the equivalent JSON Schema object.
      * @param string $url The starting website URL to crawl and extract from. Must include http:// or https://.
+     * @param list<ActionShape> $actions Optional browser actions executed in order on the requested page after it loads, before links are discovered or additional pages are crawled. Requires a paid plan. When actions are provided and stopAfterMs is omitted, the crawl budget defaults to 110000 ms.
      * @param bool $factCheck When true, every returned value must be grounded in facts stated on the page; fields that cannot be supported by the page are returned as null/empty. When false (default), the model may make reasonable inferences and derivations from the page content (e.g. ideal customer, competitor analysis, recommendations) while keeping verifiable specifics (names, quotes, URLs, dates, metrics) faithful to the source.
      * @param bool $followSubdomains when true, follow links on subdomains of the starting URL's domain
      * @param bool $includeFrames when true, iframe contents are included in Markdown before extraction
@@ -75,7 +77,7 @@ final class WebService implements WebContract
      * @param int $maxPages Maximum number of pages to analyze for extraction. Hard cap: 50. Defaults to 5.
      * @param Pdf|PdfShape $pdf
      * @param bool $settleAnimations When true, waits briefly for CSS and transition animations to settle before extracting each crawled page. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
-     * @param int $stopAfterMs Soft time budget for the crawl in milliseconds. Min: 10000 (10s). Max: 110000 (110s). Default: 80000 (80s).
+     * @param int $stopAfterMs Soft time budget for the crawl in milliseconds. Min: 10000 (10s). Max: 110000 (110s). Defaults to 80000 (80s), or 110000 (110s) when browser actions are provided.
      * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param int $waitForMs optional browser wait time in milliseconds after initial page load for each crawled page
@@ -86,6 +88,7 @@ final class WebService implements WebContract
     public function extract(
         array $schema,
         string $url,
+        ?array $actions = null,
         bool $factCheck = false,
         bool $followSubdomains = false,
         bool $includeFrames = false,
@@ -105,6 +108,7 @@ final class WebService implements WebContract
             [
                 'schema' => $schema,
                 'url' => $url,
+                'actions' => $actions,
                 'factCheck' => $factCheck,
                 'followSubdomains' => $followSubdomains,
                 'includeFrames' => $includeFrames,
@@ -384,9 +388,9 @@ final class WebService implements WebContract
      * @param int $stopAfterMs Soft time budget for the crawl in milliseconds. After each scrape, the crawler checks the elapsed time and, if exceeded, returns the pages collected so far instead of continuing. Min: 10000 (10s). Max: 110000 (110s). Default: 80000 (80s).
      * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
-     * @param string $urlRegex Regex pattern. Only URLs matching this pattern will be followed and scraped.
+     * @param string $urlRegex Regex pattern. Only URLs matching this pattern will be followed and scraped. An automatic prefix scope in the form ^<starting URL> follows a redirect of the starting page.
      * @param bool $useMainContentOnly Extract only the main content, stripping headers, footers, sidebars, and navigation
-     * @param int $waitForMs Optional browser wait time in milliseconds after initial page load for each crawled page. Min: 0. Max: 30000 (30 seconds).
+     * @param int $waitForMs Browser wait time in milliseconds after initial page load for each crawled page. Defaults to 3500 (3.5 seconds). Min: 0. Max: 30000 (30 seconds).
      * @param \ContextDev\Web\WebWebCrawlMdParams\Zdr|value-of<\ContextDev\Web\WebWebCrawlMdParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
@@ -414,7 +418,7 @@ final class WebService implements WebContract
         ?int $timeoutMs = null,
         ?string $urlRegex = null,
         bool $useMainContentOnly = false,
-        ?int $waitForMs = null,
+        int $waitForMs = 3500,
         \ContextDev\Web\WebWebCrawlMdParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): WebWebCrawlMdResponse {
@@ -456,7 +460,7 @@ final class WebService implements WebContract
      * Scrapes the given URL and returns the raw HTML content of the page. The base request costs 1 credit; requests with browser actions cost 2 credits.
      *
      * @param string $url Full URL to scrape (must include http:// or https:// protocol)
-     * @param list<ActionShape>|null $actions Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
+     * @param list<ActionShape1>|null $actions Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
      * @param \ContextDev\Web\WebWebScrapeHTMLParams\Country|value-of<\ContextDev\Web\WebWebScrapeHTMLParams\Country> $country fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2)
      * @param list<string>|null $excludeSelectors CSS selectors to remove from the result. Applied after includeSelectors. Exclusion takes precedence: an element matching both is removed. Examples: "nav", "footer", ".ad-banner", "[aria-hidden=true]".
      * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
@@ -526,7 +530,7 @@ final class WebService implements WebContract
      * Extract image assets from a web page, including standard URLs, inline SVGs, data URIs, responsive image sources, metadata, CSS backgrounds, video posters, and embeds. The base request costs 1 credit, or 2 credits with browser actions. When enrichment is enabled, the entire call costs 5 credits, including requests that also use actions.
      *
      * @param string $url Page URL to inspect. Must include http:// or https://.
-     * @param list<ActionShape1>|null $actions Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
+     * @param list<ActionShape2>|null $actions Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
      * @param bool $dedupe When true, visually duplicate images are removed: every image is loaded and perceptually hashed, and only the highest-resolution copy of each duplicate group is kept. Images that cannot be downloaded or hashed are kept. Default: false.
      * @param Enrichment|EnrichmentShape|null $enrichment optional per-image processing, sent as deep-object query params such as enrichment[resolution]=true
      * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
@@ -594,7 +598,7 @@ final class WebService implements WebContract
      * | 500 | No | Internal error |
      *
      * @param string $url Full URL to scrape into LLM usable Markdown (must include http:// or https:// protocol)
-     * @param list<ActionShape2>|null $actions Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
+     * @param list<ActionShape3>|null $actions Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
      * @param \ContextDev\Web\WebWebScrapeMdParams\Country|value-of<\ContextDev\Web\WebWebScrapeMdParams\Country> $country fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2)
      * @param list<string>|null $excludeSelectors CSS selectors to remove before conversion to Markdown. Applied after includeSelectors. Exclusion takes precedence: an element matching both is removed. Examples: "nav", "footer", ".ad-banner", "[aria-hidden=true]".
      * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
