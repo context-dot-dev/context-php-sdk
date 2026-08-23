@@ -8,6 +8,7 @@ use ContextDev\Core\Concerns\SdkUnion;
 use ContextDev\Core\Conversion\Contracts\Converter;
 use ContextDev\Core\Conversion\Contracts\ConverterSource;
 use ContextDev\Web\WebWebScrapeImagesParams\Action\WebScrapePerformAction;
+use ContextDev\Web\WebWebScrapeImagesParams\Action\WebScrapeScrollAction;
 use ContextDev\Web\WebWebScrapeImagesParams\Action\WebScrapeWaitAction;
 
 /**
@@ -15,9 +16,10 @@ use ContextDev\Web\WebWebScrapeImagesParams\Action\WebScrapeWaitAction;
  *
  * @phpstan-import-type WebScrapeWaitActionShape from \ContextDev\Web\WebWebScrapeImagesParams\Action\WebScrapeWaitAction
  * @phpstan-import-type WebScrapePerformActionShape from \ContextDev\Web\WebWebScrapeImagesParams\Action\WebScrapePerformAction
+ * @phpstan-import-type WebScrapeScrollActionShape from \ContextDev\Web\WebWebScrapeImagesParams\Action\WebScrapeScrollAction
  *
- * @phpstan-type ActionVariants = WebScrapeWaitAction|WebScrapePerformAction
- * @phpstan-type ActionShape = ActionVariants|WebScrapeWaitActionShape|WebScrapePerformActionShape
+ * @phpstan-type ActionVariants = WebScrapeWaitAction|WebScrapePerformAction|WebScrapeScrollAction
+ * @phpstan-type ActionShape = ActionVariants|WebScrapeWaitActionShape|WebScrapePerformActionShape|WebScrapeScrollActionShape
  */
 final class Action implements ConverterSource
 {
@@ -36,6 +38,7 @@ final class Action implements ConverterSource
         return [
             'wait' => WebScrapeWaitAction::class,
             'perform' => WebScrapePerformAction::class,
+            'scroll' => WebScrapeScrollAction::class,
         ];
     }
 }
