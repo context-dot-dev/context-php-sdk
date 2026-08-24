@@ -121,7 +121,7 @@ final class Brand implements BaseModel
     public ?Links $links;
 
     /**
-     * An array of logos associated with the brand.
+     * An array of logos associated with the brand. When a similarly shaped SVG variant exists, it is returned ahead of its raster equivalent; otherwise relevance order is preserved.
      *
      * @var list<Logo>|null $logos
      */
@@ -354,7 +354,7 @@ final class Brand implements BaseModel
     }
 
     /**
-     * An array of logos associated with the brand.
+     * An array of logos associated with the brand. When a similarly shaped SVG variant exists, it is returned ahead of its raster equivalent; otherwise relevance order is preserved.
      *
      * @param list<Logo|LogoShape> $logos
      */
