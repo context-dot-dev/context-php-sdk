@@ -55,7 +55,7 @@ final class NewsService implements NewsContract
     public function search(
         SearchBy|array $searchBy,
         ?string $cursor = null,
-        FilterBy|array $filterBy = (object) [],
+        FilterBy|array|null $filterBy = null,
         int $limit = 10,
         SortBy|array $sortBy = ['type' => 'newest'],
         ?array $tags = null,
