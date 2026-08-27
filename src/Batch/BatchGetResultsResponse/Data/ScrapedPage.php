@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ContextDev\Batch\BatchGetResultsResponse\Data;
 
+use ContextDev\Batch\BatchGetResultsResponse\Data\ScrapedPage\CacheMetadata;
 use ContextDev\Batch\BatchGetResultsResponse\Data\ScrapedPage\Metadata;
 use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
@@ -13,9 +14,11 @@ use ContextDev\Core\Contracts\BaseModel;
 /**
  * A page the batch fetched successfully.
  *
+ * @phpstan-import-type CacheMetadataShape from \ContextDev\Batch\BatchGetResultsResponse\Data\ScrapedPage\CacheMetadata
  * @phpstan-import-type MetadataShape from \ContextDev\Batch\BatchGetResultsResponse\Data\ScrapedPage\Metadata
  *
  * @phpstan-type ScrapedPageShape = array{
+ *   cacheMetadata: CacheMetadata|CacheMetadataShape,
  *   finalURL: string,
  *   httpStatus: int|null,
  *   metadata: Metadata|MetadataShape,
@@ -40,6 +43,12 @@ final class ScrapedPage implements BaseModel
      */
     #[Required]
     public string $status = 'ok';
+
+    /**
+     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     */
+    #[Required('cache_metadata')]
+    public CacheMetadata $cacheMetadata;
 
     /**
      * URL the content was read from, after redirects.
@@ -102,13 +111,16 @@ final class ScrapedPage implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * ScrapedPage::with(finalURL: ..., httpStatus: ..., metadata: ..., url: ...)
+     * ScrapedPage::with(
+     *   cacheMetadata: ..., finalURL: ..., httpStatus: ..., metadata: ..., url: ...
+     * )
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
      * (new ScrapedPage)
+     *   ->withCacheMetadata(...)
      *   ->withFinalURL(...)
      *   ->withHTTPStatus(...)
      *   ->withMetadata(...)
@@ -125,10 +137,12 @@ final class ScrapedPage implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      * @param Metadata|MetadataShape $metadata
      * @param array<string,mixed>|null $meta
      */
     public static function with(
+        CacheMetadata|array $cacheMetadata,
         string $finalURL,
         ?int $httpStatus,
         Metadata|array $metadata,
@@ -141,6 +155,7 @@ final class ScrapedPage implements BaseModel
     ): self {
         $self = new self;
 
+        $self['cacheMetadata'] = $cacheMetadata;
         $self['finalURL'] = $finalURL;
         $self['httpStatus'] = $httpStatus;
         $self['metadata'] = $metadata;
@@ -151,6 +166,19 @@ final class ScrapedPage implements BaseModel
         null !== $markdown && $self['markdown'] = $markdown;
         null !== $meta && $self['meta'] = $meta;
         null !== $ocrPages && $self['ocrPages'] = $ocrPages;
+
+        return $self;
+    }
+
+    /**
+     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     *
+     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
+     */
+    public function withCacheMetadata(CacheMetadata|array $cacheMetadata): self
+    {
+        $self = clone $this;
+        $self['cacheMetadata'] = $cacheMetadata;
 
         return $self;
     }

@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace ContextDev\AI;
 
+use ContextDev\AI\AIExtractProductResponse\CacheMetadata;
 use ContextDev\AI\AIExtractProductResponse\KeyMetadata;
 use ContextDev\AI\AIExtractProductResponse\Platform;
 use ContextDev\AI\AIExtractProductResponse\Product;
 use ContextDev\Core\Attributes\Optional;
+use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
+ * @phpstan-import-type CacheMetadataShape from \ContextDev\AI\AIExtractProductResponse\CacheMetadata
  * @phpstan-import-type KeyMetadataShape from \ContextDev\AI\AIExtractProductResponse\KeyMetadata
  * @phpstan-import-type ProductShape from \ContextDev\AI\AIExtractProductResponse\Product
  *
  * @phpstan-type AIExtractProductResponseShape = array{
+ *   cacheMetadata: CacheMetadata|CacheMetadataShape,
  *   isProductPage?: bool|null,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  *   platform?: null|Platform|value-of<Platform>,
@@ -26,6 +30,12 @@ final class AIExtractProductResponse implements BaseModel
 {
     /** @use SdkModel<AIExtractProductResponseShape> */
     use SdkModel;
+
+    /**
+     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     */
+    #[Required('cache_metadata')]
+    public CacheMetadata $cacheMetadata;
 
     /**
      * Whether the given URL is a product detail page.
@@ -53,6 +63,20 @@ final class AIExtractProductResponse implements BaseModel
     #[Optional(nullable: true)]
     public ?Product $product;
 
+    /**
+     * `new AIExtractProductResponse()` is missing required properties by the API.
+     *
+     * To enforce required parameters use
+     * ```
+     * AIExtractProductResponse::with(cacheMetadata: ...)
+     * ```
+     *
+     * Otherwise ensure the following setters are called
+     *
+     * ```
+     * (new AIExtractProductResponse)->withCacheMetadata(...)
+     * ```
+     */
     public function __construct()
     {
         $this->initialize();
@@ -63,11 +87,13 @@ final class AIExtractProductResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      * @param Platform|value-of<Platform>|null $platform
      * @param Product|ProductShape|null $product
      */
     public static function with(
+        CacheMetadata|array $cacheMetadata,
         ?bool $isProductPage = null,
         KeyMetadata|array|null $keyMetadata = null,
         Platform|string|null $platform = null,
@@ -75,10 +101,25 @@ final class AIExtractProductResponse implements BaseModel
     ): self {
         $self = new self;
 
+        $self['cacheMetadata'] = $cacheMetadata;
+
         null !== $isProductPage && $self['isProductPage'] = $isProductPage;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
         null !== $platform && $self['platform'] = $platform;
         null !== $product && $self['product'] = $product;
+
+        return $self;
+    }
+
+    /**
+     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     *
+     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
+     */
+    public function withCacheMetadata(CacheMetadata|array $cacheMetadata): self
+    {
+        $self = clone $this;
+        $self['cacheMetadata'] = $cacheMetadata;
 
         return $self;
     }

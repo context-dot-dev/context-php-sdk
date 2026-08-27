@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ContextDev\Batch;
 
+use ContextDev\Batch\BatchSubmitResponse\CacheMetadata;
 use ContextDev\Batch\BatchSubmitResponse\Credits;
 use ContextDev\Batch\BatchSubmitResponse\Format;
 use ContextDev\Batch\BatchSubmitResponse\InvalidURL;
@@ -16,6 +17,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
+ * @phpstan-import-type CacheMetadataShape from \ContextDev\Batch\BatchSubmitResponse\CacheMetadata
  * @phpstan-import-type CrawlControlsShape from \ContextDev\Batch\CrawlControls
  * @phpstan-import-type CreditsShape from \ContextDev\Batch\BatchSubmitResponse\Credits
  * @phpstan-import-type IntakeShape from \ContextDev\Batch\Intake
@@ -24,6 +26,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *
  * @phpstan-type BatchSubmitResponseShape = array{
  *   id: string,
+ *   cacheMetadata: CacheMetadata|CacheMetadataShape,
  *   crawl: null|CrawlControls|CrawlControlsShape,
  *   createdAt: string,
  *   credits: Credits|CreditsShape,
@@ -47,6 +50,12 @@ final class BatchSubmitResponse implements BaseModel
      */
     #[Required]
     public string $id;
+
+    /**
+     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     */
+    #[Required('cache_metadata')]
+    public CacheMetadata $cacheMetadata;
 
     /**
      * The crawl controls as submitted, so the limits requested can be compared against what the crawl reached.
@@ -131,6 +140,7 @@ final class BatchSubmitResponse implements BaseModel
      * ```
      * BatchSubmitResponse::with(
      *   id: ...,
+     *   cacheMetadata: ...,
      *   crawl: ...,
      *   createdAt: ...,
      *   credits: ...,
@@ -148,6 +158,7 @@ final class BatchSubmitResponse implements BaseModel
      * ```
      * (new BatchSubmitResponse)
      *   ->withID(...)
+     *   ->withCacheMetadata(...)
      *   ->withCrawl(...)
      *   ->withCreatedAt(...)
      *   ->withCredits(...)
@@ -169,6 +180,7 @@ final class BatchSubmitResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      * @param CrawlControls|CrawlControlsShape|null $crawl
      * @param Credits|CreditsShape $credits
      * @param Format|value-of<Format> $format
@@ -181,6 +193,7 @@ final class BatchSubmitResponse implements BaseModel
      */
     public static function with(
         string $id,
+        CacheMetadata|array $cacheMetadata,
         CrawlControls|array|null $crawl,
         string $createdAt,
         Credits|array $credits,
@@ -196,6 +209,7 @@ final class BatchSubmitResponse implements BaseModel
         $self = new self;
 
         $self['id'] = $id;
+        $self['cacheMetadata'] = $cacheMetadata;
         $self['crawl'] = $crawl;
         $self['createdAt'] = $createdAt;
         $self['credits'] = $credits;
@@ -219,6 +233,19 @@ final class BatchSubmitResponse implements BaseModel
     {
         $self = clone $this;
         $self['id'] = $id;
+
+        return $self;
+    }
+
+    /**
+     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     *
+     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
+     */
+    public function withCacheMetadata(CacheMetadata|array $cacheMetadata): self
+    {
+        $self = clone $this;
+        $self['cacheMetadata'] = $cacheMetadata;
 
         return $self;
     }

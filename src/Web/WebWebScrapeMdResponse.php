@@ -9,15 +9,18 @@ use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebWebScrapeMdResponse\ActionsApplied;
+use ContextDev\Web\WebWebScrapeMdResponse\CacheMetadata;
 use ContextDev\Web\WebWebScrapeMdResponse\KeyMetadata;
 use ContextDev\Web\WebWebScrapeMdResponse\Metadata;
 
 /**
+ * @phpstan-import-type CacheMetadataShape from \ContextDev\Web\WebWebScrapeMdResponse\CacheMetadata
  * @phpstan-import-type MetadataShape from \ContextDev\Web\WebWebScrapeMdResponse\Metadata
  * @phpstan-import-type ActionsAppliedShape from \ContextDev\Web\WebWebScrapeMdResponse\ActionsApplied
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Web\WebWebScrapeMdResponse\KeyMetadata
  *
  * @phpstan-type WebWebScrapeMdResponseShape = array{
+ *   cacheMetadata: CacheMetadata|CacheMetadataShape,
  *   contentLength: int,
  *   markdown: string,
  *   metadata: Metadata|MetadataShape,
@@ -33,6 +36,12 @@ final class WebWebScrapeMdResponse implements BaseModel
 {
     /** @use SdkModel<WebWebScrapeMdResponseShape> */
     use SdkModel;
+
+    /**
+     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     */
+    #[Required('cache_metadata')]
+    public CacheMetadata $cacheMetadata;
 
     /**
      * UTF-8 byte length of the returned Markdown. Use 0 to identify an empty result and compare small values against your workload's minimum useful-content threshold.
@@ -96,7 +105,12 @@ final class WebWebScrapeMdResponse implements BaseModel
      * To enforce required parameters use
      * ```
      * WebWebScrapeMdResponse::with(
-     *   contentLength: ..., markdown: ..., metadata: ..., success: ..., url: ...
+     *   cacheMetadata: ...,
+     *   contentLength: ...,
+     *   markdown: ...,
+     *   metadata: ...,
+     *   success: ...,
+     *   url: ...,
      * )
      * ```
      *
@@ -104,6 +118,7 @@ final class WebWebScrapeMdResponse implements BaseModel
      *
      * ```
      * (new WebWebScrapeMdResponse)
+     *   ->withCacheMetadata(...)
      *   ->withContentLength(...)
      *   ->withMarkdown(...)
      *   ->withMetadata(...)
@@ -121,11 +136,13 @@ final class WebWebScrapeMdResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      * @param Metadata|MetadataShape $metadata
      * @param list<ActionsApplied|ActionsAppliedShape>|null $actionsApplied
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
     public static function with(
+        CacheMetadata|array $cacheMetadata,
         int $contentLength,
         string $markdown,
         Metadata|array $metadata,
@@ -138,6 +155,7 @@ final class WebWebScrapeMdResponse implements BaseModel
     ): self {
         $self = new self;
 
+        $self['cacheMetadata'] = $cacheMetadata;
         $self['contentLength'] = $contentLength;
         $self['markdown'] = $markdown;
         $self['metadata'] = $metadata;
@@ -148,6 +166,19 @@ final class WebWebScrapeMdResponse implements BaseModel
         null !== $actionsHTMLStale && $self['actionsHTMLStale'] = $actionsHTMLStale;
         null !== $html && $self['html'] = $html;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
+
+        return $self;
+    }
+
+    /**
+     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     *
+     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
+     */
+    public function withCacheMetadata(CacheMetadata|array $cacheMetadata): self
+    {
+        $self = clone $this;
+        $self['cacheMetadata'] = $cacheMetadata;
 
         return $self;
     }

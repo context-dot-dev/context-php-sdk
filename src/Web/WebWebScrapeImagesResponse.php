@@ -9,15 +9,18 @@ use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebWebScrapeImagesResponse\ActionsApplied;
+use ContextDev\Web\WebWebScrapeImagesResponse\CacheMetadata;
 use ContextDev\Web\WebWebScrapeImagesResponse\Image;
 use ContextDev\Web\WebWebScrapeImagesResponse\KeyMetadata;
 
 /**
+ * @phpstan-import-type CacheMetadataShape from \ContextDev\Web\WebWebScrapeImagesResponse\CacheMetadata
  * @phpstan-import-type ImageShape from \ContextDev\Web\WebWebScrapeImagesResponse\Image
  * @phpstan-import-type ActionsAppliedShape from \ContextDev\Web\WebWebScrapeImagesResponse\ActionsApplied
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Web\WebWebScrapeImagesResponse\KeyMetadata
  *
  * @phpstan-type WebWebScrapeImagesResponseShape = array{
+ *   cacheMetadata: CacheMetadata|CacheMetadataShape,
  *   images: list<Image|ImageShape>,
  *   success: bool,
  *   url: string,
@@ -29,6 +32,12 @@ final class WebWebScrapeImagesResponse implements BaseModel
 {
     /** @use SdkModel<WebWebScrapeImagesResponseShape> */
     use SdkModel;
+
+    /**
+     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     */
+    #[Required('cache_metadata')]
+    public CacheMetadata $cacheMetadata;
 
     /**
      * Images found on the page.
@@ -69,13 +78,16 @@ final class WebWebScrapeImagesResponse implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * WebWebScrapeImagesResponse::with(images: ..., success: ..., url: ...)
+     * WebWebScrapeImagesResponse::with(
+     *   cacheMetadata: ..., images: ..., success: ..., url: ...
+     * )
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
      * (new WebWebScrapeImagesResponse)
+     *   ->withCacheMetadata(...)
      *   ->withImages(...)
      *   ->withSuccess(...)
      *   ->withURL(...)
@@ -91,11 +103,13 @@ final class WebWebScrapeImagesResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      * @param list<Image|ImageShape> $images
      * @param list<ActionsApplied|ActionsAppliedShape>|null $actionsApplied
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
     public static function with(
+        CacheMetadata|array $cacheMetadata,
         array $images,
         bool $success,
         string $url,
@@ -104,12 +118,26 @@ final class WebWebScrapeImagesResponse implements BaseModel
     ): self {
         $self = new self;
 
+        $self['cacheMetadata'] = $cacheMetadata;
         $self['images'] = $images;
         $self['success'] = $success;
         $self['url'] = $url;
 
         null !== $actionsApplied && $self['actionsApplied'] = $actionsApplied;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
+
+        return $self;
+    }
+
+    /**
+     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     *
+     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
+     */
+    public function withCacheMetadata(CacheMetadata|array $cacheMetadata): self
+    {
+        $self = clone $this;
+        $self['cacheMetadata'] = $cacheMetadata;
 
         return $self;
     }
