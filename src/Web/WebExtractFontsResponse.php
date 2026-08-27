@@ -8,16 +8,19 @@ use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebExtractFontsResponse\CacheMetadata;
 use ContextDev\Web\WebExtractFontsResponse\Font;
 use ContextDev\Web\WebExtractFontsResponse\FontLink;
 use ContextDev\Web\WebExtractFontsResponse\KeyMetadata;
 
 /**
+ * @phpstan-import-type CacheMetadataShape from \ContextDev\Web\WebExtractFontsResponse\CacheMetadata
  * @phpstan-import-type FontShape from \ContextDev\Web\WebExtractFontsResponse\Font
  * @phpstan-import-type FontLinkShape from \ContextDev\Web\WebExtractFontsResponse\FontLink
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Web\WebExtractFontsResponse\KeyMetadata
  *
  * @phpstan-type WebExtractFontsResponseShape = array{
+ *   cacheMetadata: CacheMetadata|CacheMetadataShape,
  *   code: int,
  *   domain: string,
  *   fonts: list<Font|FontShape>,
@@ -30,6 +33,12 @@ final class WebExtractFontsResponse implements BaseModel
 {
     /** @use SdkModel<WebExtractFontsResponseShape> */
     use SdkModel;
+
+    /**
+     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     */
+    #[Required('cache_metadata')]
+    public CacheMetadata $cacheMetadata;
 
     /**
      * HTTP status code, e.g., 200.
@@ -76,13 +85,16 @@ final class WebExtractFontsResponse implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * WebExtractFontsResponse::with(code: ..., domain: ..., fonts: ..., status: ...)
+     * WebExtractFontsResponse::with(
+     *   cacheMetadata: ..., code: ..., domain: ..., fonts: ..., status: ...
+     * )
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
      * (new WebExtractFontsResponse)
+     *   ->withCacheMetadata(...)
      *   ->withCode(...)
      *   ->withDomain(...)
      *   ->withFonts(...)
@@ -99,11 +111,13 @@ final class WebExtractFontsResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      * @param list<Font|FontShape> $fonts
      * @param array<string,FontLink|FontLinkShape>|null $fontLinks
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
     public static function with(
+        CacheMetadata|array $cacheMetadata,
         int $code,
         string $domain,
         array $fonts,
@@ -113,6 +127,7 @@ final class WebExtractFontsResponse implements BaseModel
     ): self {
         $self = new self;
 
+        $self['cacheMetadata'] = $cacheMetadata;
         $self['code'] = $code;
         $self['domain'] = $domain;
         $self['fonts'] = $fonts;
@@ -120,6 +135,19 @@ final class WebExtractFontsResponse implements BaseModel
 
         null !== $fontLinks && $self['fontLinks'] = $fontLinks;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
+
+        return $self;
+    }
+
+    /**
+     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     *
+     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
+     */
+    public function withCacheMetadata(CacheMetadata|array $cacheMetadata): self
+    {
+        $self = clone $this;
+        $self['cacheMetadata'] = $cacheMetadata;
 
         return $self;
     }

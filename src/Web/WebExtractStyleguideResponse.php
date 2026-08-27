@@ -5,16 +5,20 @@ declare(strict_types=1);
 namespace ContextDev\Web;
 
 use ContextDev\Core\Attributes\Optional;
+use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebExtractStyleguideResponse\CacheMetadata;
 use ContextDev\Web\WebExtractStyleguideResponse\KeyMetadata;
 use ContextDev\Web\WebExtractStyleguideResponse\Styleguide;
 
 /**
+ * @phpstan-import-type CacheMetadataShape from \ContextDev\Web\WebExtractStyleguideResponse\CacheMetadata
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Web\WebExtractStyleguideResponse\KeyMetadata
  * @phpstan-import-type StyleguideShape from \ContextDev\Web\WebExtractStyleguideResponse\Styleguide
  *
  * @phpstan-type WebExtractStyleguideResponseShape = array{
+ *   cacheMetadata: CacheMetadata|CacheMetadataShape,
  *   code?: int|null,
  *   domain?: string|null,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
@@ -26,6 +30,12 @@ final class WebExtractStyleguideResponse implements BaseModel
 {
     /** @use SdkModel<WebExtractStyleguideResponseShape> */
     use SdkModel;
+
+    /**
+     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     */
+    #[Required('cache_metadata')]
+    public CacheMetadata $cacheMetadata;
 
     /**
      * HTTP status code.
@@ -57,6 +67,20 @@ final class WebExtractStyleguideResponse implements BaseModel
     #[Optional]
     public ?Styleguide $styleguide;
 
+    /**
+     * `new WebExtractStyleguideResponse()` is missing required properties by the API.
+     *
+     * To enforce required parameters use
+     * ```
+     * WebExtractStyleguideResponse::with(cacheMetadata: ...)
+     * ```
+     *
+     * Otherwise ensure the following setters are called
+     *
+     * ```
+     * (new WebExtractStyleguideResponse)->withCacheMetadata(...)
+     * ```
+     */
     public function __construct()
     {
         $this->initialize();
@@ -67,10 +91,12 @@ final class WebExtractStyleguideResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      * @param Styleguide|StyleguideShape|null $styleguide
      */
     public static function with(
+        CacheMetadata|array $cacheMetadata,
         ?int $code = null,
         ?string $domain = null,
         KeyMetadata|array|null $keyMetadata = null,
@@ -79,11 +105,26 @@ final class WebExtractStyleguideResponse implements BaseModel
     ): self {
         $self = new self;
 
+        $self['cacheMetadata'] = $cacheMetadata;
+
         null !== $code && $self['code'] = $code;
         null !== $domain && $self['domain'] = $domain;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
         null !== $status && $self['status'] = $status;
         null !== $styleguide && $self['styleguide'] = $styleguide;
+
+        return $self;
+    }
+
+    /**
+     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     *
+     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
+     */
+    public function withCacheMetadata(CacheMetadata|array $cacheMetadata): self
+    {
+        $self = clone $this;
+        $self['cacheMetadata'] = $cacheMetadata;
 
         return $self;
     }
