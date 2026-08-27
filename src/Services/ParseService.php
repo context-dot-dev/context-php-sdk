@@ -61,7 +61,7 @@ final class ParseService implements ParseContract
         bool $includeImages = false,
         bool $includeLinks = true,
         bool $ocr = false,
-        Pdf|array $pdf = (object) [],
+        Pdf|array|null $pdf = null,
         bool $shortenBase64Images = true,
         ?array $tags = null,
         bool $useMainContentOnly = false,
