@@ -5,15 +5,19 @@ declare(strict_types=1);
 namespace ContextDev\Web;
 
 use ContextDev\Core\Attributes\Optional;
+use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebScreenshotResponse\CacheMetadata;
 use ContextDev\Web\WebScreenshotResponse\KeyMetadata;
 use ContextDev\Web\WebScreenshotResponse\ScreenshotType;
 
 /**
+ * @phpstan-import-type CacheMetadataShape from \ContextDev\Web\WebScreenshotResponse\CacheMetadata
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Web\WebScreenshotResponse\KeyMetadata
  *
  * @phpstan-type WebScreenshotResponseShape = array{
+ *   cacheMetadata: CacheMetadata|CacheMetadataShape,
  *   code?: int|null,
  *   domain?: string|null,
  *   height?: int|null,
@@ -28,6 +32,12 @@ final class WebScreenshotResponse implements BaseModel
 {
     /** @use SdkModel<WebScreenshotResponseShape> */
     use SdkModel;
+
+    /**
+     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     */
+    #[Required('cache_metadata')]
+    public CacheMetadata $cacheMetadata;
 
     /**
      * HTTP status code.
@@ -79,6 +89,20 @@ final class WebScreenshotResponse implements BaseModel
     #[Optional]
     public ?int $width;
 
+    /**
+     * `new WebScreenshotResponse()` is missing required properties by the API.
+     *
+     * To enforce required parameters use
+     * ```
+     * WebScreenshotResponse::with(cacheMetadata: ...)
+     * ```
+     *
+     * Otherwise ensure the following setters are called
+     *
+     * ```
+     * (new WebScreenshotResponse)->withCacheMetadata(...)
+     * ```
+     */
     public function __construct()
     {
         $this->initialize();
@@ -89,10 +113,12 @@ final class WebScreenshotResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      * @param ScreenshotType|value-of<ScreenshotType>|null $screenshotType
      */
     public static function with(
+        CacheMetadata|array $cacheMetadata,
         ?int $code = null,
         ?string $domain = null,
         ?int $height = null,
@@ -104,6 +130,8 @@ final class WebScreenshotResponse implements BaseModel
     ): self {
         $self = new self;
 
+        $self['cacheMetadata'] = $cacheMetadata;
+
         null !== $code && $self['code'] = $code;
         null !== $domain && $self['domain'] = $domain;
         null !== $height && $self['height'] = $height;
@@ -112,6 +140,19 @@ final class WebScreenshotResponse implements BaseModel
         null !== $screenshotType && $self['screenshotType'] = $screenshotType;
         null !== $status && $self['status'] = $status;
         null !== $width && $self['width'] = $width;
+
+        return $self;
+    }
+
+    /**
+     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     *
+     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
+     */
+    public function withCacheMetadata(CacheMetadata|array $cacheMetadata): self
+    {
+        $self = clone $this;
+        $self['cacheMetadata'] = $cacheMetadata;
 
         return $self;
     }

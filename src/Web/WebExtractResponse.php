@@ -8,14 +8,17 @@ use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebExtractResponse\CacheMetadata;
 use ContextDev\Web\WebExtractResponse\KeyMetadata;
 use ContextDev\Web\WebExtractResponse\Metadata;
 
 /**
+ * @phpstan-import-type CacheMetadataShape from \ContextDev\Web\WebExtractResponse\CacheMetadata
  * @phpstan-import-type MetadataShape from \ContextDev\Web\WebExtractResponse\Metadata
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Web\WebExtractResponse\KeyMetadata
  *
  * @phpstan-type WebExtractResponseShape = array{
+ *   cacheMetadata: CacheMetadata|CacheMetadataShape,
  *   data: array<string,mixed>,
  *   metadata: Metadata|MetadataShape,
  *   status: string,
@@ -28,6 +31,12 @@ final class WebExtractResponse implements BaseModel
 {
     /** @use SdkModel<WebExtractResponseShape> */
     use SdkModel;
+
+    /**
+     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     */
+    #[Required('cache_metadata')]
+    public CacheMetadata $cacheMetadata;
 
     /**
      * Extracted data matching the request schema.
@@ -72,7 +81,12 @@ final class WebExtractResponse implements BaseModel
      * To enforce required parameters use
      * ```
      * WebExtractResponse::with(
-     *   data: ..., metadata: ..., status: ..., url: ..., urlsAnalyzed: ...
+     *   cacheMetadata: ...,
+     *   data: ...,
+     *   metadata: ...,
+     *   status: ...,
+     *   url: ...,
+     *   urlsAnalyzed: ...,
      * )
      * ```
      *
@@ -80,6 +94,7 @@ final class WebExtractResponse implements BaseModel
      *
      * ```
      * (new WebExtractResponse)
+     *   ->withCacheMetadata(...)
      *   ->withData(...)
      *   ->withMetadata(...)
      *   ->withStatus(...)
@@ -97,12 +112,14 @@ final class WebExtractResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      * @param array<string,mixed> $data
      * @param Metadata|MetadataShape $metadata
      * @param list<string> $urlsAnalyzed
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
     public static function with(
+        CacheMetadata|array $cacheMetadata,
         array $data,
         Metadata|array $metadata,
         string $status,
@@ -112,6 +129,7 @@ final class WebExtractResponse implements BaseModel
     ): self {
         $self = new self;
 
+        $self['cacheMetadata'] = $cacheMetadata;
         $self['data'] = $data;
         $self['metadata'] = $metadata;
         $self['status'] = $status;
@@ -119,6 +137,19 @@ final class WebExtractResponse implements BaseModel
         $self['urlsAnalyzed'] = $urlsAnalyzed;
 
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
+
+        return $self;
+    }
+
+    /**
+     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     *
+     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
+     */
+    public function withCacheMetadata(CacheMetadata|array $cacheMetadata): self
+    {
+        $self = clone $this;
+        $self['cacheMetadata'] = $cacheMetadata;
 
         return $self;
     }

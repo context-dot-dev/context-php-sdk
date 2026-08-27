@@ -9,16 +9,19 @@ use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebWebScrapeHTMLResponse\ActionsApplied;
+use ContextDev\Web\WebWebScrapeHTMLResponse\CacheMetadata;
 use ContextDev\Web\WebWebScrapeHTMLResponse\KeyMetadata;
 use ContextDev\Web\WebWebScrapeHTMLResponse\Metadata;
 use ContextDev\Web\WebWebScrapeHTMLResponse\Type;
 
 /**
+ * @phpstan-import-type CacheMetadataShape from \ContextDev\Web\WebWebScrapeHTMLResponse\CacheMetadata
  * @phpstan-import-type MetadataShape from \ContextDev\Web\WebWebScrapeHTMLResponse\Metadata
  * @phpstan-import-type ActionsAppliedShape from \ContextDev\Web\WebWebScrapeHTMLResponse\ActionsApplied
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Web\WebWebScrapeHTMLResponse\KeyMetadata
  *
  * @phpstan-type WebWebScrapeHTMLResponseShape = array{
+ *   cacheMetadata: CacheMetadata|CacheMetadataShape,
  *   html: string,
  *   metadata: Metadata|MetadataShape,
  *   success: bool,
@@ -33,6 +36,12 @@ final class WebWebScrapeHTMLResponse implements BaseModel
 {
     /** @use SdkModel<WebWebScrapeHTMLResponseShape> */
     use SdkModel;
+
+    /**
+     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     */
+    #[Required('cache_metadata')]
+    public CacheMetadata $cacheMetadata;
 
     /**
      * The scraped content of the page. For normal pages this is the raw HTML. When the page is a sitemap or feed served behind an XSL stylesheet (which browsers render into HTML), this is the underlying XML instead — see the `type` field.
@@ -92,7 +101,12 @@ final class WebWebScrapeHTMLResponse implements BaseModel
      * To enforce required parameters use
      * ```
      * WebWebScrapeHTMLResponse::with(
-     *   html: ..., metadata: ..., success: ..., type: ..., url: ...
+     *   cacheMetadata: ...,
+     *   html: ...,
+     *   metadata: ...,
+     *   success: ...,
+     *   type: ...,
+     *   url: ...,
      * )
      * ```
      *
@@ -100,6 +114,7 @@ final class WebWebScrapeHTMLResponse implements BaseModel
      *
      * ```
      * (new WebWebScrapeHTMLResponse)
+     *   ->withCacheMetadata(...)
      *   ->withHTML(...)
      *   ->withMetadata(...)
      *   ->withSuccess(...)
@@ -117,12 +132,14 @@ final class WebWebScrapeHTMLResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      * @param Metadata|MetadataShape $metadata
      * @param Type|value-of<Type> $type
      * @param list<ActionsApplied|ActionsAppliedShape>|null $actionsApplied
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
     public static function with(
+        CacheMetadata|array $cacheMetadata,
         string $html,
         Metadata|array $metadata,
         bool $success,
@@ -134,6 +151,7 @@ final class WebWebScrapeHTMLResponse implements BaseModel
     ): self {
         $self = new self;
 
+        $self['cacheMetadata'] = $cacheMetadata;
         $self['html'] = $html;
         $self['metadata'] = $metadata;
         $self['success'] = $success;
@@ -143,6 +161,19 @@ final class WebWebScrapeHTMLResponse implements BaseModel
         null !== $actionsApplied && $self['actionsApplied'] = $actionsApplied;
         null !== $actionsHTMLStale && $self['actionsHTMLStale'] = $actionsHTMLStale;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
+
+        return $self;
+    }
+
+    /**
+     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     *
+     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
+     */
+    public function withCacheMetadata(CacheMetadata|array $cacheMetadata): self
+    {
+        $self = clone $this;
+        $self['cacheMetadata'] = $cacheMetadata;
 
         return $self;
     }
