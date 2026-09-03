@@ -532,11 +532,12 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Crawl an entire website's sitemap and return all discovered page URLs. Pass `search` to have the crawled sitemap filtered down to the pages about a phrase (for example `pricing and plans` or `api authentication docs`), most relevant first — a searched crawl scans the whole sitemap and costs 2 credits instead of 1.
+     * Crawl an entire website's sitemap and return all discovered page URLs. Set `includeSubdomains=true` to also discover public pages and sitemaps on child hosts such as `docs.example.com` or `brand.example.com`. Pass `search` to have the discovered URLs filtered down to the pages about a phrase (for example `pricing and plans` or `api authentication docs`), most relevant first — a searched crawl scans the whole sitemap and costs 2 credits instead of 1.
      *
      * @param array{
      *   domain: string,
      *   headers?: array<string,string>,
+     *   includeSubdomains?: bool,
      *   maxLinks?: int,
      *   search?: string,
      *   sitemapURL?: string,

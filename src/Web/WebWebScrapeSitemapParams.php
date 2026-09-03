@@ -12,13 +12,14 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebWebScrapeSitemapParams\Zdr;
 
 /**
- * Crawl an entire website's sitemap and return all discovered page URLs. Pass `search` to have the crawled sitemap filtered down to the pages about a phrase (for example `pricing and plans` or `api authentication docs`), most relevant first — a searched crawl scans the whole sitemap and costs 2 credits instead of 1.
+ * Crawl an entire website's sitemap and return all discovered page URLs. Set `includeSubdomains=true` to also discover public pages and sitemaps on child hosts such as `docs.example.com` or `brand.example.com`. Pass `search` to have the discovered URLs filtered down to the pages about a phrase (for example `pricing and plans` or `api authentication docs`), most relevant first — a searched crawl scans the whole sitemap and costs 2 credits instead of 1.
  *
  * @see ContextDev\Services\WebService::webScrapeSitemap()
  *
  * @phpstan-type WebWebScrapeSitemapParamsShape = array{
  *   domain: string,
  *   headers?: array<string,string>|null,
+ *   includeSubdomains?: bool|null,
  *   maxLinks?: int|null,
  *   search?: string|null,
  *   sitemapURL?: string|null,
@@ -47,6 +48,12 @@ final class WebWebScrapeSitemapParams implements BaseModel
      */
     #[Optional(map: 'string')]
     public ?array $headers;
+
+    /**
+     * When true, discover and include public pages and sitemaps on subdomains of the requested domain. Defaults to false.
+     */
+    #[Optional]
+    public ?bool $includeSubdomains;
 
     /**
      * Maximum number of links to return from the sitemap crawl. Defaults to 10,000. Minimum is 1, maximum is 100,000.
@@ -125,6 +132,7 @@ final class WebWebScrapeSitemapParams implements BaseModel
     public static function with(
         string $domain,
         ?array $headers = null,
+        ?bool $includeSubdomains = null,
         ?int $maxLinks = null,
         ?string $search = null,
         ?string $sitemapURL = null,
@@ -138,6 +146,7 @@ final class WebWebScrapeSitemapParams implements BaseModel
         $self['domain'] = $domain;
 
         null !== $headers && $self['headers'] = $headers;
+        null !== $includeSubdomains && $self['includeSubdomains'] = $includeSubdomains;
         null !== $maxLinks && $self['maxLinks'] = $maxLinks;
         null !== $search && $self['search'] = $search;
         null !== $sitemapURL && $self['sitemapURL'] = $sitemapURL;
@@ -169,6 +178,17 @@ final class WebWebScrapeSitemapParams implements BaseModel
     {
         $self = clone $this;
         $self['headers'] = $headers;
+
+        return $self;
+    }
+
+    /**
+     * When true, discover and include public pages and sitemaps on subdomains of the requested domain. Defaults to false.
+     */
+    public function withIncludeSubdomains(bool $includeSubdomains): self
+    {
+        $self = clone $this;
+        $self['includeSubdomains'] = $includeSubdomains;
 
         return $self;
     }
