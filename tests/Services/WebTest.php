@@ -412,6 +412,7 @@ final class WebTest extends TestCase
         $result = $this->client->web->webScrapeSitemap(
             domain: 'xxx',
             headers: ['foo' => 'J!'],
+            includeSubdomains: true,
             maxLinks: 1,
             search: 'help center and troubleshooting articles',
             sitemapURL: 'https://example.com',
