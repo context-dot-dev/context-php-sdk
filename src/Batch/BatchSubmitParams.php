@@ -7,6 +7,7 @@ namespace ContextDev\Batch;
 use ContextDev\Batch\BatchSubmitParams\Input;
 use ContextDev\Batch\BatchSubmitParams\Input\Crawl;
 use ContextDev\Batch\BatchSubmitParams\Input\Scrape;
+use ContextDev\Batch\BatchSubmitParams\Webhook;
 use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
@@ -20,10 +21,12 @@ use ContextDev\Core\Contracts\BaseModel;
  *
  * @phpstan-import-type InputVariants from \ContextDev\Batch\BatchSubmitParams\Input
  * @phpstan-import-type InputShape from \ContextDev\Batch\BatchSubmitParams\Input
+ * @phpstan-import-type WebhookShape from \ContextDev\Batch\BatchSubmitParams\Webhook
  *
  * @phpstan-type BatchSubmitParamsShape = array{
  *   input: InputShape,
  *   tags?: list<string>|null,
+ *   webhook?: null|Webhook|WebhookShape,
  *   webhookURL?: string|null,
  *   idempotencyKey?: string|null,
  * }
@@ -51,7 +54,13 @@ final class BatchSubmitParams implements BaseModel
     public ?array $tags;
 
     /**
-     * URL notified when the batch finishes.
+     * Completion webhook settings. Cannot be combined with webhookUrl. Omitting retry preserves legacy delivery; retry: {} opts into durable retries.
+     */
+    #[Optional]
+    public ?Webhook $webhook;
+
+    /**
+     * Legacy URL notified when the batch finishes. Preserves one best-effort attempt. Cannot be combined with webhook.
      */
     #[Optional('webhookUrl')]
     public ?string $webhookURL;
@@ -88,10 +97,12 @@ final class BatchSubmitParams implements BaseModel
      *
      * @param InputShape $input
      * @param list<string>|null $tags
+     * @param Webhook|WebhookShape|null $webhook
      */
     public static function with(
         Scrape|array|Crawl $input,
         ?array $tags = null,
+        Webhook|array|null $webhook = null,
         ?string $webhookURL = null,
         ?string $idempotencyKey = null,
     ): self {
@@ -100,6 +111,7 @@ final class BatchSubmitParams implements BaseModel
         $self['input'] = $input;
 
         null !== $tags && $self['tags'] = $tags;
+        null !== $webhook && $self['webhook'] = $webhook;
         null !== $webhookURL && $self['webhookURL'] = $webhookURL;
         null !== $idempotencyKey && $self['idempotencyKey'] = $idempotencyKey;
 
@@ -133,7 +145,20 @@ final class BatchSubmitParams implements BaseModel
     }
 
     /**
-     * URL notified when the batch finishes.
+     * Completion webhook settings. Cannot be combined with webhookUrl. Omitting retry preserves legacy delivery; retry: {} opts into durable retries.
+     *
+     * @param Webhook|WebhookShape $webhook
+     */
+    public function withWebhook(Webhook|array $webhook): self
+    {
+        $self = clone $this;
+        $self['webhook'] = $webhook;
+
+        return $self;
+    }
+
+    /**
+     * Legacy URL notified when the batch finishes. Preserves one best-effort attempt. Cannot be combined with webhook.
      */
     public function withWebhookURL(string $webhookURL): self
     {

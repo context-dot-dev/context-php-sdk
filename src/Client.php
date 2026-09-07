@@ -16,6 +16,7 @@ use ContextDev\Services\NewsService;
 use ContextDev\Services\ParseService;
 use ContextDev\Services\PeopleService;
 use ContextDev\Services\UtilityService;
+use ContextDev\Services\WebhooksService;
 use ContextDev\Services\WebService;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
@@ -67,6 +68,11 @@ class Client extends BaseClient
      * @api
      */
     public BatchService $batch;
+
+    /**
+     * @api
+     */
+    public WebhooksService $webhooks;
 
     /**
      * @api
@@ -144,6 +150,7 @@ class Client extends BaseClient
         $this->utility = new UtilityService($this);
         $this->monitors = new MonitorsService($this);
         $this->batch = new BatchService($this);
+        $this->webhooks = new WebhooksService($this);
         $this->people = new PeopleService($this);
         $this->news = new NewsService($this);
     }

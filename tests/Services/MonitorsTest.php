@@ -78,6 +78,7 @@ final class MonitorsTest extends TestCase
             webhook: [
                 'url' => 'https://example.com/webhook',
                 'events' => ['change.detected', 'run.completed'],
+                'retry' => ['delaysSeconds' => [10, 60, 300, 1800, 7200, 21600, 57600]],
             ],
         );
 
