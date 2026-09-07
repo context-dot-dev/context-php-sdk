@@ -37,6 +37,7 @@ use ContextDev\Monitors\WebhookDelivery;
  *   startedAt?: \DateTimeInterface|null,
  *   webhookDeliveries?: list<WebhookDelivery|WebhookDeliveryShape>|null,
  *   webhookDelivery?: null|WebhookDelivery|WebhookDeliveryShape,
+ *   webhookDeliveryIDs?: list<string>|null,
  * }
  */
 final class Data implements BaseModel
@@ -126,6 +127,14 @@ final class Data implements BaseModel
     public ?WebhookDelivery $webhookDelivery;
 
     /**
+     * Retained webhook deliveries for this run. Inspect their live state and attempt history through /webhooks/deliveries. With webhook.retry configured, delivery is asynchronous and the legacy webhook_delivery/webhook_deliveries outcomes are omitted.
+     *
+     * @var list<string>|null $webhookDeliveryIDs
+     */
+    #[Optional('webhook_delivery_ids', list: 'string')]
+    public ?array $webhookDeliveryIDs;
+
+    /**
      * `new Data()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -176,6 +185,7 @@ final class Data implements BaseModel
      * @param SkipReason|value-of<SkipReason>|null $skipReason
      * @param list<WebhookDelivery|WebhookDeliveryShape>|null $webhookDeliveries
      * @param WebhookDelivery|WebhookDeliveryShape|null $webhookDelivery
+     * @param list<string>|null $webhookDeliveryIDs
      */
     public static function with(
         string $id,
@@ -194,6 +204,7 @@ final class Data implements BaseModel
         ?\DateTimeInterface $startedAt = null,
         ?array $webhookDeliveries = null,
         WebhookDelivery|array|null $webhookDelivery = null,
+        ?array $webhookDeliveryIDs = null,
     ): self {
         $self = new self;
 
@@ -214,6 +225,7 @@ final class Data implements BaseModel
         null !== $startedAt && $self['startedAt'] = $startedAt;
         null !== $webhookDeliveries && $self['webhookDeliveries'] = $webhookDeliveries;
         null !== $webhookDelivery && $self['webhookDelivery'] = $webhookDelivery;
+        null !== $webhookDeliveryIDs && $self['webhookDeliveryIDs'] = $webhookDeliveryIDs;
 
         return $self;
     }
@@ -384,6 +396,19 @@ final class Data implements BaseModel
     ): self {
         $self = clone $this;
         $self['webhookDelivery'] = $webhookDelivery;
+
+        return $self;
+    }
+
+    /**
+     * Retained webhook deliveries for this run. Inspect their live state and attempt history through /webhooks/deliveries. With webhook.retry configured, delivery is asynchronous and the legacy webhook_delivery/webhook_deliveries outcomes are omitted.
+     *
+     * @param list<string> $webhookDeliveryIDs
+     */
+    public function withWebhookDeliveryIDs(array $webhookDeliveryIDs): self
+    {
+        $self = clone $this;
+        $self['webhookDeliveryIDs'] = $webhookDeliveryIDs;
 
         return $self;
     }

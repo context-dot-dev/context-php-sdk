@@ -46,6 +46,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   tags: list<string>,
  *   timing: Timing|TimingShape,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
+ *   webhookDeliveryID?: string|null,
  * }
  */
 final class BatchGetResponse implements BaseModel
@@ -153,6 +154,12 @@ final class BatchGetResponse implements BaseModel
     public ?KeyMetadata $keyMetadata;
 
     /**
+     * Retained completion delivery ID. Inspect or retry it through /webhooks/deliveries/{delivery_id}. Present once the delivery has been retained.
+     */
+    #[Optional('webhook_delivery_id')]
+    public ?string $webhookDeliveryID;
+
+    /**
      * `new BatchGetResponse()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -236,6 +243,7 @@ final class BatchGetResponse implements BaseModel
         array $tags,
         Timing|array $timing,
         KeyMetadata|array|null $keyMetadata = null,
+        ?string $webhookDeliveryID = null,
     ): self {
         $self = new self;
 
@@ -255,6 +263,7 @@ final class BatchGetResponse implements BaseModel
         $self['timing'] = $timing;
 
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
+        null !== $webhookDeliveryID && $self['webhookDeliveryID'] = $webhookDeliveryID;
 
         return $self;
     }
@@ -446,6 +455,17 @@ final class BatchGetResponse implements BaseModel
     {
         $self = clone $this;
         $self['keyMetadata'] = $keyMetadata;
+
+        return $self;
+    }
+
+    /**
+     * Retained completion delivery ID. Inspect or retry it through /webhooks/deliveries/{delivery_id}. Present once the delivery has been retained.
+     */
+    public function withWebhookDeliveryID(string $webhookDeliveryID): self
+    {
+        $self = clone $this;
+        $self['webhookDeliveryID'] = $webhookDeliveryID;
 
         return $self;
     }

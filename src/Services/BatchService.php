@@ -13,6 +13,7 @@ use ContextDev\Batch\BatchListParams\Status;
 use ContextDev\Batch\BatchListResponse;
 use ContextDev\Batch\BatchSubmitParams\Input\Crawl;
 use ContextDev\Batch\BatchSubmitParams\Input\Scrape;
+use ContextDev\Batch\BatchSubmitParams\Webhook;
 use ContextDev\Batch\BatchSubmitResponse;
 use ContextDev\Client;
 use ContextDev\Core\Exceptions\APIException;
@@ -24,6 +25,7 @@ use ContextDev\ServiceContracts\BatchContract;
  * Scrape many pages or crawl a site asynchronously.
  *
  * @phpstan-import-type InputShape from \ContextDev\Batch\BatchSubmitParams\Input
+ * @phpstan-import-type WebhookShape from \ContextDev\Batch\BatchSubmitParams\Webhook
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class BatchService implements BatchContract
@@ -175,7 +177,8 @@ final class BatchService implements BatchContract
      *
      * @param InputShape $input body param: Choose a URL list or a site crawl
      * @param list<string> $tags Body param: Tags stored on the batch. Filter the batch list by them later.
-     * @param string $webhookURL body param: URL notified when the batch finishes
+     * @param Webhook|WebhookShape $webhook Body param: Completion webhook settings. Cannot be combined with webhookUrl. Omitting retry preserves legacy delivery; retry: {} opts into durable retries.
+     * @param string $webhookURL Body param: Legacy URL notified when the batch finishes. Preserves one best-effort attempt. Cannot be combined with webhook.
      * @param string $idempotencyKey Header param: Any string unique to this submission. Retries with the same key return the original batch.
      * @param RequestOpts|null $requestOptions
      *
@@ -184,6 +187,7 @@ final class BatchService implements BatchContract
     public function submit(
         Scrape|array|Crawl $input,
         ?array $tags = null,
+        Webhook|array|null $webhook = null,
         ?string $webhookURL = null,
         ?string $idempotencyKey = null,
         RequestOptions|array|null $requestOptions = null,
@@ -192,6 +196,7 @@ final class BatchService implements BatchContract
             [
                 'input' => $input,
                 'tags' => $tags,
+                'webhook' => $webhook,
                 'webhookURL' => $webhookURL,
                 'idempotencyKey' => $idempotencyKey,
             ],

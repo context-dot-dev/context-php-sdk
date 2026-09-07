@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ContextDev\Monitors;
 
+use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
@@ -21,6 +22,7 @@ use ContextDev\Monitors\WebhookDelivery\Status;
  *   eventID: string,
  *   httpStatus: int|null,
  *   status: Status|value-of<Status>,
+ *   deliveryID?: string|null,
  * }
  */
 final class WebhookDelivery implements BaseModel
@@ -61,6 +63,12 @@ final class WebhookDelivery implements BaseModel
      */
     #[Required(enum: Status::class)]
     public string $status;
+
+    /**
+     * Retained delivery ID for GET /webhooks/deliveries/{delivery_id}. Omitted for historical or unretained deliveries.
+     */
+    #[Optional('delivery_id')]
+    public ?string $deliveryID;
 
     /**
      * `new WebhookDelivery()` is missing required properties by the API.
@@ -110,6 +118,7 @@ final class WebhookDelivery implements BaseModel
         string $eventID,
         ?int $httpStatus,
         Status|string $status,
+        ?string $deliveryID = null,
     ): self {
         $self = new self;
 
@@ -119,6 +128,8 @@ final class WebhookDelivery implements BaseModel
         $self['eventID'] = $eventID;
         $self['httpStatus'] = $httpStatus;
         $self['status'] = $status;
+
+        null !== $deliveryID && $self['deliveryID'] = $deliveryID;
 
         return $self;
     }
@@ -186,6 +197,17 @@ final class WebhookDelivery implements BaseModel
     {
         $self = clone $this;
         $self['status'] = $status;
+
+        return $self;
+    }
+
+    /**
+     * Retained delivery ID for GET /webhooks/deliveries/{delivery_id}. Omitted for historical or unretained deliveries.
+     */
+    public function withDeliveryID(string $deliveryID): self
+    {
+        $self = clone $this;
+        $self['deliveryID'] = $deliveryID;
 
         return $self;
     }

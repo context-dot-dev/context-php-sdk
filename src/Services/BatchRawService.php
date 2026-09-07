@@ -14,6 +14,7 @@ use ContextDev\Batch\BatchListParams\SearchType;
 use ContextDev\Batch\BatchListParams\Status;
 use ContextDev\Batch\BatchListResponse;
 use ContextDev\Batch\BatchSubmitParams;
+use ContextDev\Batch\BatchSubmitParams\Webhook;
 use ContextDev\Batch\BatchSubmitResponse;
 use ContextDev\Client;
 use ContextDev\Core\Contracts\BaseResponse;
@@ -26,6 +27,7 @@ use ContextDev\ServiceContracts\BatchRawContract;
  * Scrape many pages or crawl a site asynchronously.
  *
  * @phpstan-import-type InputShape from \ContextDev\Batch\BatchSubmitParams\Input
+ * @phpstan-import-type WebhookShape from \ContextDev\Batch\BatchSubmitParams\Webhook
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class BatchRawService implements BatchRawContract
@@ -193,6 +195,7 @@ final class BatchRawService implements BatchRawContract
      * @param array{
      *   input: InputShape,
      *   tags?: list<string>,
+     *   webhook?: Webhook|WebhookShape,
      *   webhookURL?: string,
      *   idempotencyKey?: string,
      * }|BatchSubmitParams $params
