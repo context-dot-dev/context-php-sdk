@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.15.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.14.0...v2.15.0) (2026-09-08)
+
+
+### Features
+
+* **webhooks:** add configurable retries and manual replay ([aa77746](https://github.com/context-dot-dev/context-php-sdk/commit/aa777466766153ec04c4e70c4a82b0278bd49f81))
+* **webhooks:** simplify delivery APIs ([8b4861b](https://github.com/context-dot-dev/context-php-sdk/commit/8b4861b53f95a3822b7f3178b53610677dc9d393))
+
 ## [2.14.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.13.0...v2.14.0) (2026-09-03)
 
 
