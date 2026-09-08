@@ -53,7 +53,30 @@ final class DeliveriesTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->webhooks->deliveries->list();
+        $result = $this->client->webhooks->deliveries->list(type: 'monitor');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(DeliveryListResponse::class, $result);
+    }
+
+    #[Test]
+    public function testListWithOptionalParams(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->webhooks->deliveries->list(
+            type: 'monitor',
+            batchID: 'batch_id',
+            createdAfter: new \DateTimeImmutable('2026-09-01T00:00:00Z'),
+            cursor: 'whd_210b9798eb53baa4e69d31c1071cf03d',
+            limit: 1,
+            status: 'pending',
+            tags: ['production', 'team-alpha'],
+            monitorID: 'monitor_id',
+            runID: 'run_id',
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(DeliveryListResponse::class, $result);

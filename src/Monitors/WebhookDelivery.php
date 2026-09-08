@@ -65,7 +65,7 @@ final class WebhookDelivery implements BaseModel
     public string $status;
 
     /**
-     * Retained delivery ID for GET /webhooks/deliveries/{delivery_id}. Omitted for historical or unretained deliveries.
+     * Delivery ID for status checks and retries, when available.
      */
     #[Optional('delivery_id')]
     public ?string $deliveryID;
@@ -202,7 +202,7 @@ final class WebhookDelivery implements BaseModel
     }
 
     /**
-     * Retained delivery ID for GET /webhooks/deliveries/{delivery_id}. Omitted for historical or unretained deliveries.
+     * Delivery ID for status checks and retries, when available.
      */
     public function withDeliveryID(string $deliveryID): self
     {

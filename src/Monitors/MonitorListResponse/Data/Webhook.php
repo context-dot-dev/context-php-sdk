@@ -41,7 +41,7 @@ final class Webhook implements BaseModel
     public ?array $events;
 
     /**
-     * Opt into durable webhook delivery. An empty object uses the default retry schedule. Omit retry to preserve legacy delivery behavior. The policy is snapshotted for each event.
+     * Webhook retry settings. Use {} for the default schedule.
      */
     #[Optional]
     public ?RetryConfig $retry;
@@ -121,7 +121,7 @@ final class Webhook implements BaseModel
     }
 
     /**
-     * Opt into durable webhook delivery. An empty object uses the default retry schedule. Omit retry to preserve legacy delivery behavior. The policy is snapshotted for each event.
+     * Webhook retry settings. Use {} for the default schedule.
      *
      * @param RetryConfig|RetryConfigShape $retry
      */

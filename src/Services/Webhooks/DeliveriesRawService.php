@@ -15,13 +15,14 @@ use ContextDev\Webhooks\Deliveries\DeliveryListAttemptsParams;
 use ContextDev\Webhooks\Deliveries\DeliveryListAttemptsResponse;
 use ContextDev\Webhooks\Deliveries\DeliveryListParams;
 use ContextDev\Webhooks\Deliveries\DeliveryListParams\Status;
+use ContextDev\Webhooks\Deliveries\DeliveryListParams\Type;
 use ContextDev\Webhooks\Deliveries\DeliveryListResponse;
 use ContextDev\Webhooks\Deliveries\DeliveryRetrieveParams;
 use ContextDev\Webhooks\Deliveries\DeliveryRetryParams;
 use ContextDev\Webhooks\Deliveries\DeliveryRetryResponse;
 
 /**
- * Inspect and retry batch and monitor webhook deliveries without rerunning the underlying work.
+ * Inspect and retry webhook deliveries. These endpoints cost no credits.
  *
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
@@ -36,8 +37,9 @@ final class DeliveriesRawService implements DeliveriesRawContract
     /**
      * @api
      *
-     * Get the live status, retry policy, latest attempt, and replay expiration for a retained delivery. Use the attempts endpoint for its complete paginated history. This endpoint costs no credits.
+     * Get a webhook delivery, including its status and latest attempt.
      *
+     * @param string $deliveryID delivery ID
      * @param array{tags?: list<string>}|DeliveryRetrieveParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -68,16 +70,18 @@ final class DeliveriesRawService implements DeliveriesRawContract
     /**
      * @api
      *
-     * List retained batch and monitor webhook deliveries for your organization, newest first. Filter by at most one of batch_id, monitor_id, or run_id, optionally combined with status. Historical events without retained payloads are not listed. This endpoint costs no credits.
+     * List your batch or monitor webhook deliveries, newest first.
      *
      * @param array{
+     *   type: Type|value-of<Type>,
      *   batchID?: string,
+     *   createdAfter?: \DateTimeInterface,
      *   cursor?: string,
      *   limit?: int,
-     *   monitorID?: string,
-     *   runID?: string,
      *   status?: Status|value-of<Status>,
      *   tags?: list<string>,
+     *   monitorID?: string,
+     *   runID?: string,
      * }|DeliveryListParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -96,16 +100,9 @@ final class DeliveriesRawService implements DeliveriesRawContract
 
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
-            method: 'get',
+            method: 'post',
             path: 'webhooks/deliveries',
-            query: Util::array_transform_keys(
-                $parsed,
-                [
-                    'batchID' => 'batch_id',
-                    'monitorID' => 'monitor_id',
-                    'runID' => 'run_id',
-                ],
-            ),
+            body: (object) $parsed,
             options: $options,
             convert: DeliveryListResponse::class,
         );
@@ -114,8 +111,9 @@ final class DeliveriesRawService implements DeliveriesRawContract
     /**
      * @api
      *
-     * List individual HTTP attempts for a delivery, newest first, including their destination, timestamps, HTTP status, and error. An interrupted attempt may have reached the endpoint even when its outcome is unknown. This endpoint costs no credits.
+     * List delivery attempts, newest first.
      *
+     * @param string $deliveryID delivery ID
      * @param array{
      *   cursor?: string, limit?: int, tags?: list<string>
      * }|DeliveryListAttemptsParams $params
@@ -148,9 +146,9 @@ final class DeliveriesRawService implements DeliveriesRawContract
     /**
      * @api
      *
-     * Queue an immediate attempt without rerunning or billing the underlying batch or monitor. A waiting retry is brought forward. A failed delivery gets one additional attempt without restarting its automatic retry budget. Set force: true to resend an acknowledged delivery. An in-progress attempt cannot be duplicated. The stored event body, event ID, and creation time remain unchanged; each attempt receives a fresh signature. Monitor retries use the current URL and secret; removing the webhook cancels pending deliveries. Batch result URLs in old payloads may have expired: retrieve the batch to get fresh URLs. Replay is available for seven days. A successful attempt cancels remaining automatic retries. Idempotency-Key is scoped to your organization and retained with the delivery metadata; repeating the same key and input returns the original accepted response.
+     * Retry a webhook delivery within seven days of creation.
      *
-     * @param string $deliveryID Path param
+     * @param string $deliveryID path param: Delivery ID
      * @param array{
      *   force?: bool, tags?: list<string>, idempotencyKey?: string
      * }|DeliveryRetryParams $params

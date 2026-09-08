@@ -43,7 +43,7 @@ final class BrandRetrieveSimplifiedParams implements BaseModel
     public ?int $maxAgeMs;
 
     /**
-     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     * Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
      *
      * @var list<string>|null $tags
      */
@@ -133,7 +133,7 @@ final class BrandRetrieveSimplifiedParams implements BaseModel
     }
 
     /**
-     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     * Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
      *
      * @param list<string> $tags
      */

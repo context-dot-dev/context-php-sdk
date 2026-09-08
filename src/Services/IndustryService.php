@@ -39,7 +39,7 @@ final class IndustryService implements IndustryContract
      * @param string $input Brand domain or title to retrieve NAICS code for. If a valid domain is provided, it will be used for classification, otherwise, we will search for the brand using the provided title.
      * @param int $maxResults Maximum number of NAICS codes to return. Must be between 1 and 10. Defaults to 5.
      * @param int $minResults Minimum number of NAICS codes to return. Must be at least 1. Defaults to 1.
-     * @param list<string> $tags Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param RequestOpts|null $requestOptions
      *
@@ -77,7 +77,7 @@ final class IndustryService implements IndustryContract
      * @param string $input Brand domain or title to retrieve SIC code for. If a valid domain is provided, it will be used for classification, otherwise, we will search for the brand using the provided title.
      * @param int $maxResults Maximum number of SIC codes to return. Must be between 1 and 10. Defaults to 5.
      * @param int $minResults Minimum number of SIC codes to return. Must be at least 1. Defaults to 1.
-     * @param list<string> $tags Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
      * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
      * @param Type|value-of<Type> $type Which SIC dataset to classify against. `original_sic` uses the 1987 Standard Industrial Classification system; `latest_sec` uses the current SIC list as published by the SEC. Defaults to `original_sic`.
      * @param RequestOpts|null $requestOptions

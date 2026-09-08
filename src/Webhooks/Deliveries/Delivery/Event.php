@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace ContextDev\Webhooks\Deliveries\Delivery;
 
+/**
+ * Webhook event type.
+ */
 enum Event: string
 {
     case BATCH_COMPLETED = 'batch.completed';

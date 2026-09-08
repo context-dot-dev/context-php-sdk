@@ -11,11 +11,11 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Webhooks\Deliveries\DeliveryListResponse\KeyMetadata;
 
 /**
- * @phpstan-import-type DeliveryShape from \ContextDev\Webhooks\Deliveries\Delivery
+ * @phpstan-import-type DeliverySummaryShape from \ContextDev\Webhooks\Deliveries\DeliverySummary
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Webhooks\Deliveries\DeliveryListResponse\KeyMetadata
  *
  * @phpstan-type DeliveryListResponseShape = array{
- *   data: list<Delivery|DeliveryShape>,
+ *   data: list<DeliverySummary|DeliverySummaryShape>,
  *   hasMore: bool,
  *   nextCursor: string|null,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
@@ -26,18 +26,28 @@ final class DeliveryListResponse implements BaseModel
     /** @use SdkModel<DeliveryListResponseShape> */
     use SdkModel;
 
-    /** @var list<Delivery> $data */
-    #[Required(list: Delivery::class)]
+    /**
+     * Webhook deliveries.
+     *
+     * @var list<DeliverySummary> $data
+     */
+    #[Required(list: DeliverySummary::class)]
     public array $data;
 
+    /**
+     * Whether more deliveries are available.
+     */
     #[Required('has_more')]
     public bool $hasMore;
 
+    /**
+     * Next page cursor, or null on the last page.
+     */
     #[Required('next_cursor')]
     public ?string $nextCursor;
 
     /**
-     * Metadata about the API key used for the request. Included in every response whenever a valid API key is provided, even when the response status is not 200.
+     * Credit usage, included whenever a valid API key is provided.
      */
     #[Optional('key_metadata')]
     public ?KeyMetadata $keyMetadata;
@@ -66,7 +76,7 @@ final class DeliveryListResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param list<Delivery|DeliveryShape> $data
+     * @param list<DeliverySummary|DeliverySummaryShape> $data
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
     public static function with(
@@ -87,7 +97,9 @@ final class DeliveryListResponse implements BaseModel
     }
 
     /**
-     * @param list<Delivery|DeliveryShape> $data
+     * Webhook deliveries.
+     *
+     * @param list<DeliverySummary|DeliverySummaryShape> $data
      */
     public function withData(array $data): self
     {
@@ -97,6 +109,9 @@ final class DeliveryListResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Whether more deliveries are available.
+     */
     public function withHasMore(bool $hasMore): self
     {
         $self = clone $this;
@@ -105,6 +120,9 @@ final class DeliveryListResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Next page cursor, or null on the last page.
+     */
     public function withNextCursor(?string $nextCursor): self
     {
         $self = clone $this;
@@ -114,7 +132,7 @@ final class DeliveryListResponse implements BaseModel
     }
 
     /**
-     * Metadata about the API key used for the request. Included in every response whenever a valid API key is provided, even when the response status is not 200.
+     * Credit usage, included whenever a valid API key is provided.
      *
      * @param KeyMetadata|KeyMetadataShape $keyMetadata
      */

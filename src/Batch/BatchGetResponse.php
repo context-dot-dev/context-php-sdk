@@ -154,7 +154,7 @@ final class BatchGetResponse implements BaseModel
     public ?KeyMetadata $keyMetadata;
 
     /**
-     * Retained completion delivery ID. Inspect or retry it through /webhooks/deliveries/{delivery_id}. Present once the delivery has been retained.
+     * Batch completion delivery ID, when available.
      */
     #[Optional('webhook_delivery_id')]
     public ?string $webhookDeliveryID;
@@ -460,7 +460,7 @@ final class BatchGetResponse implements BaseModel
     }
 
     /**
-     * Retained completion delivery ID. Inspect or retry it through /webhooks/deliveries/{delivery_id}. Present once the delivery has been retained.
+     * Batch completion delivery ID, when available.
      */
     public function withWebhookDeliveryID(string $webhookDeliveryID): self
     {

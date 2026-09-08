@@ -94,7 +94,7 @@ final class WebWebScrapeMdResponse implements BaseModel
     public ?string $html;
 
     /**
-     * Metadata about the API key used for the request. Included in every response whenever a valid API key is provided, even when the response status is not 200.
+     * Credit usage, included whenever a valid API key is provided.
      */
     #[Optional('key_metadata')]
     public ?KeyMetadata $keyMetadata;
@@ -276,7 +276,7 @@ final class WebWebScrapeMdResponse implements BaseModel
     }
 
     /**
-     * Metadata about the API key used for the request. Included in every response whenever a valid API key is provided, even when the response status is not 200.
+     * Credit usage, included whenever a valid API key is provided.
      *
      * @param KeyMetadata|KeyMetadataShape $keyMetadata
      */

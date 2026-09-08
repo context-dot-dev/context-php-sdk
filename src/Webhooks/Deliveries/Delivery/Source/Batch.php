@@ -7,37 +7,42 @@ namespace ContextDev\Webhooks\Deliveries\Delivery\Source;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
-use ContextDev\Webhooks\Deliveries\Delivery\Source\UnionMember0\Type;
+use ContextDev\Webhooks\Deliveries\Delivery\Source\Batch\Type;
 
 /**
- * @phpstan-type UnionMember0Shape = array{
- *   batchID: string, type: Type|value-of<Type>
- * }
+ * @phpstan-type BatchShape = array{batchID: string, type: Type|value-of<Type>}
  */
-final class UnionMember0 implements BaseModel
+final class Batch implements BaseModel
 {
-    /** @use SdkModel<UnionMember0Shape> */
+    /** @use SdkModel<BatchShape> */
     use SdkModel;
 
+    /**
+     * Batch ID.
+     */
     #[Required('batch_id')]
     public string $batchID;
 
-    /** @var value-of<Type> $type */
+    /**
+     * Delivery source.
+     *
+     * @var value-of<Type> $type
+     */
     #[Required(enum: Type::class)]
     public string $type;
 
     /**
-     * `new UnionMember0()` is missing required properties by the API.
+     * `new Batch()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * UnionMember0::with(batchID: ..., type: ...)
+     * Batch::with(batchID: ..., type: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new UnionMember0)->withBatchID(...)->withType(...)
+     * (new Batch)->withBatchID(...)->withType(...)
      * ```
      */
     public function __construct()
@@ -62,6 +67,9 @@ final class UnionMember0 implements BaseModel
         return $self;
     }
 
+    /**
+     * Batch ID.
+     */
     public function withBatchID(string $batchID): self
     {
         $self = clone $this;
@@ -71,6 +79,8 @@ final class UnionMember0 implements BaseModel
     }
 
     /**
+     * Delivery source.
+     *
      * @param Type|value-of<Type> $type
      */
     public function withType(Type|string $type): self

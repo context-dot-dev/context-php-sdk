@@ -24,6 +24,7 @@ interface DeliveriesRawContract
     /**
      * @api
      *
+     * @param string $deliveryID delivery ID
      * @param array<string,mixed>|DeliveryRetrieveParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -55,6 +56,7 @@ interface DeliveriesRawContract
     /**
      * @api
      *
+     * @param string $deliveryID delivery ID
      * @param array<string,mixed>|DeliveryListAttemptsParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -71,7 +73,7 @@ interface DeliveriesRawContract
     /**
      * @api
      *
-     * @param string $deliveryID Path param
+     * @param string $deliveryID path param: Delivery ID
      * @param array<string,mixed>|DeliveryRetryParams $params
      * @param RequestOpts|null $requestOptions
      *

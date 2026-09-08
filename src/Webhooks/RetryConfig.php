@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Opt into durable webhook delivery. An empty object uses the default retry schedule. Omit retry to preserve legacy delivery behavior. The policy is snapshotted for each event.
+ * Webhook retry settings. Use {} for the default schedule.
  *
  * @phpstan-type RetryConfigShape = array{delaysSeconds?: list<int>|null}
  */
@@ -19,7 +19,7 @@ final class RetryConfig implements BaseModel
     use SdkModel;
 
     /**
-     * Wait in seconds after each failed attempt. The first attempt is immediate. At most 10 delays, each 1–86400 seconds, totaling at most 72 hours. Small jitter is added automatically. An empty array disables automatic retries; manual retries remain available.
+     * Retry delays in seconds, totaling at most 72 hours. Use [] to disable automatic retries.
      *
      * @var list<int>|null $delaysSeconds
      */
@@ -48,7 +48,7 @@ final class RetryConfig implements BaseModel
     }
 
     /**
-     * Wait in seconds after each failed attempt. The first attempt is immediate. At most 10 delays, each 1–86400 seconds, totaling at most 72 hours. Small jitter is added automatically. An empty array disables automatic retries; manual retries remain available.
+     * Retry delays in seconds, totaling at most 72 hours. Use [] to disable automatic retries.
      *
      * @param list<int> $delaysSeconds
      */
