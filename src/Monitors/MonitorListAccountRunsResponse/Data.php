@@ -127,7 +127,7 @@ final class Data implements BaseModel
     public ?WebhookDelivery $webhookDelivery;
 
     /**
-     * Retained webhook deliveries for this run. Inspect their live state and attempt history through /webhooks/deliveries. With webhook.retry configured, delivery is asynchronous and the legacy webhook_delivery/webhook_deliveries outcomes are omitted.
+     * Webhook delivery IDs for this run.
      *
      * @var list<string>|null $webhookDeliveryIDs
      */
@@ -401,7 +401,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Retained webhook deliveries for this run. Inspect their live state and attempt history through /webhooks/deliveries. With webhook.retry configured, delivery is asynchronous and the legacy webhook_delivery/webhook_deliveries outcomes are omitted.
+     * Webhook delivery IDs for this run.
      *
      * @param list<string> $webhookDeliveryIDs
      */

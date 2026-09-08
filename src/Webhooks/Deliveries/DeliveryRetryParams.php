@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Queue an immediate attempt without rerunning or billing the underlying batch or monitor. A waiting retry is brought forward. A failed delivery gets one additional attempt without restarting its automatic retry budget. Set force: true to resend an acknowledged delivery. An in-progress attempt cannot be duplicated. The stored event body, event ID, and creation time remain unchanged; each attempt receives a fresh signature. Monitor retries use the current URL and secret; removing the webhook cancels pending deliveries. Batch result URLs in old payloads may have expired: retrieve the batch to get fresh URLs. Replay is available for seven days. A successful attempt cancels remaining automatic retries. Idempotency-Key is scoped to your organization and retained with the delivery metadata; repeating the same key and input returns the original accepted response.
+ * Retry a webhook delivery within seven days of creation.
  *
  * @see ContextDev\Services\Webhooks\DeliveriesService::retry()
  *
@@ -24,6 +24,9 @@ final class DeliveryRetryParams implements BaseModel
     use SdkModel;
     use SdkParams;
 
+    /**
+     * Resend a delivery that already succeeded.
+     */
     #[Optional]
     public ?bool $force;
 
@@ -35,6 +38,9 @@ final class DeliveryRetryParams implements BaseModel
     #[Optional(list: 'string')]
     public ?array $tags;
 
+    /**
+     * Unique key to prevent duplicate retry requests.
+     */
     #[Optional]
     public ?string $idempotencyKey;
 
@@ -64,6 +70,9 @@ final class DeliveryRetryParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Resend a delivery that already succeeded.
+     */
     public function withForce(bool $force): self
     {
         $self = clone $this;
@@ -85,6 +94,9 @@ final class DeliveryRetryParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Unique key to prevent duplicate retry requests.
+     */
     public function withIdempotencyKey(string $idempotencyKey): self
     {
         $self = clone $this;

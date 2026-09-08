@@ -7,15 +7,17 @@ namespace ContextDev\Webhooks\Deliveries\Delivery;
 use ContextDev\Core\Concerns\SdkUnion;
 use ContextDev\Core\Conversion\Contracts\Converter;
 use ContextDev\Core\Conversion\Contracts\ConverterSource;
-use ContextDev\Webhooks\Deliveries\Delivery\Source\UnionMember0;
-use ContextDev\Webhooks\Deliveries\Delivery\Source\UnionMember1;
+use ContextDev\Webhooks\Deliveries\Delivery\Source\Batch;
+use ContextDev\Webhooks\Deliveries\Delivery\Source\Monitor;
 
 /**
- * @phpstan-import-type UnionMember0Shape from \ContextDev\Webhooks\Deliveries\Delivery\Source\UnionMember0
- * @phpstan-import-type UnionMember1Shape from \ContextDev\Webhooks\Deliveries\Delivery\Source\UnionMember1
+ * Batch or monitor run that produced the event.
  *
- * @phpstan-type SourceVariants = UnionMember0|UnionMember1
- * @phpstan-type SourceShape = SourceVariants|UnionMember0Shape|UnionMember1Shape
+ * @phpstan-import-type BatchShape from \ContextDev\Webhooks\Deliveries\Delivery\Source\Batch
+ * @phpstan-import-type MonitorShape from \ContextDev\Webhooks\Deliveries\Delivery\Source\Monitor
+ *
+ * @phpstan-type SourceVariants = Batch|Monitor
+ * @phpstan-type SourceShape = SourceVariants|BatchShape|MonitorShape
  */
 final class Source implements ConverterSource
 {
@@ -26,6 +28,6 @@ final class Source implements ConverterSource
      */
     public static function variants(): array
     {
-        return [UnionMember0::class, UnionMember1::class];
+        return [Batch::class, Monitor::class];
     }
 }

@@ -9,6 +9,8 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
+ * Latest delivery error, or null if none.
+ *
  * @phpstan-type LastErrorShape = array{code: string, message: string}
  */
 final class LastError implements BaseModel
@@ -16,9 +18,15 @@ final class LastError implements BaseModel
     /** @use SdkModel<LastErrorShape> */
     use SdkModel;
 
+    /**
+     * Error code.
+     */
     #[Required]
     public string $code;
 
+    /**
+     * Error details.
+     */
     #[Required]
     public string $message;
 
@@ -56,6 +64,9 @@ final class LastError implements BaseModel
         return $self;
     }
 
+    /**
+     * Error code.
+     */
     public function withCode(string $code): self
     {
         $self = clone $this;
@@ -64,6 +75,9 @@ final class LastError implements BaseModel
         return $self;
     }
 
+    /**
+     * Error details.
+     */
     public function withMessage(string $message): self
     {
         $self = clone $this;

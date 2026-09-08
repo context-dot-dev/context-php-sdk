@@ -8,28 +8,26 @@ use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Webhooks\Deliveries\Delivery\Event;
-use ContextDev\Webhooks\Deliveries\Delivery\LastAttempt;
 use ContextDev\Webhooks\Deliveries\Delivery\LastError;
-use ContextDev\Webhooks\Deliveries\Delivery\Source\UnionMember0;
-use ContextDev\Webhooks\Deliveries\Delivery\Source\UnionMember1;
+use ContextDev\Webhooks\Deliveries\Delivery\Source\Batch;
+use ContextDev\Webhooks\Deliveries\Delivery\Source\Monitor;
 use ContextDev\Webhooks\Deliveries\Delivery\Status;
 use ContextDev\Webhooks\RetryConfig;
 
 /**
  * @phpstan-import-type SourceVariants from \ContextDev\Webhooks\Deliveries\Delivery\Source
- * @phpstan-import-type LastAttemptShape from \ContextDev\Webhooks\Deliveries\Delivery\LastAttempt
+ * @phpstan-import-type AttemptShape from \ContextDev\Webhooks\Deliveries\Attempt
  * @phpstan-import-type LastErrorShape from \ContextDev\Webhooks\Deliveries\Delivery\LastError
  * @phpstan-import-type RetryConfigShape from \ContextDev\Webhooks\RetryConfig
  * @phpstan-import-type SourceShape from \ContextDev\Webhooks\Deliveries\Delivery\Source
  *
  * @phpstan-type DeliveryShape = array{
  *   id: string,
- *   attemptCount: int,
  *   createdAt: \DateTimeInterface,
  *   deliveredAt: \DateTimeInterface|null,
  *   event: Event|value-of<Event>,
  *   eventID: string,
- *   lastAttempt: LastAttempt|LastAttemptShape,
+ *   lastAttempt: null|Attempt|AttemptShape,
  *   lastError: null|LastError|LastErrorShape,
  *   nextAttemptAt: \DateTimeInterface|null,
  *   retry: RetryConfig|RetryConfigShape,
@@ -44,65 +42,86 @@ final class Delivery implements BaseModel
     /** @use SdkModel<DeliveryShape> */
     use SdkModel;
 
+    /**
+     * Delivery ID.
+     */
     #[Required]
     public string $id;
 
     /**
-     * Number of delivery attempts started, including any attempt in progress.
+     * Event creation time.
      */
-    #[Required('attempt_count')]
-    public int $attemptCount;
-
     #[Required('created_at')]
     public \DateTimeInterface $createdAt;
 
     /**
-     * Most recent successful acknowledgment; retained if a later forced resend fails.
+     * Last successful delivery time, or null if never delivered.
      */
     #[Required('delivered_at')]
     public ?\DateTimeInterface $deliveredAt;
 
-    /** @var value-of<Event> $event */
+    /**
+     * Webhook event type.
+     *
+     * @var value-of<Event> $event
+     */
     #[Required(enum: Event::class)]
     public string $event;
 
     /**
-     * Stable event ID. Unchanged across automatic and manual attempts; use it to deduplicate events.
+     * Stable event ID for deduplicating received webhooks.
      */
     #[Required('event_id')]
     public string $eventID;
 
+    /**
+     * Latest attempt, or null if none.
+     */
     #[Required('last_attempt')]
-    public LastAttempt $lastAttempt;
+    public ?Attempt $lastAttempt;
 
+    /**
+     * Latest delivery error, or null if none.
+     */
     #[Required('last_error')]
     public ?LastError $lastError;
 
+    /**
+     * Next scheduled attempt, or null if none.
+     */
     #[Required('next_attempt_at')]
     public ?\DateTimeInterface $nextAttemptAt;
 
     /**
-     * Opt into durable webhook delivery. An empty object uses the default retry schedule. Omit retry to preserve legacy delivery behavior. The policy is snapshotted for each event.
+     * Webhook retry settings. Use {} for the default schedule.
      */
     #[Required]
     public RetryConfig $retry;
 
     /**
-     * Seven days after event creation. Manual retries after this time return 410. Delivery and attempt metadata remain available for up to 30 days.
+     * Manual retry deadline, seven days after event creation.
      */
     #[Required('retry_expires_at')]
     public \DateTimeInterface $retryExpiresAt;
 
-    /** @var SourceVariants $source */
+    /**
+     * Batch or monitor run that produced the event.
+     *
+     * @var SourceVariants $source
+     */
     #[Required]
-    public UnionMember0|UnionMember1 $source;
+    public Batch|Monitor $source;
 
-    /** @var value-of<Status> $status */
+    /**
+     * Current delivery status.
+     *
+     * @var value-of<Status> $status
+     */
     #[Required(enum: Status::class)]
     public string $status;
 
     /**
-     * Destination recorded for this delivery. Each attempt records the URL it used. Monitor retries use the currently configured URL and signing secret.
+     * Webhook destination URL.
      */
     #[Required]
     public string $url;
@@ -114,7 +133,6 @@ final class Delivery implements BaseModel
      * ```
      * Delivery::with(
      *   id: ...,
-     *   attemptCount: ...,
      *   createdAt: ...,
      *   deliveredAt: ...,
      *   event: ...,
@@ -135,7 +153,6 @@ final class Delivery implements BaseModel
      * ```
      * (new Delivery)
      *   ->withID(...)
-     *   ->withAttemptCount(...)
      *   ->withCreatedAt(...)
      *   ->withDeliveredAt(...)
      *   ->withEvent(...)
@@ -161,7 +178,7 @@ final class Delivery implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param Event|value-of<Event> $event
-     * @param LastAttempt|LastAttemptShape $lastAttempt
+     * @param Attempt|AttemptShape|null $lastAttempt
      * @param LastError|LastErrorShape|null $lastError
      * @param RetryConfig|RetryConfigShape $retry
      * @param SourceShape $source
@@ -169,24 +186,22 @@ final class Delivery implements BaseModel
      */
     public static function with(
         string $id,
-        int $attemptCount,
         \DateTimeInterface $createdAt,
         ?\DateTimeInterface $deliveredAt,
         Event|string $event,
         string $eventID,
-        LastAttempt|array $lastAttempt,
+        Attempt|array|null $lastAttempt,
         LastError|array|null $lastError,
         ?\DateTimeInterface $nextAttemptAt,
         RetryConfig|array $retry,
         \DateTimeInterface $retryExpiresAt,
-        UnionMember0|array|UnionMember1 $source,
+        Batch|array|Monitor $source,
         Status|string $status,
         string $url,
     ): self {
         $self = new self;
 
         $self['id'] = $id;
-        $self['attemptCount'] = $attemptCount;
         $self['createdAt'] = $createdAt;
         $self['deliveredAt'] = $deliveredAt;
         $self['event'] = $event;
@@ -203,6 +218,9 @@ final class Delivery implements BaseModel
         return $self;
     }
 
+    /**
+     * Delivery ID.
+     */
     public function withID(string $id): self
     {
         $self = clone $this;
@@ -212,16 +230,8 @@ final class Delivery implements BaseModel
     }
 
     /**
-     * Number of delivery attempts started, including any attempt in progress.
+     * Event creation time.
      */
-    public function withAttemptCount(int $attemptCount): self
-    {
-        $self = clone $this;
-        $self['attemptCount'] = $attemptCount;
-
-        return $self;
-    }
-
     public function withCreatedAt(\DateTimeInterface $createdAt): self
     {
         $self = clone $this;
@@ -231,7 +241,7 @@ final class Delivery implements BaseModel
     }
 
     /**
-     * Most recent successful acknowledgment; retained if a later forced resend fails.
+     * Last successful delivery time, or null if never delivered.
      */
     public function withDeliveredAt(?\DateTimeInterface $deliveredAt): self
     {
@@ -242,6 +252,8 @@ final class Delivery implements BaseModel
     }
 
     /**
+     * Webhook event type.
+     *
      * @param Event|value-of<Event> $event
      */
     public function withEvent(Event|string $event): self
@@ -253,7 +265,7 @@ final class Delivery implements BaseModel
     }
 
     /**
-     * Stable event ID. Unchanged across automatic and manual attempts; use it to deduplicate events.
+     * Stable event ID for deduplicating received webhooks.
      */
     public function withEventID(string $eventID): self
     {
@@ -264,9 +276,11 @@ final class Delivery implements BaseModel
     }
 
     /**
-     * @param LastAttempt|LastAttemptShape $lastAttempt
+     * Latest attempt, or null if none.
+     *
+     * @param Attempt|AttemptShape|null $lastAttempt
      */
-    public function withLastAttempt(LastAttempt|array $lastAttempt): self
+    public function withLastAttempt(Attempt|array|null $lastAttempt): self
     {
         $self = clone $this;
         $self['lastAttempt'] = $lastAttempt;
@@ -275,6 +289,8 @@ final class Delivery implements BaseModel
     }
 
     /**
+     * Latest delivery error, or null if none.
+     *
      * @param LastError|LastErrorShape|null $lastError
      */
     public function withLastError(LastError|array|null $lastError): self
@@ -285,6 +301,9 @@ final class Delivery implements BaseModel
         return $self;
     }
 
+    /**
+     * Next scheduled attempt, or null if none.
+     */
     public function withNextAttemptAt(?\DateTimeInterface $nextAttemptAt): self
     {
         $self = clone $this;
@@ -294,7 +313,7 @@ final class Delivery implements BaseModel
     }
 
     /**
-     * Opt into durable webhook delivery. An empty object uses the default retry schedule. Omit retry to preserve legacy delivery behavior. The policy is snapshotted for each event.
+     * Webhook retry settings. Use {} for the default schedule.
      *
      * @param RetryConfig|RetryConfigShape $retry
      */
@@ -307,7 +326,7 @@ final class Delivery implements BaseModel
     }
 
     /**
-     * Seven days after event creation. Manual retries after this time return 410. Delivery and attempt metadata remain available for up to 30 days.
+     * Manual retry deadline, seven days after event creation.
      */
     public function withRetryExpiresAt(\DateTimeInterface $retryExpiresAt): self
     {
@@ -318,9 +337,11 @@ final class Delivery implements BaseModel
     }
 
     /**
+     * Batch or monitor run that produced the event.
+     *
      * @param SourceShape $source
      */
-    public function withSource(UnionMember0|array|UnionMember1 $source): self
+    public function withSource(Batch|array|Monitor $source): self
     {
         $self = clone $this;
         $self['source'] = $source;
@@ -329,6 +350,8 @@ final class Delivery implements BaseModel
     }
 
     /**
+     * Current delivery status.
+     *
      * @param Status|value-of<Status> $status
      */
     public function withStatus(Status|string $status): self
@@ -340,7 +363,7 @@ final class Delivery implements BaseModel
     }
 
     /**
-     * Destination recorded for this delivery. Each attempt records the URL it used. Monitor retries use the currently configured URL and signing secret.
+     * Webhook destination URL.
      */
     public function withURL(string $url): self
     {

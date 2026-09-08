@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace ContextDev\Webhooks\Deliveries\DeliveryListParams;
 
+/**
+ * Filter by delivery status.
+ */
 enum Status: string
 {
     case PENDING = 'pending';

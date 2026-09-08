@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * List individual HTTP attempts for a delivery, newest first, including their destination, timestamps, HTTP status, and error. An interrupted attempt may have reached the endpoint even when its outcome is unknown. This endpoint costs no credits.
+ * List delivery attempts, newest first.
  *
  * @see ContextDev\Services\Webhooks\DeliveriesService::listAttempts()
  *
@@ -24,14 +24,20 @@ final class DeliveryListAttemptsParams implements BaseModel
     use SdkModel;
     use SdkParams;
 
+    /**
+     * The next_cursor from the previous response.
+     */
     #[Optional]
     public ?string $cursor;
 
+    /**
+     * Number of attempts to return.
+     */
     #[Optional]
     public ?int $limit;
 
     /**
-     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     * Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
      *
      * @var list<string>|null $tags
      */
@@ -64,6 +70,9 @@ final class DeliveryListAttemptsParams implements BaseModel
         return $self;
     }
 
+    /**
+     * The next_cursor from the previous response.
+     */
     public function withCursor(string $cursor): self
     {
         $self = clone $this;
@@ -72,6 +81,9 @@ final class DeliveryListAttemptsParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Number of attempts to return.
+     */
     public function withLimit(int $limit): self
     {
         $self = clone $this;
@@ -81,7 +93,7 @@ final class DeliveryListAttemptsParams implements BaseModel
     }
 
     /**
-     * Optional comma-separated caller-defined tags for tracking this request. Tags are recorded on the request's usage log and can be used to filter usage on the dashboard usage page. Up to 20 tags, each 1-50 characters.
+     * Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
      *
      * @param list<string> $tags
      */

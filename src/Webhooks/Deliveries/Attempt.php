@@ -14,7 +14,6 @@ use ContextDev\Webhooks\Deliveries\Attempt\Trigger;
  * @phpstan-import-type ErrorShape from \ContextDev\Webhooks\Deliveries\Attempt\Error
  *
  * @phpstan-type AttemptShape = array{
- *   id: string,
  *   attempt: int,
  *   completedAt: \DateTimeInterface|null,
  *   error: null|Error|ErrorShape,
@@ -29,28 +28,47 @@ final class Attempt implements BaseModel
     /** @use SdkModel<AttemptShape> */
     use SdkModel;
 
-    #[Required]
-    public string $id;
-
+    /**
+     * Attempt number, starting at 1.
+     */
     #[Required]
     public int $attempt;
 
+    /**
+     * Completion time, or null while in progress.
+     */
     #[Required('completed_at')]
     public ?\DateTimeInterface $completedAt;
 
+    /**
+     * Attempt error, or null if none.
+     */
     #[Required]
     public ?Error $error;
 
+    /**
+     * HTTP response status, or null if no response was received.
+     */
     #[Required('http_status')]
     public ?int $httpStatus;
 
+    /**
+     * Attempt start time.
+     */
     #[Required('started_at')]
     public \DateTimeInterface $startedAt;
 
-    /** @var value-of<Trigger> $trigger */
+    /**
+     * What started this attempt.
+     *
+     * @var value-of<Trigger> $trigger
+     */
     #[Required(enum: Trigger::class)]
     public string $trigger;
 
+    /**
+     * URL used for this attempt.
+     */
     #[Required]
     public string $url;
 
@@ -60,7 +78,6 @@ final class Attempt implements BaseModel
      * To enforce required parameters use
      * ```
      * Attempt::with(
-     *   id: ...,
      *   attempt: ...,
      *   completedAt: ...,
      *   error: ...,
@@ -75,7 +92,6 @@ final class Attempt implements BaseModel
      *
      * ```
      * (new Attempt)
-     *   ->withID(...)
      *   ->withAttempt(...)
      *   ->withCompletedAt(...)
      *   ->withError(...)
@@ -99,7 +115,6 @@ final class Attempt implements BaseModel
      * @param Trigger|value-of<Trigger> $trigger
      */
     public static function with(
-        string $id,
         int $attempt,
         ?\DateTimeInterface $completedAt,
         Error|array|null $error,
@@ -110,7 +125,6 @@ final class Attempt implements BaseModel
     ): self {
         $self = new self;
 
-        $self['id'] = $id;
         $self['attempt'] = $attempt;
         $self['completedAt'] = $completedAt;
         $self['error'] = $error;
@@ -122,14 +136,9 @@ final class Attempt implements BaseModel
         return $self;
     }
 
-    public function withID(string $id): self
-    {
-        $self = clone $this;
-        $self['id'] = $id;
-
-        return $self;
-    }
-
+    /**
+     * Attempt number, starting at 1.
+     */
     public function withAttempt(int $attempt): self
     {
         $self = clone $this;
@@ -138,6 +147,9 @@ final class Attempt implements BaseModel
         return $self;
     }
 
+    /**
+     * Completion time, or null while in progress.
+     */
     public function withCompletedAt(?\DateTimeInterface $completedAt): self
     {
         $self = clone $this;
@@ -147,6 +159,8 @@ final class Attempt implements BaseModel
     }
 
     /**
+     * Attempt error, or null if none.
+     *
      * @param Error|ErrorShape|null $error
      */
     public function withError(Error|array|null $error): self
@@ -157,6 +171,9 @@ final class Attempt implements BaseModel
         return $self;
     }
 
+    /**
+     * HTTP response status, or null if no response was received.
+     */
     public function withHTTPStatus(?int $httpStatus): self
     {
         $self = clone $this;
@@ -165,6 +182,9 @@ final class Attempt implements BaseModel
         return $self;
     }
 
+    /**
+     * Attempt start time.
+     */
     public function withStartedAt(\DateTimeInterface $startedAt): self
     {
         $self = clone $this;
@@ -174,6 +194,8 @@ final class Attempt implements BaseModel
     }
 
     /**
+     * What started this attempt.
+     *
      * @param Trigger|value-of<Trigger> $trigger
      */
     public function withTrigger(Trigger|string $trigger): self
@@ -184,6 +206,9 @@ final class Attempt implements BaseModel
         return $self;
     }
 
+    /**
+     * URL used for this attempt.
+     */
     public function withURL(string $url): self
     {
         $self = clone $this;

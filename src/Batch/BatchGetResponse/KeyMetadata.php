@@ -21,13 +21,13 @@ final class KeyMetadata implements BaseModel
     use SdkModel;
 
     /**
-     * The number of credits consumed by this request.
+     * Credits used by this request.
      */
     #[Required('credits_consumed')]
     public int $creditsConsumed;
 
     /**
-     * The number of credits remaining for your organization after this request.
+     * Credits remaining for your organization.
      */
     #[Required('credits_remaining')]
     public int $creditsRemaining;
@@ -69,7 +69,7 @@ final class KeyMetadata implements BaseModel
     }
 
     /**
-     * The number of credits consumed by this request.
+     * Credits used by this request.
      */
     public function withCreditsConsumed(int $creditsConsumed): self
     {
@@ -80,7 +80,7 @@ final class KeyMetadata implements BaseModel
     }
 
     /**
-     * The number of credits remaining for your organization after this request.
+     * Credits remaining for your organization.
      */
     public function withCreditsRemaining(int $creditsRemaining): self
     {

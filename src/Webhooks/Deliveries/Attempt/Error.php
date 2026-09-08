@@ -9,6 +9,8 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
+ * Attempt error, or null if none.
+ *
  * @phpstan-type ErrorShape = array{code: string, message: string}
  */
 final class Error implements BaseModel
@@ -16,9 +18,15 @@ final class Error implements BaseModel
     /** @use SdkModel<ErrorShape> */
     use SdkModel;
 
+    /**
+     * Error code.
+     */
     #[Required]
     public string $code;
 
+    /**
+     * Error details.
+     */
     #[Required]
     public string $message;
 
@@ -56,6 +64,9 @@ final class Error implements BaseModel
         return $self;
     }
 
+    /**
+     * Error code.
+     */
     public function withCode(string $code): self
     {
         $self = clone $this;
@@ -64,6 +75,9 @@ final class Error implements BaseModel
         return $self;
     }
 
+    /**
+     * Error details.
+     */
     public function withMessage(string $message): self
     {
         $self = clone $this;

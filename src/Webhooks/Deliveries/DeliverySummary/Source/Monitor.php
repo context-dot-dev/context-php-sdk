@@ -2,45 +2,55 @@
 
 declare(strict_types=1);
 
-namespace ContextDev\Webhooks\Deliveries\Delivery\Source;
+namespace ContextDev\Webhooks\Deliveries\DeliverySummary\Source;
 
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
-use ContextDev\Webhooks\Deliveries\Delivery\Source\UnionMember1\Type;
+use ContextDev\Webhooks\Deliveries\DeliverySummary\Source\Monitor\Type;
 
 /**
- * @phpstan-type UnionMember1Shape = array{
+ * @phpstan-type MonitorShape = array{
  *   monitorID: string, runID: string, type: Type|value-of<Type>
  * }
  */
-final class UnionMember1 implements BaseModel
+final class Monitor implements BaseModel
 {
-    /** @use SdkModel<UnionMember1Shape> */
+    /** @use SdkModel<MonitorShape> */
     use SdkModel;
 
+    /**
+     * Monitor ID.
+     */
     #[Required('monitor_id')]
     public string $monitorID;
 
+    /**
+     * Monitor run ID.
+     */
     #[Required('run_id')]
     public string $runID;
 
-    /** @var value-of<Type> $type */
+    /**
+     * Delivery source.
+     *
+     * @var value-of<Type> $type
+     */
     #[Required(enum: Type::class)]
     public string $type;
 
     /**
-     * `new UnionMember1()` is missing required properties by the API.
+     * `new Monitor()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * UnionMember1::with(monitorID: ..., runID: ..., type: ...)
+     * Monitor::with(monitorID: ..., runID: ..., type: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new UnionMember1)->withMonitorID(...)->withRunID(...)->withType(...)
+     * (new Monitor)->withMonitorID(...)->withRunID(...)->withType(...)
      * ```
      */
     public function __construct()
@@ -69,6 +79,9 @@ final class UnionMember1 implements BaseModel
         return $self;
     }
 
+    /**
+     * Monitor ID.
+     */
     public function withMonitorID(string $monitorID): self
     {
         $self = clone $this;
@@ -77,6 +90,9 @@ final class UnionMember1 implements BaseModel
         return $self;
     }
 
+    /**
+     * Monitor run ID.
+     */
     public function withRunID(string $runID): self
     {
         $self = clone $this;
@@ -86,6 +102,8 @@ final class UnionMember1 implements BaseModel
     }
 
     /**
+     * Delivery source.
+     *
      * @param Type|value-of<Type> $type
      */
     public function withType(Type|string $type): self
