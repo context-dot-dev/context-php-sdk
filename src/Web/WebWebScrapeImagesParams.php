@@ -94,7 +94,7 @@ final class WebWebScrapeImagesParams implements BaseModel
     public ?int $timeoutMs;
 
     /**
-     * Optional browser wait time in milliseconds after initial page load before collecting images. Min: 0. Max: 30000 (30 seconds).
+     * Optional browser wait time in milliseconds after initial page load before collecting images. Min: 0. Max: 30000 (30 seconds). When combined with timeoutMS, timeoutMS must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
      */
     #[Optional(nullable: true)]
     public ?int $waitForMs;
@@ -252,7 +252,7 @@ final class WebWebScrapeImagesParams implements BaseModel
     }
 
     /**
-     * Optional browser wait time in milliseconds after initial page load before collecting images. Min: 0. Max: 30000 (30 seconds).
+     * Optional browser wait time in milliseconds after initial page load before collecting images. Min: 0. Max: 30000 (30 seconds). When combined with timeoutMS, timeoutMS must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
      */
     public function withWaitForMs(?int $waitForMs): self
     {
