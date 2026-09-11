@@ -11,6 +11,7 @@ use ContextDev\Services\AIService;
 use ContextDev\Services\BatchService;
 use ContextDev\Services\BrandService;
 use ContextDev\Services\IndustryService;
+use ContextDev\Services\LogsService;
 use ContextDev\Services\MonitorsService;
 use ContextDev\Services\NewsService;
 use ContextDev\Services\ParseService;
@@ -85,6 +86,11 @@ class Client extends BaseClient
     public NewsService $news;
 
     /**
+     * @api
+     */
+    public LogsService $logs;
+
+    /**
      * @param RequestOpts|null $requestOptions
      */
     public function __construct(
@@ -153,6 +159,7 @@ class Client extends BaseClient
         $this->webhooks = new WebhooksService($this);
         $this->people = new PeopleService($this);
         $this->news = new NewsService($this);
+        $this->logs = new LogsService($this);
     }
 
     /** @return array<string,string> */
