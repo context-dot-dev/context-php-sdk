@@ -34,6 +34,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   input: Intake|IntakeShape,
  *   invalidURLs: list<InvalidURL|InvalidURLShape>,
  *   mode: Mode|value-of<Mode>,
+ *   requestID: string,
  *   status: Status|value-of<Status>,
  *   tags: list<string>,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
@@ -106,6 +107,12 @@ final class BatchSubmitResponse implements BaseModel
     public string $mode;
 
     /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    #[Required('request_id')]
+    public string $requestID;
+
+    /**
      * Always `queued`. An accepted batch has not started yet.
      *
      * @var value-of<Status> $status
@@ -148,6 +155,7 @@ final class BatchSubmitResponse implements BaseModel
      *   input: ...,
      *   invalidURLs: ...,
      *   mode: ...,
+     *   requestID: ...,
      *   status: ...,
      *   tags: ...,
      * )
@@ -166,6 +174,7 @@ final class BatchSubmitResponse implements BaseModel
      *   ->withInput(...)
      *   ->withInvalidURLs(...)
      *   ->withMode(...)
+     *   ->withRequestID(...)
      *   ->withStatus(...)
      *   ->withTags(...)
      * ```
@@ -201,6 +210,7 @@ final class BatchSubmitResponse implements BaseModel
         Intake|array $input,
         array $invalidURLs,
         Mode|string $mode,
+        string $requestID,
         Status|string $status,
         array $tags,
         KeyMetadata|array|null $keyMetadata = null,
@@ -217,6 +227,7 @@ final class BatchSubmitResponse implements BaseModel
         $self['input'] = $input;
         $self['invalidURLs'] = $invalidURLs;
         $self['mode'] = $mode;
+        $self['requestID'] = $requestID;
         $self['status'] = $status;
         $self['tags'] = $tags;
 
@@ -335,6 +346,17 @@ final class BatchSubmitResponse implements BaseModel
     {
         $self = clone $this;
         $self['mode'] = $mode;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }

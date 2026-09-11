@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Utility;
 
 use ContextDev\Core\Attributes\Optional;
+use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Utility\UtilityPrefetchResponse\KeyMetadata;
@@ -14,6 +15,7 @@ use ContextDev\Utility\UtilityPrefetchResponse\Type;
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Utility\UtilityPrefetchResponse\KeyMetadata
  *
  * @phpstan-type UtilityPrefetchResponseShape = array{
+ *   requestID: string,
  *   domain?: string|null,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  *   message?: string|null,
@@ -25,6 +27,12 @@ final class UtilityPrefetchResponse implements BaseModel
 {
     /** @use SdkModel<UtilityPrefetchResponseShape> */
     use SdkModel;
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    #[Required('request_id')]
+    public string $requestID;
 
     /**
      * The domain that was queued for prefetching.
@@ -58,6 +66,20 @@ final class UtilityPrefetchResponse implements BaseModel
     #[Optional(enum: Type::class)]
     public ?string $type;
 
+    /**
+     * `new UtilityPrefetchResponse()` is missing required properties by the API.
+     *
+     * To enforce required parameters use
+     * ```
+     * UtilityPrefetchResponse::with(requestID: ...)
+     * ```
+     *
+     * Otherwise ensure the following setters are called
+     *
+     * ```
+     * (new UtilityPrefetchResponse)->withRequestID(...)
+     * ```
+     */
     public function __construct()
     {
         $this->initialize();
@@ -72,6 +94,7 @@ final class UtilityPrefetchResponse implements BaseModel
      * @param Type|value-of<Type>|null $type
      */
     public static function with(
+        string $requestID,
         ?string $domain = null,
         KeyMetadata|array|null $keyMetadata = null,
         ?string $message = null,
@@ -80,11 +103,24 @@ final class UtilityPrefetchResponse implements BaseModel
     ): self {
         $self = new self;
 
+        $self['requestID'] = $requestID;
+
         null !== $domain && $self['domain'] = $domain;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
         null !== $message && $self['message'] = $message;
         null !== $status && $self['status'] = $status;
         null !== $type && $self['type'] = $type;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }

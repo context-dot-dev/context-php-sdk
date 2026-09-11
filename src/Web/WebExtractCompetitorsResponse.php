@@ -21,6 +21,7 @@ use ContextDev\Web\WebExtractCompetitorsResponse\Target;
  * @phpstan-type WebExtractCompetitorsResponseShape = array{
  *   competitors: list<Competitor|CompetitorShape>,
  *   domain: string,
+ *   requestID: string,
  *   status: Status|value-of<Status>,
  *   target: Target|TargetShape,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
@@ -44,6 +45,12 @@ final class WebExtractCompetitorsResponse implements BaseModel
      */
     #[Required]
     public string $domain;
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    #[Required('request_id')]
+    public string $requestID;
 
     /**
      * Status of the response.
@@ -71,7 +78,7 @@ final class WebExtractCompetitorsResponse implements BaseModel
      * To enforce required parameters use
      * ```
      * WebExtractCompetitorsResponse::with(
-     *   competitors: ..., domain: ..., status: ..., target: ...
+     *   competitors: ..., domain: ..., requestID: ..., status: ..., target: ...
      * )
      * ```
      *
@@ -81,6 +88,7 @@ final class WebExtractCompetitorsResponse implements BaseModel
      * (new WebExtractCompetitorsResponse)
      *   ->withCompetitors(...)
      *   ->withDomain(...)
+     *   ->withRequestID(...)
      *   ->withStatus(...)
      *   ->withTarget(...)
      * ```
@@ -103,6 +111,7 @@ final class WebExtractCompetitorsResponse implements BaseModel
     public static function with(
         array $competitors,
         string $domain,
+        string $requestID,
         Status|string $status,
         Target|array $target,
         KeyMetadata|array|null $keyMetadata = null,
@@ -111,6 +120,7 @@ final class WebExtractCompetitorsResponse implements BaseModel
 
         $self['competitors'] = $competitors;
         $self['domain'] = $domain;
+        $self['requestID'] = $requestID;
         $self['status'] = $status;
         $self['target'] = $target;
 
@@ -139,6 +149,17 @@ final class WebExtractCompetitorsResponse implements BaseModel
     {
         $self = clone $this;
         $self['domain'] = $domain;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }

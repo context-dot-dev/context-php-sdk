@@ -22,6 +22,7 @@ use ContextDev\Web\WebWebScrapeImagesResponse\KeyMetadata;
  * @phpstan-type WebWebScrapeImagesResponseShape = array{
  *   cacheMetadata: CacheMetadata|CacheMetadataShape,
  *   images: list<Image|ImageShape>,
+ *   requestID: string,
  *   success: bool,
  *   url: string,
  *   actionsApplied?: list<ActionsApplied|ActionsAppliedShape>|null,
@@ -46,6 +47,12 @@ final class WebWebScrapeImagesResponse implements BaseModel
      */
     #[Required(list: Image::class)]
     public array $images;
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    #[Required('request_id')]
+    public string $requestID;
 
     /**
      * Always true on success.
@@ -79,7 +86,7 @@ final class WebWebScrapeImagesResponse implements BaseModel
      * To enforce required parameters use
      * ```
      * WebWebScrapeImagesResponse::with(
-     *   cacheMetadata: ..., images: ..., success: ..., url: ...
+     *   cacheMetadata: ..., images: ..., requestID: ..., success: ..., url: ...
      * )
      * ```
      *
@@ -89,6 +96,7 @@ final class WebWebScrapeImagesResponse implements BaseModel
      * (new WebWebScrapeImagesResponse)
      *   ->withCacheMetadata(...)
      *   ->withImages(...)
+     *   ->withRequestID(...)
      *   ->withSuccess(...)
      *   ->withURL(...)
      * ```
@@ -111,6 +119,7 @@ final class WebWebScrapeImagesResponse implements BaseModel
     public static function with(
         CacheMetadata|array $cacheMetadata,
         array $images,
+        string $requestID,
         bool $success,
         string $url,
         ?array $actionsApplied = null,
@@ -120,6 +129,7 @@ final class WebWebScrapeImagesResponse implements BaseModel
 
         $self['cacheMetadata'] = $cacheMetadata;
         $self['images'] = $images;
+        $self['requestID'] = $requestID;
         $self['success'] = $success;
         $self['url'] = $url;
 
@@ -151,6 +161,17 @@ final class WebWebScrapeImagesResponse implements BaseModel
     {
         $self = clone $this;
         $self['images'] = $images;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }

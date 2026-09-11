@@ -18,6 +18,7 @@ use ContextDev\Web\WebWebScrapeSitemapResponse\Meta;
  * @phpstan-type WebWebScrapeSitemapResponseShape = array{
  *   domain: string,
  *   meta: Meta|MetaShape,
+ *   requestID: string,
  *   success: bool,
  *   urls: list<string>,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
@@ -39,6 +40,12 @@ final class WebWebScrapeSitemapResponse implements BaseModel
      */
     #[Required]
     public Meta $meta;
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    #[Required('request_id')]
+    public string $requestID;
 
     /**
      * Indicates success.
@@ -66,7 +73,7 @@ final class WebWebScrapeSitemapResponse implements BaseModel
      * To enforce required parameters use
      * ```
      * WebWebScrapeSitemapResponse::with(
-     *   domain: ..., meta: ..., success: ..., urls: ...
+     *   domain: ..., meta: ..., requestID: ..., success: ..., urls: ...
      * )
      * ```
      *
@@ -76,6 +83,7 @@ final class WebWebScrapeSitemapResponse implements BaseModel
      * (new WebWebScrapeSitemapResponse)
      *   ->withDomain(...)
      *   ->withMeta(...)
+     *   ->withRequestID(...)
      *   ->withSuccess(...)
      *   ->withURLs(...)
      * ```
@@ -97,6 +105,7 @@ final class WebWebScrapeSitemapResponse implements BaseModel
     public static function with(
         string $domain,
         Meta|array $meta,
+        string $requestID,
         bool $success,
         array $urls,
         KeyMetadata|array|null $keyMetadata = null,
@@ -105,6 +114,7 @@ final class WebWebScrapeSitemapResponse implements BaseModel
 
         $self['domain'] = $domain;
         $self['meta'] = $meta;
+        $self['requestID'] = $requestID;
         $self['success'] = $success;
         $self['urls'] = $urls;
 
@@ -133,6 +143,17 @@ final class WebWebScrapeSitemapResponse implements BaseModel
     {
         $self = clone $this;
         $self['meta'] = $meta;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }

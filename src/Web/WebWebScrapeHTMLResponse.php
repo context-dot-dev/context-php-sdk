@@ -24,6 +24,7 @@ use ContextDev\Web\WebWebScrapeHTMLResponse\Type;
  *   cacheMetadata: CacheMetadata|CacheMetadataShape,
  *   html: string,
  *   metadata: Metadata|MetadataShape,
+ *   requestID: string,
  *   success: bool,
  *   type: Type|value-of<Type>,
  *   url: string,
@@ -54,6 +55,12 @@ final class WebWebScrapeHTMLResponse implements BaseModel
      */
     #[Required]
     public Metadata $metadata;
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    #[Required('request_id')]
+    public string $requestID;
 
     /**
      * Indicates success.
@@ -104,6 +111,7 @@ final class WebWebScrapeHTMLResponse implements BaseModel
      *   cacheMetadata: ...,
      *   html: ...,
      *   metadata: ...,
+     *   requestID: ...,
      *   success: ...,
      *   type: ...,
      *   url: ...,
@@ -117,6 +125,7 @@ final class WebWebScrapeHTMLResponse implements BaseModel
      *   ->withCacheMetadata(...)
      *   ->withHTML(...)
      *   ->withMetadata(...)
+     *   ->withRequestID(...)
      *   ->withSuccess(...)
      *   ->withType(...)
      *   ->withURL(...)
@@ -142,6 +151,7 @@ final class WebWebScrapeHTMLResponse implements BaseModel
         CacheMetadata|array $cacheMetadata,
         string $html,
         Metadata|array $metadata,
+        string $requestID,
         bool $success,
         Type|string $type,
         string $url,
@@ -154,6 +164,7 @@ final class WebWebScrapeHTMLResponse implements BaseModel
         $self['cacheMetadata'] = $cacheMetadata;
         $self['html'] = $html;
         $self['metadata'] = $metadata;
+        $self['requestID'] = $requestID;
         $self['success'] = $success;
         $self['type'] = $type;
         $self['url'] = $url;
@@ -198,6 +209,17 @@ final class WebWebScrapeHTMLResponse implements BaseModel
     {
         $self = clone $this;
         $self['metadata'] = $metadata;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }

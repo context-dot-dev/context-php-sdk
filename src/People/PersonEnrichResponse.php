@@ -19,7 +19,9 @@ use ContextDev\People\PersonEnrichResponse\Match_\PersonEnrichmentNotFoundMatch;
  * @phpstan-import-type KeyMetadataShape from \ContextDev\People\PersonEnrichResponse\KeyMetadata
  *
  * @phpstan-type PersonEnrichResponseShape = array{
- *   match: MatchShape, keyMetadata?: null|KeyMetadata|KeyMetadataShape
+ *   match: MatchShape,
+ *   requestID: string,
+ *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  * }
  */
 final class PersonEnrichResponse implements BaseModel
@@ -36,6 +38,12 @@ final class PersonEnrichResponse implements BaseModel
     public PersonEnrichmentCandidateMatch|PersonEnrichmentNotFoundMatch $match;
 
     /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    #[Required('request_id')]
+    public string $requestID;
+
+    /**
      * Credit usage, included whenever a valid API key is provided.
      */
     #[Optional('key_metadata')]
@@ -46,13 +54,13 @@ final class PersonEnrichResponse implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * PersonEnrichResponse::with(match: ...)
+     * PersonEnrichResponse::with(match: ..., requestID: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new PersonEnrichResponse)->withMatch(...)
+     * (new PersonEnrichResponse)->withMatch(...)->withRequestID(...)
      * ```
      */
     public function __construct()
@@ -70,11 +78,13 @@ final class PersonEnrichResponse implements BaseModel
      */
     public static function with(
         PersonEnrichmentCandidateMatch|array|PersonEnrichmentNotFoundMatch $match,
+        string $requestID,
         KeyMetadata|array|null $keyMetadata = null,
     ): self {
         $self = new self;
 
         $self['match'] = $match;
+        $self['requestID'] = $requestID;
 
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
 
@@ -91,6 +101,17 @@ final class PersonEnrichResponse implements BaseModel
     ): self {
         $self = clone $this;
         $self['match'] = $match;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }

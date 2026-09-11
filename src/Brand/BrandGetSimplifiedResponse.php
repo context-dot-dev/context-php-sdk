@@ -19,6 +19,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *
  * @phpstan-type BrandGetSimplifiedResponseShape = array{
  *   cacheMetadata: CacheMetadata|CacheMetadataShape,
+ *   requestID: string,
  *   brand?: null|Brand|BrandShape,
  *   code?: int|null,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
@@ -35,6 +36,12 @@ final class BrandGetSimplifiedResponse implements BaseModel
      */
     #[Required('cache_metadata')]
     public CacheMetadata $cacheMetadata;
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    #[Required('request_id')]
+    public string $requestID;
 
     /**
      * Simplified brand information.
@@ -65,13 +72,13 @@ final class BrandGetSimplifiedResponse implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * BrandGetSimplifiedResponse::with(cacheMetadata: ...)
+     * BrandGetSimplifiedResponse::with(cacheMetadata: ..., requestID: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new BrandGetSimplifiedResponse)->withCacheMetadata(...)
+     * (new BrandGetSimplifiedResponse)->withCacheMetadata(...)->withRequestID(...)
      * ```
      */
     public function __construct()
@@ -90,6 +97,7 @@ final class BrandGetSimplifiedResponse implements BaseModel
      */
     public static function with(
         CacheMetadata|array $cacheMetadata,
+        string $requestID,
         Brand|array|null $brand = null,
         ?int $code = null,
         KeyMetadata|array|null $keyMetadata = null,
@@ -98,6 +106,7 @@ final class BrandGetSimplifiedResponse implements BaseModel
         $self = new self;
 
         $self['cacheMetadata'] = $cacheMetadata;
+        $self['requestID'] = $requestID;
 
         null !== $brand && $self['brand'] = $brand;
         null !== $code && $self['code'] = $code;
@@ -116,6 +125,17 @@ final class BrandGetSimplifiedResponse implements BaseModel
     {
         $self = clone $this;
         $self['cacheMetadata'] = $cacheMetadata;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }

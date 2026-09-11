@@ -19,6 +19,7 @@ use ContextDev\Web\WebExtractStyleguideResponse\Styleguide;
  *
  * @phpstan-type WebExtractStyleguideResponseShape = array{
  *   cacheMetadata: CacheMetadata|CacheMetadataShape,
+ *   requestID: string,
  *   code?: int|null,
  *   domain?: string|null,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
@@ -36,6 +37,12 @@ final class WebExtractStyleguideResponse implements BaseModel
      */
     #[Required('cache_metadata')]
     public CacheMetadata $cacheMetadata;
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    #[Required('request_id')]
+    public string $requestID;
 
     /**
      * HTTP status code.
@@ -72,13 +79,13 @@ final class WebExtractStyleguideResponse implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * WebExtractStyleguideResponse::with(cacheMetadata: ...)
+     * WebExtractStyleguideResponse::with(cacheMetadata: ..., requestID: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new WebExtractStyleguideResponse)->withCacheMetadata(...)
+     * (new WebExtractStyleguideResponse)->withCacheMetadata(...)->withRequestID(...)
      * ```
      */
     public function __construct()
@@ -97,6 +104,7 @@ final class WebExtractStyleguideResponse implements BaseModel
      */
     public static function with(
         CacheMetadata|array $cacheMetadata,
+        string $requestID,
         ?int $code = null,
         ?string $domain = null,
         KeyMetadata|array|null $keyMetadata = null,
@@ -106,6 +114,7 @@ final class WebExtractStyleguideResponse implements BaseModel
         $self = new self;
 
         $self['cacheMetadata'] = $cacheMetadata;
+        $self['requestID'] = $requestID;
 
         null !== $code && $self['code'] = $code;
         null !== $domain && $self['domain'] = $domain;
@@ -125,6 +134,17 @@ final class WebExtractStyleguideResponse implements BaseModel
     {
         $self = clone $this;
         $self['cacheMetadata'] = $cacheMetadata;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }

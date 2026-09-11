@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Industry;
 
 use ContextDev\Core\Attributes\Optional;
+use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Industry\IndustryGetNaicsResponse\Code;
@@ -15,6 +16,7 @@ use ContextDev\Industry\IndustryGetNaicsResponse\KeyMetadata;
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Industry\IndustryGetNaicsResponse\KeyMetadata
  *
  * @phpstan-type IndustryGetNaicsResponseShape = array{
+ *   requestID: string,
  *   codes?: list<Code|CodeShape>|null,
  *   domain?: string|null,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
@@ -26,6 +28,12 @@ final class IndustryGetNaicsResponse implements BaseModel
 {
     /** @use SdkModel<IndustryGetNaicsResponseShape> */
     use SdkModel;
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    #[Required('request_id')]
+    public string $requestID;
 
     /**
      * Array of NAICS codes and titles.
@@ -59,6 +67,20 @@ final class IndustryGetNaicsResponse implements BaseModel
     #[Optional]
     public ?string $type;
 
+    /**
+     * `new IndustryGetNaicsResponse()` is missing required properties by the API.
+     *
+     * To enforce required parameters use
+     * ```
+     * IndustryGetNaicsResponse::with(requestID: ...)
+     * ```
+     *
+     * Otherwise ensure the following setters are called
+     *
+     * ```
+     * (new IndustryGetNaicsResponse)->withRequestID(...)
+     * ```
+     */
     public function __construct()
     {
         $this->initialize();
@@ -73,6 +95,7 @@ final class IndustryGetNaicsResponse implements BaseModel
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
     public static function with(
+        string $requestID,
         ?array $codes = null,
         ?string $domain = null,
         KeyMetadata|array|null $keyMetadata = null,
@@ -81,11 +104,24 @@ final class IndustryGetNaicsResponse implements BaseModel
     ): self {
         $self = new self;
 
+        $self['requestID'] = $requestID;
+
         null !== $codes && $self['codes'] = $codes;
         null !== $domain && $self['domain'] = $domain;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
         null !== $status && $self['status'] = $status;
         null !== $type && $self['type'] = $type;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }

@@ -7,6 +7,7 @@ namespace ContextDev\Batch;
 use ContextDev\Batch\BatchGetResultsResponse\Data;
 use ContextDev\Batch\BatchGetResultsResponse\KeyMetadata;
 use ContextDev\Core\Attributes\Optional;
+use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
@@ -16,6 +17,7 @@ use ContextDev\Core\Contracts\BaseModel;
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Batch\BatchGetResultsResponse\KeyMetadata
  *
  * @phpstan-type BatchGetResultsResponseShape = array{
+ *   requestID: string,
  *   data?: list<DataShape>|null,
  *   hasMore?: bool|null,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
@@ -26,6 +28,12 @@ final class BatchGetResultsResponse implements BaseModel
 {
     /** @use SdkModel<BatchGetResultsResponseShape> */
     use SdkModel;
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    #[Required('request_id')]
+    public string $requestID;
 
     /**
      * Result records on this page.
@@ -53,6 +61,20 @@ final class BatchGetResultsResponse implements BaseModel
     #[Optional('next_cursor', nullable: true)]
     public ?string $nextCursor;
 
+    /**
+     * `new BatchGetResultsResponse()` is missing required properties by the API.
+     *
+     * To enforce required parameters use
+     * ```
+     * BatchGetResultsResponse::with(requestID: ...)
+     * ```
+     *
+     * Otherwise ensure the following setters are called
+     *
+     * ```
+     * (new BatchGetResultsResponse)->withRequestID(...)
+     * ```
+     */
     public function __construct()
     {
         $this->initialize();
@@ -67,6 +89,7 @@ final class BatchGetResultsResponse implements BaseModel
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
     public static function with(
+        string $requestID,
         ?array $data = null,
         ?bool $hasMore = null,
         KeyMetadata|array|null $keyMetadata = null,
@@ -74,10 +97,23 @@ final class BatchGetResultsResponse implements BaseModel
     ): self {
         $self = new self;
 
+        $self['requestID'] = $requestID;
+
         null !== $data && $self['data'] = $data;
         null !== $hasMore && $self['hasMore'] = $hasMore;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
         null !== $nextCursor && $self['nextCursor'] = $nextCursor;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }

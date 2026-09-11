@@ -22,6 +22,7 @@ use ContextDev\Web\WebWebCrawlMdResponse\Result;
  * @phpstan-type WebWebCrawlMdResponseShape = array{
  *   cacheMetadata: CacheMetadata|CacheMetadataShape,
  *   metadata: Metadata|MetadataShape,
+ *   requestID: string,
  *   results: list<Result|ResultShape>,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  * }
@@ -40,6 +41,12 @@ final class WebWebCrawlMdResponse implements BaseModel
     #[Required]
     public Metadata $metadata;
 
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    #[Required('request_id')]
+    public string $requestID;
+
     /** @var list<Result> $results */
     #[Required(list: Result::class)]
     public array $results;
@@ -55,7 +62,9 @@ final class WebWebCrawlMdResponse implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * WebWebCrawlMdResponse::with(cacheMetadata: ..., metadata: ..., results: ...)
+     * WebWebCrawlMdResponse::with(
+     *   cacheMetadata: ..., metadata: ..., requestID: ..., results: ...
+     * )
      * ```
      *
      * Otherwise ensure the following setters are called
@@ -64,6 +73,7 @@ final class WebWebCrawlMdResponse implements BaseModel
      * (new WebWebCrawlMdResponse)
      *   ->withCacheMetadata(...)
      *   ->withMetadata(...)
+     *   ->withRequestID(...)
      *   ->withResults(...)
      * ```
      */
@@ -85,6 +95,7 @@ final class WebWebCrawlMdResponse implements BaseModel
     public static function with(
         CacheMetadata|array $cacheMetadata,
         Metadata|array $metadata,
+        string $requestID,
         array $results,
         KeyMetadata|array|null $keyMetadata = null,
     ): self {
@@ -92,6 +103,7 @@ final class WebWebCrawlMdResponse implements BaseModel
 
         $self['cacheMetadata'] = $cacheMetadata;
         $self['metadata'] = $metadata;
+        $self['requestID'] = $requestID;
         $self['results'] = $results;
 
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
@@ -119,6 +131,17 @@ final class WebWebCrawlMdResponse implements BaseModel
     {
         $self = clone $this;
         $self['metadata'] = $metadata;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }

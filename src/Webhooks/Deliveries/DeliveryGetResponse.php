@@ -38,6 +38,7 @@ use ContextDev\Webhooks\RetryConfig;
  *   source: SourceShape,
  *   status: Status|value-of<Status>,
  *   url: string,
+ *   requestID: string,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  * }
  */
@@ -128,6 +129,12 @@ final class DeliveryGetResponse implements BaseModel
     public string $url;
 
     /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    #[Required('request_id')]
+    public string $requestID;
+
+    /**
      * Credit usage, included whenever a valid API key is provided.
      */
     #[Optional('key_metadata')]
@@ -152,6 +159,7 @@ final class DeliveryGetResponse implements BaseModel
      *   source: ...,
      *   status: ...,
      *   url: ...,
+     *   requestID: ...,
      * )
      * ```
      *
@@ -172,6 +180,7 @@ final class DeliveryGetResponse implements BaseModel
      *   ->withSource(...)
      *   ->withStatus(...)
      *   ->withURL(...)
+     *   ->withRequestID(...)
      * ```
      */
     public function __construct()
@@ -206,6 +215,7 @@ final class DeliveryGetResponse implements BaseModel
         Batch|array|Monitor $source,
         Status|string $status,
         string $url,
+        string $requestID,
         KeyMetadata|array|null $keyMetadata = null,
     ): self {
         $self = new self;
@@ -223,6 +233,7 @@ final class DeliveryGetResponse implements BaseModel
         $self['source'] = $source;
         $self['status'] = $status;
         $self['url'] = $url;
+        $self['requestID'] = $requestID;
 
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
 
@@ -378,6 +389,17 @@ final class DeliveryGetResponse implements BaseModel
     {
         $self = clone $this;
         $self['url'] = $url;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }

@@ -24,6 +24,7 @@ use ContextDev\Web\WebWebScrapeMdResponse\Metadata;
  *   contentLength: int,
  *   markdown: string,
  *   metadata: Metadata|MetadataShape,
+ *   requestID: string,
  *   success: bool,
  *   url: string,
  *   actionsApplied?: list<ActionsApplied|ActionsAppliedShape>|null,
@@ -60,6 +61,12 @@ final class WebWebScrapeMdResponse implements BaseModel
      */
     #[Required]
     public Metadata $metadata;
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    #[Required('request_id')]
+    public string $requestID;
 
     /**
      * Indicates success.
@@ -109,6 +116,7 @@ final class WebWebScrapeMdResponse implements BaseModel
      *   contentLength: ...,
      *   markdown: ...,
      *   metadata: ...,
+     *   requestID: ...,
      *   success: ...,
      *   url: ...,
      * )
@@ -122,6 +130,7 @@ final class WebWebScrapeMdResponse implements BaseModel
      *   ->withContentLength(...)
      *   ->withMarkdown(...)
      *   ->withMetadata(...)
+     *   ->withRequestID(...)
      *   ->withSuccess(...)
      *   ->withURL(...)
      * ```
@@ -146,6 +155,7 @@ final class WebWebScrapeMdResponse implements BaseModel
         int $contentLength,
         string $markdown,
         Metadata|array $metadata,
+        string $requestID,
         bool $success,
         string $url,
         ?array $actionsApplied = null,
@@ -159,6 +169,7 @@ final class WebWebScrapeMdResponse implements BaseModel
         $self['contentLength'] = $contentLength;
         $self['markdown'] = $markdown;
         $self['metadata'] = $metadata;
+        $self['requestID'] = $requestID;
         $self['success'] = $success;
         $self['url'] = $url;
 
@@ -214,6 +225,17 @@ final class WebWebScrapeMdResponse implements BaseModel
     {
         $self = clone $this;
         $self['metadata'] = $metadata;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }

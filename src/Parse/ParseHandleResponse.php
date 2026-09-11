@@ -16,6 +16,7 @@ use ContextDev\Parse\ParseHandleResponse\Type;
  *
  * @phpstan-type ParseHandleResponseShape = array{
  *   markdown: string,
+ *   requestID: string,
  *   success: bool,
  *   type: Type|value-of<Type>,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
@@ -31,6 +32,12 @@ final class ParseHandleResponse implements BaseModel
      */
     #[Required]
     public string $markdown;
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    #[Required('request_id')]
+    public string $requestID;
 
     /**
      * Indicates success.
@@ -57,13 +64,19 @@ final class ParseHandleResponse implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * ParseHandleResponse::with(markdown: ..., success: ..., type: ...)
+     * ParseHandleResponse::with(
+     *   markdown: ..., requestID: ..., success: ..., type: ...
+     * )
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new ParseHandleResponse)->withMarkdown(...)->withSuccess(...)->withType(...)
+     * (new ParseHandleResponse)
+     *   ->withMarkdown(...)
+     *   ->withRequestID(...)
+     *   ->withSuccess(...)
+     *   ->withType(...)
      * ```
      */
     public function __construct()
@@ -81,6 +94,7 @@ final class ParseHandleResponse implements BaseModel
      */
     public static function with(
         string $markdown,
+        string $requestID,
         bool $success,
         Type|string $type,
         KeyMetadata|array|null $keyMetadata = null,
@@ -88,6 +102,7 @@ final class ParseHandleResponse implements BaseModel
         $self = new self;
 
         $self['markdown'] = $markdown;
+        $self['requestID'] = $requestID;
         $self['success'] = $success;
         $self['type'] = $type;
 
@@ -103,6 +118,17 @@ final class ParseHandleResponse implements BaseModel
     {
         $self = clone $this;
         $self['markdown'] = $markdown;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }
