@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.16.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.15.0...v2.16.0) (2026-09-11)
+
+
+### Features
+
+* **api:** return request_id on every response ([ad2cd5c](https://github.com/context-dot-dev/context-php-sdk/commit/ad2cd5c05480b70e58f9f60685adeac3028aa410))
+* **logs:** expose request log endpoints in SDKs ([#1025](https://github.com/context-dot-dev/context-php-sdk/issues/1025)) ([222b53a](https://github.com/context-dot-dev/context-php-sdk/commit/222b53a1f02d7b5e30a82fa3d27082c07a831ed5))
+
+
+### Bug Fixes
+
+* **api:** reject timeoutMS too short for waitForMs ([f48fa21](https://github.com/context-dot-dev/context-php-sdk/commit/f48fa21836c263354e256d157304f321fb70104b))
+
 ## [2.15.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.14.0...v2.15.0) (2026-09-08)
 
 
