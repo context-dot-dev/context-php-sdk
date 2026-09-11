@@ -24,6 +24,7 @@ use ContextDev\Web\WebExtractFontsResponse\KeyMetadata;
  *   code: int,
  *   domain: string,
  *   fonts: list<Font|FontShape>,
+ *   requestID: string,
  *   status: string,
  *   fontLinks?: array<string,FontLink|FontLinkShape>|null,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
@@ -61,6 +62,12 @@ final class WebExtractFontsResponse implements BaseModel
     public array $fonts;
 
     /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    #[Required('request_id')]
+    public string $requestID;
+
+    /**
      * Status of the response, e.g., 'ok'.
      */
     #[Required]
@@ -86,7 +93,12 @@ final class WebExtractFontsResponse implements BaseModel
      * To enforce required parameters use
      * ```
      * WebExtractFontsResponse::with(
-     *   cacheMetadata: ..., code: ..., domain: ..., fonts: ..., status: ...
+     *   cacheMetadata: ...,
+     *   code: ...,
+     *   domain: ...,
+     *   fonts: ...,
+     *   requestID: ...,
+     *   status: ...,
      * )
      * ```
      *
@@ -98,6 +110,7 @@ final class WebExtractFontsResponse implements BaseModel
      *   ->withCode(...)
      *   ->withDomain(...)
      *   ->withFonts(...)
+     *   ->withRequestID(...)
      *   ->withStatus(...)
      * ```
      */
@@ -121,6 +134,7 @@ final class WebExtractFontsResponse implements BaseModel
         int $code,
         string $domain,
         array $fonts,
+        string $requestID,
         string $status,
         ?array $fontLinks = null,
         KeyMetadata|array|null $keyMetadata = null,
@@ -131,6 +145,7 @@ final class WebExtractFontsResponse implements BaseModel
         $self['code'] = $code;
         $self['domain'] = $domain;
         $self['fonts'] = $fonts;
+        $self['requestID'] = $requestID;
         $self['status'] = $status;
 
         null !== $fontLinks && $self['fontLinks'] = $fontLinks;
@@ -183,6 +198,17 @@ final class WebExtractFontsResponse implements BaseModel
     {
         $self = clone $this;
         $self['fonts'] = $fonts;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }

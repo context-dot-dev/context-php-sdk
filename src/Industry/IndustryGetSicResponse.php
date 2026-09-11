@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Industry;
 
 use ContextDev\Core\Attributes\Optional;
+use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Industry\IndustryGetSicResponse\Classification;
@@ -16,6 +17,7 @@ use ContextDev\Industry\IndustryGetSicResponse\KeyMetadata;
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Industry\IndustryGetSicResponse\KeyMetadata
  *
  * @phpstan-type IndustryGetSicResponseShape = array{
+ *   requestID: string,
  *   classification?: null|Classification|value-of<Classification>,
  *   codes?: list<Code|CodeShape>|null,
  *   domain?: string|null,
@@ -28,6 +30,12 @@ final class IndustryGetSicResponse implements BaseModel
 {
     /** @use SdkModel<IndustryGetSicResponseShape> */
     use SdkModel;
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    #[Required('request_id')]
+    public string $requestID;
 
     /**
      * Echoes back which SIC dataset was used to classify the brand.
@@ -69,6 +77,20 @@ final class IndustryGetSicResponse implements BaseModel
     #[Optional]
     public ?string $type;
 
+    /**
+     * `new IndustryGetSicResponse()` is missing required properties by the API.
+     *
+     * To enforce required parameters use
+     * ```
+     * IndustryGetSicResponse::with(requestID: ...)
+     * ```
+     *
+     * Otherwise ensure the following setters are called
+     *
+     * ```
+     * (new IndustryGetSicResponse)->withRequestID(...)
+     * ```
+     */
     public function __construct()
     {
         $this->initialize();
@@ -84,6 +106,7 @@ final class IndustryGetSicResponse implements BaseModel
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
     public static function with(
+        string $requestID,
         Classification|string|null $classification = null,
         ?array $codes = null,
         ?string $domain = null,
@@ -93,12 +116,25 @@ final class IndustryGetSicResponse implements BaseModel
     ): self {
         $self = new self;
 
+        $self['requestID'] = $requestID;
+
         null !== $classification && $self['classification'] = $classification;
         null !== $codes && $self['codes'] = $codes;
         null !== $domain && $self['domain'] = $domain;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
         null !== $status && $self['status'] = $status;
         null !== $type && $self['type'] = $type;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }

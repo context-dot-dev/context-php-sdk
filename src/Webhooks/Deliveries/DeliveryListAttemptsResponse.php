@@ -18,6 +18,7 @@ use ContextDev\Webhooks\Deliveries\DeliveryListAttemptsResponse\KeyMetadata;
  *   data: list<Attempt|AttemptShape>,
  *   hasMore: bool,
  *   nextCursor: string|null,
+ *   requestID: string,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  * }
  */
@@ -47,6 +48,12 @@ final class DeliveryListAttemptsResponse implements BaseModel
     public ?string $nextCursor;
 
     /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    #[Required('request_id')]
+    public string $requestID;
+
+    /**
      * Credit usage, included whenever a valid API key is provided.
      */
     #[Optional('key_metadata')]
@@ -57,7 +64,9 @@ final class DeliveryListAttemptsResponse implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * DeliveryListAttemptsResponse::with(data: ..., hasMore: ..., nextCursor: ...)
+     * DeliveryListAttemptsResponse::with(
+     *   data: ..., hasMore: ..., nextCursor: ..., requestID: ...
+     * )
      * ```
      *
      * Otherwise ensure the following setters are called
@@ -67,6 +76,7 @@ final class DeliveryListAttemptsResponse implements BaseModel
      *   ->withData(...)
      *   ->withHasMore(...)
      *   ->withNextCursor(...)
+     *   ->withRequestID(...)
      * ```
      */
     public function __construct()
@@ -86,6 +96,7 @@ final class DeliveryListAttemptsResponse implements BaseModel
         array $data,
         bool $hasMore,
         ?string $nextCursor,
+        string $requestID,
         KeyMetadata|array|null $keyMetadata = null,
     ): self {
         $self = new self;
@@ -93,6 +104,7 @@ final class DeliveryListAttemptsResponse implements BaseModel
         $self['data'] = $data;
         $self['hasMore'] = $hasMore;
         $self['nextCursor'] = $nextCursor;
+        $self['requestID'] = $requestID;
 
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
 
@@ -130,6 +142,17 @@ final class DeliveryListAttemptsResponse implements BaseModel
     {
         $self = clone $this;
         $self['nextCursor'] = $nextCursor;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }

@@ -20,6 +20,7 @@ use ContextDev\Web\WebSearchResponse\Result;
  * @phpstan-type WebSearchResponseShape = array{
  *   cacheMetadata: CacheMetadata|CacheMetadataShape,
  *   query: string,
+ *   requestID: string,
  *   results: list<Result|ResultShape>,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  * }
@@ -41,6 +42,12 @@ final class WebSearchResponse implements BaseModel
     #[Required]
     public string $query;
 
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    #[Required('request_id')]
+    public string $requestID;
+
     /** @var list<Result> $results */
     #[Required(list: Result::class)]
     public array $results;
@@ -56,7 +63,9 @@ final class WebSearchResponse implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * WebSearchResponse::with(cacheMetadata: ..., query: ..., results: ...)
+     * WebSearchResponse::with(
+     *   cacheMetadata: ..., query: ..., requestID: ..., results: ...
+     * )
      * ```
      *
      * Otherwise ensure the following setters are called
@@ -65,6 +74,7 @@ final class WebSearchResponse implements BaseModel
      * (new WebSearchResponse)
      *   ->withCacheMetadata(...)
      *   ->withQuery(...)
+     *   ->withRequestID(...)
      *   ->withResults(...)
      * ```
      */
@@ -85,6 +95,7 @@ final class WebSearchResponse implements BaseModel
     public static function with(
         CacheMetadata|array $cacheMetadata,
         string $query,
+        string $requestID,
         array $results,
         KeyMetadata|array|null $keyMetadata = null,
     ): self {
@@ -92,6 +103,7 @@ final class WebSearchResponse implements BaseModel
 
         $self['cacheMetadata'] = $cacheMetadata;
         $self['query'] = $query;
+        $self['requestID'] = $requestID;
         $self['results'] = $results;
 
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
@@ -119,6 +131,17 @@ final class WebSearchResponse implements BaseModel
     {
         $self = clone $this;
         $self['query'] = $query;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }

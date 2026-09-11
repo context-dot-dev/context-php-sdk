@@ -20,6 +20,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *
  * @phpstan-type AIExtractProductResponseShape = array{
  *   cacheMetadata: CacheMetadata|CacheMetadataShape,
+ *   requestID: string,
  *   isProductPage?: bool|null,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  *   platform?: null|Platform|value-of<Platform>,
@@ -36,6 +37,12 @@ final class AIExtractProductResponse implements BaseModel
      */
     #[Required('cache_metadata')]
     public CacheMetadata $cacheMetadata;
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    #[Required('request_id')]
+    public string $requestID;
 
     /**
      * Whether the given URL is a product detail page.
@@ -68,13 +75,13 @@ final class AIExtractProductResponse implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * AIExtractProductResponse::with(cacheMetadata: ...)
+     * AIExtractProductResponse::with(cacheMetadata: ..., requestID: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new AIExtractProductResponse)->withCacheMetadata(...)
+     * (new AIExtractProductResponse)->withCacheMetadata(...)->withRequestID(...)
      * ```
      */
     public function __construct()
@@ -94,6 +101,7 @@ final class AIExtractProductResponse implements BaseModel
      */
     public static function with(
         CacheMetadata|array $cacheMetadata,
+        string $requestID,
         ?bool $isProductPage = null,
         KeyMetadata|array|null $keyMetadata = null,
         Platform|string|null $platform = null,
@@ -102,6 +110,7 @@ final class AIExtractProductResponse implements BaseModel
         $self = new self;
 
         $self['cacheMetadata'] = $cacheMetadata;
+        $self['requestID'] = $requestID;
 
         null !== $isProductPage && $self['isProductPage'] = $isProductPage;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
@@ -120,6 +129,17 @@ final class AIExtractProductResponse implements BaseModel
     {
         $self = clone $this;
         $self['cacheMetadata'] = $cacheMetadata;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }

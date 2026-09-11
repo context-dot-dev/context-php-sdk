@@ -41,6 +41,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   mode: Mode|value-of<Mode>,
  *   pageErrors: list<PageErrorCount|PageErrorCountShape>,
  *   progress: Progress|ProgressShape,
+ *   requestID: string,
  *   results: null|Results|ResultsShape,
  *   status: Status|value-of<Status>,
  *   tags: list<string>,
@@ -123,6 +124,12 @@ final class BatchGetResponse implements BaseModel
     public Progress $progress;
 
     /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    #[Required('request_id')]
+    public string $requestID;
+
+    /**
      * Download links, available once the batch reaches a final status and null before then. GET /batch/{batch_id}/results serves the same records as paginated JSON.
      */
     #[Required]
@@ -175,6 +182,7 @@ final class BatchGetResponse implements BaseModel
      *   mode: ...,
      *   pageErrors: ...,
      *   progress: ...,
+     *   requestID: ...,
      *   results: ...,
      *   status: ...,
      *   tags: ...,
@@ -196,6 +204,7 @@ final class BatchGetResponse implements BaseModel
      *   ->withMode(...)
      *   ->withPageErrors(...)
      *   ->withProgress(...)
+     *   ->withRequestID(...)
      *   ->withResults(...)
      *   ->withStatus(...)
      *   ->withTags(...)
@@ -238,6 +247,7 @@ final class BatchGetResponse implements BaseModel
         Mode|string $mode,
         array $pageErrors,
         Progress|array $progress,
+        string $requestID,
         Results|array|null $results,
         Status|string $status,
         array $tags,
@@ -257,6 +267,7 @@ final class BatchGetResponse implements BaseModel
         $self['mode'] = $mode;
         $self['pageErrors'] = $pageErrors;
         $self['progress'] = $progress;
+        $self['requestID'] = $requestID;
         $self['results'] = $results;
         $self['status'] = $status;
         $self['tags'] = $tags;
@@ -392,6 +403,17 @@ final class BatchGetResponse implements BaseModel
     {
         $self = clone $this;
         $self['progress'] = $progress;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }

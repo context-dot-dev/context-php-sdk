@@ -32,7 +32,7 @@ $client = new Client(apiKey: getenv('CONTEXT_DEV_API_KEY') ?: 'My API Key');
 
 $brand = $client->brand->retrieve(domain: 'REPLACE_ME', type: 'by_domain');
 
-var_dump($brand->cache_metadata);
+var_dump($brand->request_id);
 ```
 
 ### Value Objects

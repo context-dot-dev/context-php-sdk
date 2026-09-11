@@ -6,6 +6,7 @@ namespace ContextDev\Batch;
 
 use ContextDev\Batch\BatchDeleteResponse\KeyMetadata;
 use ContextDev\Core\Attributes\Optional;
+use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
@@ -13,6 +14,7 @@ use ContextDev\Core\Contracts\BaseModel;
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Batch\BatchDeleteResponse\KeyMetadata
  *
  * @phpstan-type BatchDeleteResponseShape = array{
+ *   requestID: string,
  *   id?: string|null,
  *   deleted?: bool|null,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
@@ -22,6 +24,12 @@ final class BatchDeleteResponse implements BaseModel
 {
     /** @use SdkModel<BatchDeleteResponseShape> */
     use SdkModel;
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    #[Required('request_id')]
+    public string $requestID;
 
     /**
      * ID of the deleted batch.
@@ -41,6 +49,20 @@ final class BatchDeleteResponse implements BaseModel
     #[Optional('key_metadata')]
     public ?KeyMetadata $keyMetadata;
 
+    /**
+     * `new BatchDeleteResponse()` is missing required properties by the API.
+     *
+     * To enforce required parameters use
+     * ```
+     * BatchDeleteResponse::with(requestID: ...)
+     * ```
+     *
+     * Otherwise ensure the following setters are called
+     *
+     * ```
+     * (new BatchDeleteResponse)->withRequestID(...)
+     * ```
+     */
     public function __construct()
     {
         $this->initialize();
@@ -54,15 +76,29 @@ final class BatchDeleteResponse implements BaseModel
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
     public static function with(
+        string $requestID,
         ?string $id = null,
         ?bool $deleted = null,
         KeyMetadata|array|null $keyMetadata = null,
     ): self {
         $self = new self;
 
+        $self['requestID'] = $requestID;
+
         null !== $id && $self['id'] = $id;
         null !== $deleted && $self['deleted'] = $deleted;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }

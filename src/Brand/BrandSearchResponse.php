@@ -16,6 +16,7 @@ use ContextDev\Core\Contracts\BaseModel;
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Brand\BrandSearchResponse\KeyMetadata
  *
  * @phpstan-type BrandSearchResponseShape = array{
+ *   requestID: string,
  *   results: list<Result|ResultShape>,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  * }
@@ -24,6 +25,12 @@ final class BrandSearchResponse implements BaseModel
 {
     /** @use SdkModel<BrandSearchResponseShape> */
     use SdkModel;
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    #[Required('request_id')]
+    public string $requestID;
 
     /**
      * Up to 10 matching brands, name matches first, then domain matches, most popular first within each group. Empty when nothing matches.
@@ -44,13 +51,13 @@ final class BrandSearchResponse implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * BrandSearchResponse::with(results: ...)
+     * BrandSearchResponse::with(requestID: ..., results: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new BrandSearchResponse)->withResults(...)
+     * (new BrandSearchResponse)->withRequestID(...)->withResults(...)
      * ```
      */
     public function __construct()
@@ -67,14 +74,27 @@ final class BrandSearchResponse implements BaseModel
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
     public static function with(
+        string $requestID,
         array $results,
         KeyMetadata|array|null $keyMetadata = null
     ): self {
         $self = new self;
 
+        $self['requestID'] = $requestID;
         $self['results'] = $results;
 
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }
