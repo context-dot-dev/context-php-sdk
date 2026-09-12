@@ -68,6 +68,8 @@ final class MonitorsTest extends TestCase
             target: [
                 'type' => 'page',
                 'url' => 'https://acme.com/pricing',
+                'excludeSelectors' => ['.carousel', '[id^="TA_"]'],
+                'includeSelectors' => ['#attraction-details'],
                 'instructions' => 'Report pricing or plan availability changes. Ignore counters, timestamps, testimonials, and navigation.',
                 'normalizeWhitespace' => true,
             ],
