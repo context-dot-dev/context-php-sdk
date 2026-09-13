@@ -4,6 +4,7 @@ namespace Tests\Services;
 
 use ContextDev\Client;
 use ContextDev\Core\Util;
+use ContextDev\Web\WebAnswersResponse;
 use ContextDev\Web\WebExtractCompetitorsResponse;
 use ContextDev\Web\WebExtractFontsResponse;
 use ContextDev\Web\WebExtractResponse;
@@ -36,6 +37,40 @@ final class WebTest extends TestCase
         $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
 
         $this->client = $client;
+    }
+
+    #[Test]
+    public function testAnswers(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->web->answers(
+            task: 'Find the pricing page URL and plan names for context.dev.'
+        );
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(WebAnswersResponse::class, $result);
+    }
+
+    #[Test]
+    public function testAnswersWithOptionalParams(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->web->answers(
+            task: 'Find the pricing page URL and plan names for context.dev.',
+            jsonFormat: ['pricing_page_url' => 'bar', 'plans' => 'bar'],
+            mode: 'fast',
+            tags: ['production', 'team-alpha'],
+            timeoutMs: 1000,
+        );
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(WebAnswersResponse::class, $result);
     }
 
     #[Test]
