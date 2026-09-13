@@ -7,6 +7,8 @@ namespace ContextDev\ServiceContracts;
 use ContextDev\Core\Contracts\BaseResponse;
 use ContextDev\Core\Exceptions\APIException;
 use ContextDev\RequestOptions;
+use ContextDev\Web\WebAnswersParams;
+use ContextDev\Web\WebAnswersResponse;
 use ContextDev\Web\WebExtractCompetitorsParams;
 use ContextDev\Web\WebExtractCompetitorsResponse;
 use ContextDev\Web\WebExtractFontsParams;
@@ -35,6 +37,21 @@ use ContextDev\Web\WebWebScrapeSitemapResponse;
  */
 interface WebRawContract
 {
+    /**
+     * @api
+     *
+     * @param array<string,mixed>|WebAnswersParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<WebAnswersResponse>
+     *
+     * @throws APIException
+     */
+    public function answers(
+        array|WebAnswersParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse;
+
     /**
      * @api
      *

@@ -9,6 +9,8 @@ use ContextDev\Core\Exceptions\APIException;
 use ContextDev\Core\Util;
 use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\WebContract;
+use ContextDev\Web\WebAnswersParams\Mode;
+use ContextDev\Web\WebAnswersResponse;
 use ContextDev\Web\WebExtractCompetitorsResponse;
 use ContextDev\Web\WebExtractFontsResponse;
 use ContextDev\Web\WebExtractParams\Pdf;
@@ -58,6 +60,44 @@ final class WebService implements WebContract
     public function __construct(private Client $client)
     {
         $this->raw = new WebRawService($client);
+    }
+
+    /**
+     * @api
+     *
+     * Researches the live web and returns a sourced answer in your requested JSON shape. Select fast for a smaller research budget at 10 credits or ultra for deeper reasoning at 100 credits. Defaults to ultra. Fast research is limited to 30 seconds and ultra to 50 seconds; timeoutMS can shorten either deadline.
+     *
+     * @param string $task What to research and answer, in plain language. Naming a domain in the task (for example "pricing on context.dev") makes the agent read that site before it searches.
+     * @param array<string,mixed> $jsonFormat An example object with placeholder values (for example {"pricing_page_url": "", "plans": [{"name": "", "price": 0}]}). Object keys and value types are preserved; unknown values may be null. Empty arrays accept any JSON items. Defaults to {"result": ""}. Maximum 8 levels, 500 values, and 16000 characters.
+     * @param Mode|value-of<Mode> $mode Research level: fast uses a smaller model and research budget for 10 credits; ultra uses deeper reasoning and research for 100 credits. Defaults to ultra. Only successful requests consume credits.
+     * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function answers(
+        string $task,
+        ?array $jsonFormat = null,
+        Mode|string|null $mode = null,
+        ?array $tags = null,
+        ?int $timeoutMs = null,
+        RequestOptions|array|null $requestOptions = null,
+    ): WebAnswersResponse {
+        $params = Util::removeNulls(
+            [
+                'task' => $task,
+                'jsonFormat' => $jsonFormat,
+                'mode' => $mode,
+                'tags' => $tags,
+                'timeoutMs' => $timeoutMs,
+            ],
+        );
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->answers(params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
     }
 
     /**

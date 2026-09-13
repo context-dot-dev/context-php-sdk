@@ -10,6 +10,9 @@ use ContextDev\Core\Exceptions\APIException;
 use ContextDev\Core\Util;
 use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\WebRawContract;
+use ContextDev\Web\WebAnswersParams;
+use ContextDev\Web\WebAnswersParams\Mode;
+use ContextDev\Web\WebAnswersResponse;
 use ContextDev\Web\WebExtractCompetitorsParams;
 use ContextDev\Web\WebExtractCompetitorsResponse;
 use ContextDev\Web\WebExtractFontsParams;
@@ -64,6 +67,43 @@ final class WebRawService implements WebRawContract
      * @internal
      */
     public function __construct(private Client $client) {}
+
+    /**
+     * @api
+     *
+     * Researches the live web and returns a sourced answer in your requested JSON shape. Select fast for a smaller research budget at 10 credits or ultra for deeper reasoning at 100 credits. Defaults to ultra. Fast research is limited to 30 seconds and ultra to 50 seconds; timeoutMS can shorten either deadline.
+     *
+     * @param array{
+     *   task: string,
+     *   jsonFormat?: array<string,mixed>,
+     *   mode?: Mode|value-of<Mode>,
+     *   tags?: list<string>,
+     *   timeoutMs?: int,
+     * }|WebAnswersParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<WebAnswersResponse>
+     *
+     * @throws APIException
+     */
+    public function answers(
+        array|WebAnswersParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = WebAnswersParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'post',
+            path: 'web/answers',
+            body: (object) $parsed,
+            options: $options,
+            convert: WebAnswersResponse::class,
+        );
+    }
 
     /**
      * @api
