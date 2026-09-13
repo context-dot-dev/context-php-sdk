@@ -29,7 +29,7 @@ final class Webhook implements BaseModel
     use SdkModel;
 
     /**
-     * Webhook URL events are delivered to.
+     * Webhook URL events are delivered to. Slack incoming webhook URLs are automatically formatted as Slack messages.
      */
     #[Required]
     public string $url;
@@ -99,7 +99,7 @@ final class Webhook implements BaseModel
     }
 
     /**
-     * Webhook URL events are delivered to.
+     * Webhook URL events are delivered to. Slack incoming webhook URLs are automatically formatted as Slack messages.
      */
     public function withURL(string $url): self
     {
