@@ -36,6 +36,8 @@ use ContextDev\Web\WebSearchParams\MarkdownOptions;
 use ContextDev\Web\WebSearchResponse;
 use ContextDev\Web\WebWebCrawlMdParams;
 use ContextDev\Web\WebWebCrawlMdResponse;
+use ContextDev\Web\WebWebScrapeBytesParams;
+use ContextDev\Web\WebWebScrapeBytesResponse;
 use ContextDev\Web\WebWebScrapeHTMLParams;
 use ContextDev\Web\WebWebScrapeHTMLResponse;
 use ContextDev\Web\WebWebScrapeImagesParams;
@@ -409,6 +411,44 @@ final class WebRawService implements WebRawContract
             body: (object) $parsed,
             options: $options,
             convert: WebWebCrawlMdResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Downloads a resource and returns its bytes as base64. Supports images, PDFs, HTML pages, and any other content type without image conversion, text extraction, or character-encoding changes. HTTP compression is decoded before base64 encoding. HTML is the original HTTP response; JavaScript is not rendered. Follows public redirects and retries failed downloads through ISP and residential proxies, with a direct fallback. When country is specified, only a residential proxy in that country is used. Supply headers such as Referer for images that require a referring page. Downloads are not cached. Maximum decoded resource size: 20 MiB (20971520 bytes), before base64 encoding. Successful requests cost 1 credit; errors are not billed.
+     *
+     * @param array{
+     *   url: string,
+     *   country?: value-of<WebWebScrapeBytesParams\Country>,
+     *   headers?: array<string,string>,
+     *   tags?: list<string>,
+     *   timeoutMs?: int,
+     *   zdr?: WebWebScrapeBytesParams\Zdr|value-of<WebWebScrapeBytesParams\Zdr>,
+     * }|WebWebScrapeBytesParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<WebWebScrapeBytesResponse>
+     *
+     * @throws APIException
+     */
+    public function webScrapeBytes(
+        array|WebWebScrapeBytesParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = WebWebScrapeBytesParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: 'web/scrape/bytes',
+            query: Util::array_transform_keys($parsed, ['timeoutMs' => 'timeoutMS']),
+            options: $options,
+            convert: WebWebScrapeBytesResponse::class,
         );
     }
 

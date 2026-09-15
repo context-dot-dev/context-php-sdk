@@ -27,6 +27,7 @@ use ContextDev\Web\WebSearchParams\Freshness;
 use ContextDev\Web\WebSearchParams\MarkdownOptions;
 use ContextDev\Web\WebSearchResponse;
 use ContextDev\Web\WebWebCrawlMdResponse;
+use ContextDev\Web\WebWebScrapeBytesResponse;
 use ContextDev\Web\WebWebScrapeHTMLResponse;
 use ContextDev\Web\WebWebScrapeImagesParams\Enrichment;
 use ContextDev\Web\WebWebScrapeImagesResponse;
@@ -490,6 +491,47 @@ final class WebService implements WebContract
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->webCrawlMd(params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Downloads a resource and returns its bytes as base64. Supports images, PDFs, HTML pages, and any other content type without image conversion, text extraction, or character-encoding changes. HTTP compression is decoded before base64 encoding. HTML is the original HTTP response; JavaScript is not rendered. Follows public redirects and retries failed downloads through ISP and residential proxies, with a direct fallback. When country is specified, only a residential proxy in that country is used. Supply headers such as Referer for images that require a referring page. Downloads are not cached. Maximum decoded resource size: 20 MiB (20971520 bytes), before base64 encoding. Successful requests cost 1 credit; errors are not billed.
+     *
+     * @param string $url full HTTP(S) URL of the resource to download, such as an image, PDF, or page
+     * @param \ContextDev\Web\WebWebScrapeBytesParams\Country|value-of<\ContextDev\Web\WebWebScrapeBytesParams\Country> $country fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2)
+     * @param array<string,string> $headers Optional outbound HTTP headers, such as Referer, Cookie, or Authorization. Send as a JSON object or deep-object query params such as headers[Referer]=https://example.com/. Host, Content-Length, and hop-by-hop transport headers are rejected. Authorization and cookies are removed when a redirect changes origin.
+     * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * @param \ContextDev\Web\WebWebScrapeBytesParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeBytesParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function webScrapeBytes(
+        string $url,
+        \ContextDev\Web\WebWebScrapeBytesParams\Country|string|null $country = null,
+        ?array $headers = null,
+        ?array $tags = null,
+        ?int $timeoutMs = null,
+        \ContextDev\Web\WebWebScrapeBytesParams\Zdr|string $zdr = 'disabled',
+        RequestOptions|array|null $requestOptions = null,
+    ): WebWebScrapeBytesResponse {
+        $params = Util::removeNulls(
+            [
+                'url' => $url,
+                'country' => $country,
+                'headers' => $headers,
+                'tags' => $tags,
+                'timeoutMs' => $timeoutMs,
+                'zdr' => $zdr,
+            ],
+        );
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->webScrapeBytes(params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }

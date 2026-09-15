@@ -24,6 +24,7 @@ use ContextDev\Web\WebSearchParams\Freshness;
 use ContextDev\Web\WebSearchParams\MarkdownOptions;
 use ContextDev\Web\WebSearchResponse;
 use ContextDev\Web\WebWebCrawlMdResponse;
+use ContextDev\Web\WebWebScrapeBytesResponse;
 use ContextDev\Web\WebWebScrapeHTMLResponse;
 use ContextDev\Web\WebWebScrapeImagesParams\Enrichment;
 use ContextDev\Web\WebWebScrapeImagesResponse;
@@ -299,6 +300,29 @@ interface WebContract
         \ContextDev\Web\WebWebCrawlMdParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): WebWebCrawlMdResponse;
+
+    /**
+     * @api
+     *
+     * @param string $url full HTTP(S) URL of the resource to download, such as an image, PDF, or page
+     * @param \ContextDev\Web\WebWebScrapeBytesParams\Country|value-of<\ContextDev\Web\WebWebScrapeBytesParams\Country> $country fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2)
+     * @param array<string,string> $headers Optional outbound HTTP headers, such as Referer, Cookie, or Authorization. Send as a JSON object or deep-object query params such as headers[Referer]=https://example.com/. Host, Content-Length, and hop-by-hop transport headers are rejected. Authorization and cookies are removed when a redirect changes origin.
+     * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * @param \ContextDev\Web\WebWebScrapeBytesParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeBytesParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function webScrapeBytes(
+        string $url,
+        \ContextDev\Web\WebWebScrapeBytesParams\Country|string|null $country = null,
+        ?array $headers = null,
+        ?array $tags = null,
+        ?int $timeoutMs = null,
+        \ContextDev\Web\WebWebScrapeBytesParams\Zdr|string $zdr = 'disabled',
+        RequestOptions|array|null $requestOptions = null,
+    ): WebWebScrapeBytesResponse;
 
     /**
      * @api

@@ -12,6 +12,7 @@ use ContextDev\Web\WebExtractStyleguideResponse;
 use ContextDev\Web\WebScreenshotResponse;
 use ContextDev\Web\WebSearchResponse;
 use ContextDev\Web\WebWebCrawlMdResponse;
+use ContextDev\Web\WebWebScrapeBytesResponse;
 use ContextDev\Web\WebWebScrapeHTMLResponse;
 use ContextDev\Web\WebWebScrapeImagesResponse;
 use ContextDev\Web\WebWebScrapeMdResponse;
@@ -293,6 +294,39 @@ final class WebTest extends TestCase
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(WebWebCrawlMdResponse::class, $result);
+    }
+
+    #[Test]
+    public function testWebScrapeBytes(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->web->webScrapeBytes(url: 'https://example.com');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(WebWebScrapeBytesResponse::class, $result);
+    }
+
+    #[Test]
+    public function testWebScrapeBytesWithOptionalParams(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->web->webScrapeBytes(
+            url: 'https://example.com',
+            country: 'de',
+            headers: ['foo' => 'J!'],
+            tags: ['production', 'team-alpha'],
+            timeoutMs: 1,
+            zdr: 'enabled',
+        );
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(WebWebScrapeBytesResponse::class, $result);
     }
 
     #[Test]
