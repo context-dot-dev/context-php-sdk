@@ -65,7 +65,7 @@ final class BrandTest extends TestCase
             maxAgeMs: 0,
             maxSpeed: true,
             tags: ['production', 'team-alpha'],
-            timeoutMs: 1000,
+            timeoutOpts: ['milliseconds' => 1000, 'behavior' => 'fail'],
             name: 'xxx',
             countryGl: 'country_gl',
             email: 'dev@stainless.com',
@@ -108,7 +108,7 @@ final class BrandTest extends TestCase
             maxAgeMs: 0,
             tags: ['production', 'team-alpha'],
             theme: 'light',
-            timeoutMs: 1000,
+            timeoutOpts: ['milliseconds' => 1000, 'behavior' => 'fail'],
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

@@ -21,6 +21,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   cacheMetadata: CacheMetadata|CacheMetadataShape,
  *   requestID: string,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
+ *   partial?: bool|null,
  *   products?: list<Product|ProductShape>|null,
  * }
  */
@@ -46,6 +47,12 @@ final class AIExtractProductsResponse implements BaseModel
      */
     #[Optional('key_metadata')]
     public ?KeyMetadata $keyMetadata;
+
+    /**
+     * True when timeoutOpts.behavior=return-partial returned the usable results collected before the deadline. Partial collections are not cached as complete results.
+     */
+    #[Optional]
+    public ?bool $partial;
 
     /**
      * Array of products extracted from the website.
@@ -87,6 +94,7 @@ final class AIExtractProductsResponse implements BaseModel
         CacheMetadata|array $cacheMetadata,
         string $requestID,
         KeyMetadata|array|null $keyMetadata = null,
+        ?bool $partial = null,
         ?array $products = null,
     ): self {
         $self = new self;
@@ -95,6 +103,7 @@ final class AIExtractProductsResponse implements BaseModel
         $self['requestID'] = $requestID;
 
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
+        null !== $partial && $self['partial'] = $partial;
         null !== $products && $self['products'] = $products;
 
         return $self;
@@ -133,6 +142,17 @@ final class AIExtractProductsResponse implements BaseModel
     {
         $self = clone $this;
         $self['keyMetadata'] = $keyMetadata;
+
+        return $self;
+    }
+
+    /**
+     * True when timeoutOpts.behavior=return-partial returned the usable results collected before the deadline. Partial collections are not cached as complete results.
+     */
+    public function withPartial(bool $partial): self
+    {
+        $self = clone $this;
+        $self['partial'] = $partial;
 
         return $self;
     }

@@ -12,6 +12,7 @@ use ContextDev\Web\WebScreenshotParams\ColorScheme;
 use ContextDev\Web\WebScreenshotParams\Country;
 use ContextDev\Web\WebScreenshotParams\FullScreenshot;
 use ContextDev\Web\WebScreenshotParams\Page;
+use ContextDev\Web\WebScreenshotParams\TimeoutOpts;
 use ContextDev\Web\WebScreenshotParams\Viewport;
 use ContextDev\Web\WebScreenshotParams\Zdr;
 
@@ -20,6 +21,7 @@ use ContextDev\Web\WebScreenshotParams\Zdr;
  *
  * @see ContextDev\Services\WebService::screenshot()
  *
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebScreenshotParams\TimeoutOpts
  * @phpstan-import-type ViewportShape from \ContextDev\Web\WebScreenshotParams\Viewport
  *
  * @phpstan-type WebScreenshotParamsShape = array{
@@ -34,7 +36,7 @@ use ContextDev\Web\WebScreenshotParams\Zdr;
  *   page?: null|Page|value-of<Page>,
  *   scrollOffset?: int|null,
  *   tags?: list<string>|null,
- *   timeoutMs?: int|null,
+ *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  *   viewport?: null|Viewport|ViewportShape,
  *   waitForMs?: int|null,
  *   zdr?: null|Zdr|value-of<Zdr>,
@@ -123,10 +125,10 @@ final class WebScreenshotParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      */
     #[Optional]
-    public ?int $timeoutMs;
+    public ?TimeoutOpts $timeoutOpts;
 
     /**
      * Optional browser viewport dimensions for the screenshot. Defaults to 1920x1080.
@@ -135,7 +137,7 @@ final class WebScreenshotParams implements BaseModel
     public ?Viewport $viewport;
 
     /**
-     * Optional browser wait time in milliseconds after initial page load before taking the screenshot. Min: 0. Max: 30000 (30 seconds). Defaults to 3000 ms when omitted. When combined with timeoutMS, timeoutMS must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
+     * Optional browser wait time in milliseconds after initial page load before taking the screenshot. Min: 0. Max: 30000 (30 seconds). Defaults to 3000 ms when omitted. When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
      */
     #[Optional(nullable: true)]
     public ?int $waitForMs;
@@ -163,6 +165,7 @@ final class WebScreenshotParams implements BaseModel
      * @param FullScreenshot|value-of<FullScreenshot>|null $fullScreenshot
      * @param Page|value-of<Page>|null $page
      * @param list<string>|null $tags
+     * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      * @param Viewport|ViewportShape|null $viewport
      * @param Zdr|value-of<Zdr>|null $zdr
      */
@@ -178,7 +181,7 @@ final class WebScreenshotParams implements BaseModel
         Page|string|null $page = null,
         ?int $scrollOffset = null,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        TimeoutOpts|array|null $timeoutOpts = null,
         Viewport|array|null $viewport = null,
         ?int $waitForMs = null,
         Zdr|string|null $zdr = null,
@@ -196,7 +199,7 @@ final class WebScreenshotParams implements BaseModel
         null !== $page && $self['page'] = $page;
         null !== $scrollOffset && $self['scrollOffset'] = $scrollOffset;
         null !== $tags && $self['tags'] = $tags;
-        null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
+        null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
         null !== $viewport && $self['viewport'] = $viewport;
         null !== $waitForMs && $self['waitForMs'] = $waitForMs;
         null !== $zdr && $self['zdr'] = $zdr;
@@ -337,12 +340,14 @@ final class WebScreenshotParams implements BaseModel
     }
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     *
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
-    public function withTimeoutMs(int $timeoutMs): self
+    public function withTimeoutOpts(TimeoutOpts|array $timeoutOpts): self
     {
         $self = clone $this;
-        $self['timeoutMs'] = $timeoutMs;
+        $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }
@@ -361,7 +366,7 @@ final class WebScreenshotParams implements BaseModel
     }
 
     /**
-     * Optional browser wait time in milliseconds after initial page load before taking the screenshot. Min: 0. Max: 30000 (30 seconds). Defaults to 3000 ms when omitted. When combined with timeoutMS, timeoutMS must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
+     * Optional browser wait time in milliseconds after initial page load before taking the screenshot. Min: 0. Max: 30000 (30 seconds). Defaults to 3000 ms when omitted. When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
      */
     public function withWaitForMs(?int $waitForMs): self
     {

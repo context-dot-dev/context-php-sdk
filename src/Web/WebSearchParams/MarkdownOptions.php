@@ -8,11 +8,13 @@ use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebSearchParams\MarkdownOptions\Pdf;
+use ContextDev\Web\WebSearchParams\MarkdownOptions\TimeoutOpts;
 
 /**
  * Inline Markdown scraping for each result. Set `enabled: true` to activate.
  *
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebSearchParams\MarkdownOptions\Pdf
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebSearchParams\MarkdownOptions\TimeoutOpts
  *
  * @phpstan-type MarkdownOptionsShape = array{
  *   enabled?: bool|null,
@@ -22,7 +24,7 @@ use ContextDev\Web\WebSearchParams\MarkdownOptions\Pdf;
  *   maxAgeMs?: int|null,
  *   pdf?: null|Pdf|PdfShape,
  *   shortenBase64Images?: bool|null,
- *   timeoutMs?: int|null,
+ *   timeoutOpts?: null|\ContextDev\Web\WebSearchParams\MarkdownOptions\TimeoutOpts|TimeoutOptsShape,
  *   useMainContentOnly?: bool|null,
  *   waitForMs?: int|null,
  * }
@@ -75,10 +77,10 @@ final class MarkdownOptions implements BaseModel
     public ?bool $shortenBase64Images;
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      */
-    #[Optional('timeoutMS')]
-    public ?int $timeoutMs;
+    #[Optional]
+    public ?TimeoutOpts $timeoutOpts;
 
     /**
      * Strip nav, header, footer, and sidebar — keep only the primary article content.
@@ -103,6 +105,7 @@ final class MarkdownOptions implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param Pdf|PdfShape|null $pdf
+     * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      */
     public static function with(
         ?bool $enabled = null,
@@ -112,7 +115,7 @@ final class MarkdownOptions implements BaseModel
         ?int $maxAgeMs = null,
         Pdf|array|null $pdf = null,
         ?bool $shortenBase64Images = null,
-        ?int $timeoutMs = null,
+        TimeoutOpts|array|null $timeoutOpts = null,
         ?bool $useMainContentOnly = null,
         ?int $waitForMs = null,
     ): self {
@@ -125,7 +128,7 @@ final class MarkdownOptions implements BaseModel
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
         null !== $pdf && $self['pdf'] = $pdf;
         null !== $shortenBase64Images && $self['shortenBase64Images'] = $shortenBase64Images;
-        null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
+        null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
         null !== $useMainContentOnly && $self['useMainContentOnly'] = $useMainContentOnly;
         null !== $waitForMs && $self['waitForMs'] = $waitForMs;
 
@@ -212,12 +215,15 @@ final class MarkdownOptions implements BaseModel
     }
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     *
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
-    public function withTimeoutMs(int $timeoutMs): self
-    {
+    public function withTimeoutOpts(
+        TimeoutOpts|array $timeoutOpts,
+    ): self {
         $self = clone $this;
-        $self['timeoutMs'] = $timeoutMs;
+        $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }

@@ -23,6 +23,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   requestID: string,
  *   isProductPage?: bool|null,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
+ *   partial?: bool|null,
  *   platform?: null|Platform|value-of<Platform>,
  *   product?: null|Product|ProductShape,
  * }
@@ -55,6 +56,12 @@ final class AIExtractProductResponse implements BaseModel
      */
     #[Optional('key_metadata')]
     public ?KeyMetadata $keyMetadata;
+
+    /**
+     * True when the timeout ended processing and this response contains only usable results completed so far. Unfinished results are omitted.
+     */
+    #[Optional]
+    public ?bool $partial;
 
     /**
      * The detected ecommerce platform, or null if not a product page.
@@ -104,6 +111,7 @@ final class AIExtractProductResponse implements BaseModel
         string $requestID,
         ?bool $isProductPage = null,
         KeyMetadata|array|null $keyMetadata = null,
+        ?bool $partial = null,
         Platform|string|null $platform = null,
         Product|array|null $product = null,
     ): self {
@@ -114,6 +122,7 @@ final class AIExtractProductResponse implements BaseModel
 
         null !== $isProductPage && $self['isProductPage'] = $isProductPage;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
+        null !== $partial && $self['partial'] = $partial;
         null !== $platform && $self['platform'] = $platform;
         null !== $product && $self['product'] = $product;
 
@@ -164,6 +173,17 @@ final class AIExtractProductResponse implements BaseModel
     {
         $self = clone $this;
         $self['keyMetadata'] = $keyMetadata;
+
+        return $self;
+    }
+
+    /**
+     * True when the timeout ended processing and this response contains only usable results completed so far. Unfinished results are omitted.
+     */
+    public function withPartial(bool $partial): self
+    {
+        $self = clone $this;
+        $self['partial'] = $partial;
 
         return $self;
     }

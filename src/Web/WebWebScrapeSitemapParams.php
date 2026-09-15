@@ -9,12 +9,15 @@ use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebWebScrapeSitemapParams\TimeoutOpts;
 use ContextDev\Web\WebWebScrapeSitemapParams\Zdr;
 
 /**
  * Crawl an entire website's sitemap and return all discovered page URLs. Set `includeSubdomains=true` to also discover public pages and sitemaps on child hosts such as `docs.example.com` or `brand.example.com`. Pass `search` to have the discovered URLs filtered down to the pages about a phrase (for example `pricing and plans` or `api authentication docs`), most relevant first — a searched crawl scans the whole sitemap and costs 2 credits instead of 1.
  *
  * @see ContextDev\Services\WebService::webScrapeSitemap()
+ *
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeSitemapParams\TimeoutOpts
  *
  * @phpstan-type WebWebScrapeSitemapParamsShape = array{
  *   domain: string,
@@ -24,7 +27,7 @@ use ContextDev\Web\WebWebScrapeSitemapParams\Zdr;
  *   search?: string|null,
  *   sitemapURL?: string|null,
  *   tags?: list<string>|null,
- *   timeoutMs?: int|null,
+ *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  *   urlRegex?: string|null,
  *   zdr?: null|Zdr|value-of<Zdr>,
  * }
@@ -82,10 +85,10 @@ final class WebWebScrapeSitemapParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      */
     #[Optional]
-    public ?int $timeoutMs;
+    public ?TimeoutOpts $timeoutOpts;
 
     /**
      * Optional RE2-compatible regex pattern. Only URLs matching this pattern are returned and counted against maxLinks.
@@ -127,6 +130,7 @@ final class WebWebScrapeSitemapParams implements BaseModel
      *
      * @param array<string,string>|null $headers
      * @param list<string>|null $tags
+     * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
@@ -137,7 +141,7 @@ final class WebWebScrapeSitemapParams implements BaseModel
         ?string $search = null,
         ?string $sitemapURL = null,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        TimeoutOpts|array|null $timeoutOpts = null,
         ?string $urlRegex = null,
         Zdr|string|null $zdr = null,
     ): self {
@@ -151,7 +155,7 @@ final class WebWebScrapeSitemapParams implements BaseModel
         null !== $search && $self['search'] = $search;
         null !== $sitemapURL && $self['sitemapURL'] = $sitemapURL;
         null !== $tags && $self['tags'] = $tags;
-        null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
+        null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
         null !== $urlRegex && $self['urlRegex'] = $urlRegex;
         null !== $zdr && $self['zdr'] = $zdr;
 
@@ -240,12 +244,14 @@ final class WebWebScrapeSitemapParams implements BaseModel
     }
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     *
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
-    public function withTimeoutMs(int $timeoutMs): self
+    public function withTimeoutOpts(TimeoutOpts|array $timeoutOpts): self
     {
         $self = clone $this;
-        $self['timeoutMs'] = $timeoutMs;
+        $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }

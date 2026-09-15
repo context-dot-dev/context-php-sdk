@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace ContextDev\Web\WebSearchResponse\Result;
 
+use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebSearchResponse\Result\Markdown\Code;
+use ContextDev\Web\WebSearchResponse\Result\Markdown\FinalDomState;
 
 /**
  * Markdown scrape status and content for this result.
  *
  * @phpstan-type MarkdownShape = array{
- *   code: Code|value-of<Code>, markdown: string|null
+ *   code: Code|value-of<Code>,
+ *   markdown: string|null,
+ *   finalDomState?: null|FinalDomState|value-of<FinalDomState>,
  * }
  */
 final class Markdown implements BaseModel
@@ -34,6 +38,14 @@ final class Markdown implements BaseModel
      */
     #[Required]
     public ?string $markdown;
+
+    /**
+     * How complete the returned content is. `loaded` means the page finished the waits the request asked for. `still-loading` only occurs with timeoutOpts.behavior=return-partial: the timeoutOpts.milliseconds deadline was reached first, so the content reflects the DOM at that moment and late-rendering parts may be missing. Partial results are billed at the base request cost.
+     *
+     * @var value-of<FinalDomState>|null $finalDomState
+     */
+    #[Optional('finalDOMState', enum: FinalDomState::class)]
+    public ?string $finalDomState;
 
     /**
      * `new Markdown()` is missing required properties by the API.
@@ -60,13 +72,19 @@ final class Markdown implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param Code|value-of<Code> $code
+     * @param FinalDomState|value-of<FinalDomState>|null $finalDomState
      */
-    public static function with(Code|string $code, ?string $markdown): self
-    {
+    public static function with(
+        Code|string $code,
+        ?string $markdown,
+        FinalDomState|string|null $finalDomState = null,
+    ): self {
         $self = new self;
 
         $self['code'] = $code;
         $self['markdown'] = $markdown;
+
+        null !== $finalDomState && $self['finalDomState'] = $finalDomState;
 
         return $self;
     }
@@ -91,6 +109,19 @@ final class Markdown implements BaseModel
     {
         $self = clone $this;
         $self['markdown'] = $markdown;
+
+        return $self;
+    }
+
+    /**
+     * How complete the returned content is. `loaded` means the page finished the waits the request asked for. `still-loading` only occurs with timeoutOpts.behavior=return-partial: the timeoutOpts.milliseconds deadline was reached first, so the content reflects the DOM at that moment and late-rendering parts may be missing. Partial results are billed at the base request cost.
+     *
+     * @param FinalDomState|value-of<FinalDomState> $finalDomState
+     */
+    public function withFinalDomState(FinalDomState|string $finalDomState): self
+    {
+        $self = clone $this;
+        $self['finalDomState'] = $finalDomState;
 
         return $self;
     }

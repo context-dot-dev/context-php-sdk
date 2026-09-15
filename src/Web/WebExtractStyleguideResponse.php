@@ -9,6 +9,7 @@ use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebExtractStyleguideResponse\CacheMetadata;
+use ContextDev\Web\WebExtractStyleguideResponse\FinalDomState;
 use ContextDev\Web\WebExtractStyleguideResponse\KeyMetadata;
 use ContextDev\Web\WebExtractStyleguideResponse\Styleguide;
 
@@ -22,6 +23,7 @@ use ContextDev\Web\WebExtractStyleguideResponse\Styleguide;
  *   requestID: string,
  *   code?: int|null,
  *   domain?: string|null,
+ *   finalDomState?: null|FinalDomState|value-of<FinalDomState>,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  *   status?: string|null,
  *   styleguide?: null|Styleguide|StyleguideShape,
@@ -55,6 +57,14 @@ final class WebExtractStyleguideResponse implements BaseModel
      */
     #[Optional]
     public ?string $domain;
+
+    /**
+     * How complete the returned content is. `loaded` means the page finished the waits the request asked for. `still-loading` only occurs with timeoutOpts.behavior=return-partial: the timeoutOpts.milliseconds deadline was reached first, so the content reflects the DOM at that moment and late-rendering parts may be missing. Partial results are billed at the base request cost.
+     *
+     * @var value-of<FinalDomState>|null $finalDomState
+     */
+    #[Optional('finalDOMState', enum: FinalDomState::class)]
+    public ?string $finalDomState;
 
     /**
      * Credit usage, included whenever a valid API key is provided.
@@ -99,6 +109,7 @@ final class WebExtractStyleguideResponse implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param CacheMetadata|CacheMetadataShape $cacheMetadata
+     * @param FinalDomState|value-of<FinalDomState>|null $finalDomState
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      * @param Styleguide|StyleguideShape|null $styleguide
      */
@@ -107,6 +118,7 @@ final class WebExtractStyleguideResponse implements BaseModel
         string $requestID,
         ?int $code = null,
         ?string $domain = null,
+        FinalDomState|string|null $finalDomState = null,
         KeyMetadata|array|null $keyMetadata = null,
         ?string $status = null,
         Styleguide|array|null $styleguide = null,
@@ -118,6 +130,7 @@ final class WebExtractStyleguideResponse implements BaseModel
 
         null !== $code && $self['code'] = $code;
         null !== $domain && $self['domain'] = $domain;
+        null !== $finalDomState && $self['finalDomState'] = $finalDomState;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
         null !== $status && $self['status'] = $status;
         null !== $styleguide && $self['styleguide'] = $styleguide;
@@ -167,6 +180,19 @@ final class WebExtractStyleguideResponse implements BaseModel
     {
         $self = clone $this;
         $self['domain'] = $domain;
+
+        return $self;
+    }
+
+    /**
+     * How complete the returned content is. `loaded` means the page finished the waits the request asked for. `still-loading` only occurs with timeoutOpts.behavior=return-partial: the timeoutOpts.milliseconds deadline was reached first, so the content reflects the DOM at that moment and late-rendering parts may be missing. Partial results are billed at the base request cost.
+     *
+     * @param FinalDomState|value-of<FinalDomState> $finalDomState
+     */
+    public function withFinalDomState(FinalDomState|string $finalDomState): self
+    {
+        $self = clone $this;
+        $self['finalDomState'] = $finalDomState;
 
         return $self;
     }

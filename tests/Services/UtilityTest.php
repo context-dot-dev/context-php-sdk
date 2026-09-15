@@ -55,7 +55,7 @@ final class UtilityTest extends TestCase
             identifier: ['domain' => 'xxx'],
             type: 'brand',
             tags: ['production', 'team-alpha'],
-            timeoutMs: 1000,
+            timeoutOpts: ['milliseconds' => 1000, 'behavior' => 'fail'],
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

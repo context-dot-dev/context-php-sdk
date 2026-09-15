@@ -26,6 +26,7 @@ use ContextDev\Web\WebExtractResponse\Metadata;
  *   url: string,
  *   urlsAnalyzed: list<string>,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
+ *   partial?: bool|null,
  * }
  */
 final class WebExtractResponse implements BaseModel
@@ -83,6 +84,12 @@ final class WebExtractResponse implements BaseModel
     public ?KeyMetadata $keyMetadata;
 
     /**
+     * True when the timeout ended processing and this response contains only usable results completed so far. Unfinished results are omitted.
+     */
+    #[Optional]
+    public ?bool $partial;
+
+    /**
      * `new WebExtractResponse()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -136,6 +143,7 @@ final class WebExtractResponse implements BaseModel
         string $url,
         array $urlsAnalyzed,
         KeyMetadata|array|null $keyMetadata = null,
+        ?bool $partial = null,
     ): self {
         $self = new self;
 
@@ -148,6 +156,7 @@ final class WebExtractResponse implements BaseModel
         $self['urlsAnalyzed'] = $urlsAnalyzed;
 
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
+        null !== $partial && $self['partial'] = $partial;
 
         return $self;
     }
@@ -244,6 +253,17 @@ final class WebExtractResponse implements BaseModel
     {
         $self = clone $this;
         $self['keyMetadata'] = $keyMetadata;
+
+        return $self;
+    }
+
+    /**
+     * True when the timeout ended processing and this response contains only usable results completed so far. Unfinished results are omitted.
+     */
+    public function withPartial(bool $partial): self
+    {
+        $self = clone $this;
+        $self['partial'] = $partial;
 
         return $self;
     }

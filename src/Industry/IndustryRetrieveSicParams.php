@@ -9,6 +9,7 @@ use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Industry\IndustryRetrieveSicParams\TimeoutOpts;
 use ContextDev\Industry\IndustryRetrieveSicParams\Type;
 
 /**
@@ -16,12 +17,14 @@ use ContextDev\Industry\IndustryRetrieveSicParams\Type;
  *
  * @see ContextDev\Services\IndustryService::retrieveSic()
  *
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Industry\IndustryRetrieveSicParams\TimeoutOpts
+ *
  * @phpstan-type IndustryRetrieveSicParamsShape = array{
  *   input: string,
  *   maxResults?: int|null,
  *   minResults?: int|null,
  *   tags?: list<string>|null,
- *   timeoutMs?: int|null,
+ *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  *   type?: null|Type|value-of<Type>,
  * }
  */
@@ -58,10 +61,10 @@ final class IndustryRetrieveSicParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      */
     #[Optional]
-    public ?int $timeoutMs;
+    public ?TimeoutOpts $timeoutOpts;
 
     /**
      * Which SIC dataset to classify against. `original_sic` uses the 1987 Standard Industrial Classification system; `latest_sec` uses the current SIC list as published by the SEC. Defaults to `original_sic`.
@@ -96,6 +99,7 @@ final class IndustryRetrieveSicParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param list<string>|null $tags
+     * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      * @param Type|value-of<Type>|null $type
      */
     public static function with(
@@ -103,7 +107,7 @@ final class IndustryRetrieveSicParams implements BaseModel
         ?int $maxResults = null,
         ?int $minResults = null,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        TimeoutOpts|array|null $timeoutOpts = null,
         Type|string|null $type = null,
     ): self {
         $self = new self;
@@ -113,7 +117,7 @@ final class IndustryRetrieveSicParams implements BaseModel
         null !== $maxResults && $self['maxResults'] = $maxResults;
         null !== $minResults && $self['minResults'] = $minResults;
         null !== $tags && $self['tags'] = $tags;
-        null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
+        null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
         null !== $type && $self['type'] = $type;
 
         return $self;
@@ -166,12 +170,14 @@ final class IndustryRetrieveSicParams implements BaseModel
     }
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     *
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
-    public function withTimeoutMs(int $timeoutMs): self
+    public function withTimeoutOpts(TimeoutOpts|array $timeoutOpts): self
     {
         $self = clone $this;
-        $self['timeoutMs'] = $timeoutMs;
+        $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }

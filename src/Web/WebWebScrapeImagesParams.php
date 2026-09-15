@@ -11,6 +11,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebWebScrapeImagesParams\Action;
 use ContextDev\Web\WebWebScrapeImagesParams\Enrichment;
+use ContextDev\Web\WebWebScrapeImagesParams\TimeoutOpts;
 
 /**
  * Extract image assets from a web page, including standard URLs, inline SVGs, data URIs, responsive image sources, metadata, CSS backgrounds, video posters, and embeds. The base request costs 1 credit, or 2 credits with browser actions. When enrichment is enabled, the entire call costs 5 credits, including requests that also use actions.
@@ -20,6 +21,7 @@ use ContextDev\Web\WebWebScrapeImagesParams\Enrichment;
  * @phpstan-import-type ActionVariants from \ContextDev\Web\WebWebScrapeImagesParams\Action
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeImagesParams\Action
  * @phpstan-import-type EnrichmentShape from \ContextDev\Web\WebWebScrapeImagesParams\Enrichment
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeImagesParams\TimeoutOpts
  *
  * @phpstan-type WebWebScrapeImagesParamsShape = array{
  *   url: string,
@@ -29,7 +31,7 @@ use ContextDev\Web\WebWebScrapeImagesParams\Enrichment;
  *   headers?: array<string,string>|null,
  *   maxAgeMs?: int|null,
  *   tags?: list<string>|null,
- *   timeoutMs?: int|null,
+ *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  *   waitForMs?: int|null,
  * }
  */
@@ -88,13 +90,13 @@ final class WebWebScrapeImagesParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      */
     #[Optional]
-    public ?int $timeoutMs;
+    public ?TimeoutOpts $timeoutOpts;
 
     /**
-     * Optional browser wait time in milliseconds after initial page load before collecting images. Min: 0. Max: 30000 (30 seconds). When combined with timeoutMS, timeoutMS must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
+     * Optional browser wait time in milliseconds after initial page load before collecting images. Min: 0. Max: 30000 (30 seconds). When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
      */
     #[Optional(nullable: true)]
     public ?int $waitForMs;
@@ -127,6 +129,7 @@ final class WebWebScrapeImagesParams implements BaseModel
      * @param Enrichment|EnrichmentShape|null $enrichment
      * @param array<string,string>|null $headers
      * @param list<string>|null $tags
+     * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      */
     public static function with(
         string $url,
@@ -136,7 +139,7 @@ final class WebWebScrapeImagesParams implements BaseModel
         ?array $headers = null,
         ?int $maxAgeMs = null,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        TimeoutOpts|array|null $timeoutOpts = null,
         ?int $waitForMs = null,
     ): self {
         $self = new self;
@@ -149,7 +152,7 @@ final class WebWebScrapeImagesParams implements BaseModel
         null !== $headers && $self['headers'] = $headers;
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
         null !== $tags && $self['tags'] = $tags;
-        null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
+        null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
         null !== $waitForMs && $self['waitForMs'] = $waitForMs;
 
         return $self;
@@ -241,18 +244,20 @@ final class WebWebScrapeImagesParams implements BaseModel
     }
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     *
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
-    public function withTimeoutMs(int $timeoutMs): self
+    public function withTimeoutOpts(TimeoutOpts|array $timeoutOpts): self
     {
         $self = clone $this;
-        $self['timeoutMs'] = $timeoutMs;
+        $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }
 
     /**
-     * Optional browser wait time in milliseconds after initial page load before collecting images. Min: 0. Max: 30000 (30 seconds). When combined with timeoutMS, timeoutMS must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
+     * Optional browser wait time in milliseconds after initial page load before collecting images. Min: 0. Max: 30000 (30 seconds). When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
      */
     public function withWaitForMs(?int $waitForMs): self
     {

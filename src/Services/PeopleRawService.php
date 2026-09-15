@@ -12,6 +12,7 @@ use ContextDev\People\PersonEnrichParams\Company;
 use ContextDev\People\PersonEnrichParams\Education;
 use ContextDev\People\PersonEnrichParams\Location;
 use ContextDev\People\PersonEnrichParams\Name;
+use ContextDev\People\PersonEnrichParams\TimeoutOpts;
 use ContextDev\People\PersonEnrichResponse;
 use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\PeopleRawContract;
@@ -21,6 +22,7 @@ use ContextDev\ServiceContracts\PeopleRawContract;
  * @phpstan-import-type EducationShape from \ContextDev\People\PersonEnrichParams\Education
  * @phpstan-import-type LocationShape from \ContextDev\People\PersonEnrichParams\Location
  * @phpstan-import-type NameShape from \ContextDev\People\PersonEnrichParams\Name
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\People\PersonEnrichParams\TimeoutOpts
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class PeopleRawService implements PeopleRawContract
@@ -44,7 +46,7 @@ final class PeopleRawService implements PeopleRawContract
      *   name?: Name|NameShape,
      *   socialURLs?: list<string>,
      *   tags?: list<string>,
-     *   timeoutMs?: int,
+     *   timeoutOpts?: TimeoutOpts|TimeoutOptsShape,
      * }|PersonEnrichParams $params
      * @param RequestOpts|null $requestOptions
      *

@@ -12,16 +12,18 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebWebScrapeHTMLParams\Action;
 use ContextDev\Web\WebWebScrapeHTMLParams\Country;
 use ContextDev\Web\WebWebScrapeHTMLParams\Pdf;
+use ContextDev\Web\WebWebScrapeHTMLParams\TimeoutOpts;
 use ContextDev\Web\WebWebScrapeHTMLParams\Zdr;
 
 /**
- * Scrapes the given URL and returns the raw HTML content of the page. The base request costs 1 credit; requests with browser actions cost 2 credits.
+ * Scrapes the given URL and returns the raw HTML content of the page. The base request costs 1 credit; requests with browser actions cost 2 credits. A request that hits its timeoutOpts.milliseconds deadline fails with 408 and is not billed, unless timeoutOpts.behavior=return-partial is set — then the page as rendered so far is returned with `finalDOMState: "still-loading"` and billed at the base cost of 1 credit.
  *
  * @see ContextDev\Services\WebService::webScrapeHTML()
  *
  * @phpstan-import-type ActionVariants from \ContextDev\Web\WebWebScrapeHTMLParams\Action
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeHTMLParams\Action
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeHTMLParams\Pdf
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeHTMLParams\TimeoutOpts
  *
  * @phpstan-type WebWebScrapeHTMLParamsShape = array{
  *   url: string,
@@ -35,7 +37,7 @@ use ContextDev\Web\WebWebScrapeHTMLParams\Zdr;
  *   pdf?: null|Pdf|PdfShape,
  *   settleAnimations?: bool|null,
  *   tags?: list<string>|null,
- *   timeoutMs?: int|null,
+ *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  *   useMainContentOnly?: bool|null,
  *   waitForMs?: int|null,
  *   zdr?: null|Zdr|value-of<Zdr>,
@@ -126,10 +128,10 @@ final class WebWebScrapeHTMLParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      */
     #[Optional]
-    public ?int $timeoutMs;
+    public ?TimeoutOpts $timeoutOpts;
 
     /**
      * When true, return only the page's main content in the HTML response, excluding headers, footers, sidebars, and navigation when detectable.
@@ -138,7 +140,7 @@ final class WebWebScrapeHTMLParams implements BaseModel
     public ?bool $useMainContentOnly;
 
     /**
-     * Optional browser wait time in milliseconds after initial page load. Min: 0. Max: 30000 (30 seconds). When combined with timeoutMS, timeoutMS must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
+     * Optional browser wait time in milliseconds after initial page load. Min: 0. Max: 30000 (30 seconds). When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
      */
     #[Optional(nullable: true)]
     public ?int $waitForMs;
@@ -182,6 +184,7 @@ final class WebWebScrapeHTMLParams implements BaseModel
      * @param list<string>|null $includeSelectors
      * @param Pdf|PdfShape|null $pdf
      * @param list<string>|null $tags
+     * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
@@ -196,7 +199,7 @@ final class WebWebScrapeHTMLParams implements BaseModel
         Pdf|array|null $pdf = null,
         ?bool $settleAnimations = null,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        TimeoutOpts|array|null $timeoutOpts = null,
         ?bool $useMainContentOnly = null,
         ?int $waitForMs = null,
         Zdr|string|null $zdr = null,
@@ -215,7 +218,7 @@ final class WebWebScrapeHTMLParams implements BaseModel
         null !== $pdf && $self['pdf'] = $pdf;
         null !== $settleAnimations && $self['settleAnimations'] = $settleAnimations;
         null !== $tags && $self['tags'] = $tags;
-        null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
+        null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
         null !== $useMainContentOnly && $self['useMainContentOnly'] = $useMainContentOnly;
         null !== $waitForMs && $self['waitForMs'] = $waitForMs;
         null !== $zdr && $self['zdr'] = $zdr;
@@ -359,12 +362,14 @@ final class WebWebScrapeHTMLParams implements BaseModel
     }
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     *
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
-    public function withTimeoutMs(int $timeoutMs): self
+    public function withTimeoutOpts(TimeoutOpts|array $timeoutOpts): self
     {
         $self = clone $this;
-        $self['timeoutMs'] = $timeoutMs;
+        $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }
@@ -381,7 +386,7 @@ final class WebWebScrapeHTMLParams implements BaseModel
     }
 
     /**
-     * Optional browser wait time in milliseconds after initial page load. Min: 0. Max: 30000 (30 seconds). When combined with timeoutMS, timeoutMS must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
+     * Optional browser wait time in milliseconds after initial page load. Min: 0. Max: 30000 (30 seconds). When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
      */
     public function withWaitForMs(?int $waitForMs): self
     {

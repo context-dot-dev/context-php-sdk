@@ -9,6 +9,7 @@ use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebExtractFontsResponse\CacheMetadata;
+use ContextDev\Web\WebExtractFontsResponse\FinalDomState;
 use ContextDev\Web\WebExtractFontsResponse\Font;
 use ContextDev\Web\WebExtractFontsResponse\FontLink;
 use ContextDev\Web\WebExtractFontsResponse\KeyMetadata;
@@ -26,6 +27,7 @@ use ContextDev\Web\WebExtractFontsResponse\KeyMetadata;
  *   fonts: list<Font|FontShape>,
  *   requestID: string,
  *   status: string,
+ *   finalDomState?: null|FinalDomState|value-of<FinalDomState>,
  *   fontLinks?: array<string,FontLink|FontLinkShape>|null,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  * }
@@ -72,6 +74,14 @@ final class WebExtractFontsResponse implements BaseModel
      */
     #[Required]
     public string $status;
+
+    /**
+     * How complete the returned content is. `loaded` means the page finished the waits the request asked for. `still-loading` only occurs with timeoutOpts.behavior=return-partial: the timeoutOpts.milliseconds deadline was reached first, so the content reflects the DOM at that moment and late-rendering parts may be missing. Partial results are billed at the base request cost.
+     *
+     * @var value-of<FinalDomState>|null $finalDomState
+     */
+    #[Optional('finalDOMState', enum: FinalDomState::class)]
+    public ?string $finalDomState;
 
     /**
      * Font assets keyed by family name as it appears in the fonts array (non-generic names only). Clients match entries in fonts to pick a file URL from files. Omitted when no families resolve to Google or custom @font-face URLs.
@@ -126,6 +136,7 @@ final class WebExtractFontsResponse implements BaseModel
      *
      * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      * @param list<Font|FontShape> $fonts
+     * @param FinalDomState|value-of<FinalDomState>|null $finalDomState
      * @param array<string,FontLink|FontLinkShape>|null $fontLinks
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
@@ -136,6 +147,7 @@ final class WebExtractFontsResponse implements BaseModel
         array $fonts,
         string $requestID,
         string $status,
+        FinalDomState|string|null $finalDomState = null,
         ?array $fontLinks = null,
         KeyMetadata|array|null $keyMetadata = null,
     ): self {
@@ -148,6 +160,7 @@ final class WebExtractFontsResponse implements BaseModel
         $self['requestID'] = $requestID;
         $self['status'] = $status;
 
+        null !== $finalDomState && $self['finalDomState'] = $finalDomState;
         null !== $fontLinks && $self['fontLinks'] = $fontLinks;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
 
@@ -220,6 +233,19 @@ final class WebExtractFontsResponse implements BaseModel
     {
         $self = clone $this;
         $self['status'] = $status;
+
+        return $self;
+    }
+
+    /**
+     * How complete the returned content is. `loaded` means the page finished the waits the request asked for. `still-loading` only occurs with timeoutOpts.behavior=return-partial: the timeoutOpts.milliseconds deadline was reached first, so the content reflects the DOM at that moment and late-rendering parts may be missing. Partial results are billed at the base request cost.
+     *
+     * @param FinalDomState|value-of<FinalDomState> $finalDomState
+     */
+    public function withFinalDomState(FinalDomState|string $finalDomState): self
+    {
+        $self = clone $this;
+        $self['finalDomState'] = $finalDomState;
 
         return $self;
     }

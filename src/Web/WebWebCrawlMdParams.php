@@ -11,6 +11,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebWebCrawlMdParams\Country;
 use ContextDev\Web\WebWebCrawlMdParams\Pdf;
+use ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts;
 use ContextDev\Web\WebWebCrawlMdParams\Zdr;
 
 /**
@@ -19,6 +20,7 @@ use ContextDev\Web\WebWebCrawlMdParams\Zdr;
  * @see ContextDev\Services\WebService::webCrawlMd()
  *
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebCrawlMdParams\Pdf
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts
  *
  * @phpstan-type WebWebCrawlMdParamsShape = array{
  *   url: string,
@@ -37,7 +39,7 @@ use ContextDev\Web\WebWebCrawlMdParams\Zdr;
  *   shortenBase64Images?: bool|null,
  *   stopAfterMs?: int|null,
  *   tags?: list<string>|null,
- *   timeoutMs?: int|null,
+ *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  *   urlRegex?: string|null,
  *   useMainContentOnly?: bool|null,
  *   waitForMs?: int|null,
@@ -155,10 +157,10 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      */
-    #[Optional('timeoutMS')]
-    public ?int $timeoutMs;
+    #[Optional]
+    public ?TimeoutOpts $timeoutOpts;
 
     /**
      * Regex pattern. Only URLs matching this pattern will be followed and scraped. An automatic prefix scope in the form ^<starting URL> follows a redirect of the starting page.
@@ -215,6 +217,7 @@ final class WebWebCrawlMdParams implements BaseModel
      * @param list<string>|null $includeSelectors
      * @param Pdf|PdfShape|null $pdf
      * @param list<string>|null $tags
+     * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
@@ -234,7 +237,7 @@ final class WebWebCrawlMdParams implements BaseModel
         ?bool $shortenBase64Images = null,
         ?int $stopAfterMs = null,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        TimeoutOpts|array|null $timeoutOpts = null,
         ?string $urlRegex = null,
         ?bool $useMainContentOnly = null,
         ?int $waitForMs = null,
@@ -259,7 +262,7 @@ final class WebWebCrawlMdParams implements BaseModel
         null !== $shortenBase64Images && $self['shortenBase64Images'] = $shortenBase64Images;
         null !== $stopAfterMs && $self['stopAfterMs'] = $stopAfterMs;
         null !== $tags && $self['tags'] = $tags;
-        null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
+        null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
         null !== $urlRegex && $self['urlRegex'] = $urlRegex;
         null !== $useMainContentOnly && $self['useMainContentOnly'] = $useMainContentOnly;
         null !== $waitForMs && $self['waitForMs'] = $waitForMs;
@@ -455,12 +458,14 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     *
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
-    public function withTimeoutMs(int $timeoutMs): self
+    public function withTimeoutOpts(TimeoutOpts|array $timeoutOpts): self
     {
         $self = clone $this;
-        $self['timeoutMs'] = $timeoutMs;
+        $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }

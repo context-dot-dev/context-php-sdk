@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ContextDev\AI;
 
+use ContextDev\AI\AIExtractProductsParams\TimeoutOpts;
 use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
@@ -15,12 +16,14 @@ use ContextDev\Core\Contracts\BaseModel;
  *
  * @see ContextDev\Services\AIService::extractProducts()
  *
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\AI\AIExtractProductsParams\TimeoutOpts
+ *
  * @phpstan-type AIExtractProductsParamsShape = array{
  *   domain: string,
  *   maxAgeMs?: int|null,
  *   maxProducts?: int|null,
  *   tags?: list<string>|null,
- *   timeoutMs?: int|null,
+ *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  *   directURL: string,
  * }
  */
@@ -57,10 +60,10 @@ final class AIExtractProductsParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      */
-    #[Optional('timeoutMS')]
-    public ?int $timeoutMs;
+    #[Optional]
+    public ?TimeoutOpts $timeoutOpts;
 
     /**
      * A specific URL to use directly as the starting point for extraction without domain resolution.
@@ -93,6 +96,7 @@ final class AIExtractProductsParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param list<string>|null $tags
+     * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      */
     public static function with(
         string $domain,
@@ -100,7 +104,7 @@ final class AIExtractProductsParams implements BaseModel
         ?int $maxAgeMs = null,
         ?int $maxProducts = null,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        TimeoutOpts|array|null $timeoutOpts = null,
     ): self {
         $self = new self;
 
@@ -110,7 +114,7 @@ final class AIExtractProductsParams implements BaseModel
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
         null !== $maxProducts && $self['maxProducts'] = $maxProducts;
         null !== $tags && $self['tags'] = $tags;
-        null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
+        null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }
@@ -162,12 +166,14 @@ final class AIExtractProductsParams implements BaseModel
     }
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     *
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
-    public function withTimeoutMs(int $timeoutMs): self
+    public function withTimeoutOpts(TimeoutOpts|array $timeoutOpts): self
     {
         $self = clone $this;
-        $self['timeoutMs'] = $timeoutMs;
+        $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }

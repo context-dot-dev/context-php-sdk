@@ -23,6 +23,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   brand?: null|Brand|BrandShape,
  *   code?: int|null,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
+ *   partial?: bool|null,
  *   status?: string|null,
  * }
  */
@@ -60,6 +61,12 @@ final class BrandGetSimplifiedResponse implements BaseModel
      */
     #[Optional('key_metadata')]
     public ?KeyMetadata $keyMetadata;
+
+    /**
+     * True when the timeout ended processing and only completed brand data is returned.
+     */
+    #[Optional]
+    public ?bool $partial;
 
     /**
      * Status of the response, e.g., 'ok'.
@@ -101,6 +108,7 @@ final class BrandGetSimplifiedResponse implements BaseModel
         Brand|array|null $brand = null,
         ?int $code = null,
         KeyMetadata|array|null $keyMetadata = null,
+        ?bool $partial = null,
         ?string $status = null,
     ): self {
         $self = new self;
@@ -111,6 +119,7 @@ final class BrandGetSimplifiedResponse implements BaseModel
         null !== $brand && $self['brand'] = $brand;
         null !== $code && $self['code'] = $code;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
+        null !== $partial && $self['partial'] = $partial;
         null !== $status && $self['status'] = $status;
 
         return $self;
@@ -173,6 +182,17 @@ final class BrandGetSimplifiedResponse implements BaseModel
     {
         $self = clone $this;
         $self['keyMetadata'] = $keyMetadata;
+
+        return $self;
+    }
+
+    /**
+     * True when the timeout ended processing and only completed brand data is returned.
+     */
+    public function withPartial(bool $partial): self
+    {
+        $self = clone $this;
+        $self['partial'] = $partial;
 
         return $self;
     }

@@ -12,6 +12,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebWebScrapeMdParams\Action;
 use ContextDev\Web\WebWebScrapeMdParams\Country;
 use ContextDev\Web\WebWebScrapeMdParams\Pdf;
+use ContextDev\Web\WebWebScrapeMdParams\TimeoutOpts;
 use ContextDev\Web\WebWebScrapeMdParams\Zdr;
 
 /**
@@ -25,11 +26,11 @@ use ContextDev\Web\WebWebScrapeMdParams\Zdr;
  *
  * | HTTP status | Billed? | Meaning |
  * | --- | --- | --- |
- * | 200 | Yes — 1 credit, or 2 credits with actions | Successful scrape, including a zero-length result when includeSelectors matched nothing |
+ * | 200 | Yes — 1 credit, or 2 credits with actions | Successful scrape, including a zero-length result when includeSelectors matched nothing. A partial result (`finalDOMState: "still-loading"`, only with timeoutOpts.behavior=return-partial) is billed at the base 1 credit with no OCR or actions surcharge |
  * | 400 | No | Invalid input, skipped PDF, or the page could not be scraped. error_code WEBSITE_BLOCKED specifically means the site answered with an anti-bot challenge, CAPTCHA wall, or login shell instead of the page (even when the site returned HTTP 200) — retrying later or from another country sometimes succeeds |
  * | 401 / 403 | No | Invalid/disabled key, insufficient permissions, or credits exhausted; inspect error_code |
  * | 404 | No | Target page returned or fingerprinted as not found |
- * | 408 | No | Request timed out |
+ * | 408 | No | Request timed out. With timeoutOpts.behavior=return-partial this only happens when nothing usable had rendered by the deadline |
  * | 413 | No | Target content exceeds the maximum supported size (20 MB) |
  * | 415 | No | Unsupported content type |
  * | 429 | No | Per-minute rate limit exceeded; honor Retry-After |
@@ -40,6 +41,7 @@ use ContextDev\Web\WebWebScrapeMdParams\Zdr;
  * @phpstan-import-type ActionVariants from \ContextDev\Web\WebWebScrapeMdParams\Action
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeMdParams\Action
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeMdParams\Pdf
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeMdParams\TimeoutOpts
  *
  * @phpstan-type WebWebScrapeMdParamsShape = array{
  *   url: string,
@@ -57,7 +59,7 @@ use ContextDev\Web\WebWebScrapeMdParams\Zdr;
  *   settleAnimations?: bool|null,
  *   shortenBase64Images?: bool|null,
  *   tags?: list<string>|null,
- *   timeoutMs?: int|null,
+ *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  *   useMainContentOnly?: bool|null,
  *   waitForMs?: int|null,
  *   zdr?: null|Zdr|value-of<Zdr>,
@@ -172,10 +174,10 @@ final class WebWebScrapeMdParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      */
     #[Optional]
-    public ?int $timeoutMs;
+    public ?TimeoutOpts $timeoutOpts;
 
     /**
      * Extract only the main content of the page, excluding headers, footers, sidebars, and navigation.
@@ -184,7 +186,7 @@ final class WebWebScrapeMdParams implements BaseModel
     public ?bool $useMainContentOnly;
 
     /**
-     * Optional browser wait time in milliseconds after initial page load before converting the page to Markdown. Min: 0. Max: 30000 (30 seconds). When combined with timeoutMS, timeoutMS must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
+     * Optional browser wait time in milliseconds after initial page load before converting the page to Markdown. Min: 0. Max: 30000 (30 seconds). When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
      */
     #[Optional(nullable: true)]
     public ?int $waitForMs;
@@ -228,6 +230,7 @@ final class WebWebScrapeMdParams implements BaseModel
      * @param list<string>|null $includeSelectors
      * @param Pdf|PdfShape|null $pdf
      * @param list<string>|null $tags
+     * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
@@ -246,7 +249,7 @@ final class WebWebScrapeMdParams implements BaseModel
         ?bool $settleAnimations = null,
         ?bool $shortenBase64Images = null,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        TimeoutOpts|array|null $timeoutOpts = null,
         ?bool $useMainContentOnly = null,
         ?int $waitForMs = null,
         Zdr|string|null $zdr = null,
@@ -269,7 +272,7 @@ final class WebWebScrapeMdParams implements BaseModel
         null !== $settleAnimations && $self['settleAnimations'] = $settleAnimations;
         null !== $shortenBase64Images && $self['shortenBase64Images'] = $shortenBase64Images;
         null !== $tags && $self['tags'] = $tags;
-        null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
+        null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
         null !== $useMainContentOnly && $self['useMainContentOnly'] = $useMainContentOnly;
         null !== $waitForMs && $self['waitForMs'] = $waitForMs;
         null !== $zdr && $self['zdr'] = $zdr;
@@ -457,12 +460,14 @@ final class WebWebScrapeMdParams implements BaseModel
     }
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     *
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
-    public function withTimeoutMs(int $timeoutMs): self
+    public function withTimeoutOpts(TimeoutOpts|array $timeoutOpts): self
     {
         $self = clone $this;
-        $self['timeoutMs'] = $timeoutMs;
+        $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }
@@ -479,7 +484,7 @@ final class WebWebScrapeMdParams implements BaseModel
     }
 
     /**
-     * Optional browser wait time in milliseconds after initial page load before converting the page to Markdown. Min: 0. Max: 30000 (30 seconds). When combined with timeoutMS, timeoutMS must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
+     * Optional browser wait time in milliseconds after initial page load before converting the page to Markdown. Min: 0. Max: 30000 (30 seconds). When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
      */
     public function withWaitForMs(?int $waitForMs): self
     {

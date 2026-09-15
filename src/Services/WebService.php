@@ -10,6 +10,7 @@ use ContextDev\Core\Util;
 use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\WebContract;
 use ContextDev\Web\WebAnswersParams\Mode;
+use ContextDev\Web\WebAnswersParams\TimeoutOpts;
 use ContextDev\Web\WebAnswersResponse;
 use ContextDev\Web\WebExtractCompetitorsResponse;
 use ContextDev\Web\WebExtractFontsResponse;
@@ -35,17 +36,30 @@ use ContextDev\Web\WebWebScrapeMdResponse;
 use ContextDev\Web\WebWebScrapeSitemapResponse;
 
 /**
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebAnswersParams\TimeoutOpts
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebExtractParams\Action
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebExtractParams\Pdf
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebExtractParams\TimeoutOpts as TimeoutOptsShape1
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebExtractCompetitorsParams\TimeoutOpts as TimeoutOptsShape2
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebExtractFontsParams\TimeoutOpts as TimeoutOptsShape3
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebExtractStyleguideParams\TimeoutOpts as TimeoutOptsShape4
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebScreenshotParams\TimeoutOpts as TimeoutOptsShape5
  * @phpstan-import-type ViewportShape from \ContextDev\Web\WebScreenshotParams\Viewport
  * @phpstan-import-type MarkdownOptionsShape from \ContextDev\Web\WebSearchParams\MarkdownOptions
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebSearchParams\TimeoutOpts as TimeoutOptsShape6
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebCrawlMdParams\Pdf as PdfShape1
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts as TimeoutOptsShape7
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeBytesParams\TimeoutOpts as TimeoutOptsShape8
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeHTMLParams\Action as ActionShape1
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeHTMLParams\Pdf as PdfShape2
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeHTMLParams\TimeoutOpts as TimeoutOptsShape9
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeImagesParams\Action as ActionShape2
  * @phpstan-import-type EnrichmentShape from \ContextDev\Web\WebWebScrapeImagesParams\Enrichment
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeImagesParams\TimeoutOpts as TimeoutOptsShape10
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeMdParams\Action as ActionShape3
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeMdParams\Pdf as PdfShape3
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeMdParams\TimeoutOpts as TimeoutOptsShape11
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeSitemapParams\TimeoutOpts as TimeoutOptsShape12
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class WebService implements WebContract
@@ -66,13 +80,13 @@ final class WebService implements WebContract
     /**
      * @api
      *
-     * Researches the live web and returns a sourced answer in your requested JSON shape. Select fast for a smaller research budget at 10 credits or ultra for deeper reasoning at 100 credits. Defaults to ultra. Fast research is limited to 30 seconds and ultra to 50 seconds; timeoutMS can shorten either deadline.
+     * Researches the live web and returns a sourced answer in your requested JSON shape. Select fast for a smaller research budget at 10 credits or ultra for deeper reasoning at 100 credits. Defaults to ultra. Fast research is limited to 30 seconds and ultra to 50 seconds; timeoutOpts.milliseconds can shorten either deadline.
      *
      * @param string $task What to research and answer, in plain language. Naming a domain in the task (for example "pricing on context.dev") makes the agent read that site before it searches.
      * @param array<string,mixed> $jsonFormat An example object with placeholder values (for example {"pricing_page_url": "", "plans": [{"name": "", "price": 0}]}). Object keys and value types are preserved; unknown values may be null. Empty arrays accept any JSON items. Defaults to {"result": ""}. Maximum 8 levels, 500 values, and 16000 characters.
      * @param Mode|value-of<Mode> $mode Research level: fast uses a smaller model and research budget for 10 credits; ultra uses deeper reasoning and research for 100 credits. Defaults to ultra. Only successful requests consume credits.
      * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
-     * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -82,7 +96,7 @@ final class WebService implements WebContract
         ?array $jsonFormat = null,
         Mode|string|null $mode = null,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        TimeoutOpts|array|null $timeoutOpts = null,
         RequestOptions|array|null $requestOptions = null,
     ): WebAnswersResponse {
         $params = Util::removeNulls(
@@ -91,7 +105,7 @@ final class WebService implements WebContract
                 'jsonFormat' => $jsonFormat,
                 'mode' => $mode,
                 'tags' => $tags,
-                'timeoutMs' => $timeoutMs,
+                'timeoutOpts' => $timeoutOpts,
             ],
         );
 
@@ -120,7 +134,7 @@ final class WebService implements WebContract
      * @param bool $settleAnimations When true, waits briefly for CSS and transition animations to settle before extracting each crawled page. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
      * @param int $stopAfterMs Soft time budget for the crawl in milliseconds. Min: 10000 (10s). Max: 110000 (110s). Defaults to 80000 (80s), or 110000 (110s) when browser actions are provided.
      * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
-     * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * @param \ContextDev\Web\WebExtractParams\TimeoutOpts|TimeoutOptsShape1 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param int $waitForMs optional browser wait time in milliseconds after initial page load for each crawled page
      * @param RequestOpts|null $requestOptions
      *
@@ -141,7 +155,7 @@ final class WebService implements WebContract
         bool $settleAnimations = false,
         int $stopAfterMs = 80000,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        \ContextDev\Web\WebExtractParams\TimeoutOpts|array|null $timeoutOpts = null,
         ?int $waitForMs = null,
         RequestOptions|array|null $requestOptions = null,
     ): WebExtractResponse {
@@ -161,7 +175,7 @@ final class WebService implements WebContract
                 'settleAnimations' => $settleAnimations,
                 'stopAfterMs' => $stopAfterMs,
                 'tags' => $tags,
-                'timeoutMs' => $timeoutMs,
+                'timeoutOpts' => $timeoutOpts,
                 'waitForMs' => $waitForMs,
             ],
         );
@@ -180,7 +194,7 @@ final class WebService implements WebContract
      * @param string $domain Company domain to analyze, such as `stripe.com`. Full http(s) URLs are accepted and normalized to their domain.
      * @param int $numCompetitors Exact number of direct competitors to return. Defaults to 5.
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
-     * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * @param \ContextDev\Web\WebExtractCompetitorsParams\TimeoutOpts|TimeoutOptsShape2 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -189,7 +203,7 @@ final class WebService implements WebContract
         string $domain,
         int $numCompetitors = 5,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        \ContextDev\Web\WebExtractCompetitorsParams\TimeoutOpts|array|null $timeoutOpts = null,
         RequestOptions|array|null $requestOptions = null,
     ): WebExtractCompetitorsResponse {
         $params = Util::removeNulls(
@@ -197,7 +211,7 @@ final class WebService implements WebContract
                 'domain' => $domain,
                 'numCompetitors' => $numCompetitors,
                 'tags' => $tags,
-                'timeoutMs' => $timeoutMs,
+                'timeoutOpts' => $timeoutOpts,
             ],
         );
 
@@ -216,7 +230,7 @@ final class WebService implements WebContract
      * @param string $domain Domain name to extract fonts from (e.g., 'example.com', 'google.com'). The domain will be automatically normalized and validated. You must provide either 'domain' or 'directUrl', but not both.
      * @param int|null $maxAgeMs Maximum age in milliseconds for cached brand data before the API performs a hard refresh. Defaults to 3 months (7776000000 ms). Set to 0 to always perform a hard refresh. Negative values are clamped to 0; values above 1 year (31536000000 ms) are clamped to 1 year.
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
-     * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * @param \ContextDev\Web\WebExtractFontsParams\TimeoutOpts|TimeoutOptsShape3 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -226,7 +240,7 @@ final class WebService implements WebContract
         ?string $domain = null,
         ?int $maxAgeMs = 7776000000,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        \ContextDev\Web\WebExtractFontsParams\TimeoutOpts|array|null $timeoutOpts = null,
         RequestOptions|array|null $requestOptions = null,
     ): WebExtractFontsResponse {
         $params = Util::removeNulls(
@@ -235,7 +249,7 @@ final class WebService implements WebContract
                 'domain' => $domain,
                 'maxAgeMs' => $maxAgeMs,
                 'tags' => $tags,
-                'timeoutMs' => $timeoutMs,
+                'timeoutOpts' => $timeoutOpts,
             ],
         );
 
@@ -255,7 +269,7 @@ final class WebService implements WebContract
      * @param string $domain Domain name to extract styleguide from (e.g., 'example.com', 'google.com'). The domain will be automatically normalized and validated. You must provide either 'domain' or 'directUrl', but not both.
      * @param int|null $maxAgeMs Maximum age in milliseconds for cached brand data before the API performs a hard refresh. Defaults to 3 months (7776000000 ms). Set to 0 to always perform a hard refresh. Negative values are clamped to 0; values above 1 year (31536000000 ms) are clamped to 1 year.
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
-     * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * @param \ContextDev\Web\WebExtractStyleguideParams\TimeoutOpts|TimeoutOptsShape4 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -266,7 +280,7 @@ final class WebService implements WebContract
         ?string $domain = null,
         ?int $maxAgeMs = 7776000000,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        \ContextDev\Web\WebExtractStyleguideParams\TimeoutOpts|array|null $timeoutOpts = null,
         RequestOptions|array|null $requestOptions = null,
     ): WebExtractStyleguideResponse {
         $params = Util::removeNulls(
@@ -276,7 +290,7 @@ final class WebService implements WebContract
                 'domain' => $domain,
                 'maxAgeMs' => $maxAgeMs,
                 'tags' => $tags,
-                'timeoutMs' => $timeoutMs,
+                'timeoutOpts' => $timeoutOpts,
             ],
         );
 
@@ -302,9 +316,9 @@ final class WebService implements WebContract
      * @param Page|value-of<Page> $page Optional parameter to specify which page type to screenshot. If provided, the system will scrape the domain's links and use heuristics to find the most appropriate URL for the specified page type (30 supported languages). If not provided, screenshots the main domain landing page. Only applicable when using 'domain', not 'directUrl'.
      * @param int|null $scrollOffset Optional vertical scroll offset in pixels for capturing a long page in viewport-sized chunks. When provided, the full page is captured once and the returned image is the viewport-sized slice that begins at this Y offset (e.g. request scrollOffset=0, then 1080, then 2160 to walk a 1920x1080 landing page top to bottom). The final slice may be shorter than the viewport height. Takes precedence over fullScreenshot. Max: 100000.
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
-     * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * @param \ContextDev\Web\WebScreenshotParams\TimeoutOpts|TimeoutOptsShape5 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param Viewport|ViewportShape $viewport Optional browser viewport dimensions for the screenshot. Defaults to 1920x1080.
-     * @param int|null $waitForMs Optional browser wait time in milliseconds after initial page load before taking the screenshot. Min: 0. Max: 30000 (30 seconds). Defaults to 3000 ms when omitted. When combined with timeoutMS, timeoutMS must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
+     * @param int|null $waitForMs Optional browser wait time in milliseconds after initial page load before taking the screenshot. Min: 0. Max: 30000 (30 seconds). Defaults to 3000 ms when omitted. When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
      * @param Zdr|value-of<Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
@@ -322,7 +336,7 @@ final class WebService implements WebContract
         Page|string|null $page = null,
         ?int $scrollOffset = null,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        \ContextDev\Web\WebScreenshotParams\TimeoutOpts|array|null $timeoutOpts = null,
         Viewport|array $viewport = ['width' => 1920, 'height' => 1080],
         ?int $waitForMs = 3000,
         Zdr|string $zdr = 'disabled',
@@ -341,7 +355,7 @@ final class WebService implements WebContract
                 'page' => $page,
                 'scrollOffset' => $scrollOffset,
                 'tags' => $tags,
-                'timeoutMs' => $timeoutMs,
+                'timeoutOpts' => $timeoutOpts,
                 'viewport' => $viewport,
                 'waitForMs' => $waitForMs,
                 'zdr' => $zdr,
@@ -368,7 +382,7 @@ final class WebService implements WebContract
      * @param int $numResults Number of results to request and return (10–100). Defaults to 10.
      * @param bool $queryFanout expand the query into multiple parallel variants for broader recall
      * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
-     * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * @param \ContextDev\Web\WebSearchParams\TimeoutOpts|TimeoutOptsShape6 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -383,7 +397,7 @@ final class WebService implements WebContract
         int $numResults = 10,
         ?bool $queryFanout = null,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        \ContextDev\Web\WebSearchParams\TimeoutOpts|array|null $timeoutOpts = null,
         RequestOptions|array|null $requestOptions = null,
     ): WebSearchResponse {
         $params = Util::removeNulls(
@@ -397,7 +411,7 @@ final class WebService implements WebContract
                 'numResults' => $numResults,
                 'queryFanout' => $queryFanout,
                 'tags' => $tags,
-                'timeoutMs' => $timeoutMs,
+                'timeoutOpts' => $timeoutOpts,
             ],
         );
 
@@ -428,7 +442,7 @@ final class WebService implements WebContract
      * @param bool $shortenBase64Images Truncate base64-encoded image data in the Markdown output
      * @param int $stopAfterMs Soft time budget for the crawl in milliseconds. After each scrape, the crawler checks the elapsed time and, if exceeded, returns the pages collected so far instead of continuing. Min: 10000 (10s). Max: 110000 (110s). Default: 80000 (80s).
      * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
-     * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * @param \ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts|TimeoutOptsShape7 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param string $urlRegex Regex pattern. Only URLs matching this pattern will be followed and scraped. An automatic prefix scope in the form ^<starting URL> follows a redirect of the starting page.
      * @param bool $useMainContentOnly Extract only the main content, stripping headers, footers, sidebars, and navigation
      * @param int $waitForMs Browser wait time in milliseconds after initial page load for each crawled page. Defaults to 3500 (3.5 seconds). Min: 0. Max: 30000 (30 seconds).
@@ -456,7 +470,7 @@ final class WebService implements WebContract
         bool $shortenBase64Images = true,
         int $stopAfterMs = 80000,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        \ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts|array|null $timeoutOpts = null,
         ?string $urlRegex = null,
         bool $useMainContentOnly = false,
         int $waitForMs = 3500,
@@ -481,7 +495,7 @@ final class WebService implements WebContract
                 'shortenBase64Images' => $shortenBase64Images,
                 'stopAfterMs' => $stopAfterMs,
                 'tags' => $tags,
-                'timeoutMs' => $timeoutMs,
+                'timeoutOpts' => $timeoutOpts,
                 'urlRegex' => $urlRegex,
                 'useMainContentOnly' => $useMainContentOnly,
                 'waitForMs' => $waitForMs,
@@ -504,7 +518,7 @@ final class WebService implements WebContract
      * @param \ContextDev\Web\WebWebScrapeBytesParams\Country|value-of<\ContextDev\Web\WebWebScrapeBytesParams\Country> $country fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2)
      * @param array<string,string> $headers Optional outbound HTTP headers, such as Referer, Cookie, or Authorization. Send as a JSON object or deep-object query params such as headers[Referer]=https://example.com/. Host, Content-Length, and hop-by-hop transport headers are rejected. Authorization and cookies are removed when a redirect changes origin.
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
-     * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * @param \ContextDev\Web\WebWebScrapeBytesParams\TimeoutOpts|TimeoutOptsShape8 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param \ContextDev\Web\WebWebScrapeBytesParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeBytesParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
@@ -515,7 +529,7 @@ final class WebService implements WebContract
         \ContextDev\Web\WebWebScrapeBytesParams\Country|string|null $country = null,
         ?array $headers = null,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        \ContextDev\Web\WebWebScrapeBytesParams\TimeoutOpts|array|null $timeoutOpts = null,
         \ContextDev\Web\WebWebScrapeBytesParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): WebWebScrapeBytesResponse {
@@ -525,7 +539,7 @@ final class WebService implements WebContract
                 'country' => $country,
                 'headers' => $headers,
                 'tags' => $tags,
-                'timeoutMs' => $timeoutMs,
+                'timeoutOpts' => $timeoutOpts,
                 'zdr' => $zdr,
             ],
         );
@@ -539,7 +553,7 @@ final class WebService implements WebContract
     /**
      * @api
      *
-     * Scrapes the given URL and returns the raw HTML content of the page. The base request costs 1 credit; requests with browser actions cost 2 credits.
+     * Scrapes the given URL and returns the raw HTML content of the page. The base request costs 1 credit; requests with browser actions cost 2 credits. A request that hits its timeoutOpts.milliseconds deadline fails with 408 and is not billed, unless timeoutOpts.behavior=return-partial is set — then the page as rendered so far is returned with `finalDOMState: "still-loading"` and billed at the base cost of 1 credit.
      *
      * @param string $url Full URL to scrape (must include http:// or https:// protocol)
      * @param list<ActionShape1>|null $actions Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
@@ -552,9 +566,9 @@ final class WebService implements WebContract
      * @param \ContextDev\Web\WebWebScrapeHTMLParams\Pdf|PdfShape2 $pdf PDF parsing controls. Use start/end to limit text extraction and embedded-image detection/OCR to an inclusive 1-based page range.
      * @param bool $settleAnimations When true, waits briefly for CSS and transition animations to settle before extracting HTML. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
-     * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * @param \ContextDev\Web\WebWebScrapeHTMLParams\TimeoutOpts|TimeoutOptsShape9 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param bool $useMainContentOnly when true, return only the page's main content in the HTML response, excluding headers, footers, sidebars, and navigation when detectable
-     * @param int|null $waitForMs Optional browser wait time in milliseconds after initial page load. Min: 0. Max: 30000 (30 seconds). When combined with timeoutMS, timeoutMS must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
+     * @param int|null $waitForMs Optional browser wait time in milliseconds after initial page load. Min: 0. Max: 30000 (30 seconds). When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
      * @param \ContextDev\Web\WebWebScrapeHTMLParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeHTMLParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
@@ -574,7 +588,7 @@ final class WebService implements WebContract
         ],
         bool $settleAnimations = false,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        \ContextDev\Web\WebWebScrapeHTMLParams\TimeoutOpts|array|null $timeoutOpts = null,
         bool $useMainContentOnly = false,
         ?int $waitForMs = null,
         \ContextDev\Web\WebWebScrapeHTMLParams\Zdr|string $zdr = 'disabled',
@@ -593,7 +607,7 @@ final class WebService implements WebContract
                 'pdf' => $pdf,
                 'settleAnimations' => $settleAnimations,
                 'tags' => $tags,
-                'timeoutMs' => $timeoutMs,
+                'timeoutOpts' => $timeoutOpts,
                 'useMainContentOnly' => $useMainContentOnly,
                 'waitForMs' => $waitForMs,
                 'zdr' => $zdr,
@@ -618,8 +632,8 @@ final class WebService implements WebContract
      * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
      * @param int|null $maxAgeMs Reuse a cached result this many milliseconds old or newer. Default: 86400000 (1 day). Set to 0 to bypass cache. Maximum: 2592000000 (30 days).
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
-     * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
-     * @param int|null $waitForMs Optional browser wait time in milliseconds after initial page load before collecting images. Min: 0. Max: 30000 (30 seconds). When combined with timeoutMS, timeoutMS must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
+     * @param \ContextDev\Web\WebWebScrapeImagesParams\TimeoutOpts|TimeoutOptsShape10 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * @param int|null $waitForMs Optional browser wait time in milliseconds after initial page load before collecting images. Min: 0. Max: 30000 (30 seconds). When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -632,7 +646,7 @@ final class WebService implements WebContract
         ?array $headers = null,
         ?int $maxAgeMs = 86400000,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        \ContextDev\Web\WebWebScrapeImagesParams\TimeoutOpts|array|null $timeoutOpts = null,
         ?int $waitForMs = null,
         RequestOptions|array|null $requestOptions = null,
     ): WebWebScrapeImagesResponse {
@@ -645,7 +659,7 @@ final class WebService implements WebContract
                 'headers' => $headers,
                 'maxAgeMs' => $maxAgeMs,
                 'tags' => $tags,
-                'timeoutMs' => $timeoutMs,
+                'timeoutOpts' => $timeoutOpts,
                 'waitForMs' => $waitForMs,
             ],
         );
@@ -669,11 +683,11 @@ final class WebService implements WebContract
      *
      * | HTTP status | Billed? | Meaning |
      * | --- | --- | --- |
-     * | 200 | Yes — 1 credit, or 2 credits with actions | Successful scrape, including a zero-length result when includeSelectors matched nothing |
+     * | 200 | Yes — 1 credit, or 2 credits with actions | Successful scrape, including a zero-length result when includeSelectors matched nothing. A partial result (`finalDOMState: "still-loading"`, only with timeoutOpts.behavior=return-partial) is billed at the base 1 credit with no OCR or actions surcharge |
      * | 400 | No | Invalid input, skipped PDF, or the page could not be scraped. error_code WEBSITE_BLOCKED specifically means the site answered with an anti-bot challenge, CAPTCHA wall, or login shell instead of the page (even when the site returned HTTP 200) — retrying later or from another country sometimes succeeds |
      * | 401 / 403 | No | Invalid/disabled key, insufficient permissions, or credits exhausted; inspect error_code |
      * | 404 | No | Target page returned or fingerprinted as not found |
-     * | 408 | No | Request timed out |
+     * | 408 | No | Request timed out. With timeoutOpts.behavior=return-partial this only happens when nothing usable had rendered by the deadline |
      * | 413 | No | Target content exceeds the maximum supported size (20 MB) |
      * | 415 | No | Unsupported content type |
      * | 429 | No | Per-minute rate limit exceeded; honor Retry-After |
@@ -694,9 +708,9 @@ final class WebService implements WebContract
      * @param bool $settleAnimations When true, waits briefly for CSS and transition animations to settle before converting to Markdown. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
      * @param bool $shortenBase64Images Shorten base64-encoded image data in the Markdown output
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
-     * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * @param \ContextDev\Web\WebWebScrapeMdParams\TimeoutOpts|TimeoutOptsShape11 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param bool $useMainContentOnly Extract only the main content of the page, excluding headers, footers, sidebars, and navigation
-     * @param int|null $waitForMs Optional browser wait time in milliseconds after initial page load before converting the page to Markdown. Min: 0. Max: 30000 (30 seconds). When combined with timeoutMS, timeoutMS must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
+     * @param int|null $waitForMs Optional browser wait time in milliseconds after initial page load before converting the page to Markdown. Min: 0. Max: 30000 (30 seconds). When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
      * @param \ContextDev\Web\WebWebScrapeMdParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeMdParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
@@ -720,7 +734,7 @@ final class WebService implements WebContract
         bool $settleAnimations = false,
         bool $shortenBase64Images = true,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        \ContextDev\Web\WebWebScrapeMdParams\TimeoutOpts|array|null $timeoutOpts = null,
         bool $useMainContentOnly = false,
         ?int $waitForMs = null,
         \ContextDev\Web\WebWebScrapeMdParams\Zdr|string $zdr = 'disabled',
@@ -743,7 +757,7 @@ final class WebService implements WebContract
                 'settleAnimations' => $settleAnimations,
                 'shortenBase64Images' => $shortenBase64Images,
                 'tags' => $tags,
-                'timeoutMs' => $timeoutMs,
+                'timeoutOpts' => $timeoutOpts,
                 'useMainContentOnly' => $useMainContentOnly,
                 'waitForMs' => $waitForMs,
                 'zdr' => $zdr,
@@ -768,7 +782,7 @@ final class WebService implements WebContract
      * @param string $search Optional search phrase. When provided, the crawled sitemap is filtered to the pages whose URLs are about that phrase, most relevant first, and the request costs 2 credits instead of 1.
      * @param string $sitemapURL Optional explicit sitemap URL. When provided, exactly this sitemap is crawled instead of discovering the domain's sitemaps.
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
-     * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * @param \ContextDev\Web\WebWebScrapeSitemapParams\TimeoutOpts|TimeoutOptsShape12 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param string $urlRegex Optional RE2-compatible regex pattern. Only URLs matching this pattern are returned and counted against maxLinks.
      * @param \ContextDev\Web\WebWebScrapeSitemapParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeSitemapParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
@@ -783,7 +797,7 @@ final class WebService implements WebContract
         ?string $search = null,
         ?string $sitemapURL = null,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        \ContextDev\Web\WebWebScrapeSitemapParams\TimeoutOpts|array|null $timeoutOpts = null,
         ?string $urlRegex = null,
         \ContextDev\Web\WebWebScrapeSitemapParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
@@ -797,7 +811,7 @@ final class WebService implements WebContract
                 'search' => $search,
                 'sitemapURL' => $sitemapURL,
                 'tags' => $tags,
-                'timeoutMs' => $timeoutMs,
+                'timeoutOpts' => $timeoutOpts,
                 'urlRegex' => $urlRegex,
                 'zdr' => $zdr,
             ],

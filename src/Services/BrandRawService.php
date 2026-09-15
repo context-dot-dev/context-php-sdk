@@ -8,6 +8,7 @@ use ContextDev\Brand\BrandGetResponse;
 use ContextDev\Brand\BrandGetSimplifiedResponse;
 use ContextDev\Brand\BrandRetrieveParams;
 use ContextDev\Brand\BrandRetrieveParams\ForceLanguage;
+use ContextDev\Brand\BrandRetrieveParams\TimeoutOpts;
 use ContextDev\Brand\BrandRetrieveParams\Type;
 use ContextDev\Brand\BrandRetrieveSimplifiedParams;
 use ContextDev\Brand\BrandRetrieveSimplifiedParams\Theme;
@@ -17,13 +18,14 @@ use ContextDev\Brand\BrandSearchResponse;
 use ContextDev\Client;
 use ContextDev\Core\Contracts\BaseResponse;
 use ContextDev\Core\Exceptions\APIException;
-use ContextDev\Core\Util;
 use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\BrandRawContract;
 
 /**
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Brand\BrandRetrieveParams\TimeoutOpts
  * @phpstan-import-type MccShape from \ContextDev\Brand\BrandRetrieveParams\Mcc
  * @phpstan-import-type PhoneShape from \ContextDev\Brand\BrandRetrieveParams\Phone
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Brand\BrandRetrieveSimplifiedParams\TimeoutOpts as TimeoutOptsShape1
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class BrandRawService implements BrandRawContract
@@ -46,7 +48,7 @@ final class BrandRawService implements BrandRawContract
      *   maxAgeMs?: int,
      *   maxSpeed?: bool,
      *   tags?: list<string>,
-     *   timeoutMs?: int,
+     *   timeoutOpts?: TimeoutOpts|TimeoutOptsShape,
      *   name: string,
      *   countryGl?: string,
      *   email: string,
@@ -94,7 +96,7 @@ final class BrandRawService implements BrandRawContract
      *   maxAgeMs?: int|null,
      *   tags?: list<string>,
      *   theme?: Theme|value-of<Theme>,
-     *   timeoutMs?: int,
+     *   timeoutOpts?: BrandRetrieveSimplifiedParams\TimeoutOpts|TimeoutOptsShape1,
      * }|BrandRetrieveSimplifiedParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -115,7 +117,7 @@ final class BrandRawService implements BrandRawContract
         return $this->client->request(
             method: 'get',
             path: 'brand/retrieve-simplified',
-            query: Util::array_transform_keys($parsed, ['timeoutMs' => 'timeoutMS']),
+            query: $parsed,
             options: $options,
             convert: BrandGetSimplifiedResponse::class,
         );

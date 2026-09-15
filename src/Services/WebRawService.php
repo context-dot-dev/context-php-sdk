@@ -12,6 +12,7 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\WebRawContract;
 use ContextDev\Web\WebAnswersParams;
 use ContextDev\Web\WebAnswersParams\Mode;
+use ContextDev\Web\WebAnswersParams\TimeoutOpts;
 use ContextDev\Web\WebAnswersResponse;
 use ContextDev\Web\WebExtractCompetitorsParams;
 use ContextDev\Web\WebExtractCompetitorsResponse;
@@ -49,17 +50,30 @@ use ContextDev\Web\WebWebScrapeSitemapParams;
 use ContextDev\Web\WebWebScrapeSitemapResponse;
 
 /**
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebAnswersParams\TimeoutOpts
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebExtractParams\Action
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebExtractParams\Pdf
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebExtractParams\TimeoutOpts as TimeoutOptsShape1
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebExtractCompetitorsParams\TimeoutOpts as TimeoutOptsShape2
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebExtractFontsParams\TimeoutOpts as TimeoutOptsShape3
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebExtractStyleguideParams\TimeoutOpts as TimeoutOptsShape4
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebScreenshotParams\TimeoutOpts as TimeoutOptsShape5
  * @phpstan-import-type ViewportShape from \ContextDev\Web\WebScreenshotParams\Viewport
  * @phpstan-import-type MarkdownOptionsShape from \ContextDev\Web\WebSearchParams\MarkdownOptions
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebSearchParams\TimeoutOpts as TimeoutOptsShape6
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebCrawlMdParams\Pdf as PdfShape1
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts as TimeoutOptsShape7
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeBytesParams\TimeoutOpts as TimeoutOptsShape8
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeHTMLParams\Action as ActionShape1
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeHTMLParams\Pdf as PdfShape2
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeHTMLParams\TimeoutOpts as TimeoutOptsShape9
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeImagesParams\Action as ActionShape2
  * @phpstan-import-type EnrichmentShape from \ContextDev\Web\WebWebScrapeImagesParams\Enrichment
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeImagesParams\TimeoutOpts as TimeoutOptsShape10
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeMdParams\Action as ActionShape3
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeMdParams\Pdf as PdfShape3
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeMdParams\TimeoutOpts as TimeoutOptsShape11
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeSitemapParams\TimeoutOpts as TimeoutOptsShape12
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class WebRawService implements WebRawContract
@@ -73,14 +87,14 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Researches the live web and returns a sourced answer in your requested JSON shape. Select fast for a smaller research budget at 10 credits or ultra for deeper reasoning at 100 credits. Defaults to ultra. Fast research is limited to 30 seconds and ultra to 50 seconds; timeoutMS can shorten either deadline.
+     * Researches the live web and returns a sourced answer in your requested JSON shape. Select fast for a smaller research budget at 10 credits or ultra for deeper reasoning at 100 credits. Defaults to ultra. Fast research is limited to 30 seconds and ultra to 50 seconds; timeoutOpts.milliseconds can shorten either deadline.
      *
      * @param array{
      *   task: string,
      *   jsonFormat?: array<string,mixed>,
      *   mode?: Mode|value-of<Mode>,
      *   tags?: list<string>,
-     *   timeoutMs?: int,
+     *   timeoutOpts?: TimeoutOpts|TimeoutOptsShape,
      * }|WebAnswersParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -127,7 +141,7 @@ final class WebRawService implements WebRawContract
      *   settleAnimations?: bool,
      *   stopAfterMs?: int,
      *   tags?: list<string>,
-     *   timeoutMs?: int,
+     *   timeoutOpts?: WebExtractParams\TimeoutOpts|TimeoutOptsShape1,
      *   waitForMs?: int,
      * }|WebExtractParams $params
      * @param RequestOpts|null $requestOptions
@@ -161,7 +175,10 @@ final class WebRawService implements WebRawContract
      * Analyze a company's landing page and web search evidence to return direct competitors for the same product or market.
      *
      * @param array{
-     *   domain: string, numCompetitors?: int, tags?: list<string>, timeoutMs?: int
+     *   domain: string,
+     *   numCompetitors?: int,
+     *   tags?: list<string>,
+     *   timeoutOpts?: WebExtractCompetitorsParams\TimeoutOpts|TimeoutOptsShape2,
      * }|WebExtractCompetitorsParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -182,7 +199,7 @@ final class WebRawService implements WebRawContract
         return $this->client->request(
             method: 'get',
             path: 'web/competitors',
-            query: Util::array_transform_keys($parsed, ['timeoutMs' => 'timeoutMS']),
+            query: $parsed,
             options: $options,
             convert: WebExtractCompetitorsResponse::class,
         );
@@ -198,7 +215,7 @@ final class WebRawService implements WebRawContract
      *   domain?: string,
      *   maxAgeMs?: int|null,
      *   tags?: list<string>,
-     *   timeoutMs?: int,
+     *   timeoutOpts?: WebExtractFontsParams\TimeoutOpts|TimeoutOptsShape3,
      * }|WebExtractFontsParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -219,10 +236,7 @@ final class WebRawService implements WebRawContract
         return $this->client->request(
             method: 'get',
             path: 'web/fonts',
-            query: Util::array_transform_keys(
-                $parsed,
-                ['directURL' => 'directUrl', 'timeoutMs' => 'timeoutMS']
-            ),
+            query: Util::array_transform_keys($parsed, ['directURL' => 'directUrl']),
             options: $options,
             convert: WebExtractFontsResponse::class,
         );
@@ -239,7 +253,7 @@ final class WebRawService implements WebRawContract
      *   domain?: string,
      *   maxAgeMs?: int|null,
      *   tags?: list<string>,
-     *   timeoutMs?: int,
+     *   timeoutOpts?: WebExtractStyleguideParams\TimeoutOpts|TimeoutOptsShape4,
      * }|WebExtractStyleguideParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -260,10 +274,7 @@ final class WebRawService implements WebRawContract
         return $this->client->request(
             method: 'get',
             path: 'web/styleguide',
-            query: Util::array_transform_keys(
-                $parsed,
-                ['directURL' => 'directUrl', 'timeoutMs' => 'timeoutMS']
-            ),
+            query: Util::array_transform_keys($parsed, ['directURL' => 'directUrl']),
             options: $options,
             convert: WebExtractStyleguideResponse::class,
         );
@@ -286,7 +297,7 @@ final class WebRawService implements WebRawContract
      *   page?: Page|value-of<Page>,
      *   scrollOffset?: int|null,
      *   tags?: list<string>,
-     *   timeoutMs?: int,
+     *   timeoutOpts?: WebScreenshotParams\TimeoutOpts|TimeoutOptsShape5,
      *   viewport?: Viewport|ViewportShape,
      *   waitForMs?: int|null,
      *   zdr?: Zdr|value-of<Zdr>,
@@ -310,10 +321,7 @@ final class WebRawService implements WebRawContract
         return $this->client->request(
             method: 'get',
             path: 'web/screenshot',
-            query: Util::array_transform_keys(
-                $parsed,
-                ['directURL' => 'directUrl', 'timeoutMs' => 'timeoutMS']
-            ),
+            query: Util::array_transform_keys($parsed, ['directURL' => 'directUrl']),
             options: $options,
             convert: WebScreenshotResponse::class,
         );
@@ -334,7 +342,7 @@ final class WebRawService implements WebRawContract
      *   numResults?: int,
      *   queryFanout?: bool,
      *   tags?: list<string>,
-     *   timeoutMs?: int,
+     *   timeoutOpts?: WebSearchParams\TimeoutOpts|TimeoutOptsShape6,
      * }|WebSearchParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -383,7 +391,7 @@ final class WebRawService implements WebRawContract
      *   shortenBase64Images?: bool,
      *   stopAfterMs?: int,
      *   tags?: list<string>,
-     *   timeoutMs?: int,
+     *   timeoutOpts?: WebWebCrawlMdParams\TimeoutOpts|TimeoutOptsShape7,
      *   urlRegex?: string,
      *   useMainContentOnly?: bool,
      *   waitForMs?: int,
@@ -424,7 +432,7 @@ final class WebRawService implements WebRawContract
      *   country?: value-of<WebWebScrapeBytesParams\Country>,
      *   headers?: array<string,string>,
      *   tags?: list<string>,
-     *   timeoutMs?: int,
+     *   timeoutOpts?: WebWebScrapeBytesParams\TimeoutOpts|TimeoutOptsShape8,
      *   zdr?: WebWebScrapeBytesParams\Zdr|value-of<WebWebScrapeBytesParams\Zdr>,
      * }|WebWebScrapeBytesParams $params
      * @param RequestOpts|null $requestOptions
@@ -446,7 +454,7 @@ final class WebRawService implements WebRawContract
         return $this->client->request(
             method: 'get',
             path: 'web/scrape/bytes',
-            query: Util::array_transform_keys($parsed, ['timeoutMs' => 'timeoutMS']),
+            query: $parsed,
             options: $options,
             convert: WebWebScrapeBytesResponse::class,
         );
@@ -455,7 +463,7 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Scrapes the given URL and returns the raw HTML content of the page. The base request costs 1 credit; requests with browser actions cost 2 credits.
+     * Scrapes the given URL and returns the raw HTML content of the page. The base request costs 1 credit; requests with browser actions cost 2 credits. A request that hits its timeoutOpts.milliseconds deadline fails with 408 and is not billed, unless timeoutOpts.behavior=return-partial is set — then the page as rendered so far is returned with `finalDOMState: "still-loading"` and billed at the base cost of 1 credit.
      *
      * @param array{
      *   url: string,
@@ -469,7 +477,7 @@ final class WebRawService implements WebRawContract
      *   pdf?: WebWebScrapeHTMLParams\Pdf|PdfShape2,
      *   settleAnimations?: bool,
      *   tags?: list<string>,
-     *   timeoutMs?: int,
+     *   timeoutOpts?: WebWebScrapeHTMLParams\TimeoutOpts|TimeoutOptsShape9,
      *   useMainContentOnly?: bool,
      *   waitForMs?: int|null,
      *   zdr?: WebWebScrapeHTMLParams\Zdr|value-of<WebWebScrapeHTMLParams\Zdr>,
@@ -493,7 +501,7 @@ final class WebRawService implements WebRawContract
         return $this->client->request(
             method: 'get',
             path: 'web/scrape/html',
-            query: Util::array_transform_keys($parsed, ['timeoutMs' => 'timeoutMS']),
+            query: $parsed,
             options: $options,
             convert: WebWebScrapeHTMLResponse::class,
         );
@@ -512,7 +520,7 @@ final class WebRawService implements WebRawContract
      *   headers?: array<string,string>,
      *   maxAgeMs?: int|null,
      *   tags?: list<string>,
-     *   timeoutMs?: int,
+     *   timeoutOpts?: WebWebScrapeImagesParams\TimeoutOpts|TimeoutOptsShape10,
      *   waitForMs?: int|null,
      * }|WebWebScrapeImagesParams $params
      * @param RequestOpts|null $requestOptions
@@ -534,7 +542,7 @@ final class WebRawService implements WebRawContract
         return $this->client->request(
             method: 'get',
             path: 'web/scrape/images',
-            query: Util::array_transform_keys($parsed, ['timeoutMs' => 'timeoutMS']),
+            query: $parsed,
             options: $options,
             convert: WebWebScrapeImagesResponse::class,
         );
@@ -553,11 +561,11 @@ final class WebRawService implements WebRawContract
      *
      * | HTTP status | Billed? | Meaning |
      * | --- | --- | --- |
-     * | 200 | Yes — 1 credit, or 2 credits with actions | Successful scrape, including a zero-length result when includeSelectors matched nothing |
+     * | 200 | Yes — 1 credit, or 2 credits with actions | Successful scrape, including a zero-length result when includeSelectors matched nothing. A partial result (`finalDOMState: "still-loading"`, only with timeoutOpts.behavior=return-partial) is billed at the base 1 credit with no OCR or actions surcharge |
      * | 400 | No | Invalid input, skipped PDF, or the page could not be scraped. error_code WEBSITE_BLOCKED specifically means the site answered with an anti-bot challenge, CAPTCHA wall, or login shell instead of the page (even when the site returned HTTP 200) — retrying later or from another country sometimes succeeds |
      * | 401 / 403 | No | Invalid/disabled key, insufficient permissions, or credits exhausted; inspect error_code |
      * | 404 | No | Target page returned or fingerprinted as not found |
-     * | 408 | No | Request timed out |
+     * | 408 | No | Request timed out. With timeoutOpts.behavior=return-partial this only happens when nothing usable had rendered by the deadline |
      * | 413 | No | Target content exceeds the maximum supported size (20 MB) |
      * | 415 | No | Unsupported content type |
      * | 429 | No | Per-minute rate limit exceeded; honor Retry-After |
@@ -579,7 +587,7 @@ final class WebRawService implements WebRawContract
      *   settleAnimations?: bool,
      *   shortenBase64Images?: bool,
      *   tags?: list<string>,
-     *   timeoutMs?: int,
+     *   timeoutOpts?: WebWebScrapeMdParams\TimeoutOpts|TimeoutOptsShape11,
      *   useMainContentOnly?: bool,
      *   waitForMs?: int|null,
      *   zdr?: WebWebScrapeMdParams\Zdr|value-of<WebWebScrapeMdParams\Zdr>,
@@ -603,7 +611,7 @@ final class WebRawService implements WebRawContract
         return $this->client->request(
             method: 'get',
             path: 'web/scrape/markdown',
-            query: Util::array_transform_keys($parsed, ['timeoutMs' => 'timeoutMS']),
+            query: $parsed,
             options: $options,
             convert: WebWebScrapeMdResponse::class,
         );
@@ -622,7 +630,7 @@ final class WebRawService implements WebRawContract
      *   search?: string,
      *   sitemapURL?: string,
      *   tags?: list<string>,
-     *   timeoutMs?: int,
+     *   timeoutOpts?: WebWebScrapeSitemapParams\TimeoutOpts|TimeoutOptsShape12,
      *   urlRegex?: string,
      *   zdr?: WebWebScrapeSitemapParams\Zdr|value-of<WebWebScrapeSitemapParams\Zdr>,
      * }|WebWebScrapeSitemapParams $params
@@ -647,7 +655,7 @@ final class WebRawService implements WebRawContract
             path: 'web/scrape/sitemap',
             query: Util::array_transform_keys(
                 $parsed,
-                ['sitemapURL' => 'sitemapUrl', 'timeoutMs' => 'timeoutMS']
+                ['sitemapURL' => 'sitemapUrl']
             ),
             options: $options,
             convert: WebWebScrapeSitemapResponse::class,
