@@ -10,6 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebWebScrapeMdResponse\ActionsApplied;
 use ContextDev\Web\WebWebScrapeMdResponse\CacheMetadata;
+use ContextDev\Web\WebWebScrapeMdResponse\FinalDomState;
 use ContextDev\Web\WebWebScrapeMdResponse\KeyMetadata;
 use ContextDev\Web\WebWebScrapeMdResponse\Metadata;
 
@@ -22,6 +23,7 @@ use ContextDev\Web\WebWebScrapeMdResponse\Metadata;
  * @phpstan-type WebWebScrapeMdResponseShape = array{
  *   cacheMetadata: CacheMetadata|CacheMetadataShape,
  *   contentLength: int,
+ *   finalDomState: FinalDomState|value-of<FinalDomState>,
  *   markdown: string,
  *   metadata: Metadata|MetadataShape,
  *   requestID: string,
@@ -49,6 +51,14 @@ final class WebWebScrapeMdResponse implements BaseModel
      */
     #[Required]
     public int $contentLength;
+
+    /**
+     * How complete the returned content is. `loaded` means the page finished the waits the request asked for. `still-loading` only occurs with timeoutOpts.behavior=return-partial: the timeoutOpts.milliseconds deadline was reached first, so the content reflects the DOM at that moment and late-rendering parts may be missing. Partial results are billed at the base request cost.
+     *
+     * @var value-of<FinalDomState> $finalDomState
+     */
+    #[Required('finalDOMState', enum: FinalDomState::class)]
+    public string $finalDomState;
 
     /**
      * Page content converted to GitHub Flavored Markdown.
@@ -114,6 +124,7 @@ final class WebWebScrapeMdResponse implements BaseModel
      * WebWebScrapeMdResponse::with(
      *   cacheMetadata: ...,
      *   contentLength: ...,
+     *   finalDomState: ...,
      *   markdown: ...,
      *   metadata: ...,
      *   requestID: ...,
@@ -128,6 +139,7 @@ final class WebWebScrapeMdResponse implements BaseModel
      * (new WebWebScrapeMdResponse)
      *   ->withCacheMetadata(...)
      *   ->withContentLength(...)
+     *   ->withFinalDomState(...)
      *   ->withMarkdown(...)
      *   ->withMetadata(...)
      *   ->withRequestID(...)
@@ -146,6 +158,7 @@ final class WebWebScrapeMdResponse implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param CacheMetadata|CacheMetadataShape $cacheMetadata
+     * @param FinalDomState|value-of<FinalDomState> $finalDomState
      * @param Metadata|MetadataShape $metadata
      * @param list<ActionsApplied|ActionsAppliedShape>|null $actionsApplied
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
@@ -153,6 +166,7 @@ final class WebWebScrapeMdResponse implements BaseModel
     public static function with(
         CacheMetadata|array $cacheMetadata,
         int $contentLength,
+        FinalDomState|string $finalDomState,
         string $markdown,
         Metadata|array $metadata,
         string $requestID,
@@ -167,6 +181,7 @@ final class WebWebScrapeMdResponse implements BaseModel
 
         $self['cacheMetadata'] = $cacheMetadata;
         $self['contentLength'] = $contentLength;
+        $self['finalDomState'] = $finalDomState;
         $self['markdown'] = $markdown;
         $self['metadata'] = $metadata;
         $self['requestID'] = $requestID;
@@ -201,6 +216,19 @@ final class WebWebScrapeMdResponse implements BaseModel
     {
         $self = clone $this;
         $self['contentLength'] = $contentLength;
+
+        return $self;
+    }
+
+    /**
+     * How complete the returned content is. `loaded` means the page finished the waits the request asked for. `still-loading` only occurs with timeoutOpts.behavior=return-partial: the timeoutOpts.milliseconds deadline was reached first, so the content reflects the DOM at that moment and late-rendering parts may be missing. Partial results are billed at the base request cost.
+     *
+     * @param FinalDomState|value-of<FinalDomState> $finalDomState
+     */
+    public function withFinalDomState(FinalDomState|string $finalDomState): self
+    {
+        $self = clone $this;
+        $self['finalDomState'] = $finalDomState;
 
         return $self;
     }

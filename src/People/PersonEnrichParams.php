@@ -12,6 +12,7 @@ use ContextDev\People\PersonEnrichParams\Company;
 use ContextDev\People\PersonEnrichParams\Education;
 use ContextDev\People\PersonEnrichParams\Location;
 use ContextDev\People\PersonEnrichParams\Name;
+use ContextDev\People\PersonEnrichParams\TimeoutOpts;
 
 /**
  * Finds and normalizes the best available person candidate from additive identity clues, then assigns an identity match score from 0 to 100. Available on all paid plans. Successful requests cost 20 credits. Disposable and free email addresses (like gmail.com, yahoo.com) will throw a 422 error.
@@ -22,6 +23,7 @@ use ContextDev\People\PersonEnrichParams\Name;
  * @phpstan-import-type EducationShape from \ContextDev\People\PersonEnrichParams\Education
  * @phpstan-import-type LocationShape from \ContextDev\People\PersonEnrichParams\Location
  * @phpstan-import-type NameShape from \ContextDev\People\PersonEnrichParams\Name
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\People\PersonEnrichParams\TimeoutOpts
  *
  * @phpstan-type PersonEnrichParamsShape = array{
  *   company?: null|Company|CompanyShape,
@@ -31,7 +33,7 @@ use ContextDev\People\PersonEnrichParams\Name;
  *   name?: null|Name|NameShape,
  *   socialURLs?: list<string>|null,
  *   tags?: list<string>|null,
- *   timeoutMs?: int|null,
+ *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  * }
  */
 final class PersonEnrichParams implements BaseModel
@@ -69,10 +71,10 @@ final class PersonEnrichParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      */
-    #[Optional('timeoutMS')]
-    public ?int $timeoutMs;
+    #[Optional]
+    public ?TimeoutOpts $timeoutOpts;
 
     public function __construct()
     {
@@ -90,6 +92,7 @@ final class PersonEnrichParams implements BaseModel
      * @param Name|NameShape|null $name
      * @param list<string>|null $socialURLs
      * @param list<string>|null $tags
+     * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      */
     public static function with(
         Company|array|null $company = null,
@@ -99,7 +102,7 @@ final class PersonEnrichParams implements BaseModel
         Name|array|null $name = null,
         ?array $socialURLs = null,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        TimeoutOpts|array|null $timeoutOpts = null,
     ): self {
         $self = new self;
 
@@ -110,7 +113,7 @@ final class PersonEnrichParams implements BaseModel
         null !== $name && $self['name'] = $name;
         null !== $socialURLs && $self['socialURLs'] = $socialURLs;
         null !== $tags && $self['tags'] = $tags;
-        null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
+        null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }
@@ -192,12 +195,14 @@ final class PersonEnrichParams implements BaseModel
     }
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     *
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
-    public function withTimeoutMs(int $timeoutMs): self
+    public function withTimeoutOpts(TimeoutOpts|array $timeoutOpts): self
     {
         $self = clone $this;
-        $self['timeoutMs'] = $timeoutMs;
+        $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }

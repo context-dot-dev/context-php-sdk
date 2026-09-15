@@ -53,7 +53,7 @@ final class AITest extends TestCase
             url: 'https://example.com',
             maxAgeMs: 0,
             tags: ['production', 'team-alpha'],
-            timeoutMs: 1000,
+            timeoutOpts: ['milliseconds' => 1000, 'behavior' => 'fail'],
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -88,7 +88,7 @@ final class AITest extends TestCase
             maxAgeMs: 0,
             maxProducts: 1,
             tags: ['production', 'team-alpha'],
-            timeoutMs: 1000,
+            timeoutOpts: ['milliseconds' => 1000, 'behavior' => 'fail'],
             directURL: 'https://example.com',
         );
 

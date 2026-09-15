@@ -10,6 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebWebScrapeImagesResponse\ActionsApplied;
 use ContextDev\Web\WebWebScrapeImagesResponse\CacheMetadata;
+use ContextDev\Web\WebWebScrapeImagesResponse\FinalDomState;
 use ContextDev\Web\WebWebScrapeImagesResponse\Image;
 use ContextDev\Web\WebWebScrapeImagesResponse\KeyMetadata;
 
@@ -26,7 +27,9 @@ use ContextDev\Web\WebWebScrapeImagesResponse\KeyMetadata;
  *   success: bool,
  *   url: string,
  *   actionsApplied?: list<ActionsApplied|ActionsAppliedShape>|null,
+ *   finalDomState?: null|FinalDomState|value-of<FinalDomState>,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
+ *   partial?: bool|null,
  * }
  */
 final class WebWebScrapeImagesResponse implements BaseModel
@@ -75,10 +78,24 @@ final class WebWebScrapeImagesResponse implements BaseModel
     public ?array $actionsApplied;
 
     /**
+     * How complete the returned content is. `loaded` means the page finished the waits the request asked for. `still-loading` only occurs with timeoutOpts.behavior=return-partial: the timeoutOpts.milliseconds deadline was reached first, so the content reflects the DOM at that moment and late-rendering parts may be missing. Partial results are billed at the base request cost.
+     *
+     * @var value-of<FinalDomState>|null $finalDomState
+     */
+    #[Optional('finalDOMState', enum: FinalDomState::class)]
+    public ?string $finalDomState;
+
+    /**
      * Credit usage, included whenever a valid API key is provided.
      */
     #[Optional('key_metadata')]
     public ?KeyMetadata $keyMetadata;
+
+    /**
+     * True when the deadline interrupted rendering or image enrichment. Partial results are billed at the base request cost, without enrichment or actions surcharges.
+     */
+    #[Optional]
+    public ?bool $partial;
 
     /**
      * `new WebWebScrapeImagesResponse()` is missing required properties by the API.
@@ -114,6 +131,7 @@ final class WebWebScrapeImagesResponse implements BaseModel
      * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      * @param list<Image|ImageShape> $images
      * @param list<ActionsApplied|ActionsAppliedShape>|null $actionsApplied
+     * @param FinalDomState|value-of<FinalDomState>|null $finalDomState
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
     public static function with(
@@ -123,7 +141,9 @@ final class WebWebScrapeImagesResponse implements BaseModel
         bool $success,
         string $url,
         ?array $actionsApplied = null,
+        FinalDomState|string|null $finalDomState = null,
         KeyMetadata|array|null $keyMetadata = null,
+        ?bool $partial = null,
     ): self {
         $self = new self;
 
@@ -134,7 +154,9 @@ final class WebWebScrapeImagesResponse implements BaseModel
         $self['url'] = $url;
 
         null !== $actionsApplied && $self['actionsApplied'] = $actionsApplied;
+        null !== $finalDomState && $self['finalDomState'] = $finalDomState;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
+        null !== $partial && $self['partial'] = $partial;
 
         return $self;
     }
@@ -212,6 +234,19 @@ final class WebWebScrapeImagesResponse implements BaseModel
     }
 
     /**
+     * How complete the returned content is. `loaded` means the page finished the waits the request asked for. `still-loading` only occurs with timeoutOpts.behavior=return-partial: the timeoutOpts.milliseconds deadline was reached first, so the content reflects the DOM at that moment and late-rendering parts may be missing. Partial results are billed at the base request cost.
+     *
+     * @param FinalDomState|value-of<FinalDomState> $finalDomState
+     */
+    public function withFinalDomState(FinalDomState|string $finalDomState): self
+    {
+        $self = clone $this;
+        $self['finalDomState'] = $finalDomState;
+
+        return $self;
+    }
+
+    /**
      * Credit usage, included whenever a valid API key is provided.
      *
      * @param KeyMetadata|KeyMetadataShape $keyMetadata
@@ -220,6 +255,17 @@ final class WebWebScrapeImagesResponse implements BaseModel
     {
         $self = clone $this;
         $self['keyMetadata'] = $keyMetadata;
+
+        return $self;
+    }
+
+    /**
+     * True when the deadline interrupted rendering or image enrichment. Partial results are billed at the base request cost, without enrichment or actions surcharges.
+     */
+    public function withPartial(bool $partial): self
+    {
+        $self = clone $this;
+        $self['partial'] = $partial;
 
         return $self;
     }

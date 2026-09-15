@@ -9,18 +9,21 @@ use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Industry\IndustryRetrieveNaicsParams\TimeoutOpts;
 
 /**
  * Classify any brand into 2022 NAICS industry codes from its domain or name.
  *
  * @see ContextDev\Services\IndustryService::retrieveNaics()
  *
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Industry\IndustryRetrieveNaicsParams\TimeoutOpts
+ *
  * @phpstan-type IndustryRetrieveNaicsParamsShape = array{
  *   input: string,
  *   maxResults?: int|null,
  *   minResults?: int|null,
  *   tags?: list<string>|null,
- *   timeoutMs?: int|null,
+ *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  * }
  */
 final class IndustryRetrieveNaicsParams implements BaseModel
@@ -56,10 +59,10 @@ final class IndustryRetrieveNaicsParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      */
     #[Optional]
-    public ?int $timeoutMs;
+    public ?TimeoutOpts $timeoutOpts;
 
     /**
      * `new IndustryRetrieveNaicsParams()` is missing required properties by the API.
@@ -86,13 +89,14 @@ final class IndustryRetrieveNaicsParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param list<string>|null $tags
+     * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      */
     public static function with(
         string $input,
         ?int $maxResults = null,
         ?int $minResults = null,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        TimeoutOpts|array|null $timeoutOpts = null,
     ): self {
         $self = new self;
 
@@ -101,7 +105,7 @@ final class IndustryRetrieveNaicsParams implements BaseModel
         null !== $maxResults && $self['maxResults'] = $maxResults;
         null !== $minResults && $self['minResults'] = $minResults;
         null !== $tags && $self['tags'] = $tags;
-        null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
+        null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }
@@ -153,12 +157,14 @@ final class IndustryRetrieveNaicsParams implements BaseModel
     }
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     *
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
-    public function withTimeoutMs(int $timeoutMs): self
+    public function withTimeoutOpts(TimeoutOpts|array $timeoutOpts): self
     {
         $self = clone $this;
-        $self['timeoutMs'] = $timeoutMs;
+        $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }

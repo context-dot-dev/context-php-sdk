@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Brand;
 
 use ContextDev\Brand\BrandRetrieveSimplifiedParams\Theme;
+use ContextDev\Brand\BrandRetrieveSimplifiedParams\TimeoutOpts;
 use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
@@ -16,12 +17,14 @@ use ContextDev\Core\Contracts\BaseModel;
  *
  * @see ContextDev\Services\BrandService::retrieveSimplified()
  *
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Brand\BrandRetrieveSimplifiedParams\TimeoutOpts
+ *
  * @phpstan-type BrandRetrieveSimplifiedParamsShape = array{
  *   domain: string,
  *   maxAgeMs?: int|null,
  *   tags?: list<string>|null,
  *   theme?: null|Theme|value-of<Theme>,
- *   timeoutMs?: int|null,
+ *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  * }
  */
 final class BrandRetrieveSimplifiedParams implements BaseModel
@@ -59,10 +62,10 @@ final class BrandRetrieveSimplifiedParams implements BaseModel
     public ?string $theme;
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      */
     #[Optional]
-    public ?int $timeoutMs;
+    public ?TimeoutOpts $timeoutOpts;
 
     /**
      * `new BrandRetrieveSimplifiedParams()` is missing required properties by the API.
@@ -90,13 +93,14 @@ final class BrandRetrieveSimplifiedParams implements BaseModel
      *
      * @param list<string>|null $tags
      * @param Theme|value-of<Theme>|null $theme
+     * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      */
     public static function with(
         string $domain,
         ?int $maxAgeMs = null,
         ?array $tags = null,
         Theme|string|null $theme = null,
-        ?int $timeoutMs = null,
+        TimeoutOpts|array|null $timeoutOpts = null,
     ): self {
         $self = new self;
 
@@ -105,7 +109,7 @@ final class BrandRetrieveSimplifiedParams implements BaseModel
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
         null !== $tags && $self['tags'] = $tags;
         null !== $theme && $self['theme'] = $theme;
-        null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
+        null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }
@@ -159,12 +163,14 @@ final class BrandRetrieveSimplifiedParams implements BaseModel
     }
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     *
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
-    public function withTimeoutMs(int $timeoutMs): self
+    public function withTimeoutOpts(TimeoutOpts|array $timeoutOpts): self
     {
         $self = clone $this;
-        $self['timeoutMs'] = $timeoutMs;
+        $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }

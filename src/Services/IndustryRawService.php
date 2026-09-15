@@ -7,16 +7,18 @@ namespace ContextDev\Services;
 use ContextDev\Client;
 use ContextDev\Core\Contracts\BaseResponse;
 use ContextDev\Core\Exceptions\APIException;
-use ContextDev\Core\Util;
 use ContextDev\Industry\IndustryGetNaicsResponse;
 use ContextDev\Industry\IndustryGetSicResponse;
 use ContextDev\Industry\IndustryRetrieveNaicsParams;
+use ContextDev\Industry\IndustryRetrieveNaicsParams\TimeoutOpts;
 use ContextDev\Industry\IndustryRetrieveSicParams;
 use ContextDev\Industry\IndustryRetrieveSicParams\Type;
 use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\IndustryRawContract;
 
 /**
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Industry\IndustryRetrieveNaicsParams\TimeoutOpts
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Industry\IndustryRetrieveSicParams\TimeoutOpts as TimeoutOptsShape1
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class IndustryRawService implements IndustryRawContract
@@ -37,7 +39,7 @@ final class IndustryRawService implements IndustryRawContract
      *   maxResults?: int,
      *   minResults?: int,
      *   tags?: list<string>,
-     *   timeoutMs?: int,
+     *   timeoutOpts?: TimeoutOpts|TimeoutOptsShape,
      * }|IndustryRetrieveNaicsParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -58,7 +60,7 @@ final class IndustryRawService implements IndustryRawContract
         return $this->client->request(
             method: 'get',
             path: 'web/naics',
-            query: Util::array_transform_keys($parsed, ['timeoutMs' => 'timeoutMS']),
+            query: $parsed,
             options: $options,
             convert: IndustryGetNaicsResponse::class,
         );
@@ -74,7 +76,7 @@ final class IndustryRawService implements IndustryRawContract
      *   maxResults?: int,
      *   minResults?: int,
      *   tags?: list<string>,
-     *   timeoutMs?: int,
+     *   timeoutOpts?: IndustryRetrieveSicParams\TimeoutOpts|TimeoutOptsShape1,
      *   type?: Type|value-of<Type>,
      * }|IndustryRetrieveSicParams $params
      * @param RequestOpts|null $requestOptions
@@ -96,7 +98,7 @@ final class IndustryRawService implements IndustryRawContract
         return $this->client->request(
             method: 'get',
             path: 'web/sic',
-            query: Util::array_transform_keys($parsed, ['timeoutMs' => 'timeoutMS']),
+            query: $parsed,
             options: $options,
             convert: IndustryGetSicResponse::class,
         );

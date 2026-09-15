@@ -22,6 +22,7 @@ use ContextDev\People\PersonEnrichResponse\Match_\PersonEnrichmentNotFoundMatch;
  *   match: MatchShape,
  *   requestID: string,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
+ *   partial?: bool|null,
  * }
  */
 final class PersonEnrichResponse implements BaseModel
@@ -48,6 +49,12 @@ final class PersonEnrichResponse implements BaseModel
      */
     #[Optional('key_metadata')]
     public ?KeyMetadata $keyMetadata;
+
+    /**
+     * True when the timeout ended processing and this response contains the usable data completed so far. Unfinished fields are omitted.
+     */
+    #[Optional]
+    public ?bool $partial;
 
     /**
      * `new PersonEnrichResponse()` is missing required properties by the API.
@@ -80,6 +87,7 @@ final class PersonEnrichResponse implements BaseModel
         PersonEnrichmentCandidateMatch|array|PersonEnrichmentNotFoundMatch $match,
         string $requestID,
         KeyMetadata|array|null $keyMetadata = null,
+        ?bool $partial = null,
     ): self {
         $self = new self;
 
@@ -87,6 +95,7 @@ final class PersonEnrichResponse implements BaseModel
         $self['requestID'] = $requestID;
 
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
+        null !== $partial && $self['partial'] = $partial;
 
         return $self;
     }
@@ -125,6 +134,17 @@ final class PersonEnrichResponse implements BaseModel
     {
         $self = clone $this;
         $self['keyMetadata'] = $keyMetadata;
+
+        return $self;
+    }
+
+    /**
+     * True when the timeout ended processing and this response contains the usable data completed so far. Unfinished fields are omitted.
+     */
+    public function withPartial(bool $partial): self
+    {
+        $self = clone $this;
+        $self['partial'] = $partial;
 
         return $self;
     }

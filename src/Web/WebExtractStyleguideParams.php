@@ -9,11 +9,14 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebExtractStyleguideParams\ColorScheme;
+use ContextDev\Web\WebExtractStyleguideParams\TimeoutOpts;
 
 /**
  * Extract a comprehensive design system from a website including colors, typography, spacing, shadows, and UI components.
  *
  * @see ContextDev\Services\WebService::extractStyleguide()
+ *
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebExtractStyleguideParams\TimeoutOpts
  *
  * @phpstan-type WebExtractStyleguideParamsShape = array{
  *   colorScheme?: null|ColorScheme|value-of<ColorScheme>,
@@ -21,7 +24,7 @@ use ContextDev\Web\WebExtractStyleguideParams\ColorScheme;
  *   domain?: string|null,
  *   maxAgeMs?: int|null,
  *   tags?: list<string>|null,
- *   timeoutMs?: int|null,
+ *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  * }
  */
 final class WebExtractStyleguideParams implements BaseModel
@@ -65,10 +68,10 @@ final class WebExtractStyleguideParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      */
     #[Optional]
-    public ?int $timeoutMs;
+    public ?TimeoutOpts $timeoutOpts;
 
     public function __construct()
     {
@@ -82,6 +85,7 @@ final class WebExtractStyleguideParams implements BaseModel
      *
      * @param ColorScheme|value-of<ColorScheme>|null $colorScheme
      * @param list<string>|null $tags
+     * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      */
     public static function with(
         ColorScheme|string|null $colorScheme = null,
@@ -89,7 +93,7 @@ final class WebExtractStyleguideParams implements BaseModel
         ?string $domain = null,
         ?int $maxAgeMs = null,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        TimeoutOpts|array|null $timeoutOpts = null,
     ): self {
         $self = new self;
 
@@ -98,7 +102,7 @@ final class WebExtractStyleguideParams implements BaseModel
         null !== $domain && $self['domain'] = $domain;
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
         null !== $tags && $self['tags'] = $tags;
-        null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
+        null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }
@@ -163,12 +167,14 @@ final class WebExtractStyleguideParams implements BaseModel
     }
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     *
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
-    public function withTimeoutMs(int $timeoutMs): self
+    public function withTimeoutOpts(TimeoutOpts|array $timeoutOpts): self
     {
         $self = clone $this;
-        $self['timeoutMs'] = $timeoutMs;
+        $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }

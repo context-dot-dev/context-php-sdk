@@ -11,6 +11,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebExtractParams\Action;
 use ContextDev\Web\WebExtractParams\Pdf;
+use ContextDev\Web\WebExtractParams\TimeoutOpts;
 
 /**
  * Crawl a website, use the provided JSON Schema and instructions to prioritize relevant internal links, and extract structured data from the selected pages.
@@ -20,6 +21,7 @@ use ContextDev\Web\WebExtractParams\Pdf;
  * @phpstan-import-type ActionVariants from \ContextDev\Web\WebExtractParams\Action
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebExtractParams\Action
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebExtractParams\Pdf
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebExtractParams\TimeoutOpts
  *
  * @phpstan-type WebExtractParamsShape = array{
  *   schema: array<string,mixed>,
@@ -36,7 +38,7 @@ use ContextDev\Web\WebExtractParams\Pdf;
  *   settleAnimations?: bool|null,
  *   stopAfterMs?: int|null,
  *   tags?: list<string>|null,
- *   timeoutMs?: int|null,
+ *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  *   waitForMs?: int|null,
  * }
  */
@@ -134,10 +136,10 @@ final class WebExtractParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      */
-    #[Optional('timeoutMS')]
-    public ?int $timeoutMs;
+    #[Optional]
+    public ?TimeoutOpts $timeoutOpts;
 
     /**
      * Optional browser wait time in milliseconds after initial page load for each crawled page.
@@ -173,6 +175,7 @@ final class WebExtractParams implements BaseModel
      * @param list<ActionShape>|null $actions
      * @param Pdf|PdfShape|null $pdf
      * @param list<string>|null $tags
+     * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      */
     public static function with(
         array $schema,
@@ -189,7 +192,7 @@ final class WebExtractParams implements BaseModel
         ?bool $settleAnimations = null,
         ?int $stopAfterMs = null,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        TimeoutOpts|array|null $timeoutOpts = null,
         ?int $waitForMs = null,
     ): self {
         $self = new self;
@@ -209,7 +212,7 @@ final class WebExtractParams implements BaseModel
         null !== $settleAnimations && $self['settleAnimations'] = $settleAnimations;
         null !== $stopAfterMs && $self['stopAfterMs'] = $stopAfterMs;
         null !== $tags && $self['tags'] = $tags;
-        null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
+        null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
         null !== $waitForMs && $self['waitForMs'] = $waitForMs;
 
         return $self;
@@ -376,12 +379,14 @@ final class WebExtractParams implements BaseModel
     }
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     *
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
-    public function withTimeoutMs(int $timeoutMs): self
+    public function withTimeoutOpts(TimeoutOpts|array $timeoutOpts): self
     {
         $self = clone $this;
-        $self['timeoutMs'] = $timeoutMs;
+        $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }

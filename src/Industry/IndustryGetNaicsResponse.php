@@ -20,6 +20,7 @@ use ContextDev\Industry\IndustryGetNaicsResponse\KeyMetadata;
  *   codes?: list<Code|CodeShape>|null,
  *   domain?: string|null,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
+ *   partial?: bool|null,
  *   status?: string|null,
  *   type?: string|null,
  * }
@@ -54,6 +55,12 @@ final class IndustryGetNaicsResponse implements BaseModel
      */
     #[Optional('key_metadata')]
     public ?KeyMetadata $keyMetadata;
+
+    /**
+     * True when the timeout ended processing and this response contains only usable results completed so far. Unfinished results are omitted.
+     */
+    #[Optional]
+    public ?bool $partial;
 
     /**
      * Status of the response, e.g., 'ok'.
@@ -99,6 +106,7 @@ final class IndustryGetNaicsResponse implements BaseModel
         ?array $codes = null,
         ?string $domain = null,
         KeyMetadata|array|null $keyMetadata = null,
+        ?bool $partial = null,
         ?string $status = null,
         ?string $type = null,
     ): self {
@@ -109,6 +117,7 @@ final class IndustryGetNaicsResponse implements BaseModel
         null !== $codes && $self['codes'] = $codes;
         null !== $domain && $self['domain'] = $domain;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
+        null !== $partial && $self['partial'] = $partial;
         null !== $status && $self['status'] = $status;
         null !== $type && $self['type'] = $type;
 
@@ -159,6 +168,17 @@ final class IndustryGetNaicsResponse implements BaseModel
     {
         $self = clone $this;
         $self['keyMetadata'] = $keyMetadata;
+
+        return $self;
+    }
+
+    /**
+     * True when the timeout ended processing and this response contains only usable results completed so far. Unfinished results are omitted.
+     */
+    public function withPartial(bool $partial): self
+    {
+        $self = clone $this;
+        $self['partial'] = $partial;
 
         return $self;
     }

@@ -67,7 +67,7 @@ final class WebTest extends TestCase
             jsonFormat: ['pricing_page_url' => 'bar', 'plans' => 'bar'],
             mode: 'fast',
             tags: ['production', 'team-alpha'],
-            timeoutMs: 1000,
+            timeoutOpts: ['milliseconds' => 1000, 'behavior' => 'fail'],
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -122,7 +122,7 @@ final class WebTest extends TestCase
             settleAnimations: true,
             stopAfterMs: 10000,
             tags: ['production', 'team-alpha'],
-            timeoutMs: 1000,
+            timeoutOpts: ['milliseconds' => 1000, 'behavior' => 'fail'],
             waitForMs: 0,
         );
 
@@ -154,7 +154,7 @@ final class WebTest extends TestCase
             domain: 'xxx',
             numCompetitors: 1,
             tags: ['production', 'team-alpha'],
-            timeoutMs: 1000,
+            timeoutOpts: ['milliseconds' => 1000, 'behavior' => 'fail'],
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -234,14 +234,14 @@ final class WebTest extends TestCase
                 'maxAgeMs' => 0,
                 'pdf' => ['end' => 1, 'shouldParse' => true, 'start' => 1],
                 'shortenBase64Images' => true,
-                'timeoutMs' => 1000,
+                'timeoutOpts' => ['milliseconds' => 1, 'behavior' => 'fail'],
                 'useMainContentOnly' => true,
                 'waitForMs' => 0,
             ],
             numResults: 10,
             queryFanout: true,
             tags: ['production', 'team-alpha'],
-            timeoutMs: 1000,
+            timeoutOpts: ['milliseconds' => 1000, 'behavior' => 'fail'],
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -285,7 +285,7 @@ final class WebTest extends TestCase
             shortenBase64Images: true,
             stopAfterMs: 10000,
             tags: ['production', 'team-alpha'],
-            timeoutMs: 1000,
+            timeoutOpts: ['milliseconds' => 1000, 'behavior' => 'fail'],
             urlRegex: '^https?://[^/]+/blog/',
             useMainContentOnly: true,
             waitForMs: 0,
@@ -321,7 +321,7 @@ final class WebTest extends TestCase
             country: 'de',
             headers: ['foo' => 'J!'],
             tags: ['production', 'team-alpha'],
-            timeoutMs: 1,
+            timeoutOpts: ['milliseconds' => 1, 'behavior' => 'fail'],
             zdr: 'enabled',
         );
 
@@ -361,7 +361,7 @@ final class WebTest extends TestCase
             pdf: ['end' => 1, 'ocr' => true, 'shouldParse' => true, 'start' => 1],
             settleAnimations: true,
             tags: ['production', 'team-alpha'],
-            timeoutMs: 1,
+            timeoutOpts: ['milliseconds' => 1, 'behavior' => 'fail'],
             useMainContentOnly: true,
             waitForMs: 0,
             zdr: 'enabled',
@@ -404,7 +404,7 @@ final class WebTest extends TestCase
             headers: ['foo' => 'J!'],
             maxAgeMs: 0,
             tags: ['production', 'team-alpha'],
-            timeoutMs: 1,
+            timeoutOpts: ['milliseconds' => 1, 'behavior' => 'fail'],
             waitForMs: 0,
         );
 
@@ -448,7 +448,7 @@ final class WebTest extends TestCase
             settleAnimations: true,
             shortenBase64Images: true,
             tags: ['production', 'team-alpha'],
-            timeoutMs: 1,
+            timeoutOpts: ['milliseconds' => 1, 'behavior' => 'fail'],
             useMainContentOnly: true,
             waitForMs: 0,
             zdr: 'enabled',
@@ -486,7 +486,7 @@ final class WebTest extends TestCase
             search: 'help center and troubleshooting articles',
             sitemapURL: 'https://example.com',
             tags: ['production', 'team-alpha'],
-            timeoutMs: 1,
+            timeoutOpts: ['milliseconds' => 1, 'behavior' => 'fail'],
             urlRegex: '^https?://[^/]+/blog/',
             zdr: 'enabled',
         );

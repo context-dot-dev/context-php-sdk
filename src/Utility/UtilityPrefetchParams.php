@@ -11,6 +11,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Utility\UtilityPrefetchParams\Identifier\UtilityPrefetchDomainIdentifier;
 use ContextDev\Utility\UtilityPrefetchParams\Identifier\UtilityPrefetchEmailIdentifier;
+use ContextDev\Utility\UtilityPrefetchParams\TimeoutOpts;
 use ContextDev\Utility\UtilityPrefetchParams\Type;
 
 /**
@@ -20,12 +21,13 @@ use ContextDev\Utility\UtilityPrefetchParams\Type;
  *
  * @phpstan-import-type IdentifierVariants from \ContextDev\Utility\UtilityPrefetchParams\Identifier
  * @phpstan-import-type IdentifierShape from \ContextDev\Utility\UtilityPrefetchParams\Identifier
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Utility\UtilityPrefetchParams\TimeoutOpts
  *
  * @phpstan-type UtilityPrefetchParamsShape = array{
  *   identifier: IdentifierShape,
  *   type: Type|value-of<Type>,
  *   tags?: list<string>|null,
- *   timeoutMs?: int|null,
+ *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  * }
  */
 final class UtilityPrefetchParams implements BaseModel
@@ -59,10 +61,10 @@ final class UtilityPrefetchParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      */
-    #[Optional('timeoutMS')]
-    public ?int $timeoutMs;
+    #[Optional]
+    public ?TimeoutOpts $timeoutOpts;
 
     /**
      * `new UtilityPrefetchParams()` is missing required properties by the API.
@@ -91,12 +93,13 @@ final class UtilityPrefetchParams implements BaseModel
      * @param IdentifierShape $identifier
      * @param Type|value-of<Type> $type
      * @param list<string>|null $tags
+     * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      */
     public static function with(
         UtilityPrefetchDomainIdentifier|array|UtilityPrefetchEmailIdentifier $identifier,
         Type|string $type,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        TimeoutOpts|array|null $timeoutOpts = null,
     ): self {
         $self = new self;
 
@@ -104,7 +107,7 @@ final class UtilityPrefetchParams implements BaseModel
         $self['type'] = $type;
 
         null !== $tags && $self['tags'] = $tags;
-        null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
+        null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }
@@ -150,12 +153,14 @@ final class UtilityPrefetchParams implements BaseModel
     }
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     *
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
-    public function withTimeoutMs(int $timeoutMs): self
+    public function withTimeoutOpts(TimeoutOpts|array $timeoutOpts): self
     {
         $self = clone $this;
-        $self['timeoutMs'] = $timeoutMs;
+        $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }

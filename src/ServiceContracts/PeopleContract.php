@@ -9,6 +9,7 @@ use ContextDev\People\PersonEnrichParams\Company;
 use ContextDev\People\PersonEnrichParams\Education;
 use ContextDev\People\PersonEnrichParams\Location;
 use ContextDev\People\PersonEnrichParams\Name;
+use ContextDev\People\PersonEnrichParams\TimeoutOpts;
 use ContextDev\People\PersonEnrichResponse;
 use ContextDev\RequestOptions;
 
@@ -17,6 +18,7 @@ use ContextDev\RequestOptions;
  * @phpstan-import-type EducationShape from \ContextDev\People\PersonEnrichParams\Education
  * @phpstan-import-type LocationShape from \ContextDev\People\PersonEnrichParams\Location
  * @phpstan-import-type NameShape from \ContextDev\People\PersonEnrichParams\Name
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\People\PersonEnrichParams\TimeoutOpts
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 interface PeopleContract
@@ -30,7 +32,7 @@ interface PeopleContract
      * @param Name|NameShape $name
      * @param list<string> $socialURLs
      * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
-     * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -43,7 +45,7 @@ interface PeopleContract
         Name|array|null $name = null,
         ?array $socialURLs = null,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        TimeoutOpts|array|null $timeoutOpts = null,
         RequestOptions|array|null $requestOptions = null,
     ): PersonEnrichResponse;
 }

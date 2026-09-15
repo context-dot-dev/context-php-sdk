@@ -9,6 +9,7 @@ use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebScreenshotResponse\CacheMetadata;
+use ContextDev\Web\WebScreenshotResponse\FinalDomState;
 use ContextDev\Web\WebScreenshotResponse\KeyMetadata;
 use ContextDev\Web\WebScreenshotResponse\ScreenshotType;
 
@@ -21,6 +22,7 @@ use ContextDev\Web\WebScreenshotResponse\ScreenshotType;
  *   requestID: string,
  *   code?: int|null,
  *   domain?: string|null,
+ *   finalDomState?: null|FinalDomState|value-of<FinalDomState>,
  *   height?: int|null,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  *   screenshot?: string|null,
@@ -57,6 +59,14 @@ final class WebScreenshotResponse implements BaseModel
      */
     #[Optional]
     public ?string $domain;
+
+    /**
+     * How complete the returned content is. `loaded` means the page finished the waits the request asked for. `still-loading` only occurs with timeoutOpts.behavior=return-partial: the timeoutOpts.milliseconds deadline was reached first, so the content reflects the DOM at that moment and late-rendering parts may be missing. Partial results are billed at the base request cost.
+     *
+     * @var value-of<FinalDomState>|null $finalDomState
+     */
+    #[Optional('finalDOMState', enum: FinalDomState::class)]
+    public ?string $finalDomState;
 
     /**
      * Height in pixels of the returned screenshot image.
@@ -121,6 +131,7 @@ final class WebScreenshotResponse implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param CacheMetadata|CacheMetadataShape $cacheMetadata
+     * @param FinalDomState|value-of<FinalDomState>|null $finalDomState
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      * @param ScreenshotType|value-of<ScreenshotType>|null $screenshotType
      */
@@ -129,6 +140,7 @@ final class WebScreenshotResponse implements BaseModel
         string $requestID,
         ?int $code = null,
         ?string $domain = null,
+        FinalDomState|string|null $finalDomState = null,
         ?int $height = null,
         KeyMetadata|array|null $keyMetadata = null,
         ?string $screenshot = null,
@@ -143,6 +155,7 @@ final class WebScreenshotResponse implements BaseModel
 
         null !== $code && $self['code'] = $code;
         null !== $domain && $self['domain'] = $domain;
+        null !== $finalDomState && $self['finalDomState'] = $finalDomState;
         null !== $height && $self['height'] = $height;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
         null !== $screenshot && $self['screenshot'] = $screenshot;
@@ -195,6 +208,19 @@ final class WebScreenshotResponse implements BaseModel
     {
         $self = clone $this;
         $self['domain'] = $domain;
+
+        return $self;
+    }
+
+    /**
+     * How complete the returned content is. `loaded` means the page finished the waits the request asked for. `still-loading` only occurs with timeoutOpts.behavior=return-partial: the timeoutOpts.milliseconds deadline was reached first, so the content reflects the DOM at that moment and late-rendering parts may be missing. Partial results are billed at the base request cost.
+     *
+     * @param FinalDomState|value-of<FinalDomState> $finalDomState
+     */
+    public function withFinalDomState(FinalDomState|string $finalDomState): self
+    {
+        $self = clone $this;
+        $self['finalDomState'] = $finalDomState;
 
         return $self;
     }

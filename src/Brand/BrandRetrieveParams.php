@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Brand;
 
 use ContextDev\Brand\BrandRetrieveParams\ForceLanguage;
+use ContextDev\Brand\BrandRetrieveParams\TimeoutOpts;
 use ContextDev\Brand\BrandRetrieveParams\Type;
 use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
@@ -19,6 +20,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *
  * @phpstan-import-type MccVariants from \ContextDev\Brand\BrandRetrieveParams\Mcc
  * @phpstan-import-type PhoneVariants from \ContextDev\Brand\BrandRetrieveParams\Phone
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Brand\BrandRetrieveParams\TimeoutOpts
  * @phpstan-import-type MccShape from \ContextDev\Brand\BrandRetrieveParams\Mcc
  * @phpstan-import-type PhoneShape from \ContextDev\Brand\BrandRetrieveParams\Phone
  *
@@ -29,7 +31,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   maxAgeMs?: int|null,
  *   maxSpeed?: bool|null,
  *   tags?: list<string>|null,
- *   timeoutMs?: int|null,
+ *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  *   name: string,
  *   countryGl?: string|null,
  *   email: string,
@@ -88,10 +90,10 @@ final class BrandRetrieveParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      */
-    #[Optional('timeoutMS')]
-    public ?int $timeoutMs;
+    #[Optional]
+    public ?TimeoutOpts $timeoutOpts;
 
     /**
      * Company name to retrieve brand data for (e.g., 'Apple Inc').
@@ -205,6 +207,7 @@ final class BrandRetrieveParams implements BaseModel
      * @param Type|value-of<Type> $type
      * @param ForceLanguage|value-of<ForceLanguage>|null $forceLanguage
      * @param list<string>|null $tags
+     * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      * @param MccShape|null $mcc
      * @param PhoneShape|null $phone
      */
@@ -220,7 +223,7 @@ final class BrandRetrieveParams implements BaseModel
         ?int $maxAgeMs = null,
         ?bool $maxSpeed = null,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        TimeoutOpts|array|null $timeoutOpts = null,
         ?string $countryGl = null,
         ?string $tickerExchange = null,
         ?string $city = null,
@@ -242,7 +245,7 @@ final class BrandRetrieveParams implements BaseModel
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
         null !== $maxSpeed && $self['maxSpeed'] = $maxSpeed;
         null !== $tags && $self['tags'] = $tags;
-        null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
+        null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
         null !== $countryGl && $self['countryGl'] = $countryGl;
         null !== $tickerExchange && $self['tickerExchange'] = $tickerExchange;
         null !== $city && $self['city'] = $city;
@@ -325,12 +328,14 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     *
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
-    public function withTimeoutMs(int $timeoutMs): self
+    public function withTimeoutOpts(TimeoutOpts|array $timeoutOpts): self
     {
         $self = clone $this;
-        $self['timeoutMs'] = $timeoutMs;
+        $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }

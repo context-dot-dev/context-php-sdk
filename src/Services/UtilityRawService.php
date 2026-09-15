@@ -10,11 +10,13 @@ use ContextDev\Core\Exceptions\APIException;
 use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\UtilityRawContract;
 use ContextDev\Utility\UtilityPrefetchParams;
+use ContextDev\Utility\UtilityPrefetchParams\TimeoutOpts;
 use ContextDev\Utility\UtilityPrefetchParams\Type;
 use ContextDev\Utility\UtilityPrefetchResponse;
 
 /**
  * @phpstan-import-type IdentifierShape from \ContextDev\Utility\UtilityPrefetchParams\Identifier
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Utility\UtilityPrefetchParams\TimeoutOpts
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class UtilityRawService implements UtilityRawContract
@@ -34,7 +36,7 @@ final class UtilityRawService implements UtilityRawContract
      *   identifier: IdentifierShape,
      *   type: Type|value-of<Type>,
      *   tags?: list<string>,
-     *   timeoutMs?: int,
+     *   timeoutOpts?: TimeoutOpts|TimeoutOptsShape,
      * }|UtilityPrefetchParams $params
      * @param RequestOpts|null $requestOptions
      *

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Services;
 
 use ContextDev\AI\AIExtractProductParams;
+use ContextDev\AI\AIExtractProductParams\TimeoutOpts;
 use ContextDev\AI\AIExtractProductResponse;
 use ContextDev\AI\AIExtractProductsParams;
 use ContextDev\AI\AIExtractProductsResponse;
@@ -15,6 +16,8 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\AIRawContract;
 
 /**
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\AI\AIExtractProductParams\TimeoutOpts
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\AI\AIExtractProductsParams\TimeoutOpts as TimeoutOptsShape1
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class AIRawService implements AIRawContract
@@ -31,7 +34,10 @@ final class AIRawService implements AIRawContract
      * Given a single URL, determines if it is a product page and extracts the product information.
      *
      * @param array{
-     *   url: string, maxAgeMs?: int, tags?: list<string>, timeoutMs?: int
+     *   url: string,
+     *   maxAgeMs?: int,
+     *   tags?: list<string>,
+     *   timeoutOpts?: TimeoutOpts|TimeoutOptsShape,
      * }|AIExtractProductParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -68,7 +74,7 @@ final class AIRawService implements AIRawContract
      *   maxAgeMs?: int,
      *   maxProducts?: int,
      *   tags?: list<string>,
-     *   timeoutMs?: int,
+     *   timeoutOpts?: AIExtractProductsParams\TimeoutOpts|TimeoutOptsShape1,
      *   directURL: string,
      * }|AIExtractProductsParams $params
      * @param RequestOpts|null $requestOptions

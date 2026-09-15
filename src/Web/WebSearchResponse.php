@@ -23,6 +23,7 @@ use ContextDev\Web\WebSearchResponse\Result;
  *   requestID: string,
  *   results: list<Result|ResultShape>,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
+ *   partial?: bool|null,
  * }
  */
 final class WebSearchResponse implements BaseModel
@@ -57,6 +58,12 @@ final class WebSearchResponse implements BaseModel
      */
     #[Optional('key_metadata')]
     public ?KeyMetadata $keyMetadata;
+
+    /**
+     * True when timeoutOpts.behavior=return-partial returned the usable results collected before the deadline. Partial collections are not cached as complete results.
+     */
+    #[Optional]
+    public ?bool $partial;
 
     /**
      * `new WebSearchResponse()` is missing required properties by the API.
@@ -98,6 +105,7 @@ final class WebSearchResponse implements BaseModel
         string $requestID,
         array $results,
         KeyMetadata|array|null $keyMetadata = null,
+        ?bool $partial = null,
     ): self {
         $self = new self;
 
@@ -107,6 +115,7 @@ final class WebSearchResponse implements BaseModel
         $self['results'] = $results;
 
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
+        null !== $partial && $self['partial'] = $partial;
 
         return $self;
     }
@@ -166,6 +175,17 @@ final class WebSearchResponse implements BaseModel
     {
         $self = clone $this;
         $self['keyMetadata'] = $keyMetadata;
+
+        return $self;
+    }
+
+    /**
+     * True when timeoutOpts.behavior=return-partial returned the usable results collected before the deadline. Partial collections are not cached as complete results.
+     */
+    public function withPartial(bool $partial): self
+    {
+        $self = clone $this;
+        $self['partial'] = $partial;
 
         return $self;
     }

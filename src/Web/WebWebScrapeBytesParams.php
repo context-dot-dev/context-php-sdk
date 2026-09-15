@@ -10,6 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebWebScrapeBytesParams\Country;
+use ContextDev\Web\WebWebScrapeBytesParams\TimeoutOpts;
 use ContextDev\Web\WebWebScrapeBytesParams\Zdr;
 
 /**
@@ -17,12 +18,14 @@ use ContextDev\Web\WebWebScrapeBytesParams\Zdr;
  *
  * @see ContextDev\Services\WebService::webScrapeBytes()
  *
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeBytesParams\TimeoutOpts
+ *
  * @phpstan-type WebWebScrapeBytesParamsShape = array{
  *   url: string,
  *   country?: null|Country|value-of<Country>,
  *   headers?: array<string,string>|null,
  *   tags?: list<string>|null,
- *   timeoutMs?: int|null,
+ *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  *   zdr?: null|Zdr|value-of<Zdr>,
  * }
  */
@@ -63,10 +66,10 @@ final class WebWebScrapeBytesParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      */
     #[Optional]
-    public ?int $timeoutMs;
+    public ?TimeoutOpts $timeoutOpts;
 
     /**
      * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
@@ -103,6 +106,7 @@ final class WebWebScrapeBytesParams implements BaseModel
      * @param Country|value-of<Country>|null $country
      * @param array<string,string>|null $headers
      * @param list<string>|null $tags
+     * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
@@ -110,7 +114,7 @@ final class WebWebScrapeBytesParams implements BaseModel
         Country|string|null $country = null,
         ?array $headers = null,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        TimeoutOpts|array|null $timeoutOpts = null,
         Zdr|string|null $zdr = null,
     ): self {
         $self = new self;
@@ -120,7 +124,7 @@ final class WebWebScrapeBytesParams implements BaseModel
         null !== $country && $self['country'] = $country;
         null !== $headers && $self['headers'] = $headers;
         null !== $tags && $self['tags'] = $tags;
-        null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
+        null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
         null !== $zdr && $self['zdr'] = $zdr;
 
         return $self;
@@ -177,12 +181,14 @@ final class WebWebScrapeBytesParams implements BaseModel
     }
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     *
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
-    public function withTimeoutMs(int $timeoutMs): self
+    public function withTimeoutOpts(TimeoutOpts|array $timeoutOpts): self
     {
         $self = clone $this;
-        $self['timeoutMs'] = $timeoutMs;
+        $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }

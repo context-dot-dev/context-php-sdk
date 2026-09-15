@@ -7,6 +7,7 @@ namespace ContextDev\ServiceContracts;
 use ContextDev\Brand\BrandGetResponse;
 use ContextDev\Brand\BrandGetSimplifiedResponse;
 use ContextDev\Brand\BrandRetrieveParams\ForceLanguage;
+use ContextDev\Brand\BrandRetrieveParams\TimeoutOpts;
 use ContextDev\Brand\BrandRetrieveParams\Type;
 use ContextDev\Brand\BrandRetrieveSimplifiedParams\Theme;
 use ContextDev\Brand\BrandSearchParams\QueryBy;
@@ -15,8 +16,10 @@ use ContextDev\Core\Exceptions\APIException;
 use ContextDev\RequestOptions;
 
 /**
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Brand\BrandRetrieveParams\TimeoutOpts
  * @phpstan-import-type MccShape from \ContextDev\Brand\BrandRetrieveParams\Mcc
  * @phpstan-import-type PhoneShape from \ContextDev\Brand\BrandRetrieveParams\Phone
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Brand\BrandRetrieveSimplifiedParams\TimeoutOpts as TimeoutOptsShape1
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 interface BrandContract
@@ -35,7 +38,7 @@ interface BrandContract
      * @param int $maxAgeMs Maximum age in milliseconds for cached brand data before the API performs a hard refresh. Defaults to 3 months (7776000000 ms). Set to 0 to always perform a hard refresh. Negative values are clamped to 0; values above 1 year (31536000000 ms) are clamped to 1 year.
      * @param bool $maxSpeed Optional parameter to optimize the API call for maximum speed. When set to true, the API will skip time-consuming operations for faster response at the cost of less comprehensive data.
      * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
-     * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param string $countryGl optional country code hint (GL parameter) to specify the country when identifying a transaction
      * @param string $tickerExchange Optional stock exchange for the ticker. Defaults to NASDAQ if not specified.
      * @param string $city optional city name to prioritize when searching for the brand
@@ -58,7 +61,7 @@ interface BrandContract
         ?int $maxAgeMs = null,
         ?bool $maxSpeed = null,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        TimeoutOpts|array|null $timeoutOpts = null,
         ?string $countryGl = null,
         ?string $tickerExchange = null,
         ?string $city = null,
@@ -75,7 +78,7 @@ interface BrandContract
      * @param int|null $maxAgeMs Maximum age in milliseconds for cached brand data before the API performs a hard refresh. Defaults to 3 months (7776000000 ms). Set to 0 to always perform a hard refresh. Negative values are clamped to 0; values above 1 year (31536000000 ms) are clamped to 1 year.
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
      * @param Theme|value-of<Theme> $theme optional theme preference used when selecting brand assets
-     * @param int $timeoutMs Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * @param \ContextDev\Brand\BrandRetrieveSimplifiedParams\TimeoutOpts|TimeoutOptsShape1 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -85,7 +88,7 @@ interface BrandContract
         ?int $maxAgeMs = 7776000000,
         ?array $tags = null,
         Theme|string|null $theme = null,
-        ?int $timeoutMs = null,
+        \ContextDev\Brand\BrandRetrieveSimplifiedParams\TimeoutOpts|array|null $timeoutOpts = null,
         RequestOptions|array|null $requestOptions = null,
     ): BrandGetSimplifiedResponse;
 

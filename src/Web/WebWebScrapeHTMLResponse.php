@@ -10,6 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebWebScrapeHTMLResponse\ActionsApplied;
 use ContextDev\Web\WebWebScrapeHTMLResponse\CacheMetadata;
+use ContextDev\Web\WebWebScrapeHTMLResponse\FinalDomState;
 use ContextDev\Web\WebWebScrapeHTMLResponse\KeyMetadata;
 use ContextDev\Web\WebWebScrapeHTMLResponse\Metadata;
 use ContextDev\Web\WebWebScrapeHTMLResponse\Type;
@@ -22,6 +23,7 @@ use ContextDev\Web\WebWebScrapeHTMLResponse\Type;
  *
  * @phpstan-type WebWebScrapeHTMLResponseShape = array{
  *   cacheMetadata: CacheMetadata|CacheMetadataShape,
+ *   finalDomState: FinalDomState|value-of<FinalDomState>,
  *   html: string,
  *   metadata: Metadata|MetadataShape,
  *   requestID: string,
@@ -43,6 +45,14 @@ final class WebWebScrapeHTMLResponse implements BaseModel
      */
     #[Required('cache_metadata')]
     public CacheMetadata $cacheMetadata;
+
+    /**
+     * How complete the returned content is. `loaded` means the page finished the waits the request asked for. `still-loading` only occurs with timeoutOpts.behavior=return-partial: the timeoutOpts.milliseconds deadline was reached first, so the content reflects the DOM at that moment and late-rendering parts may be missing. Partial results are billed at the base request cost.
+     *
+     * @var value-of<FinalDomState> $finalDomState
+     */
+    #[Required('finalDOMState', enum: FinalDomState::class)]
+    public string $finalDomState;
 
     /**
      * The scraped content of the page. For normal pages this is the raw HTML. When the page is a sitemap or feed served behind an XSL stylesheet (which browsers render into HTML), this is the underlying XML instead — see the `type` field.
@@ -109,6 +119,7 @@ final class WebWebScrapeHTMLResponse implements BaseModel
      * ```
      * WebWebScrapeHTMLResponse::with(
      *   cacheMetadata: ...,
+     *   finalDomState: ...,
      *   html: ...,
      *   metadata: ...,
      *   requestID: ...,
@@ -123,6 +134,7 @@ final class WebWebScrapeHTMLResponse implements BaseModel
      * ```
      * (new WebWebScrapeHTMLResponse)
      *   ->withCacheMetadata(...)
+     *   ->withFinalDomState(...)
      *   ->withHTML(...)
      *   ->withMetadata(...)
      *   ->withRequestID(...)
@@ -142,6 +154,7 @@ final class WebWebScrapeHTMLResponse implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param CacheMetadata|CacheMetadataShape $cacheMetadata
+     * @param FinalDomState|value-of<FinalDomState> $finalDomState
      * @param Metadata|MetadataShape $metadata
      * @param Type|value-of<Type> $type
      * @param list<ActionsApplied|ActionsAppliedShape>|null $actionsApplied
@@ -149,6 +162,7 @@ final class WebWebScrapeHTMLResponse implements BaseModel
      */
     public static function with(
         CacheMetadata|array $cacheMetadata,
+        FinalDomState|string $finalDomState,
         string $html,
         Metadata|array $metadata,
         string $requestID,
@@ -162,6 +176,7 @@ final class WebWebScrapeHTMLResponse implements BaseModel
         $self = new self;
 
         $self['cacheMetadata'] = $cacheMetadata;
+        $self['finalDomState'] = $finalDomState;
         $self['html'] = $html;
         $self['metadata'] = $metadata;
         $self['requestID'] = $requestID;
@@ -185,6 +200,19 @@ final class WebWebScrapeHTMLResponse implements BaseModel
     {
         $self = clone $this;
         $self['cacheMetadata'] = $cacheMetadata;
+
+        return $self;
+    }
+
+    /**
+     * How complete the returned content is. `loaded` means the page finished the waits the request asked for. `still-loading` only occurs with timeoutOpts.behavior=return-partial: the timeoutOpts.milliseconds deadline was reached first, so the content reflects the DOM at that moment and late-rendering parts may be missing. Partial results are billed at the base request cost.
+     *
+     * @param FinalDomState|value-of<FinalDomState> $finalDomState
+     */
+    public function withFinalDomState(FinalDomState|string $finalDomState): self
+    {
+        $self = clone $this;
+        $self['finalDomState'] = $finalDomState;
 
         return $self;
     }

@@ -12,6 +12,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebSearchParams\Country;
 use ContextDev\Web\WebSearchParams\Freshness;
 use ContextDev\Web\WebSearchParams\MarkdownOptions;
+use ContextDev\Web\WebSearchParams\TimeoutOpts;
 
 /**
  * Search the web and optionally scrape each result to Markdown in one round-trip.
@@ -19,6 +20,7 @@ use ContextDev\Web\WebSearchParams\MarkdownOptions;
  * @see ContextDev\Services\WebService::search()
  *
  * @phpstan-import-type MarkdownOptionsShape from \ContextDev\Web\WebSearchParams\MarkdownOptions
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebSearchParams\TimeoutOpts
  *
  * @phpstan-type WebSearchParamsShape = array{
  *   query: string,
@@ -30,7 +32,7 @@ use ContextDev\Web\WebSearchParams\MarkdownOptions;
  *   numResults?: int|null,
  *   queryFanout?: bool|null,
  *   tags?: list<string>|null,
- *   timeoutMs?: int|null,
+ *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  * }
  */
 final class WebSearchParams implements BaseModel
@@ -104,10 +106,10 @@ final class WebSearchParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      */
-    #[Optional('timeoutMS')]
-    public ?int $timeoutMs;
+    #[Optional]
+    public ?TimeoutOpts $timeoutOpts;
 
     /**
      * `new WebSearchParams()` is missing required properties by the API.
@@ -139,6 +141,7 @@ final class WebSearchParams implements BaseModel
      * @param list<string>|null $includeDomains
      * @param MarkdownOptions|MarkdownOptionsShape|null $markdownOptions
      * @param list<string>|null $tags
+     * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      */
     public static function with(
         string $query,
@@ -150,7 +153,7 @@ final class WebSearchParams implements BaseModel
         ?int $numResults = null,
         ?bool $queryFanout = null,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        TimeoutOpts|array|null $timeoutOpts = null,
     ): self {
         $self = new self;
 
@@ -164,7 +167,7 @@ final class WebSearchParams implements BaseModel
         null !== $numResults && $self['numResults'] = $numResults;
         null !== $queryFanout && $self['queryFanout'] = $queryFanout;
         null !== $tags && $self['tags'] = $tags;
-        null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
+        null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }
@@ -282,12 +285,14 @@ final class WebSearchParams implements BaseModel
     }
 
     /**
-     * Optional timeout in milliseconds for the request. If the request takes longer than this value, it will be aborted with a 408 status code. Maximum allowed value is 300000ms (5 minutes).
+     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     *
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
-    public function withTimeoutMs(int $timeoutMs): self
+    public function withTimeoutOpts(TimeoutOpts|array $timeoutOpts): self
     {
         $self = clone $this;
-        $self['timeoutMs'] = $timeoutMs;
+        $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }
