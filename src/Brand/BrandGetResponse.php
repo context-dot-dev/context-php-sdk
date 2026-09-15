@@ -13,18 +13,18 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * @phpstan-import-type CacheMetadataShape from \ContextDev\Brand\BrandGetResponse\CacheMetadata
  * @phpstan-import-type BrandShape from \ContextDev\Brand\BrandGetResponse\Brand
+ * @phpstan-import-type CacheMetadataShape from \ContextDev\Brand\BrandGetResponse\CacheMetadata
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Brand\BrandGetResponse\KeyMetadata
  *
  * @phpstan-type BrandGetResponseShape = array{
+ *   brand: Brand|BrandShape,
  *   cacheMetadata: CacheMetadata|CacheMetadataShape,
+ *   code: int,
  *   requestID: string,
- *   brand?: null|Brand|BrandShape,
- *   code?: int|null,
+ *   status: string,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  *   partial?: bool|null,
- *   status?: string|null,
  * }
  */
 final class BrandGetResponse implements BaseModel
@@ -33,10 +33,22 @@ final class BrandGetResponse implements BaseModel
     use SdkModel;
 
     /**
+     * Detailed brand information.
+     */
+    #[Required]
+    public Brand $brand;
+
+    /**
      * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
      */
     #[Required('cache_metadata')]
     public CacheMetadata $cacheMetadata;
+
+    /**
+     * HTTP status code.
+     */
+    #[Required]
+    public int $code;
 
     /**
      * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
@@ -45,16 +57,10 @@ final class BrandGetResponse implements BaseModel
     public string $requestID;
 
     /**
-     * Detailed brand information.
+     * Status of the response, e.g., 'ok'.
      */
-    #[Optional]
-    public ?Brand $brand;
-
-    /**
-     * HTTP status code.
-     */
-    #[Optional]
-    public ?int $code;
+    #[Required]
+    public string $status;
 
     /**
      * Credit usage, included whenever a valid API key is provided.
@@ -69,23 +75,24 @@ final class BrandGetResponse implements BaseModel
     public ?bool $partial;
 
     /**
-     * Status of the response, e.g., 'ok'.
-     */
-    #[Optional]
-    public ?string $status;
-
-    /**
      * `new BrandGetResponse()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * BrandGetResponse::with(cacheMetadata: ..., requestID: ...)
+     * BrandGetResponse::with(
+     *   brand: ..., cacheMetadata: ..., code: ..., requestID: ..., status: ...
+     * )
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new BrandGetResponse)->withCacheMetadata(...)->withRequestID(...)
+     * (new BrandGetResponse)
+     *   ->withBrand(...)
+     *   ->withCacheMetadata(...)
+     *   ->withCode(...)
+     *   ->withRequestID(...)
+     *   ->withStatus(...)
      * ```
      */
     public function __construct()
@@ -98,53 +105,29 @@ final class BrandGetResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param Brand|BrandShape $brand
      * @param CacheMetadata|CacheMetadataShape $cacheMetadata
-     * @param Brand|BrandShape|null $brand
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
     public static function with(
+        Brand|array $brand,
         CacheMetadata|array $cacheMetadata,
+        int $code,
         string $requestID,
-        Brand|array|null $brand = null,
-        ?int $code = null,
+        string $status,
         KeyMetadata|array|null $keyMetadata = null,
         ?bool $partial = null,
-        ?string $status = null,
     ): self {
         $self = new self;
 
+        $self['brand'] = $brand;
         $self['cacheMetadata'] = $cacheMetadata;
+        $self['code'] = $code;
         $self['requestID'] = $requestID;
+        $self['status'] = $status;
 
-        null !== $brand && $self['brand'] = $brand;
-        null !== $code && $self['code'] = $code;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
         null !== $partial && $self['partial'] = $partial;
-        null !== $status && $self['status'] = $status;
-
-        return $self;
-    }
-
-    /**
-     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
-     *
-     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
-     */
-    public function withCacheMetadata(CacheMetadata|array $cacheMetadata): self
-    {
-        $self = clone $this;
-        $self['cacheMetadata'] = $cacheMetadata;
-
-        return $self;
-    }
-
-    /**
-     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
-     */
-    public function withRequestID(string $requestID): self
-    {
-        $self = clone $this;
-        $self['requestID'] = $requestID;
 
         return $self;
     }
@@ -163,12 +146,47 @@ final class BrandGetResponse implements BaseModel
     }
 
     /**
+     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     *
+     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
+     */
+    public function withCacheMetadata(CacheMetadata|array $cacheMetadata): self
+    {
+        $self = clone $this;
+        $self['cacheMetadata'] = $cacheMetadata;
+
+        return $self;
+    }
+
+    /**
      * HTTP status code.
      */
     public function withCode(int $code): self
     {
         $self = clone $this;
         $self['code'] = $code;
+
+        return $self;
+    }
+
+    /**
+     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
+
+        return $self;
+    }
+
+    /**
+     * Status of the response, e.g., 'ok'.
+     */
+    public function withStatus(string $status): self
+    {
+        $self = clone $this;
+        $self['status'] = $status;
 
         return $self;
     }
@@ -193,17 +211,6 @@ final class BrandGetResponse implements BaseModel
     {
         $self = clone $this;
         $self['partial'] = $partial;
-
-        return $self;
-    }
-
-    /**
-     * Status of the response, e.g., 'ok'.
-     */
-    public function withStatus(string $status): self
-    {
-        $self = clone $this;
-        $self['status'] = $status;
 
         return $self;
     }
