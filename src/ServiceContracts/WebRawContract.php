@@ -23,6 +23,8 @@ use ContextDev\Web\WebSearchParams;
 use ContextDev\Web\WebSearchResponse;
 use ContextDev\Web\WebWebCrawlMdParams;
 use ContextDev\Web\WebWebCrawlMdResponse;
+use ContextDev\Web\WebWebScrapeBytesParams;
+use ContextDev\Web\WebWebScrapeBytesResponse;
 use ContextDev\Web\WebWebScrapeHTMLParams;
 use ContextDev\Web\WebWebScrapeHTMLResponse;
 use ContextDev\Web\WebWebScrapeImagesParams;
@@ -154,6 +156,21 @@ interface WebRawContract
      */
     public function webCrawlMd(
         array|WebWebCrawlMdParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param array<string,mixed>|WebWebScrapeBytesParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<WebWebScrapeBytesResponse>
+     *
+     * @throws APIException
+     */
+    public function webScrapeBytes(
+        array|WebWebScrapeBytesParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;
 
