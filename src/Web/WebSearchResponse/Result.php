@@ -27,7 +27,7 @@ final class Result implements BaseModel
     use SdkModel;
 
     /**
-     * Snippet excerpt from the page.
+     * Snippet excerpt from the page. Empty string when the search provider does not supply a snippet.
      */
     #[Required]
     public string $description;
@@ -111,7 +111,7 @@ final class Result implements BaseModel
     }
 
     /**
-     * Snippet excerpt from the page.
+     * Snippet excerpt from the page. Empty string when the search provider does not supply a snippet.
      */
     public function withDescription(string $description): self
     {

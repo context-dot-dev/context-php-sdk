@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.17.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.16.0...v2.17.0) (2026-09-15)
+
+
+### Features
+
+* **answers:** add live web research with fast and ultra modes ([#954](https://github.com/context-dot-dev/context-php-sdk/issues/954)) ([5f7df63](https://github.com/context-dot-dev/context-php-sdk/commit/5f7df635b6dec3bf018860d5581f142079a43900))
+* **api-keys:** enforce scoped API key permissions ([#1038](https://github.com/context-dot-dev/context-php-sdk/issues/1038)) ([22e1313](https://github.com/context-dot-dev/context-php-sdk/commit/22e13131155ea56eaf966856266bffdfd5c9f5bd))
+* **api:** unify timeout configuration and return partial results ([#1030](https://github.com/context-dot-dev/context-php-sdk/issues/1030)) ([65009da](https://github.com/context-dot-dev/context-php-sdk/commit/65009da2a653b2e4fd9f8fb1f2606d6ce6ecd58f))
+* **monitors:** add page selector filters ([#1037](https://github.com/context-dot-dev/context-php-sdk/issues/1037)) ([ba3ef54](https://github.com/context-dot-dev/context-php-sdk/commit/ba3ef54919ec64356568d4c6e16a2838a8cb3ebb))
+* **web:** add raw bytes scraping endpoint ([#1081](https://github.com/context-dot-dev/context-php-sdk/issues/1081)) ([c9949f9](https://github.com/context-dot-dev/context-php-sdk/commit/c9949f9cb164200882e44e73ed80dff9ccfe7884))
+
+
+### Bug Fixes
+
+* **api:** honour maxAgeMs=0 on brand retrieve, styleguide and fonts endpoints ([#998](https://github.com/context-dot-dev/context-php-sdk/issues/998)) ([2854d7c](https://github.com/context-dot-dev/context-php-sdk/commit/2854d7cfeb81a801717099b3d9e5e04d80dadb2e))
+* **webhooks:** format Slack webhook notifications ([#1045](https://github.com/context-dot-dev/context-php-sdk/issues/1045)) ([b936e81](https://github.com/context-dot-dev/context-php-sdk/commit/b936e8167831ae89856fc1cdb2f17343a7401ca0))
+
 ## [2.16.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.15.0...v2.16.0) (2026-09-11)
 
 
