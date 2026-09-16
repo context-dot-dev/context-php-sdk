@@ -29,7 +29,7 @@ final class TimeoutOpts implements BaseModel
     public int $milliseconds;
 
     /**
-     * What to do at the deadline. "fail" returns 408 REQUEST_TIMEOUT without charging credits. "return-partial" returns usable results collected so far; if none are available, the request still fails without charging credits. Partial results are not cached as complete results. "return-partial" requires milliseconds of at least 15000.
+     * What to do at the deadline. "fail" returns 408 REQUEST_TIMEOUT without charging credits. "return-partial" returns usable results collected so far; if none are available, the request still fails without charging credits. Partial results are not cached as complete results. "return-partial" requires milliseconds of at least 5000.
      *
      * @var value-of<Behavior>|null $behavior
      */
@@ -87,7 +87,7 @@ final class TimeoutOpts implements BaseModel
     }
 
     /**
-     * What to do at the deadline. "fail" returns 408 REQUEST_TIMEOUT without charging credits. "return-partial" returns usable results collected so far; if none are available, the request still fails without charging credits. Partial results are not cached as complete results. "return-partial" requires milliseconds of at least 15000.
+     * What to do at the deadline. "fail" returns 408 REQUEST_TIMEOUT without charging credits. "return-partial" returns usable results collected so far; if none are available, the request still fails without charging credits. Partial results are not cached as complete results. "return-partial" requires milliseconds of at least 5000.
      *
      * @param Behavior|value-of<Behavior> $behavior
      */
