@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Web\WebWebScrapeHTMLParams\TimeoutOpts;
 
 /**
- * What to do at the deadline. "fail" returns 408 REQUEST_TIMEOUT without charging credits. "return-partial" returns usable results collected so far; if none are available, the request still fails without charging credits. Partial results are not cached as complete results. "return-partial" requires milliseconds of at least 15000.
+ * What to do at the deadline. "fail" returns 408 REQUEST_TIMEOUT without charging credits. "return-partial" returns usable results collected so far; if none are available, the request still fails without charging credits. Partial results are not cached as complete results. "return-partial" requires milliseconds of at least 5000.
  */
 enum Behavior: string
 {
