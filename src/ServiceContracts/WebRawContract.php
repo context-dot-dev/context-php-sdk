@@ -31,6 +31,8 @@ use ContextDev\Web\WebWebScrapeImagesParams;
 use ContextDev\Web\WebWebScrapeImagesResponse;
 use ContextDev\Web\WebWebScrapeMdParams;
 use ContextDev\Web\WebWebScrapeMdResponse;
+use ContextDev\Web\WebWebScrapeScreenshotParams;
+use ContextDev\Web\WebWebScrapeScreenshotResponse;
 use ContextDev\Web\WebWebScrapeSitemapParams;
 use ContextDev\Web\WebWebScrapeSitemapResponse;
 
@@ -216,6 +218,21 @@ interface WebRawContract
      */
     public function webScrapeMd(
         array|WebWebScrapeMdParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param array<string,mixed>|WebWebScrapeScreenshotParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<WebWebScrapeScreenshotResponse>
+     *
+     * @throws APIException
+     */
+    public function webScrapeScreenshot(
+        array|WebWebScrapeScreenshotParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;
 

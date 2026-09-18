@@ -46,6 +46,8 @@ use ContextDev\Web\WebWebScrapeImagesParams\Enrichment;
 use ContextDev\Web\WebWebScrapeImagesResponse;
 use ContextDev\Web\WebWebScrapeMdParams;
 use ContextDev\Web\WebWebScrapeMdResponse;
+use ContextDev\Web\WebWebScrapeScreenshotParams;
+use ContextDev\Web\WebWebScrapeScreenshotResponse;
 use ContextDev\Web\WebWebScrapeSitemapParams;
 use ContextDev\Web\WebWebScrapeSitemapResponse;
 
@@ -74,7 +76,9 @@ use ContextDev\Web\WebWebScrapeSitemapResponse;
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeMdParams\Action as ActionShape3
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeMdParams\Pdf as PdfShape3
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeMdParams\TimeoutOpts as TimeoutOptsShape11
- * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeSitemapParams\TimeoutOpts as TimeoutOptsShape12
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeScreenshotParams\TimeoutOpts as TimeoutOptsShape12
+ * @phpstan-import-type ViewportShape from \ContextDev\Web\WebWebScrapeScreenshotParams\Viewport as ViewportShape1
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeSitemapParams\TimeoutOpts as TimeoutOptsShape13
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class WebRawService implements WebRawContract
@@ -628,6 +632,51 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
+     * Capture the given HTTP or HTTPS URL with configurable viewport, full-page capture, wait time, popup handling, theme, scroll offset, cache age, country, and request timeout. Defaults to a 1920x1080 viewport, a 3-second wait, and a cache age of 1 day. With timeoutOpts.behavior=return-partial, a screenshot of the page rendered so far may be returned; inspect finalDOMState to identify an incomplete render. Successful requests cost 1 credit; errors are not billed.
+     *
+     * @param array{
+     *   url: string,
+     *   clearPopups?: bool,
+     *   colorScheme?: WebWebScrapeScreenshotParams\ColorScheme|value-of<WebWebScrapeScreenshotParams\ColorScheme>,
+     *   country?: value-of<WebWebScrapeScreenshotParams\Country>,
+     *   fullScreenshot?: WebWebScrapeScreenshotParams\FullScreenshot|value-of<WebWebScrapeScreenshotParams\FullScreenshot>,
+     *   handleCookiePopup?: bool,
+     *   maxAgeMs?: int|null,
+     *   scrollOffset?: int|null,
+     *   tags?: list<string>,
+     *   timeoutOpts?: WebWebScrapeScreenshotParams\TimeoutOpts|TimeoutOptsShape12,
+     *   viewport?: WebWebScrapeScreenshotParams\Viewport|ViewportShape1,
+     *   waitForMs?: int|null,
+     *   zdr?: WebWebScrapeScreenshotParams\Zdr|value-of<WebWebScrapeScreenshotParams\Zdr>,
+     * }|WebWebScrapeScreenshotParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<WebWebScrapeScreenshotResponse>
+     *
+     * @throws APIException
+     */
+    public function webScrapeScreenshot(
+        array|WebWebScrapeScreenshotParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = WebWebScrapeScreenshotParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: 'web/scrape/screenshot',
+            query: $parsed,
+            options: $options,
+            convert: WebWebScrapeScreenshotResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
      * Crawl an entire website's sitemap and return all discovered page URLs. Set `includeSubdomains=true` to also discover public pages and sitemaps on child hosts such as `docs.example.com` or `brand.example.com`. Pass `search` to have the discovered URLs filtered down to the pages about a phrase (for example `pricing and plans` or `api authentication docs`), most relevant first — a searched crawl scans the whole sitemap and costs 2 credits instead of 1.
      *
      * @param array{
@@ -638,7 +687,7 @@ final class WebRawService implements WebRawContract
      *   search?: string,
      *   sitemapURL?: string,
      *   tags?: list<string>,
-     *   timeoutOpts?: WebWebScrapeSitemapParams\TimeoutOpts|TimeoutOptsShape12,
+     *   timeoutOpts?: WebWebScrapeSitemapParams\TimeoutOpts|TimeoutOptsShape13,
      *   urlRegex?: string,
      *   zdr?: WebWebScrapeSitemapParams\Zdr|value-of<WebWebScrapeSitemapParams\Zdr>,
      * }|WebWebScrapeSitemapParams $params
