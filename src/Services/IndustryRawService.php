@@ -11,6 +11,7 @@ use ContextDev\Industry\IndustryGetNaicsResponse;
 use ContextDev\Industry\IndustryGetSicResponse;
 use ContextDev\Industry\IndustryRetrieveNaicsParams;
 use ContextDev\Industry\IndustryRetrieveNaicsParams\TimeoutOpts;
+use ContextDev\Industry\IndustryRetrieveNaicsParams\Zdr;
 use ContextDev\Industry\IndustryRetrieveSicParams;
 use ContextDev\Industry\IndustryRetrieveSicParams\Type;
 use ContextDev\RequestOptions;
@@ -40,6 +41,7 @@ final class IndustryRawService implements IndustryRawContract
      *   minResults?: int,
      *   tags?: list<string>,
      *   timeoutOpts?: TimeoutOpts|TimeoutOptsShape,
+     *   zdr?: Zdr|value-of<Zdr>,
      * }|IndustryRetrieveNaicsParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -78,6 +80,7 @@ final class IndustryRawService implements IndustryRawContract
      *   tags?: list<string>,
      *   timeoutOpts?: IndustryRetrieveSicParams\TimeoutOpts|TimeoutOptsShape1,
      *   type?: Type|value-of<Type>,
+     *   zdr?: IndustryRetrieveSicParams\Zdr|value-of<IndustryRetrieveSicParams\Zdr>,
      * }|IndustryRetrieveSicParams $params
      * @param RequestOpts|null $requestOptions
      *

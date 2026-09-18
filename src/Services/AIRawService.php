@@ -6,6 +6,7 @@ namespace ContextDev\Services;
 
 use ContextDev\AI\AIExtractProductParams;
 use ContextDev\AI\AIExtractProductParams\TimeoutOpts;
+use ContextDev\AI\AIExtractProductParams\Zdr;
 use ContextDev\AI\AIExtractProductResponse;
 use ContextDev\AI\AIExtractProductsParams;
 use ContextDev\AI\AIExtractProductsResponse;
@@ -38,6 +39,7 @@ final class AIRawService implements AIRawContract
      *   maxAgeMs?: int,
      *   tags?: list<string>,
      *   timeoutOpts?: TimeoutOpts|TimeoutOptsShape,
+     *   zdr?: Zdr|value-of<Zdr>,
      * }|AIExtractProductParams $params
      * @param RequestOpts|null $requestOptions
      *

@@ -10,6 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Industry\IndustryRetrieveNaicsParams\TimeoutOpts;
+use ContextDev\Industry\IndustryRetrieveNaicsParams\Zdr;
 
 /**
  * Classify any brand into 2022 NAICS industry codes from its domain or name.
@@ -24,6 +25,7 @@ use ContextDev\Industry\IndustryRetrieveNaicsParams\TimeoutOpts;
  *   minResults?: int|null,
  *   tags?: list<string>|null,
  *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
+ *   zdr?: null|Zdr|value-of<Zdr>,
  * }
  */
 final class IndustryRetrieveNaicsParams implements BaseModel
@@ -65,6 +67,14 @@ final class IndustryRetrieveNaicsParams implements BaseModel
     public ?TimeoutOpts $timeoutOpts;
 
     /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @var value-of<Zdr>|null $zdr
+     */
+    #[Optional(enum: Zdr::class)]
+    public ?string $zdr;
+
+    /**
      * `new IndustryRetrieveNaicsParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -90,6 +100,7 @@ final class IndustryRetrieveNaicsParams implements BaseModel
      *
      * @param list<string>|null $tags
      * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
+     * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
         string $input,
@@ -97,6 +108,7 @@ final class IndustryRetrieveNaicsParams implements BaseModel
         ?int $minResults = null,
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
+        Zdr|string|null $zdr = null,
     ): self {
         $self = new self;
 
@@ -106,6 +118,7 @@ final class IndustryRetrieveNaicsParams implements BaseModel
         null !== $minResults && $self['minResults'] = $minResults;
         null !== $tags && $self['tags'] = $tags;
         null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
+        null !== $zdr && $self['zdr'] = $zdr;
 
         return $self;
     }
@@ -165,6 +178,19 @@ final class IndustryRetrieveNaicsParams implements BaseModel
     {
         $self = clone $this;
         $self['timeoutOpts'] = $timeoutOpts;
+
+        return $self;
+    }
+
+    /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @param Zdr|value-of<Zdr> $zdr
+     */
+    public function withZdr(Zdr|string $zdr): self
+    {
+        $self = clone $this;
+        $self['zdr'] = $zdr;
 
         return $self;
     }

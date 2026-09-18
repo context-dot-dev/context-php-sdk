@@ -10,6 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebExtractCompetitorsParams\TimeoutOpts;
+use ContextDev\Web\WebExtractCompetitorsParams\Zdr;
 
 /**
  * Analyze a company's landing page and web search evidence to return direct competitors for the same product or market.
@@ -23,6 +24,7 @@ use ContextDev\Web\WebExtractCompetitorsParams\TimeoutOpts;
  *   numCompetitors?: int|null,
  *   tags?: list<string>|null,
  *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
+ *   zdr?: null|Zdr|value-of<Zdr>,
  * }
  */
 final class WebExtractCompetitorsParams implements BaseModel
@@ -58,6 +60,14 @@ final class WebExtractCompetitorsParams implements BaseModel
     public ?TimeoutOpts $timeoutOpts;
 
     /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @var value-of<Zdr>|null $zdr
+     */
+    #[Optional(enum: Zdr::class)]
+    public ?string $zdr;
+
+    /**
      * `new WebExtractCompetitorsParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -83,12 +93,14 @@ final class WebExtractCompetitorsParams implements BaseModel
      *
      * @param list<string>|null $tags
      * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
+     * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
         string $domain,
         ?int $numCompetitors = null,
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
+        Zdr|string|null $zdr = null,
     ): self {
         $self = new self;
 
@@ -97,6 +109,7 @@ final class WebExtractCompetitorsParams implements BaseModel
         null !== $numCompetitors && $self['numCompetitors'] = $numCompetitors;
         null !== $tags && $self['tags'] = $tags;
         null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
+        null !== $zdr && $self['zdr'] = $zdr;
 
         return $self;
     }
@@ -145,6 +158,19 @@ final class WebExtractCompetitorsParams implements BaseModel
     {
         $self = clone $this;
         $self['timeoutOpts'] = $timeoutOpts;
+
+        return $self;
+    }
+
+    /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @param Zdr|value-of<Zdr> $zdr
+     */
+    public function withZdr(Zdr|string $zdr): self
+    {
+        $self = clone $this;
+        $self['zdr'] = $zdr;
 
         return $self;
     }

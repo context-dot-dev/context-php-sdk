@@ -7,12 +7,15 @@ namespace ContextDev\AI\AIExtractProductsResponse;
 use ContextDev\AI\AIExtractProductsResponse\Product\Availability;
 use ContextDev\AI\AIExtractProductsResponse\Product\BillingFrequency;
 use ContextDev\AI\AIExtractProductsResponse\Product\PricingModel;
+use ContextDev\AI\AIExtractProductsResponse\Product\Variant;
 use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
+ * @phpstan-import-type VariantShape from \ContextDev\AI\AIExtractProductsResponse\Product\Variant
+ *
  * @phpstan-type ProductShape = array{
  *   description: string,
  *   features: list<string>,
@@ -31,6 +34,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   pricingModel?: null|PricingModel|value-of<PricingModel>,
  *   regularPrice?: float|null,
  *   url?: string|null,
+ *   variants?: list<Variant|VariantShape>|null,
  * }
  */
 final class Product implements BaseModel
@@ -161,6 +165,14 @@ final class Product implements BaseModel
     public ?string $url;
 
     /**
+     * Product variations, such as different colors or sizes, with their attributes and images. Empty if none are found. May not include every variation offered by the store.
+     *
+     * @var list<Variant>|null $variants
+     */
+    #[Optional(list: Variant::class)]
+    public ?array $variants;
+
+    /**
      * `new Product()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -207,6 +219,7 @@ final class Product implements BaseModel
      * @param BillingFrequency|value-of<BillingFrequency>|null $billingFrequency
      * @param list<string>|null $dimensions
      * @param PricingModel|value-of<PricingModel>|null $pricingModel
+     * @param list<Variant|VariantShape>|null $variants
      */
     public static function with(
         string $description,
@@ -226,6 +239,7 @@ final class Product implements BaseModel
         PricingModel|string|null $pricingModel = null,
         ?float $regularPrice = null,
         ?string $url = null,
+        ?array $variants = null,
     ): self {
         $self = new self;
 
@@ -247,6 +261,7 @@ final class Product implements BaseModel
         null !== $pricingModel && $self['pricingModel'] = $pricingModel;
         null !== $regularPrice && $self['regularPrice'] = $regularPrice;
         null !== $url && $self['url'] = $url;
+        null !== $variants && $self['variants'] = $variants;
 
         return $self;
     }
@@ -453,6 +468,19 @@ final class Product implements BaseModel
     {
         $self = clone $this;
         $self['url'] = $url;
+
+        return $self;
+    }
+
+    /**
+     * Product variations, such as different colors or sizes, with their attributes and images. Empty if none are found. May not include every variation offered by the store.
+     *
+     * @param list<Variant|VariantShape> $variants
+     */
+    public function withVariants(array $variants): self
+    {
+        $self = clone $this;
+        $self['variants'] = $variants;
 
         return $self;
     }

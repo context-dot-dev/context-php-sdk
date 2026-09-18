@@ -13,6 +13,7 @@ use ContextDev\ServiceContracts\WebRawContract;
 use ContextDev\Web\WebAnswersParams;
 use ContextDev\Web\WebAnswersParams\Mode;
 use ContextDev\Web\WebAnswersParams\TimeoutOpts;
+use ContextDev\Web\WebAnswersParams\Zdr;
 use ContextDev\Web\WebAnswersResponse;
 use ContextDev\Web\WebExtractCompetitorsParams;
 use ContextDev\Web\WebExtractCompetitorsResponse;
@@ -29,7 +30,6 @@ use ContextDev\Web\WebScreenshotParams\Country;
 use ContextDev\Web\WebScreenshotParams\FullScreenshot;
 use ContextDev\Web\WebScreenshotParams\Page;
 use ContextDev\Web\WebScreenshotParams\Viewport;
-use ContextDev\Web\WebScreenshotParams\Zdr;
 use ContextDev\Web\WebScreenshotResponse;
 use ContextDev\Web\WebSearchParams;
 use ContextDev\Web\WebSearchParams\Freshness;
@@ -65,6 +65,7 @@ use ContextDev\Web\WebWebScrapeSitemapResponse;
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts as TimeoutOptsShape7
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeBytesParams\TimeoutOpts as TimeoutOptsShape8
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeHTMLParams\Action as ActionShape1
+ * @phpstan-import-type ExtractRuleShape from \ContextDev\Web\WebWebScrapeHTMLParams\ExtractRule
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeHTMLParams\Pdf as PdfShape2
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeHTMLParams\TimeoutOpts as TimeoutOptsShape9
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeImagesParams\Action as ActionShape2
@@ -95,6 +96,7 @@ final class WebRawService implements WebRawContract
      *   mode?: Mode|value-of<Mode>,
      *   tags?: list<string>,
      *   timeoutOpts?: TimeoutOpts|TimeoutOptsShape,
+     *   zdr?: Zdr|value-of<Zdr>,
      * }|WebAnswersParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -143,6 +145,7 @@ final class WebRawService implements WebRawContract
      *   tags?: list<string>,
      *   timeoutOpts?: WebExtractParams\TimeoutOpts|TimeoutOptsShape1,
      *   waitForMs?: int,
+     *   zdr?: WebExtractParams\Zdr|value-of<WebExtractParams\Zdr>,
      * }|WebExtractParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -179,6 +182,7 @@ final class WebRawService implements WebRawContract
      *   numCompetitors?: int,
      *   tags?: list<string>,
      *   timeoutOpts?: WebExtractCompetitorsParams\TimeoutOpts|TimeoutOptsShape2,
+     *   zdr?: WebExtractCompetitorsParams\Zdr|value-of<WebExtractCompetitorsParams\Zdr>,
      * }|WebExtractCompetitorsParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -254,6 +258,7 @@ final class WebRawService implements WebRawContract
      *   maxAgeMs?: int|null,
      *   tags?: list<string>,
      *   timeoutOpts?: WebExtractStyleguideParams\TimeoutOpts|TimeoutOptsShape4,
+     *   zdr?: WebExtractStyleguideParams\Zdr|value-of<WebExtractStyleguideParams\Zdr>,
      * }|WebExtractStyleguideParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -300,7 +305,7 @@ final class WebRawService implements WebRawContract
      *   timeoutOpts?: WebScreenshotParams\TimeoutOpts|TimeoutOptsShape5,
      *   viewport?: Viewport|ViewportShape,
      *   waitForMs?: int|null,
-     *   zdr?: Zdr|value-of<Zdr>,
+     *   zdr?: WebScreenshotParams\Zdr|value-of<WebScreenshotParams\Zdr>,
      * }|WebScreenshotParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -343,6 +348,7 @@ final class WebRawService implements WebRawContract
      *   queryFanout?: bool,
      *   tags?: list<string>,
      *   timeoutOpts?: WebSearchParams\TimeoutOpts|TimeoutOptsShape6,
+     *   zdr?: WebSearchParams\Zdr|value-of<WebSearchParams\Zdr>,
      * }|WebSearchParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -463,13 +469,14 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Scrapes the given URL and returns the raw HTML content of the page. The base request costs 1 credit; requests with browser actions cost 2 credits. A request that hits its timeoutOpts.milliseconds deadline fails with 408 and is not billed, unless timeoutOpts.behavior=return-partial is set — then the page as rendered so far is returned with `finalDOMState: "still-loading"` and billed at the base cost of 1 credit.
+     * Scrapes the given URL and returns the HTML content of the page. Optional extractRules return deterministic structured data in extracted using CSS selectors, attributes, lists, and nested rules, without an LLM or additional credits. Rules run on the returned HTML after selector and main-content filtering. Send extractRules as a JSON-encoded query parameter. The base request costs 1 credit; requests with browser actions cost 2 credits. A request that hits its timeoutOpts.milliseconds deadline fails with 408 and is not billed, unless timeoutOpts.behavior=return-partial is set — then the page as rendered so far is returned with `finalDOMState: "still-loading"` and billed at the base cost of 1 credit.
      *
      * @param array{
      *   url: string,
      *   actions?: list<ActionShape1>|null,
      *   country?: value-of<WebWebScrapeHTMLParams\Country>,
      *   excludeSelectors?: list<string>|null,
+     *   extractRules?: array<string,ExtractRuleShape>,
      *   headers?: array<string,string>,
      *   includeFrames?: bool,
      *   includeSelectors?: list<string>|null,
@@ -522,6 +529,7 @@ final class WebRawService implements WebRawContract
      *   tags?: list<string>,
      *   timeoutOpts?: WebWebScrapeImagesParams\TimeoutOpts|TimeoutOptsShape10,
      *   waitForMs?: int|null,
+     *   zdr?: WebWebScrapeImagesParams\Zdr|value-of<WebWebScrapeImagesParams\Zdr>,
      * }|WebWebScrapeImagesParams $params
      * @param RequestOpts|null $requestOptions
      *

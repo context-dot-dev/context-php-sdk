@@ -12,6 +12,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebWebScrapeImagesParams\Action;
 use ContextDev\Web\WebWebScrapeImagesParams\Enrichment;
 use ContextDev\Web\WebWebScrapeImagesParams\TimeoutOpts;
+use ContextDev\Web\WebWebScrapeImagesParams\Zdr;
 
 /**
  * Extract image assets from a web page, including standard URLs, inline SVGs, data URIs, responsive image sources, metadata, CSS backgrounds, video posters, and embeds. The base request costs 1 credit, or 2 credits with browser actions. When enrichment is enabled, the entire call costs 5 credits, including requests that also use actions.
@@ -33,6 +34,7 @@ use ContextDev\Web\WebWebScrapeImagesParams\TimeoutOpts;
  *   tags?: list<string>|null,
  *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  *   waitForMs?: int|null,
+ *   zdr?: null|Zdr|value-of<Zdr>,
  * }
  */
 final class WebWebScrapeImagesParams implements BaseModel
@@ -102,6 +104,14 @@ final class WebWebScrapeImagesParams implements BaseModel
     public ?int $waitForMs;
 
     /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @var value-of<Zdr>|null $zdr
+     */
+    #[Optional(enum: Zdr::class)]
+    public ?string $zdr;
+
+    /**
      * `new WebWebScrapeImagesParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -130,6 +140,7 @@ final class WebWebScrapeImagesParams implements BaseModel
      * @param array<string,string>|null $headers
      * @param list<string>|null $tags
      * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
+     * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
         string $url,
@@ -141,6 +152,7 @@ final class WebWebScrapeImagesParams implements BaseModel
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
         ?int $waitForMs = null,
+        Zdr|string|null $zdr = null,
     ): self {
         $self = new self;
 
@@ -154,6 +166,7 @@ final class WebWebScrapeImagesParams implements BaseModel
         null !== $tags && $self['tags'] = $tags;
         null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
         null !== $waitForMs && $self['waitForMs'] = $waitForMs;
+        null !== $zdr && $self['zdr'] = $zdr;
 
         return $self;
     }
@@ -263,6 +276,19 @@ final class WebWebScrapeImagesParams implements BaseModel
     {
         $self = clone $this;
         $self['waitForMs'] = $waitForMs;
+
+        return $self;
+    }
+
+    /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @param Zdr|value-of<Zdr> $zdr
+     */
+    public function withZdr(Zdr|string $zdr): self
+    {
+        $self = clone $this;
+        $self['zdr'] = $zdr;
 
         return $self;
     }

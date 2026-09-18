@@ -11,6 +11,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Industry\IndustryRetrieveSicParams\TimeoutOpts;
 use ContextDev\Industry\IndustryRetrieveSicParams\Type;
+use ContextDev\Industry\IndustryRetrieveSicParams\Zdr;
 
 /**
  * Classify any brand into Standard Industrial Classification (SIC) codes from its domain or name. Choose between the original SIC system (`original_sic`) or the latest SIC list maintained by the SEC (`latest_sec`).
@@ -26,6 +27,7 @@ use ContextDev\Industry\IndustryRetrieveSicParams\Type;
  *   tags?: list<string>|null,
  *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  *   type?: null|Type|value-of<Type>,
+ *   zdr?: null|Zdr|value-of<Zdr>,
  * }
  */
 final class IndustryRetrieveSicParams implements BaseModel
@@ -75,6 +77,14 @@ final class IndustryRetrieveSicParams implements BaseModel
     public ?string $type;
 
     /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @var value-of<Zdr>|null $zdr
+     */
+    #[Optional(enum: Zdr::class)]
+    public ?string $zdr;
+
+    /**
      * `new IndustryRetrieveSicParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -101,6 +111,7 @@ final class IndustryRetrieveSicParams implements BaseModel
      * @param list<string>|null $tags
      * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      * @param Type|value-of<Type>|null $type
+     * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
         string $input,
@@ -109,6 +120,7 @@ final class IndustryRetrieveSicParams implements BaseModel
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
         Type|string|null $type = null,
+        Zdr|string|null $zdr = null,
     ): self {
         $self = new self;
 
@@ -119,6 +131,7 @@ final class IndustryRetrieveSicParams implements BaseModel
         null !== $tags && $self['tags'] = $tags;
         null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
         null !== $type && $self['type'] = $type;
+        null !== $zdr && $self['zdr'] = $zdr;
 
         return $self;
     }
@@ -191,6 +204,19 @@ final class IndustryRetrieveSicParams implements BaseModel
     {
         $self = clone $this;
         $self['type'] = $type;
+
+        return $self;
+    }
+
+    /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @param Zdr|value-of<Zdr> $zdr
+     */
+    public function withZdr(Zdr|string $zdr): self
+    {
+        $self = clone $this;
+        $self['zdr'] = $zdr;
 
         return $self;
     }

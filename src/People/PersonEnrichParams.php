@@ -13,6 +13,7 @@ use ContextDev\People\PersonEnrichParams\Education;
 use ContextDev\People\PersonEnrichParams\Location;
 use ContextDev\People\PersonEnrichParams\Name;
 use ContextDev\People\PersonEnrichParams\TimeoutOpts;
+use ContextDev\People\PersonEnrichParams\Zdr;
 
 /**
  * Finds and normalizes the best available person candidate from additive identity clues, then assigns an identity match score from 0 to 100. Available on all paid plans. Successful requests cost 20 credits. Disposable and free email addresses (like gmail.com, yahoo.com) will throw a 422 error.
@@ -34,6 +35,7 @@ use ContextDev\People\PersonEnrichParams\TimeoutOpts;
  *   socialURLs?: list<string>|null,
  *   tags?: list<string>|null,
  *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
+ *   zdr?: null|Zdr|value-of<Zdr>,
  * }
  */
 final class PersonEnrichParams implements BaseModel
@@ -76,6 +78,14 @@ final class PersonEnrichParams implements BaseModel
     #[Optional]
     public ?TimeoutOpts $timeoutOpts;
 
+    /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @var value-of<Zdr>|null $zdr
+     */
+    #[Optional(enum: Zdr::class)]
+    public ?string $zdr;
+
     public function __construct()
     {
         $this->initialize();
@@ -93,6 +103,7 @@ final class PersonEnrichParams implements BaseModel
      * @param list<string>|null $socialURLs
      * @param list<string>|null $tags
      * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
+     * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
         Company|array|null $company = null,
@@ -103,6 +114,7 @@ final class PersonEnrichParams implements BaseModel
         ?array $socialURLs = null,
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
+        Zdr|string|null $zdr = null,
     ): self {
         $self = new self;
 
@@ -114,6 +126,7 @@ final class PersonEnrichParams implements BaseModel
         null !== $socialURLs && $self['socialURLs'] = $socialURLs;
         null !== $tags && $self['tags'] = $tags;
         null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
+        null !== $zdr && $self['zdr'] = $zdr;
 
         return $self;
     }
@@ -203,6 +216,19 @@ final class PersonEnrichParams implements BaseModel
     {
         $self = clone $this;
         $self['timeoutOpts'] = $timeoutOpts;
+
+        return $self;
+    }
+
+    /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @param Zdr|value-of<Zdr> $zdr
+     */
+    public function withZdr(Zdr|string $zdr): self
+    {
+        $self = clone $this;
+        $self['zdr'] = $zdr;
 
         return $self;
     }

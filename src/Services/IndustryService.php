@@ -10,6 +10,7 @@ use ContextDev\Core\Util;
 use ContextDev\Industry\IndustryGetNaicsResponse;
 use ContextDev\Industry\IndustryGetSicResponse;
 use ContextDev\Industry\IndustryRetrieveNaicsParams\TimeoutOpts;
+use ContextDev\Industry\IndustryRetrieveNaicsParams\Zdr;
 use ContextDev\Industry\IndustryRetrieveSicParams\Type;
 use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\IndustryContract;
@@ -44,6 +45,7 @@ final class IndustryService implements IndustryContract
      * @param int $minResults Minimum number of NAICS codes to return. Must be at least 1. Defaults to 1.
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * @param Zdr|value-of<Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -54,6 +56,7 @@ final class IndustryService implements IndustryContract
         int $minResults = 1,
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
+        Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): IndustryGetNaicsResponse {
         $params = Util::removeNulls(
@@ -63,6 +66,7 @@ final class IndustryService implements IndustryContract
                 'minResults' => $minResults,
                 'tags' => $tags,
                 'timeoutOpts' => $timeoutOpts,
+                'zdr' => $zdr,
             ],
         );
 
@@ -83,6 +87,7 @@ final class IndustryService implements IndustryContract
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
      * @param \ContextDev\Industry\IndustryRetrieveSicParams\TimeoutOpts|TimeoutOptsShape1 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param Type|value-of<Type> $type Which SIC dataset to classify against. `original_sic` uses the 1987 Standard Industrial Classification system; `latest_sec` uses the current SIC list as published by the SEC. Defaults to `original_sic`.
+     * @param \ContextDev\Industry\IndustryRetrieveSicParams\Zdr|value-of<\ContextDev\Industry\IndustryRetrieveSicParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -94,6 +99,7 @@ final class IndustryService implements IndustryContract
         ?array $tags = null,
         \ContextDev\Industry\IndustryRetrieveSicParams\TimeoutOpts|array|null $timeoutOpts = null,
         Type|string $type = 'original_sic',
+        \ContextDev\Industry\IndustryRetrieveSicParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): IndustryGetSicResponse {
         $params = Util::removeNulls(
@@ -104,6 +110,7 @@ final class IndustryService implements IndustryContract
                 'tags' => $tags,
                 'timeoutOpts' => $timeoutOpts,
                 'type' => $type,
+                'zdr' => $zdr,
             ],
         );
 

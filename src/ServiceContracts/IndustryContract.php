@@ -8,6 +8,7 @@ use ContextDev\Core\Exceptions\APIException;
 use ContextDev\Industry\IndustryGetNaicsResponse;
 use ContextDev\Industry\IndustryGetSicResponse;
 use ContextDev\Industry\IndustryRetrieveNaicsParams\TimeoutOpts;
+use ContextDev\Industry\IndustryRetrieveNaicsParams\Zdr;
 use ContextDev\Industry\IndustryRetrieveSicParams\Type;
 use ContextDev\RequestOptions;
 
@@ -26,6 +27,7 @@ interface IndustryContract
      * @param int $minResults Minimum number of NAICS codes to return. Must be at least 1. Defaults to 1.
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * @param Zdr|value-of<Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -36,6 +38,7 @@ interface IndustryContract
         int $minResults = 1,
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
+        Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): IndustryGetNaicsResponse;
 
@@ -48,6 +51,7 @@ interface IndustryContract
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
      * @param \ContextDev\Industry\IndustryRetrieveSicParams\TimeoutOpts|TimeoutOptsShape1 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param Type|value-of<Type> $type Which SIC dataset to classify against. `original_sic` uses the 1987 Standard Industrial Classification system; `latest_sec` uses the current SIC list as published by the SEC. Defaults to `original_sic`.
+     * @param \ContextDev\Industry\IndustryRetrieveSicParams\Zdr|value-of<\ContextDev\Industry\IndustryRetrieveSicParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -59,6 +63,7 @@ interface IndustryContract
         ?array $tags = null,
         \ContextDev\Industry\IndustryRetrieveSicParams\TimeoutOpts|array|null $timeoutOpts = null,
         Type|string $type = 'original_sic',
+        \ContextDev\Industry\IndustryRetrieveSicParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): IndustryGetSicResponse;
 }

@@ -11,6 +11,7 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\WebContract;
 use ContextDev\Web\WebAnswersParams\Mode;
 use ContextDev\Web\WebAnswersParams\TimeoutOpts;
+use ContextDev\Web\WebAnswersParams\Zdr;
 use ContextDev\Web\WebAnswersResponse;
 use ContextDev\Web\WebExtractCompetitorsResponse;
 use ContextDev\Web\WebExtractFontsResponse;
@@ -22,7 +23,6 @@ use ContextDev\Web\WebScreenshotParams\Country;
 use ContextDev\Web\WebScreenshotParams\FullScreenshot;
 use ContextDev\Web\WebScreenshotParams\Page;
 use ContextDev\Web\WebScreenshotParams\Viewport;
-use ContextDev\Web\WebScreenshotParams\Zdr;
 use ContextDev\Web\WebScreenshotResponse;
 use ContextDev\Web\WebSearchParams\Freshness;
 use ContextDev\Web\WebSearchParams\MarkdownOptions;
@@ -51,6 +51,7 @@ use ContextDev\Web\WebWebScrapeSitemapResponse;
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts as TimeoutOptsShape7
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeBytesParams\TimeoutOpts as TimeoutOptsShape8
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeHTMLParams\Action as ActionShape1
+ * @phpstan-import-type ExtractRuleShape from \ContextDev\Web\WebWebScrapeHTMLParams\ExtractRule
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeHTMLParams\Pdf as PdfShape2
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeHTMLParams\TimeoutOpts as TimeoutOptsShape9
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeImagesParams\Action as ActionShape2
@@ -87,6 +88,7 @@ final class WebService implements WebContract
      * @param Mode|value-of<Mode> $mode Research level: fast uses a smaller model and research budget for 10 credits; ultra uses deeper reasoning and research for 100 credits. Defaults to ultra. Only successful requests consume credits.
      * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * @param Zdr|value-of<Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -97,6 +99,7 @@ final class WebService implements WebContract
         Mode|string|null $mode = null,
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
+        Zdr|string|null $zdr = null,
         RequestOptions|array|null $requestOptions = null,
     ): WebAnswersResponse {
         $params = Util::removeNulls(
@@ -106,6 +109,7 @@ final class WebService implements WebContract
                 'mode' => $mode,
                 'tags' => $tags,
                 'timeoutOpts' => $timeoutOpts,
+                'zdr' => $zdr,
             ],
         );
 
@@ -136,6 +140,7 @@ final class WebService implements WebContract
      * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
      * @param \ContextDev\Web\WebExtractParams\TimeoutOpts|TimeoutOptsShape1 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param int $waitForMs optional browser wait time in milliseconds after initial page load for each crawled page
+     * @param \ContextDev\Web\WebExtractParams\Zdr|value-of<\ContextDev\Web\WebExtractParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -157,6 +162,7 @@ final class WebService implements WebContract
         ?array $tags = null,
         \ContextDev\Web\WebExtractParams\TimeoutOpts|array|null $timeoutOpts = null,
         ?int $waitForMs = null,
+        \ContextDev\Web\WebExtractParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): WebExtractResponse {
         $params = Util::removeNulls(
@@ -177,6 +183,7 @@ final class WebService implements WebContract
                 'tags' => $tags,
                 'timeoutOpts' => $timeoutOpts,
                 'waitForMs' => $waitForMs,
+                'zdr' => $zdr,
             ],
         );
 
@@ -195,6 +202,7 @@ final class WebService implements WebContract
      * @param int $numCompetitors Exact number of direct competitors to return. Defaults to 5.
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
      * @param \ContextDev\Web\WebExtractCompetitorsParams\TimeoutOpts|TimeoutOptsShape2 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * @param \ContextDev\Web\WebExtractCompetitorsParams\Zdr|value-of<\ContextDev\Web\WebExtractCompetitorsParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -204,6 +212,7 @@ final class WebService implements WebContract
         int $numCompetitors = 5,
         ?array $tags = null,
         \ContextDev\Web\WebExtractCompetitorsParams\TimeoutOpts|array|null $timeoutOpts = null,
+        \ContextDev\Web\WebExtractCompetitorsParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): WebExtractCompetitorsResponse {
         $params = Util::removeNulls(
@@ -212,6 +221,7 @@ final class WebService implements WebContract
                 'numCompetitors' => $numCompetitors,
                 'tags' => $tags,
                 'timeoutOpts' => $timeoutOpts,
+                'zdr' => $zdr,
             ],
         );
 
@@ -270,6 +280,7 @@ final class WebService implements WebContract
      * @param int|null $maxAgeMs Maximum age in milliseconds for cached brand data before the API performs a hard refresh. Defaults to 3 months (7776000000 ms). Set to 0 to always perform a hard refresh. Negative values are clamped to 0; values above 1 year (31536000000 ms) are clamped to 1 year.
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
      * @param \ContextDev\Web\WebExtractStyleguideParams\TimeoutOpts|TimeoutOptsShape4 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * @param \ContextDev\Web\WebExtractStyleguideParams\Zdr|value-of<\ContextDev\Web\WebExtractStyleguideParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -281,6 +292,7 @@ final class WebService implements WebContract
         ?int $maxAgeMs = 7776000000,
         ?array $tags = null,
         \ContextDev\Web\WebExtractStyleguideParams\TimeoutOpts|array|null $timeoutOpts = null,
+        \ContextDev\Web\WebExtractStyleguideParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): WebExtractStyleguideResponse {
         $params = Util::removeNulls(
@@ -291,6 +303,7 @@ final class WebService implements WebContract
                 'maxAgeMs' => $maxAgeMs,
                 'tags' => $tags,
                 'timeoutOpts' => $timeoutOpts,
+                'zdr' => $zdr,
             ],
         );
 
@@ -319,7 +332,7 @@ final class WebService implements WebContract
      * @param \ContextDev\Web\WebScreenshotParams\TimeoutOpts|TimeoutOptsShape5 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param Viewport|ViewportShape $viewport Optional browser viewport dimensions for the screenshot. Defaults to 1920x1080.
      * @param int|null $waitForMs Optional browser wait time in milliseconds after initial page load before taking the screenshot. Min: 0. Max: 30000 (30 seconds). Defaults to 3000 ms when omitted. When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
-     * @param Zdr|value-of<Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * @param \ContextDev\Web\WebScreenshotParams\Zdr|value-of<\ContextDev\Web\WebScreenshotParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -339,7 +352,7 @@ final class WebService implements WebContract
         \ContextDev\Web\WebScreenshotParams\TimeoutOpts|array|null $timeoutOpts = null,
         Viewport|array $viewport = ['width' => 1920, 'height' => 1080],
         ?int $waitForMs = 3000,
-        Zdr|string $zdr = 'disabled',
+        \ContextDev\Web\WebScreenshotParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): WebScreenshotResponse {
         $params = Util::removeNulls(
@@ -383,6 +396,7 @@ final class WebService implements WebContract
      * @param bool $queryFanout expand the query into multiple parallel variants for broader recall
      * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
      * @param \ContextDev\Web\WebSearchParams\TimeoutOpts|TimeoutOptsShape6 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * @param \ContextDev\Web\WebSearchParams\Zdr|value-of<\ContextDev\Web\WebSearchParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -398,6 +412,7 @@ final class WebService implements WebContract
         ?bool $queryFanout = null,
         ?array $tags = null,
         \ContextDev\Web\WebSearchParams\TimeoutOpts|array|null $timeoutOpts = null,
+        \ContextDev\Web\WebSearchParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): WebSearchResponse {
         $params = Util::removeNulls(
@@ -412,6 +427,7 @@ final class WebService implements WebContract
                 'queryFanout' => $queryFanout,
                 'tags' => $tags,
                 'timeoutOpts' => $timeoutOpts,
+                'zdr' => $zdr,
             ],
         );
 
@@ -519,7 +535,7 @@ final class WebService implements WebContract
      * @param array<string,string> $headers Optional outbound HTTP headers, such as Referer, Cookie, or Authorization. Send as a JSON object or deep-object query params such as headers[Referer]=https://example.com/. Host, Content-Length, and hop-by-hop transport headers are rejected. Authorization and cookies are removed when a redirect changes origin.
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
      * @param \ContextDev\Web\WebWebScrapeBytesParams\TimeoutOpts|TimeoutOptsShape8 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
-     * @param \ContextDev\Web\WebWebScrapeBytesParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeBytesParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * @param \ContextDev\Web\WebWebScrapeBytesParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeBytesParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -553,12 +569,13 @@ final class WebService implements WebContract
     /**
      * @api
      *
-     * Scrapes the given URL and returns the raw HTML content of the page. The base request costs 1 credit; requests with browser actions cost 2 credits. A request that hits its timeoutOpts.milliseconds deadline fails with 408 and is not billed, unless timeoutOpts.behavior=return-partial is set — then the page as rendered so far is returned with `finalDOMState: "still-loading"` and billed at the base cost of 1 credit.
+     * Scrapes the given URL and returns the HTML content of the page. Optional extractRules return deterministic structured data in extracted using CSS selectors, attributes, lists, and nested rules, without an LLM or additional credits. Rules run on the returned HTML after selector and main-content filtering. Send extractRules as a JSON-encoded query parameter. The base request costs 1 credit; requests with browser actions cost 2 credits. A request that hits its timeoutOpts.milliseconds deadline fails with 408 and is not billed, unless timeoutOpts.behavior=return-partial is set — then the page as rendered so far is returned with `finalDOMState: "still-loading"` and billed at the base cost of 1 credit.
      *
      * @param string $url Full URL to scrape (must include http:// or https:// protocol)
      * @param list<ActionShape1>|null $actions Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
      * @param \ContextDev\Web\WebWebScrapeHTMLParams\Country|value-of<\ContextDev\Web\WebWebScrapeHTMLParams\Country> $country fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2)
      * @param list<string>|null $excludeSelectors CSS selectors to remove from the result. Applied after includeSelectors. Exclusion takes precedence: an element matching both is removed. Examples: "nav", "footer", ".ad-banner", "[aria-hidden=true]".
+     * @param array<string,ExtractRuleShape> $extractRules Optional CSS extraction rules applied to the returned HTML after selector and main-content filtering. Use selector strings ("h1", "a@href") or objects with selector, type (item or list), and output (text, html, @attribute, or nested rules). Text whitespace is normalized; html includes the matched element; attributes are returned as written. Missing items are null and missing lists are empty. CSS only; XPath is not supported. Maximum: 100 fields across 5 levels. Send a JSON-encoded string in the extractRules query parameter.
      * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
      * @param bool $includeFrames when true, iframes are rendered inline into the returned HTML
      * @param list<string>|null $includeSelectors CSS selectors. When provided, only matching subtrees (and their descendants) are kept and everything else is dropped. When omitted, the entire document is kept. Examples: "article.main", "#content", "[role=main]".
@@ -569,7 +586,7 @@ final class WebService implements WebContract
      * @param \ContextDev\Web\WebWebScrapeHTMLParams\TimeoutOpts|TimeoutOptsShape9 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param bool $useMainContentOnly when true, return only the page's main content in the HTML response, excluding headers, footers, sidebars, and navigation when detectable
      * @param int|null $waitForMs Optional browser wait time in milliseconds after initial page load. Min: 0. Max: 30000 (30 seconds). When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
-     * @param \ContextDev\Web\WebWebScrapeHTMLParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeHTMLParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * @param \ContextDev\Web\WebWebScrapeHTMLParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeHTMLParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -579,6 +596,7 @@ final class WebService implements WebContract
         ?array $actions = null,
         \ContextDev\Web\WebWebScrapeHTMLParams\Country|string|null $country = null,
         ?array $excludeSelectors = null,
+        ?array $extractRules = null,
         ?array $headers = null,
         bool $includeFrames = false,
         ?array $includeSelectors = null,
@@ -600,6 +618,7 @@ final class WebService implements WebContract
                 'actions' => $actions,
                 'country' => $country,
                 'excludeSelectors' => $excludeSelectors,
+                'extractRules' => $extractRules,
                 'headers' => $headers,
                 'includeFrames' => $includeFrames,
                 'includeSelectors' => $includeSelectors,
@@ -634,6 +653,7 @@ final class WebService implements WebContract
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
      * @param \ContextDev\Web\WebWebScrapeImagesParams\TimeoutOpts|TimeoutOptsShape10 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param int|null $waitForMs Optional browser wait time in milliseconds after initial page load before collecting images. Min: 0. Max: 30000 (30 seconds). When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
+     * @param \ContextDev\Web\WebWebScrapeImagesParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeImagesParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -648,6 +668,7 @@ final class WebService implements WebContract
         ?array $tags = null,
         \ContextDev\Web\WebWebScrapeImagesParams\TimeoutOpts|array|null $timeoutOpts = null,
         ?int $waitForMs = null,
+        \ContextDev\Web\WebWebScrapeImagesParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): WebWebScrapeImagesResponse {
         $params = Util::removeNulls(
@@ -661,6 +682,7 @@ final class WebService implements WebContract
                 'tags' => $tags,
                 'timeoutOpts' => $timeoutOpts,
                 'waitForMs' => $waitForMs,
+                'zdr' => $zdr,
             ],
         );
 
@@ -711,7 +733,7 @@ final class WebService implements WebContract
      * @param \ContextDev\Web\WebWebScrapeMdParams\TimeoutOpts|TimeoutOptsShape11 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param bool $useMainContentOnly Extract only the main content of the page, excluding headers, footers, sidebars, and navigation
      * @param int|null $waitForMs Optional browser wait time in milliseconds after initial page load before converting the page to Markdown. Min: 0. Max: 30000 (30 seconds). When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
-     * @param \ContextDev\Web\WebWebScrapeMdParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeMdParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * @param \ContextDev\Web\WebWebScrapeMdParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeMdParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -784,7 +806,7 @@ final class WebService implements WebContract
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
      * @param \ContextDev\Web\WebWebScrapeSitemapParams\TimeoutOpts|TimeoutOptsShape12 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param string $urlRegex Optional RE2-compatible regex pattern. Only URLs matching this pattern are returned and counted against maxLinks.
-     * @param \ContextDev\Web\WebWebScrapeSitemapParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeSitemapParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * @param \ContextDev\Web\WebWebScrapeSitemapParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeSitemapParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
