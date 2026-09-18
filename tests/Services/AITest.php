@@ -54,6 +54,7 @@ final class AITest extends TestCase
             maxAgeMs: 0,
             tags: ['production', 'team-alpha'],
             timeoutOpts: ['milliseconds' => 1000, 'behavior' => 'fail'],
+            zdr: 'enabled',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

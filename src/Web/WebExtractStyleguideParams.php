@@ -10,6 +10,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebExtractStyleguideParams\ColorScheme;
 use ContextDev\Web\WebExtractStyleguideParams\TimeoutOpts;
+use ContextDev\Web\WebExtractStyleguideParams\Zdr;
 
 /**
  * Extract a comprehensive design system from a website including colors, typography, spacing, shadows, and UI components.
@@ -25,6 +26,7 @@ use ContextDev\Web\WebExtractStyleguideParams\TimeoutOpts;
  *   maxAgeMs?: int|null,
  *   tags?: list<string>|null,
  *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
+ *   zdr?: null|Zdr|value-of<Zdr>,
  * }
  */
 final class WebExtractStyleguideParams implements BaseModel
@@ -73,6 +75,14 @@ final class WebExtractStyleguideParams implements BaseModel
     #[Optional]
     public ?TimeoutOpts $timeoutOpts;
 
+    /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @var value-of<Zdr>|null $zdr
+     */
+    #[Optional(enum: Zdr::class)]
+    public ?string $zdr;
+
     public function __construct()
     {
         $this->initialize();
@@ -86,6 +96,7 @@ final class WebExtractStyleguideParams implements BaseModel
      * @param ColorScheme|value-of<ColorScheme>|null $colorScheme
      * @param list<string>|null $tags
      * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
+     * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
         ColorScheme|string|null $colorScheme = null,
@@ -94,6 +105,7 @@ final class WebExtractStyleguideParams implements BaseModel
         ?int $maxAgeMs = null,
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
+        Zdr|string|null $zdr = null,
     ): self {
         $self = new self;
 
@@ -103,6 +115,7 @@ final class WebExtractStyleguideParams implements BaseModel
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
         null !== $tags && $self['tags'] = $tags;
         null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
+        null !== $zdr && $self['zdr'] = $zdr;
 
         return $self;
     }
@@ -175,6 +188,19 @@ final class WebExtractStyleguideParams implements BaseModel
     {
         $self = clone $this;
         $self['timeoutOpts'] = $timeoutOpts;
+
+        return $self;
+    }
+
+    /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @param Zdr|value-of<Zdr> $zdr
+     */
+    public function withZdr(Zdr|string $zdr): self
+    {
+        $self = clone $this;
+        $self['zdr'] = $zdr;
 
         return $self;
     }

@@ -68,6 +68,7 @@ final class WebTest extends TestCase
             mode: 'fast',
             tags: ['production', 'team-alpha'],
             timeoutOpts: ['milliseconds' => 1000, 'behavior' => 'fail'],
+            zdr: 'enabled',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -124,6 +125,7 @@ final class WebTest extends TestCase
             tags: ['production', 'team-alpha'],
             timeoutOpts: ['milliseconds' => 1000, 'behavior' => 'fail'],
             waitForMs: 0,
+            zdr: 'enabled',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -155,6 +157,7 @@ final class WebTest extends TestCase
             numCompetitors: 1,
             tags: ['production', 'team-alpha'],
             timeoutOpts: ['milliseconds' => 1000, 'behavior' => 'fail'],
+            zdr: 'enabled',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -242,6 +245,7 @@ final class WebTest extends TestCase
             queryFanout: true,
             tags: ['production', 'team-alpha'],
             timeoutOpts: ['milliseconds' => 1000, 'behavior' => 'fail'],
+            zdr: 'enabled',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -407,6 +411,7 @@ final class WebTest extends TestCase
             tags: ['production', 'team-alpha'],
             timeoutOpts: ['milliseconds' => 1, 'behavior' => 'fail'],
             waitForMs: 0,
+            zdr: 'enabled',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

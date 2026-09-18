@@ -13,6 +13,7 @@ use ContextDev\ServiceContracts\WebRawContract;
 use ContextDev\Web\WebAnswersParams;
 use ContextDev\Web\WebAnswersParams\Mode;
 use ContextDev\Web\WebAnswersParams\TimeoutOpts;
+use ContextDev\Web\WebAnswersParams\Zdr;
 use ContextDev\Web\WebAnswersResponse;
 use ContextDev\Web\WebExtractCompetitorsParams;
 use ContextDev\Web\WebExtractCompetitorsResponse;
@@ -29,7 +30,6 @@ use ContextDev\Web\WebScreenshotParams\Country;
 use ContextDev\Web\WebScreenshotParams\FullScreenshot;
 use ContextDev\Web\WebScreenshotParams\Page;
 use ContextDev\Web\WebScreenshotParams\Viewport;
-use ContextDev\Web\WebScreenshotParams\Zdr;
 use ContextDev\Web\WebScreenshotResponse;
 use ContextDev\Web\WebSearchParams;
 use ContextDev\Web\WebSearchParams\Freshness;
@@ -96,6 +96,7 @@ final class WebRawService implements WebRawContract
      *   mode?: Mode|value-of<Mode>,
      *   tags?: list<string>,
      *   timeoutOpts?: TimeoutOpts|TimeoutOptsShape,
+     *   zdr?: Zdr|value-of<Zdr>,
      * }|WebAnswersParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -144,6 +145,7 @@ final class WebRawService implements WebRawContract
      *   tags?: list<string>,
      *   timeoutOpts?: WebExtractParams\TimeoutOpts|TimeoutOptsShape1,
      *   waitForMs?: int,
+     *   zdr?: WebExtractParams\Zdr|value-of<WebExtractParams\Zdr>,
      * }|WebExtractParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -180,6 +182,7 @@ final class WebRawService implements WebRawContract
      *   numCompetitors?: int,
      *   tags?: list<string>,
      *   timeoutOpts?: WebExtractCompetitorsParams\TimeoutOpts|TimeoutOptsShape2,
+     *   zdr?: WebExtractCompetitorsParams\Zdr|value-of<WebExtractCompetitorsParams\Zdr>,
      * }|WebExtractCompetitorsParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -255,6 +258,7 @@ final class WebRawService implements WebRawContract
      *   maxAgeMs?: int|null,
      *   tags?: list<string>,
      *   timeoutOpts?: WebExtractStyleguideParams\TimeoutOpts|TimeoutOptsShape4,
+     *   zdr?: WebExtractStyleguideParams\Zdr|value-of<WebExtractStyleguideParams\Zdr>,
      * }|WebExtractStyleguideParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -301,7 +305,7 @@ final class WebRawService implements WebRawContract
      *   timeoutOpts?: WebScreenshotParams\TimeoutOpts|TimeoutOptsShape5,
      *   viewport?: Viewport|ViewportShape,
      *   waitForMs?: int|null,
-     *   zdr?: Zdr|value-of<Zdr>,
+     *   zdr?: WebScreenshotParams\Zdr|value-of<WebScreenshotParams\Zdr>,
      * }|WebScreenshotParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -344,6 +348,7 @@ final class WebRawService implements WebRawContract
      *   queryFanout?: bool,
      *   tags?: list<string>,
      *   timeoutOpts?: WebSearchParams\TimeoutOpts|TimeoutOptsShape6,
+     *   zdr?: WebSearchParams\Zdr|value-of<WebSearchParams\Zdr>,
      * }|WebSearchParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -524,6 +529,7 @@ final class WebRawService implements WebRawContract
      *   tags?: list<string>,
      *   timeoutOpts?: WebWebScrapeImagesParams\TimeoutOpts|TimeoutOptsShape10,
      *   waitForMs?: int|null,
+     *   zdr?: WebWebScrapeImagesParams\Zdr|value-of<WebWebScrapeImagesParams\Zdr>,
      * }|WebWebScrapeImagesParams $params
      * @param RequestOpts|null $requestOptions
      *

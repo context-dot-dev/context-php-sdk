@@ -11,6 +11,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebAnswersParams\Mode;
 use ContextDev\Web\WebAnswersParams\TimeoutOpts;
+use ContextDev\Web\WebAnswersParams\Zdr;
 
 /**
  * Researches the live web and returns a sourced answer in your requested JSON shape. Select fast for a smaller research budget at 10 credits or ultra for deeper reasoning at 100 credits. Defaults to ultra. Fast research is limited to 30 seconds and ultra to 50 seconds; timeoutOpts.milliseconds can shorten either deadline.
@@ -25,6 +26,7 @@ use ContextDev\Web\WebAnswersParams\TimeoutOpts;
  *   mode?: null|Mode|value-of<Mode>,
  *   tags?: list<string>|null,
  *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
+ *   zdr?: null|Zdr|value-of<Zdr>,
  * }
  */
 final class WebAnswersParams implements BaseModel
@@ -70,6 +72,14 @@ final class WebAnswersParams implements BaseModel
     public ?TimeoutOpts $timeoutOpts;
 
     /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @var value-of<Zdr>|null $zdr
+     */
+    #[Optional(enum: Zdr::class)]
+    public ?string $zdr;
+
+    /**
      * `new WebAnswersParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -97,6 +107,7 @@ final class WebAnswersParams implements BaseModel
      * @param Mode|value-of<Mode>|null $mode
      * @param list<string>|null $tags
      * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
+     * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
         string $task,
@@ -104,6 +115,7 @@ final class WebAnswersParams implements BaseModel
         Mode|string|null $mode = null,
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
+        Zdr|string|null $zdr = null,
     ): self {
         $self = new self;
 
@@ -113,6 +125,7 @@ final class WebAnswersParams implements BaseModel
         null !== $mode && $self['mode'] = $mode;
         null !== $tags && $self['tags'] = $tags;
         null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
+        null !== $zdr && $self['zdr'] = $zdr;
 
         return $self;
     }
@@ -176,6 +189,19 @@ final class WebAnswersParams implements BaseModel
     {
         $self = clone $this;
         $self['timeoutOpts'] = $timeoutOpts;
+
+        return $self;
+    }
+
+    /**
+     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     *
+     * @param Zdr|value-of<Zdr> $zdr
+     */
+    public function withZdr(Zdr|string $zdr): self
+    {
+        $self = clone $this;
+        $self['zdr'] = $zdr;
 
         return $self;
     }

@@ -30,7 +30,7 @@ final class Enrichment implements BaseModel
     public ?bool $classification;
 
     /**
-     * Host materializable images on the Brand.dev CDN and return their URL and MIME type.
+     * Host materializable images on the Brand.dev CDN and return their URL and MIME type. Ignored when zero data retention is enabled.
      */
     #[Optional('hostedUrl')]
     public ?bool $hostedURL;
@@ -85,7 +85,7 @@ final class Enrichment implements BaseModel
     }
 
     /**
-     * Host materializable images on the Brand.dev CDN and return their URL and MIME type.
+     * Host materializable images on the Brand.dev CDN and return their URL and MIME type. Ignored when zero data retention is enabled.
      */
     public function withHostedURL(bool $hostedURL): self
     {

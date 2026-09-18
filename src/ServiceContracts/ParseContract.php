@@ -31,7 +31,7 @@ interface ParseContract
      * @param bool $shortenBase64Images Query param: Shorten base64-encoded image data in the Markdown output
      * @param list<string> $tags Query param: Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
      * @param bool $useMainContentOnly Query param: Extract only the main content from HTML-like inputs
-     * @param Zdr|value-of<Zdr> $zdr Query param: Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * @param Zdr|value-of<Zdr> $zdr Query param: Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

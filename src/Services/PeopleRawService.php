@@ -13,6 +13,7 @@ use ContextDev\People\PersonEnrichParams\Education;
 use ContextDev\People\PersonEnrichParams\Location;
 use ContextDev\People\PersonEnrichParams\Name;
 use ContextDev\People\PersonEnrichParams\TimeoutOpts;
+use ContextDev\People\PersonEnrichParams\Zdr;
 use ContextDev\People\PersonEnrichResponse;
 use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\PeopleRawContract;
@@ -47,6 +48,7 @@ final class PeopleRawService implements PeopleRawContract
      *   socialURLs?: list<string>,
      *   tags?: list<string>,
      *   timeoutOpts?: TimeoutOpts|TimeoutOptsShape,
+     *   zdr?: Zdr|value-of<Zdr>,
      * }|PersonEnrichParams $params
      * @param RequestOpts|null $requestOptions
      *

@@ -55,6 +55,7 @@ final class IndustryTest extends TestCase
             minResults: 1,
             tags: ['production', 'team-alpha'],
             timeoutOpts: ['milliseconds' => 1000, 'behavior' => 'fail'],
+            zdr: 'enabled',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -88,6 +89,7 @@ final class IndustryTest extends TestCase
             tags: ['production', 'team-alpha'],
             timeoutOpts: ['milliseconds' => 1000, 'behavior' => 'fail'],
             type: 'original_sic',
+            zdr: 'enabled',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
