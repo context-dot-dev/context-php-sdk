@@ -11,17 +11,20 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebWebScrapeHTMLParams\Action;
 use ContextDev\Web\WebWebScrapeHTMLParams\Country;
+use ContextDev\Web\WebWebScrapeHTMLParams\ExtractRule;
 use ContextDev\Web\WebWebScrapeHTMLParams\Pdf;
 use ContextDev\Web\WebWebScrapeHTMLParams\TimeoutOpts;
 use ContextDev\Web\WebWebScrapeHTMLParams\Zdr;
 
 /**
- * Scrapes the given URL and returns the raw HTML content of the page. The base request costs 1 credit; requests with browser actions cost 2 credits. A request that hits its timeoutOpts.milliseconds deadline fails with 408 and is not billed, unless timeoutOpts.behavior=return-partial is set — then the page as rendered so far is returned with `finalDOMState: "still-loading"` and billed at the base cost of 1 credit.
+ * Scrapes the given URL and returns the HTML content of the page. Optional extractRules return deterministic structured data in extracted using CSS selectors, attributes, lists, and nested rules, without an LLM or additional credits. Rules run on the returned HTML after selector and main-content filtering. Send extractRules as a JSON-encoded query parameter. The base request costs 1 credit; requests with browser actions cost 2 credits. A request that hits its timeoutOpts.milliseconds deadline fails with 408 and is not billed, unless timeoutOpts.behavior=return-partial is set — then the page as rendered so far is returned with `finalDOMState: "still-loading"` and billed at the base cost of 1 credit.
  *
  * @see ContextDev\Services\WebService::webScrapeHTML()
  *
  * @phpstan-import-type ActionVariants from \ContextDev\Web\WebWebScrapeHTMLParams\Action
+ * @phpstan-import-type ExtractRuleVariants from \ContextDev\Web\WebWebScrapeHTMLParams\ExtractRule
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeHTMLParams\Action
+ * @phpstan-import-type ExtractRuleShape from \ContextDev\Web\WebWebScrapeHTMLParams\ExtractRule
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeHTMLParams\Pdf
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeHTMLParams\TimeoutOpts
  *
@@ -30,6 +33,7 @@ use ContextDev\Web\WebWebScrapeHTMLParams\Zdr;
  *   actions?: list<ActionShape>|null,
  *   country?: null|Country|value-of<Country>,
  *   excludeSelectors?: list<string>|null,
+ *   extractRules?: array<string,ExtractRuleShape>|null,
  *   headers?: array<string,string>|null,
  *   includeFrames?: bool|null,
  *   includeSelectors?: list<string>|null,
@@ -78,6 +82,14 @@ final class WebWebScrapeHTMLParams implements BaseModel
      */
     #[Optional(list: 'string', nullable: true)]
     public ?array $excludeSelectors;
+
+    /**
+     * Optional CSS extraction rules applied to the returned HTML after selector and main-content filtering. Use selector strings ("h1", "a@href") or objects with selector, type (item or list), and output (text, html, @attribute, or nested rules). Text whitespace is normalized; html includes the matched element; attributes are returned as written. Missing items are null and missing lists are empty. CSS only; XPath is not supported. Maximum: 100 fields across 5 levels. Send a JSON-encoded string in the extractRules query parameter.
+     *
+     * @var array<string,ExtractRuleVariants>|null $extractRules
+     */
+    #[Optional(map: ExtractRule::class)]
+    public ?array $extractRules;
 
     /**
      * Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
@@ -180,6 +192,7 @@ final class WebWebScrapeHTMLParams implements BaseModel
      * @param list<ActionShape>|null $actions
      * @param Country|value-of<Country>|null $country
      * @param list<string>|null $excludeSelectors
+     * @param array<string,ExtractRuleShape>|null $extractRules
      * @param array<string,string>|null $headers
      * @param list<string>|null $includeSelectors
      * @param Pdf|PdfShape|null $pdf
@@ -192,6 +205,7 @@ final class WebWebScrapeHTMLParams implements BaseModel
         ?array $actions = null,
         Country|string|null $country = null,
         ?array $excludeSelectors = null,
+        ?array $extractRules = null,
         ?array $headers = null,
         ?bool $includeFrames = null,
         ?array $includeSelectors = null,
@@ -211,6 +225,7 @@ final class WebWebScrapeHTMLParams implements BaseModel
         null !== $actions && $self['actions'] = $actions;
         null !== $country && $self['country'] = $country;
         null !== $excludeSelectors && $self['excludeSelectors'] = $excludeSelectors;
+        null !== $extractRules && $self['extractRules'] = $extractRules;
         null !== $headers && $self['headers'] = $headers;
         null !== $includeFrames && $self['includeFrames'] = $includeFrames;
         null !== $includeSelectors && $self['includeSelectors'] = $includeSelectors;
@@ -272,6 +287,19 @@ final class WebWebScrapeHTMLParams implements BaseModel
     {
         $self = clone $this;
         $self['excludeSelectors'] = $excludeSelectors;
+
+        return $self;
+    }
+
+    /**
+     * Optional CSS extraction rules applied to the returned HTML after selector and main-content filtering. Use selector strings ("h1", "a@href") or objects with selector, type (item or list), and output (text, html, @attribute, or nested rules). Text whitespace is normalized; html includes the matched element; attributes are returned as written. Missing items are null and missing lists are empty. CSS only; XPath is not supported. Maximum: 100 fields across 5 levels. Send a JSON-encoded string in the extractRules query parameter.
+     *
+     * @param array<string,ExtractRuleShape> $extractRules
+     */
+    public function withExtractRules(array $extractRules): self
+    {
+        $self = clone $this;
+        $self['extractRules'] = $extractRules;
 
         return $self;
     }

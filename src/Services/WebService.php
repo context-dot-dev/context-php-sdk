@@ -51,6 +51,7 @@ use ContextDev\Web\WebWebScrapeSitemapResponse;
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts as TimeoutOptsShape7
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeBytesParams\TimeoutOpts as TimeoutOptsShape8
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeHTMLParams\Action as ActionShape1
+ * @phpstan-import-type ExtractRuleShape from \ContextDev\Web\WebWebScrapeHTMLParams\ExtractRule
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeHTMLParams\Pdf as PdfShape2
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeHTMLParams\TimeoutOpts as TimeoutOptsShape9
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeImagesParams\Action as ActionShape2
@@ -553,12 +554,13 @@ final class WebService implements WebContract
     /**
      * @api
      *
-     * Scrapes the given URL and returns the raw HTML content of the page. The base request costs 1 credit; requests with browser actions cost 2 credits. A request that hits its timeoutOpts.milliseconds deadline fails with 408 and is not billed, unless timeoutOpts.behavior=return-partial is set — then the page as rendered so far is returned with `finalDOMState: "still-loading"` and billed at the base cost of 1 credit.
+     * Scrapes the given URL and returns the HTML content of the page. Optional extractRules return deterministic structured data in extracted using CSS selectors, attributes, lists, and nested rules, without an LLM or additional credits. Rules run on the returned HTML after selector and main-content filtering. Send extractRules as a JSON-encoded query parameter. The base request costs 1 credit; requests with browser actions cost 2 credits. A request that hits its timeoutOpts.milliseconds deadline fails with 408 and is not billed, unless timeoutOpts.behavior=return-partial is set — then the page as rendered so far is returned with `finalDOMState: "still-loading"` and billed at the base cost of 1 credit.
      *
      * @param string $url Full URL to scrape (must include http:// or https:// protocol)
      * @param list<ActionShape1>|null $actions Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
      * @param \ContextDev\Web\WebWebScrapeHTMLParams\Country|value-of<\ContextDev\Web\WebWebScrapeHTMLParams\Country> $country fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2)
      * @param list<string>|null $excludeSelectors CSS selectors to remove from the result. Applied after includeSelectors. Exclusion takes precedence: an element matching both is removed. Examples: "nav", "footer", ".ad-banner", "[aria-hidden=true]".
+     * @param array<string,ExtractRuleShape> $extractRules Optional CSS extraction rules applied to the returned HTML after selector and main-content filtering. Use selector strings ("h1", "a@href") or objects with selector, type (item or list), and output (text, html, @attribute, or nested rules). Text whitespace is normalized; html includes the matched element; attributes are returned as written. Missing items are null and missing lists are empty. CSS only; XPath is not supported. Maximum: 100 fields across 5 levels. Send a JSON-encoded string in the extractRules query parameter.
      * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
      * @param bool $includeFrames when true, iframes are rendered inline into the returned HTML
      * @param list<string>|null $includeSelectors CSS selectors. When provided, only matching subtrees (and their descendants) are kept and everything else is dropped. When omitted, the entire document is kept. Examples: "article.main", "#content", "[role=main]".
@@ -579,6 +581,7 @@ final class WebService implements WebContract
         ?array $actions = null,
         \ContextDev\Web\WebWebScrapeHTMLParams\Country|string|null $country = null,
         ?array $excludeSelectors = null,
+        ?array $extractRules = null,
         ?array $headers = null,
         bool $includeFrames = false,
         ?array $includeSelectors = null,
@@ -600,6 +603,7 @@ final class WebService implements WebContract
                 'actions' => $actions,
                 'country' => $country,
                 'excludeSelectors' => $excludeSelectors,
+                'extractRules' => $extractRules,
                 'headers' => $headers,
                 'includeFrames' => $includeFrames,
                 'includeSelectors' => $includeSelectors,

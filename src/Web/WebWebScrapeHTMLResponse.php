@@ -8,17 +8,21 @@ use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Core\Conversion\MapOf;
 use ContextDev\Web\WebWebScrapeHTMLResponse\ActionsApplied;
 use ContextDev\Web\WebWebScrapeHTMLResponse\CacheMetadata;
+use ContextDev\Web\WebWebScrapeHTMLResponse\Extracted;
 use ContextDev\Web\WebWebScrapeHTMLResponse\FinalDomState;
 use ContextDev\Web\WebWebScrapeHTMLResponse\KeyMetadata;
 use ContextDev\Web\WebWebScrapeHTMLResponse\Metadata;
 use ContextDev\Web\WebWebScrapeHTMLResponse\Type;
 
 /**
+ * @phpstan-import-type ExtractedVariants from \ContextDev\Web\WebWebScrapeHTMLResponse\Extracted
  * @phpstan-import-type CacheMetadataShape from \ContextDev\Web\WebWebScrapeHTMLResponse\CacheMetadata
  * @phpstan-import-type MetadataShape from \ContextDev\Web\WebWebScrapeHTMLResponse\Metadata
  * @phpstan-import-type ActionsAppliedShape from \ContextDev\Web\WebWebScrapeHTMLResponse\ActionsApplied
+ * @phpstan-import-type ExtractedShape from \ContextDev\Web\WebWebScrapeHTMLResponse\Extracted
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Web\WebWebScrapeHTMLResponse\KeyMetadata
  *
  * @phpstan-type WebWebScrapeHTMLResponseShape = array{
@@ -32,6 +36,7 @@ use ContextDev\Web\WebWebScrapeHTMLResponse\Type;
  *   url: string,
  *   actionsApplied?: list<ActionsApplied|ActionsAppliedShape>|null,
  *   actionsHTMLStale?: bool|null,
+ *   extracted?: array<string,ExtractedShape|null>|null,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  * }
  */
@@ -107,6 +112,14 @@ final class WebWebScrapeHTMLResponse implements BaseModel
     public ?bool $actionsHTMLStale;
 
     /**
+     * Present only when extractRules is supplied. Keys match the requested fields. Values are normalized text, raw attribute strings, outer HTML, nested objects, or lists. Missing items are null; lists with no matches are empty. Rules run on the returned HTML after filtering.
+     *
+     * @var array<string,ExtractedVariants|null>|null $extracted
+     */
+    #[Optional(type: new MapOf(Extracted::class, nullable: true))]
+    public ?array $extracted;
+
+    /**
      * Credit usage, included whenever a valid API key is provided.
      */
     #[Optional('key_metadata')]
@@ -158,6 +171,7 @@ final class WebWebScrapeHTMLResponse implements BaseModel
      * @param Metadata|MetadataShape $metadata
      * @param Type|value-of<Type> $type
      * @param list<ActionsApplied|ActionsAppliedShape>|null $actionsApplied
+     * @param array<string,ExtractedShape|null>|null $extracted
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
     public static function with(
@@ -171,6 +185,7 @@ final class WebWebScrapeHTMLResponse implements BaseModel
         string $url,
         ?array $actionsApplied = null,
         ?bool $actionsHTMLStale = null,
+        ?array $extracted = null,
         KeyMetadata|array|null $keyMetadata = null,
     ): self {
         $self = new self;
@@ -186,6 +201,7 @@ final class WebWebScrapeHTMLResponse implements BaseModel
 
         null !== $actionsApplied && $self['actionsApplied'] = $actionsApplied;
         null !== $actionsHTMLStale && $self['actionsHTMLStale'] = $actionsHTMLStale;
+        null !== $extracted && $self['extracted'] = $extracted;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
 
         return $self;
@@ -307,6 +323,19 @@ final class WebWebScrapeHTMLResponse implements BaseModel
     {
         $self = clone $this;
         $self['actionsHTMLStale'] = $actionsHTMLStale;
+
+        return $self;
+    }
+
+    /**
+     * Present only when extractRules is supplied. Keys match the requested fields. Values are normalized text, raw attribute strings, outer HTML, nested objects, or lists. Missing items are null; lists with no matches are empty. Rules run on the returned HTML after filtering.
+     *
+     * @param array<string,ExtractedShape|null> $extracted
+     */
+    public function withExtracted(array $extracted): self
+    {
+        $self = clone $this;
+        $self['extracted'] = $extracted;
 
         return $self;
     }

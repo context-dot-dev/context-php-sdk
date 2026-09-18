@@ -354,6 +354,7 @@ final class WebTest extends TestCase
             actions: [['do' => 'wait', 'timeMs' => 0]],
             country: 'de',
             excludeSelectors: ['x'],
+            extractRules: ['foo' => 'x'],
             headers: ['foo' => 'J!'],
             includeFrames: true,
             includeSelectors: ['x'],

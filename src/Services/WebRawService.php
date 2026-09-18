@@ -65,6 +65,7 @@ use ContextDev\Web\WebWebScrapeSitemapResponse;
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts as TimeoutOptsShape7
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeBytesParams\TimeoutOpts as TimeoutOptsShape8
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeHTMLParams\Action as ActionShape1
+ * @phpstan-import-type ExtractRuleShape from \ContextDev\Web\WebWebScrapeHTMLParams\ExtractRule
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeHTMLParams\Pdf as PdfShape2
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeHTMLParams\TimeoutOpts as TimeoutOptsShape9
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeImagesParams\Action as ActionShape2
@@ -463,13 +464,14 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Scrapes the given URL and returns the raw HTML content of the page. The base request costs 1 credit; requests with browser actions cost 2 credits. A request that hits its timeoutOpts.milliseconds deadline fails with 408 and is not billed, unless timeoutOpts.behavior=return-partial is set — then the page as rendered so far is returned with `finalDOMState: "still-loading"` and billed at the base cost of 1 credit.
+     * Scrapes the given URL and returns the HTML content of the page. Optional extractRules return deterministic structured data in extracted using CSS selectors, attributes, lists, and nested rules, without an LLM or additional credits. Rules run on the returned HTML after selector and main-content filtering. Send extractRules as a JSON-encoded query parameter. The base request costs 1 credit; requests with browser actions cost 2 credits. A request that hits its timeoutOpts.milliseconds deadline fails with 408 and is not billed, unless timeoutOpts.behavior=return-partial is set — then the page as rendered so far is returned with `finalDOMState: "still-loading"` and billed at the base cost of 1 credit.
      *
      * @param array{
      *   url: string,
      *   actions?: list<ActionShape1>|null,
      *   country?: value-of<WebWebScrapeHTMLParams\Country>,
      *   excludeSelectors?: list<string>|null,
+     *   extractRules?: array<string,ExtractRuleShape>,
      *   headers?: array<string,string>,
      *   includeFrames?: bool,
      *   includeSelectors?: list<string>|null,
