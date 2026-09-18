@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.18.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.17.1...v2.18.0) (2026-09-18)
+
+
+### Features
+
+* **api:** enable ZDR on remaining AI endpoints via OpenAI ([#1099](https://github.com/context-dot-dev/context-php-sdk/issues/1099)) ([133be34](https://github.com/context-dot-dev/context-php-sdk/commit/133be34fbabf9ee38341369a40c49fb9e6ea042f))
+* **products:** extract ProductGroup variants with images ([#1124](https://github.com/context-dot-dev/context-php-sdk/issues/1124)) ([eae00ad](https://github.com/context-dot-dev/context-php-sdk/commit/eae00ad91bb3dd7cd87f3c739598ee1c9f6c72dc))
+* **scrape:** add CSS extraction rules to HTML scraping ([#1146](https://github.com/context-dot-dev/context-php-sdk/issues/1146)) ([3f110e4](https://github.com/context-dot-dev/context-php-sdk/commit/3f110e410162d35f640adae429851852633eb603))
+* **web:** add URL-based scrape screenshot endpoint ([#1150](https://github.com/context-dot-dev/context-php-sdk/issues/1150)) ([25b9c1c](https://github.com/context-dot-dev/context-php-sdk/commit/25b9c1c2d6e48ff938a57342a7a9550366300991))
+
+
+### Bug Fixes
+
+* **api:** lower partial scrape timeout minimum to five seconds ([#1118](https://github.com/context-dot-dev/context-php-sdk/issues/1118)) ([c6c30a3](https://github.com/context-dot-dev/context-php-sdk/commit/c6c30a34d8c6d1f64d65306d17ec5214812c2c94))
+
 ## [2.17.1](https://github.com/context-dot-dev/context-php-sdk/compare/v2.17.0...v2.17.1) (2026-09-15)
 
 
