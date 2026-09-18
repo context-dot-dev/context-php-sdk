@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.19.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.18.0...v2.19.0) (2026-09-18)
+
+
+### Features
+
+* **billing:** charge for 404s and skip fraud accounting ([#1152](https://github.com/context-dot-dev/context-php-sdk/issues/1152)) ([780b335](https://github.com/context-dot-dev/context-php-sdk/commit/780b335c451883490d44a76e67f1aebad4cd1596))
+
 ## [2.18.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.17.1...v2.18.0) (2026-09-18)
 
 
