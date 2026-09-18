@@ -33,6 +33,7 @@ use ContextDev\Web\WebWebScrapeHTMLResponse;
 use ContextDev\Web\WebWebScrapeImagesParams\Enrichment;
 use ContextDev\Web\WebWebScrapeImagesResponse;
 use ContextDev\Web\WebWebScrapeMdResponse;
+use ContextDev\Web\WebWebScrapeScreenshotResponse;
 use ContextDev\Web\WebWebScrapeSitemapResponse;
 
 /**
@@ -60,7 +61,9 @@ use ContextDev\Web\WebWebScrapeSitemapResponse;
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebWebScrapeMdParams\Action as ActionShape3
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebScrapeMdParams\Pdf as PdfShape3
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeMdParams\TimeoutOpts as TimeoutOptsShape11
- * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeSitemapParams\TimeoutOpts as TimeoutOptsShape12
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeScreenshotParams\TimeoutOpts as TimeoutOptsShape12
+ * @phpstan-import-type ViewportShape from \ContextDev\Web\WebWebScrapeScreenshotParams\Viewport as ViewportShape1
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebScrapeSitemapParams\TimeoutOpts as TimeoutOptsShape13
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class WebService implements WebContract
@@ -795,6 +798,69 @@ final class WebService implements WebContract
     /**
      * @api
      *
+     * Capture the given HTTP or HTTPS URL with configurable viewport, full-page capture, wait time, popup handling, theme, scroll offset, cache age, country, and request timeout. Defaults to a 1920x1080 viewport, a 3-second wait, and a cache age of 1 day. With timeoutOpts.behavior=return-partial, a screenshot of the page rendered so far may be returned; inspect finalDOMState to identify an incomplete render. Successful requests cost 1 credit; errors are not billed.
+     *
+     * @param bool $clearPopups Optional parameter for comprehensive popup cleanup. If 'true', the browser dismisses detected cookie/consent UI and clears other detected obstructive popups and overlays before capture. If 'false' or not provided, this parameter requests no cleanup; handleCookiePopup can still request cookie/consent handling independently.
+     * @param \ContextDev\Web\WebWebScrapeScreenshotParams\ColorScheme|value-of<\ContextDev\Web\WebWebScrapeScreenshotParams\ColorScheme> $colorScheme Optional parameter to choose the site's visual theme in the screenshot. Use 'light' or 'dark' when the site offers both appearances.
+     * @param \ContextDev\Web\WebWebScrapeScreenshotParams\Country|value-of<\ContextDev\Web\WebWebScrapeScreenshotParams\Country> $country fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2)
+     * @param \ContextDev\Web\WebWebScrapeScreenshotParams\FullScreenshot|value-of<\ContextDev\Web\WebWebScrapeScreenshotParams\FullScreenshot> $fullScreenshot Optional parameter to determine screenshot type. If 'true', takes a full page screenshot capturing all content. If 'false' or not provided, takes a viewport screenshot (standard browser view).
+     * @param bool $handleCookiePopup Optional parameter to control cookie/consent popup handling. If 'true', we dismiss cookie banner before capture. If 'false' or not provided, captures the page without that step.
+     * @param int|null $maxAgeMs Return a cached screenshot if a prior screenshot for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always capture fresh.
+     * @param int|null $scrollOffset Optional vertical scroll offset in pixels for capturing a long page in viewport-sized chunks. When provided, the full page is captured once and the returned image is the viewport-sized slice that begins at this Y offset (e.g. request scrollOffset=0, then 1080, then 2160 to walk a 1920x1080 landing page top to bottom). The final slice may be shorter than the viewport height. Takes precedence over fullScreenshot. Max: 100000.
+     * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * @param \ContextDev\Web\WebWebScrapeScreenshotParams\TimeoutOpts|TimeoutOptsShape12 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * @param \ContextDev\Web\WebWebScrapeScreenshotParams\Viewport|ViewportShape1 $viewport Optional browser viewport dimensions for the screenshot. Defaults to 1920x1080.
+     * @param int|null $waitForMs Optional browser wait time in milliseconds after initial page load before taking the screenshot. Min: 0. Max: 30000 (30 seconds). Defaults to 3000 ms when omitted. When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
+     * @param \ContextDev\Web\WebWebScrapeScreenshotParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeScreenshotParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function webScrapeScreenshot(
+        string $url,
+        bool $clearPopups = false,
+        \ContextDev\Web\WebWebScrapeScreenshotParams\ColorScheme|string|null $colorScheme = null,
+        \ContextDev\Web\WebWebScrapeScreenshotParams\Country|string|null $country = null,
+        \ContextDev\Web\WebWebScrapeScreenshotParams\FullScreenshot|string|null $fullScreenshot = null,
+        bool $handleCookiePopup = false,
+        ?int $maxAgeMs = 86400000,
+        ?int $scrollOffset = null,
+        ?array $tags = null,
+        \ContextDev\Web\WebWebScrapeScreenshotParams\TimeoutOpts|array|null $timeoutOpts = null,
+        \ContextDev\Web\WebWebScrapeScreenshotParams\Viewport|array $viewport = [
+            'width' => 1920, 'height' => 1080,
+        ],
+        ?int $waitForMs = 3000,
+        \ContextDev\Web\WebWebScrapeScreenshotParams\Zdr|string $zdr = 'disabled',
+        RequestOptions|array|null $requestOptions = null,
+    ): WebWebScrapeScreenshotResponse {
+        $params = Util::removeNulls(
+            [
+                'url' => $url,
+                'clearPopups' => $clearPopups,
+                'colorScheme' => $colorScheme,
+                'country' => $country,
+                'fullScreenshot' => $fullScreenshot,
+                'handleCookiePopup' => $handleCookiePopup,
+                'maxAgeMs' => $maxAgeMs,
+                'scrollOffset' => $scrollOffset,
+                'tags' => $tags,
+                'timeoutOpts' => $timeoutOpts,
+                'viewport' => $viewport,
+                'waitForMs' => $waitForMs,
+                'zdr' => $zdr,
+            ],
+        );
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->webScrapeScreenshot(params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
      * Crawl an entire website's sitemap and return all discovered page URLs. Set `includeSubdomains=true` to also discover public pages and sitemaps on child hosts such as `docs.example.com` or `brand.example.com`. Pass `search` to have the discovered URLs filtered down to the pages about a phrase (for example `pricing and plans` or `api authentication docs`), most relevant first — a searched crawl scans the whole sitemap and costs 2 credits instead of 1.
      *
      * @param string $domain Domain to build a sitemap for
@@ -804,7 +870,7 @@ final class WebService implements WebContract
      * @param string $search Optional search phrase. When provided, the crawled sitemap is filtered to the pages whose URLs are about that phrase, most relevant first, and the request costs 2 credits instead of 1.
      * @param string $sitemapURL Optional explicit sitemap URL. When provided, exactly this sitemap is crawled instead of discovering the domain's sitemaps.
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
-     * @param \ContextDev\Web\WebWebScrapeSitemapParams\TimeoutOpts|TimeoutOptsShape12 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * @param \ContextDev\Web\WebWebScrapeSitemapParams\TimeoutOpts|TimeoutOptsShape13 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param string $urlRegex Optional RE2-compatible regex pattern. Only URLs matching this pattern are returned and counted against maxLinks.
      * @param \ContextDev\Web\WebWebScrapeSitemapParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeSitemapParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions

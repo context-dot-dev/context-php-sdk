@@ -16,6 +16,7 @@ use ContextDev\Web\WebWebScrapeBytesResponse;
 use ContextDev\Web\WebWebScrapeHTMLResponse;
 use ContextDev\Web\WebWebScrapeImagesResponse;
 use ContextDev\Web\WebWebScrapeMdResponse;
+use ContextDev\Web\WebWebScrapeScreenshotResponse;
 use ContextDev\Web\WebWebScrapeSitemapResponse;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
@@ -462,6 +463,48 @@ final class WebTest extends TestCase
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(WebWebScrapeMdResponse::class, $result);
+    }
+
+    #[Test]
+    public function testWebScrapeScreenshot(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->web->webScrapeScreenshot(
+            url: 'https://example.com'
+        );
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(WebWebScrapeScreenshotResponse::class, $result);
+    }
+
+    #[Test]
+    public function testWebScrapeScreenshotWithOptionalParams(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->web->webScrapeScreenshot(
+            url: 'https://example.com',
+            clearPopups: true,
+            colorScheme: 'light',
+            country: 'de',
+            fullScreenshot: 'true',
+            handleCookiePopup: true,
+            maxAgeMs: 0,
+            scrollOffset: 0,
+            tags: ['production', 'team-alpha'],
+            timeoutOpts: ['milliseconds' => 1, 'behavior' => 'fail'],
+            viewport: ['height' => 240, 'width' => 240],
+            waitForMs: 0,
+            zdr: 'enabled',
+        );
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(WebWebScrapeScreenshotResponse::class, $result);
     }
 
     #[Test]
