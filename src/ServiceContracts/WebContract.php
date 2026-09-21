@@ -337,6 +337,7 @@ interface WebContract
      * @param array<string,string> $headers Optional outbound HTTP headers, such as Referer, Cookie, or Authorization. Send as a JSON object or deep-object query params such as headers[Referer]=https://example.com/. Host, Content-Length, and hop-by-hop transport headers are rejected. Authorization and cookies are removed when a redirect changes origin.
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
      * @param \ContextDev\Web\WebWebScrapeBytesParams\TimeoutOpts|TimeoutOptsShape8 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * @param int|null $waitForMs Optional browser wait time after initial page load, in milliseconds (0–30000; 0 uses 500). When supplied, HTML is rendered with JavaScript and returned as UTF-8 bytes. Other resources keep their original bytes without a browser wait. Omit to download the original HTTP response. When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
      * @param \ContextDev\Web\WebWebScrapeBytesParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeBytesParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
@@ -348,6 +349,7 @@ interface WebContract
         ?array $headers = null,
         ?array $tags = null,
         \ContextDev\Web\WebWebScrapeBytesParams\TimeoutOpts|array|null $timeoutOpts = null,
+        ?int $waitForMs = null,
         \ContextDev\Web\WebWebScrapeBytesParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): WebWebScrapeBytesResponse;

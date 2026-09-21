@@ -14,7 +14,7 @@ use ContextDev\Web\WebWebScrapeBytesParams\TimeoutOpts;
 use ContextDev\Web\WebWebScrapeBytesParams\Zdr;
 
 /**
- * Downloads a resource and returns its bytes as base64. Supports images, PDFs, HTML pages, and any other content type without image conversion, text extraction, or character-encoding changes. HTTP compression is decoded before base64 encoding. HTML is the original HTTP response; JavaScript is not rendered. Follows public redirects and retries failed downloads through ISP and residential proxies, with a direct fallback. When country is specified, only a residential proxy in that country is used. Supply headers such as Referer for images that require a referring page. Downloads are not cached. Maximum decoded resource size: 20 MiB (20971520 bytes), before base64 encoding. Successful requests cost 1 credit; errors are not billed.
+ * Downloads a resource and returns its bytes as base64. Without waitForMs, returns the original HTTP response without image conversion, text extraction, or character-encoding changes. HTTP compression is decoded before base64 encoding. Supply waitForMs to render HTML with JavaScript in the browser and return the resulting HTML as UTF-8 bytes after the wait. Non-HTML resources, including images and PDFs, keep their original bytes and do not incur a browser wait. Follows public redirects and retries failed downloads through ISP and residential proxies, with a direct fallback. When country is specified, only a residential proxy in that country is used. Supply headers such as Referer for images that require a referring page. Downloads are not cached. Maximum decoded resource size: 20 MiB (20971520 bytes), before base64 encoding. Successful requests cost 1 credit; errors are not billed.
  *
  * @see ContextDev\Services\WebService::webScrapeBytes()
  *
@@ -26,6 +26,7 @@ use ContextDev\Web\WebWebScrapeBytesParams\Zdr;
  *   headers?: array<string,string>|null,
  *   tags?: list<string>|null,
  *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
+ *   waitForMs?: int|null,
  *   zdr?: null|Zdr|value-of<Zdr>,
  * }
  */
@@ -72,6 +73,12 @@ final class WebWebScrapeBytesParams implements BaseModel
     public ?TimeoutOpts $timeoutOpts;
 
     /**
+     * Optional browser wait time after initial page load, in milliseconds (0–30000; 0 uses 500). When supplied, HTML is rendered with JavaScript and returned as UTF-8 bytes. Other resources keep their original bytes without a browser wait. Omit to download the original HTTP response. When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
+     */
+    #[Optional(nullable: true)]
+    public ?int $waitForMs;
+
+    /**
      * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      *
      * @var value-of<Zdr>|null $zdr
@@ -115,6 +122,7 @@ final class WebWebScrapeBytesParams implements BaseModel
         ?array $headers = null,
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
+        ?int $waitForMs = null,
         Zdr|string|null $zdr = null,
     ): self {
         $self = new self;
@@ -125,6 +133,7 @@ final class WebWebScrapeBytesParams implements BaseModel
         null !== $headers && $self['headers'] = $headers;
         null !== $tags && $self['tags'] = $tags;
         null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
+        null !== $waitForMs && $self['waitForMs'] = $waitForMs;
         null !== $zdr && $self['zdr'] = $zdr;
 
         return $self;
@@ -189,6 +198,17 @@ final class WebWebScrapeBytesParams implements BaseModel
     {
         $self = clone $this;
         $self['timeoutOpts'] = $timeoutOpts;
+
+        return $self;
+    }
+
+    /**
+     * Optional browser wait time after initial page load, in milliseconds (0–30000; 0 uses 500). When supplied, HTML is rendered with JavaScript and returned as UTF-8 bytes. Other resources keep their original bytes without a browser wait. Omit to download the original HTTP response. When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
+     */
+    public function withWaitForMs(?int $waitForMs): self
+    {
+        $self = clone $this;
+        $self['waitForMs'] = $waitForMs;
 
         return $self;
     }

@@ -531,13 +531,14 @@ final class WebService implements WebContract
     /**
      * @api
      *
-     * Downloads a resource and returns its bytes as base64. Supports images, PDFs, HTML pages, and any other content type without image conversion, text extraction, or character-encoding changes. HTTP compression is decoded before base64 encoding. HTML is the original HTTP response; JavaScript is not rendered. Follows public redirects and retries failed downloads through ISP and residential proxies, with a direct fallback. When country is specified, only a residential proxy in that country is used. Supply headers such as Referer for images that require a referring page. Downloads are not cached. Maximum decoded resource size: 20 MiB (20971520 bytes), before base64 encoding. Successful requests cost 1 credit; errors are not billed.
+     * Downloads a resource and returns its bytes as base64. Without waitForMs, returns the original HTTP response without image conversion, text extraction, or character-encoding changes. HTTP compression is decoded before base64 encoding. Supply waitForMs to render HTML with JavaScript in the browser and return the resulting HTML as UTF-8 bytes after the wait. Non-HTML resources, including images and PDFs, keep their original bytes and do not incur a browser wait. Follows public redirects and retries failed downloads through ISP and residential proxies, with a direct fallback. When country is specified, only a residential proxy in that country is used. Supply headers such as Referer for images that require a referring page. Downloads are not cached. Maximum decoded resource size: 20 MiB (20971520 bytes), before base64 encoding. Successful requests cost 1 credit; errors are not billed.
      *
      * @param string $url full HTTP(S) URL of the resource to download, such as an image, PDF, or page
      * @param \ContextDev\Web\WebWebScrapeBytesParams\Country|value-of<\ContextDev\Web\WebWebScrapeBytesParams\Country> $country fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2)
      * @param array<string,string> $headers Optional outbound HTTP headers, such as Referer, Cookie, or Authorization. Send as a JSON object or deep-object query params such as headers[Referer]=https://example.com/. Host, Content-Length, and hop-by-hop transport headers are rejected. Authorization and cookies are removed when a redirect changes origin.
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
      * @param \ContextDev\Web\WebWebScrapeBytesParams\TimeoutOpts|TimeoutOptsShape8 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * @param int|null $waitForMs Optional browser wait time after initial page load, in milliseconds (0–30000; 0 uses 500). When supplied, HTML is rendered with JavaScript and returned as UTF-8 bytes. Other resources keep their original bytes without a browser wait. Omit to download the original HTTP response. When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
      * @param \ContextDev\Web\WebWebScrapeBytesParams\Zdr|value-of<\ContextDev\Web\WebWebScrapeBytesParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
      * @param RequestOpts|null $requestOptions
      *
@@ -549,6 +550,7 @@ final class WebService implements WebContract
         ?array $headers = null,
         ?array $tags = null,
         \ContextDev\Web\WebWebScrapeBytesParams\TimeoutOpts|array|null $timeoutOpts = null,
+        ?int $waitForMs = null,
         \ContextDev\Web\WebWebScrapeBytesParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): WebWebScrapeBytesResponse {
@@ -559,6 +561,7 @@ final class WebService implements WebContract
                 'headers' => $headers,
                 'tags' => $tags,
                 'timeoutOpts' => $timeoutOpts,
+                'waitForMs' => $waitForMs,
                 'zdr' => $zdr,
             ],
         );
