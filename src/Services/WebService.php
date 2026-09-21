@@ -328,6 +328,7 @@ final class WebService implements WebContract
      * @param string $domain Domain name to take screenshot of (e.g., 'example.com', 'google.com'). The domain will be automatically normalized and validated. You must provide either 'domain' or 'directUrl', but not both.
      * @param FullScreenshot|value-of<FullScreenshot> $fullScreenshot Optional parameter to determine screenshot type. If 'true', takes a full page screenshot capturing all content. If 'false' or not provided, takes a viewport screenshot (standard browser view).
      * @param bool $handleCookiePopup Optional parameter to control cookie/consent popup handling. If 'true', we dismiss cookie banner before capture. If 'false' or not provided, captures the page without that step.
+     * @param array<string,string> $headers Optional outbound HTTP headers, using the same JSON object or deep-object query format as other scrape endpoints (for example headers[Authorization]=Bearer token). Headers are scoped to the target origin during capture. For domain/page requests, discovery receives no custom headers and only pages on the resolved origin are eligible. Non-empty headers bypass screenshot caching and return an in-memory data URL; no screenshot is uploaded. Empty objects behave like omitted headers.
      * @param int|null $maxAgeMs Return a cached screenshot if a prior screenshot for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always capture fresh.
      * @param Page|value-of<Page> $page Optional parameter to specify which page type to screenshot. If provided, the system will scrape the domain's links and use heuristics to find the most appropriate URL for the specified page type (30 supported languages). If not provided, screenshots the main domain landing page. Only applicable when using 'domain', not 'directUrl'.
      * @param int|null $scrollOffset Optional vertical scroll offset in pixels for capturing a long page in viewport-sized chunks. When provided, the full page is captured once and the returned image is the viewport-sized slice that begins at this Y offset (e.g. request scrollOffset=0, then 1080, then 2160 to walk a 1920x1080 landing page top to bottom). The final slice may be shorter than the viewport height. Takes precedence over fullScreenshot. Max: 100000.
@@ -348,6 +349,7 @@ final class WebService implements WebContract
         ?string $domain = null,
         FullScreenshot|string|null $fullScreenshot = null,
         bool $handleCookiePopup = false,
+        ?array $headers = null,
         ?int $maxAgeMs = 86400000,
         Page|string|null $page = null,
         ?int $scrollOffset = null,
@@ -367,6 +369,7 @@ final class WebService implements WebContract
                 'domain' => $domain,
                 'fullScreenshot' => $fullScreenshot,
                 'handleCookiePopup' => $handleCookiePopup,
+                'headers' => $headers,
                 'maxAgeMs' => $maxAgeMs,
                 'page' => $page,
                 'scrollOffset' => $scrollOffset,
@@ -808,6 +811,7 @@ final class WebService implements WebContract
      * @param \ContextDev\Web\WebWebScrapeScreenshotParams\Country|value-of<\ContextDev\Web\WebWebScrapeScreenshotParams\Country> $country fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2)
      * @param \ContextDev\Web\WebWebScrapeScreenshotParams\FullScreenshot|value-of<\ContextDev\Web\WebWebScrapeScreenshotParams\FullScreenshot> $fullScreenshot Optional parameter to determine screenshot type. If 'true', takes a full page screenshot capturing all content. If 'false' or not provided, takes a viewport screenshot (standard browser view).
      * @param bool $handleCookiePopup Optional parameter to control cookie/consent popup handling. If 'true', we dismiss cookie banner before capture. If 'false' or not provided, captures the page without that step.
+     * @param array<string,string> $headers Optional outbound HTTP headers, using the same JSON object or deep-object query format as other scrape endpoints (for example headers[Authorization]=Bearer token). Headers are scoped to the target origin during capture. For domain/page requests, discovery receives no custom headers and only pages on the resolved origin are eligible. Non-empty headers bypass screenshot caching and return an in-memory data URL; no screenshot is uploaded. Empty objects behave like omitted headers.
      * @param int|null $maxAgeMs Return a cached screenshot if a prior screenshot for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always capture fresh.
      * @param int|null $scrollOffset Optional vertical scroll offset in pixels for capturing a long page in viewport-sized chunks. When provided, the full page is captured once and the returned image is the viewport-sized slice that begins at this Y offset (e.g. request scrollOffset=0, then 1080, then 2160 to walk a 1920x1080 landing page top to bottom). The final slice may be shorter than the viewport height. Takes precedence over fullScreenshot. Max: 100000.
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
@@ -826,6 +830,7 @@ final class WebService implements WebContract
         \ContextDev\Web\WebWebScrapeScreenshotParams\Country|string|null $country = null,
         \ContextDev\Web\WebWebScrapeScreenshotParams\FullScreenshot|string|null $fullScreenshot = null,
         bool $handleCookiePopup = false,
+        ?array $headers = null,
         ?int $maxAgeMs = 86400000,
         ?int $scrollOffset = null,
         ?array $tags = null,
@@ -845,6 +850,7 @@ final class WebService implements WebContract
                 'country' => $country,
                 'fullScreenshot' => $fullScreenshot,
                 'handleCookiePopup' => $handleCookiePopup,
+                'headers' => $headers,
                 'maxAgeMs' => $maxAgeMs,
                 'scrollOffset' => $scrollOffset,
                 'tags' => $tags,

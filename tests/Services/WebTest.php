@@ -495,6 +495,7 @@ final class WebTest extends TestCase
             country: 'de',
             fullScreenshot: 'true',
             handleCookiePopup: true,
+            headers: ['foo' => 'J!'],
             maxAgeMs: 0,
             scrollOffset: 0,
             tags: ['production', 'team-alpha'],
