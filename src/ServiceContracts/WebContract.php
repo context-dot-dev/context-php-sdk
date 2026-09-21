@@ -220,7 +220,7 @@ interface WebContract
      * @param string $url the URL to scrape
      * @param ImageParams|ImageParamsShape $imageParams Image options. Requires formats.images: true.
      * @param MarkdownParams|MarkdownParamsShape $markdownParams Markdown options. Requires formats.markdown: true.
-     * @param int $maxAgeMs Maximum age for the entire capture, including bytes. Defaults to 1 day; 0 fetches fresh. Captures with hosted image files refresh after 23 hours.
+     * @param int $maxAgeMs Maximum age of each cached output. Defaults to 1 day; 0 fetches fresh and updates the requested outputs. Compatible outputs are shared with the individual scrape endpoints. Image results with hosted files refresh after 23 hours; other outputs retain their own freshness.
      * @param ParseParams|ParseParamsShape $parseParams Required when formats.parse is true.
      * @param ScreenshotParams|ScreenshotParamsShape $screenshotParams Screenshot options. Requires formats.screenshot: true.
      * @param SharedParams|SharedParamsShape $sharedParams Shared browser and content settings. Content filters leave screenshots and original bytes unchanged.
