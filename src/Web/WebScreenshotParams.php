@@ -32,6 +32,7 @@ use ContextDev\Web\WebScreenshotParams\Zdr;
  *   domain?: string|null,
  *   fullScreenshot?: null|FullScreenshot|value-of<FullScreenshot>,
  *   handleCookiePopup?: bool|null,
+ *   headers?: array<string,string>|null,
  *   maxAgeMs?: int|null,
  *   page?: null|Page|value-of<Page>,
  *   scrollOffset?: int|null,
@@ -95,6 +96,14 @@ final class WebScreenshotParams implements BaseModel
      */
     #[Optional]
     public ?bool $handleCookiePopup;
+
+    /**
+     * Optional outbound HTTP headers, using the same JSON object or deep-object query format as other scrape endpoints (for example headers[Authorization]=Bearer token). Headers are scoped to the target origin during capture. For domain/page requests, discovery receives no custom headers and only pages on the resolved origin are eligible. Non-empty headers bypass screenshot caching and return an in-memory data URL; no screenshot is uploaded. Empty objects behave like omitted headers.
+     *
+     * @var array<string,string>|null $headers
+     */
+    #[Optional(map: 'string')]
+    public ?array $headers;
 
     /**
      * Return a cached screenshot if a prior screenshot for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always capture fresh.
@@ -163,6 +172,7 @@ final class WebScreenshotParams implements BaseModel
      * @param ColorScheme|value-of<ColorScheme>|null $colorScheme
      * @param Country|value-of<Country>|null $country
      * @param FullScreenshot|value-of<FullScreenshot>|null $fullScreenshot
+     * @param array<string,string>|null $headers
      * @param Page|value-of<Page>|null $page
      * @param list<string>|null $tags
      * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
@@ -177,6 +187,7 @@ final class WebScreenshotParams implements BaseModel
         ?string $domain = null,
         FullScreenshot|string|null $fullScreenshot = null,
         ?bool $handleCookiePopup = null,
+        ?array $headers = null,
         ?int $maxAgeMs = null,
         Page|string|null $page = null,
         ?int $scrollOffset = null,
@@ -195,6 +206,7 @@ final class WebScreenshotParams implements BaseModel
         null !== $domain && $self['domain'] = $domain;
         null !== $fullScreenshot && $self['fullScreenshot'] = $fullScreenshot;
         null !== $handleCookiePopup && $self['handleCookiePopup'] = $handleCookiePopup;
+        null !== $headers && $self['headers'] = $headers;
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
         null !== $page && $self['page'] = $page;
         null !== $scrollOffset && $self['scrollOffset'] = $scrollOffset;
@@ -287,6 +299,19 @@ final class WebScreenshotParams implements BaseModel
     {
         $self = clone $this;
         $self['handleCookiePopup'] = $handleCookiePopup;
+
+        return $self;
+    }
+
+    /**
+     * Optional outbound HTTP headers, using the same JSON object or deep-object query format as other scrape endpoints (for example headers[Authorization]=Bearer token). Headers are scoped to the target origin during capture. For domain/page requests, discovery receives no custom headers and only pages on the resolved origin are eligible. Non-empty headers bypass screenshot caching and return an in-memory data URL; no screenshot is uploaded. Empty objects behave like omitted headers.
+     *
+     * @param array<string,string> $headers
+     */
+    public function withHeaders(array $headers): self
+    {
+        $self = clone $this;
+        $self['headers'] = $headers;
 
         return $self;
     }

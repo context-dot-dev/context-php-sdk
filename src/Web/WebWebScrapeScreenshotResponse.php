@@ -51,7 +51,7 @@ final class WebWebScrapeScreenshotResponse implements BaseModel
     public string $requestID;
 
     /**
-     * Public image URL for standard requests, or an in-memory data URL when ZDR is enabled.
+     * Public image URL for standard requests, or an in-memory data URL when ZDR or non-empty custom headers are supplied.
      */
     #[Required]
     public string $screenshot;
@@ -184,7 +184,7 @@ final class WebWebScrapeScreenshotResponse implements BaseModel
     }
 
     /**
-     * Public image URL for standard requests, or an in-memory data URL when ZDR is enabled.
+     * Public image URL for standard requests, or an in-memory data URL when ZDR or non-empty custom headers are supplied.
      */
     public function withScreenshot(string $screenshot): self
     {

@@ -14,7 +14,7 @@ use ContextDev\Web\WebWebScrapeBytesParams\TimeoutOpts;
 use ContextDev\Web\WebWebScrapeBytesParams\Zdr;
 
 /**
- * Downloads a resource and returns its bytes as base64. Supports images, PDFs, HTML pages, and any other content type without image conversion, text extraction, or character-encoding changes. HTTP compression is decoded before base64 encoding. HTML is the original HTTP response; JavaScript is not rendered. Follows public redirects and retries failed downloads through ISP and residential proxies, with a direct fallback. When country is specified, only a residential proxy in that country is used. Supply headers such as Referer for images that require a referring page. Downloads are not cached. Maximum decoded resource size: 20 MiB (20971520 bytes), before base64 encoding. Successful requests cost 1 credit; errors are not billed.
+ * Downloads a resource and returns its bytes as base64. Without waitForMs, returns the original HTTP response without image conversion, text extraction, or character-encoding changes. HTTP compression is decoded before base64 encoding. Supply waitForMs to render HTML with JavaScript in the browser and return the resulting HTML as UTF-8 bytes after the wait. Non-HTML resources, including images and PDFs, keep their original bytes and do not incur a browser wait. Follows public redirects and retries failed downloads through ISP and residential proxies, with a direct fallback. When country is specified, only a residential proxy in that country is used. Supply headers such as Referer for images that require a referring page. Cached results are reused according to maxAgeMs (default: 1 day; maximum: 30 days). Set maxAgeMs=0 to fetch fresh and refresh the cache. Cache identity includes the exact URL, country, waitForMs, and normalized outbound headers. Credential-bearing headers and zero data retention bypass cache reads and writes. cache_metadata reports hit, miss, or zdr and the cached result age in milliseconds. Maximum decoded resource size: 20 MiB (20971520 bytes), before base64 encoding. Successful requests cost 1 credit; errors are not billed.
  *
  * @see ContextDev\Services\WebService::webScrapeBytes()
  *
@@ -24,8 +24,10 @@ use ContextDev\Web\WebWebScrapeBytesParams\Zdr;
  *   url: string,
  *   country?: null|Country|value-of<Country>,
  *   headers?: array<string,string>|null,
+ *   maxAgeMs?: int|null,
  *   tags?: list<string>|null,
  *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
+ *   waitForMs?: int|null,
  *   zdr?: null|Zdr|value-of<Zdr>,
  * }
  */
@@ -50,12 +52,18 @@ final class WebWebScrapeBytesParams implements BaseModel
     public ?string $country;
 
     /**
-     * Optional outbound HTTP headers, such as Referer, Cookie, or Authorization. Send as a JSON object or deep-object query params such as headers[Referer]=https://example.com/. Host, Content-Length, and hop-by-hop transport headers are rejected. Authorization and cookies are removed when a redirect changes origin.
+     * Optional outbound HTTP headers, such as Referer, Cookie, or Authorization. Send as a JSON object or deep-object query params such as headers[Referer]=https://example.com/. Host, Content-Length, and hop-by-hop transport headers are rejected. Authorization and cookies are removed when a redirect changes origin. Credential-bearing headers bypass cache reads and writes; other headers are included in the cache key.
      *
      * @var array<string,string>|null $headers
      */
     #[Optional(map: 'string')]
     public ?array $headers;
+
+    /**
+     * Return a cached result if a prior scrape for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always scrape fresh.
+     */
+    #[Optional(nullable: true)]
+    public ?int $maxAgeMs;
 
     /**
      * Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
@@ -70,6 +78,12 @@ final class WebWebScrapeBytesParams implements BaseModel
      */
     #[Optional]
     public ?TimeoutOpts $timeoutOpts;
+
+    /**
+     * Optional browser wait time after initial page load, in milliseconds (0–30000; 0 uses 500). When supplied, HTML is rendered with JavaScript and returned as UTF-8 bytes. Other resources keep their original bytes without a browser wait. Omit to download the original HTTP response. When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
+     */
+    #[Optional(nullable: true)]
+    public ?int $waitForMs;
 
     /**
      * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
@@ -113,8 +127,10 @@ final class WebWebScrapeBytesParams implements BaseModel
         string $url,
         Country|string|null $country = null,
         ?array $headers = null,
+        ?int $maxAgeMs = null,
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
+        ?int $waitForMs = null,
         Zdr|string|null $zdr = null,
     ): self {
         $self = new self;
@@ -123,8 +139,10 @@ final class WebWebScrapeBytesParams implements BaseModel
 
         null !== $country && $self['country'] = $country;
         null !== $headers && $self['headers'] = $headers;
+        null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
         null !== $tags && $self['tags'] = $tags;
         null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
+        null !== $waitForMs && $self['waitForMs'] = $waitForMs;
         null !== $zdr && $self['zdr'] = $zdr;
 
         return $self;
@@ -155,7 +173,7 @@ final class WebWebScrapeBytesParams implements BaseModel
     }
 
     /**
-     * Optional outbound HTTP headers, such as Referer, Cookie, or Authorization. Send as a JSON object or deep-object query params such as headers[Referer]=https://example.com/. Host, Content-Length, and hop-by-hop transport headers are rejected. Authorization and cookies are removed when a redirect changes origin.
+     * Optional outbound HTTP headers, such as Referer, Cookie, or Authorization. Send as a JSON object or deep-object query params such as headers[Referer]=https://example.com/. Host, Content-Length, and hop-by-hop transport headers are rejected. Authorization and cookies are removed when a redirect changes origin. Credential-bearing headers bypass cache reads and writes; other headers are included in the cache key.
      *
      * @param array<string,string> $headers
      */
@@ -163,6 +181,17 @@ final class WebWebScrapeBytesParams implements BaseModel
     {
         $self = clone $this;
         $self['headers'] = $headers;
+
+        return $self;
+    }
+
+    /**
+     * Return a cached result if a prior scrape for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always scrape fresh.
+     */
+    public function withMaxAgeMs(?int $maxAgeMs): self
+    {
+        $self = clone $this;
+        $self['maxAgeMs'] = $maxAgeMs;
 
         return $self;
     }
@@ -189,6 +218,17 @@ final class WebWebScrapeBytesParams implements BaseModel
     {
         $self = clone $this;
         $self['timeoutOpts'] = $timeoutOpts;
+
+        return $self;
+    }
+
+    /**
+     * Optional browser wait time after initial page load, in milliseconds (0–30000; 0 uses 500). When supplied, HTML is rendered with JavaScript and returned as UTF-8 bytes. Other resources keep their original bytes without a browser wait. Omit to download the original HTTP response. When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
+     */
+    public function withWaitForMs(?int $waitForMs): self
+    {
+        $self = clone $this;
+        $self['waitForMs'] = $waitForMs;
 
         return $self;
     }

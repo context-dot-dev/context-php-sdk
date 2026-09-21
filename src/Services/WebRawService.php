@@ -302,6 +302,7 @@ final class WebRawService implements WebRawContract
      *   domain?: string,
      *   fullScreenshot?: FullScreenshot|value-of<FullScreenshot>,
      *   handleCookiePopup?: bool,
+     *   headers?: array<string,string>,
      *   maxAgeMs?: int|null,
      *   page?: Page|value-of<Page>,
      *   scrollOffset?: int|null,
@@ -435,14 +436,16 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Downloads a resource and returns its bytes as base64. Supports images, PDFs, HTML pages, and any other content type without image conversion, text extraction, or character-encoding changes. HTTP compression is decoded before base64 encoding. HTML is the original HTTP response; JavaScript is not rendered. Follows public redirects and retries failed downloads through ISP and residential proxies, with a direct fallback. When country is specified, only a residential proxy in that country is used. Supply headers such as Referer for images that require a referring page. Downloads are not cached. Maximum decoded resource size: 20 MiB (20971520 bytes), before base64 encoding. Successful requests cost 1 credit; errors are not billed.
+     * Downloads a resource and returns its bytes as base64. Without waitForMs, returns the original HTTP response without image conversion, text extraction, or character-encoding changes. HTTP compression is decoded before base64 encoding. Supply waitForMs to render HTML with JavaScript in the browser and return the resulting HTML as UTF-8 bytes after the wait. Non-HTML resources, including images and PDFs, keep their original bytes and do not incur a browser wait. Follows public redirects and retries failed downloads through ISP and residential proxies, with a direct fallback. When country is specified, only a residential proxy in that country is used. Supply headers such as Referer for images that require a referring page. Cached results are reused according to maxAgeMs (default: 1 day; maximum: 30 days). Set maxAgeMs=0 to fetch fresh and refresh the cache. Cache identity includes the exact URL, country, waitForMs, and normalized outbound headers. Credential-bearing headers and zero data retention bypass cache reads and writes. cache_metadata reports hit, miss, or zdr and the cached result age in milliseconds. Maximum decoded resource size: 20 MiB (20971520 bytes), before base64 encoding. Successful requests cost 1 credit; errors are not billed.
      *
      * @param array{
      *   url: string,
      *   country?: value-of<WebWebScrapeBytesParams\Country>,
      *   headers?: array<string,string>,
+     *   maxAgeMs?: int|null,
      *   tags?: list<string>,
      *   timeoutOpts?: WebWebScrapeBytesParams\TimeoutOpts|TimeoutOptsShape8,
+     *   waitForMs?: int|null,
      *   zdr?: WebWebScrapeBytesParams\Zdr|value-of<WebWebScrapeBytesParams\Zdr>,
      * }|WebWebScrapeBytesParams $params
      * @param RequestOpts|null $requestOptions
@@ -526,6 +529,7 @@ final class WebRawService implements WebRawContract
      * @param array{
      *   url: string,
      *   actions?: list<ActionShape2>|null,
+     *   country?: value-of<WebWebScrapeImagesParams\Country>,
      *   dedupe?: bool,
      *   enrichment?: Enrichment|EnrichmentShape|null,
      *   headers?: array<string,string>,
@@ -641,6 +645,7 @@ final class WebRawService implements WebRawContract
      *   country?: value-of<WebWebScrapeScreenshotParams\Country>,
      *   fullScreenshot?: WebWebScrapeScreenshotParams\FullScreenshot|value-of<WebWebScrapeScreenshotParams\FullScreenshot>,
      *   handleCookiePopup?: bool,
+     *   headers?: array<string,string>,
      *   maxAgeMs?: int|null,
      *   scrollOffset?: int|null,
      *   tags?: list<string>,
