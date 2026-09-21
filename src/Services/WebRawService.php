@@ -25,6 +25,14 @@ use ContextDev\Web\WebExtractResponse;
 use ContextDev\Web\WebExtractStyleguideParams;
 use ContextDev\Web\WebExtractStyleguideParams\ColorScheme;
 use ContextDev\Web\WebExtractStyleguideResponse;
+use ContextDev\Web\WebScrapeParams;
+use ContextDev\Web\WebScrapeParams\Formats;
+use ContextDev\Web\WebScrapeParams\ImageParams;
+use ContextDev\Web\WebScrapeParams\MarkdownParams;
+use ContextDev\Web\WebScrapeParams\ParseParams;
+use ContextDev\Web\WebScrapeParams\ScreenshotParams;
+use ContextDev\Web\WebScrapeParams\SharedParams;
+use ContextDev\Web\WebScrapeResponse;
 use ContextDev\Web\WebScreenshotParams;
 use ContextDev\Web\WebScreenshotParams\Country;
 use ContextDev\Web\WebScreenshotParams\FullScreenshot;
@@ -59,6 +67,12 @@ use ContextDev\Web\WebWebScrapeSitemapResponse;
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebExtractCompetitorsParams\TimeoutOpts as TimeoutOptsShape2
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebExtractFontsParams\TimeoutOpts as TimeoutOptsShape3
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebExtractStyleguideParams\TimeoutOpts as TimeoutOptsShape4
+ * @phpstan-import-type FormatsShape from \ContextDev\Web\WebScrapeParams\Formats
+ * @phpstan-import-type ImageParamsShape from \ContextDev\Web\WebScrapeParams\ImageParams
+ * @phpstan-import-type MarkdownParamsShape from \ContextDev\Web\WebScrapeParams\MarkdownParams
+ * @phpstan-import-type ParseParamsShape from \ContextDev\Web\WebScrapeParams\ParseParams
+ * @phpstan-import-type ScreenshotParamsShape from \ContextDev\Web\WebScrapeParams\ScreenshotParams
+ * @phpstan-import-type SharedParamsShape from \ContextDev\Web\WebScrapeParams\SharedParams
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebScreenshotParams\TimeoutOpts as TimeoutOptsShape5
  * @phpstan-import-type ViewportShape from \ContextDev\Web\WebScreenshotParams\Viewport
  * @phpstan-import-type MarkdownOptionsShape from \ContextDev\Web\WebSearchParams\MarkdownOptions
@@ -286,6 +300,49 @@ final class WebRawService implements WebRawContract
             query: Util::array_transform_keys($parsed, ['directURL' => 'directUrl']),
             options: $options,
             convert: WebExtractStyleguideResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Capture the requested formats from one page visit. Shared settings apply once. HTML-only requests use the existing fast acquisition path. One credit per capture, or two with browser actions; PDF OCR adds one credit per recovered page. Original response bytes and screenshots are limited to 20 MiB each, screenshots to 40 megapixels, and the combined browser capture to 60 MiB.
+     *
+     * @param array{
+     *   formats: Formats|FormatsShape,
+     *   url: string,
+     *   imageParams?: ImageParams|ImageParamsShape,
+     *   markdownParams?: MarkdownParams|MarkdownParamsShape,
+     *   maxAgeMs?: int,
+     *   parseParams?: ParseParams|ParseParamsShape,
+     *   screenshotParams?: ScreenshotParams|ScreenshotParamsShape,
+     *   sharedParams?: SharedParams|SharedParamsShape,
+     *   tags?: list<string>,
+     *   timeoutMs?: int,
+     *   zdr?: WebScrapeParams\Zdr|value-of<WebScrapeParams\Zdr>,
+     * }|WebScrapeParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<WebScrapeResponse>
+     *
+     * @throws APIException
+     */
+    public function scrape(
+        array|WebScrapeParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = WebScrapeParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'post',
+            path: 'web/scrape',
+            body: (object) $parsed,
+            options: $options,
+            convert: WebScrapeResponse::class,
         );
     }
 

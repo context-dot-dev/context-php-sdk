@@ -17,6 +17,8 @@ use ContextDev\Web\WebExtractParams;
 use ContextDev\Web\WebExtractResponse;
 use ContextDev\Web\WebExtractStyleguideParams;
 use ContextDev\Web\WebExtractStyleguideResponse;
+use ContextDev\Web\WebScrapeParams;
+use ContextDev\Web\WebScrapeResponse;
 use ContextDev\Web\WebScreenshotParams;
 use ContextDev\Web\WebScreenshotResponse;
 use ContextDev\Web\WebSearchParams;
@@ -113,6 +115,21 @@ interface WebRawContract
      */
     public function extractStyleguide(
         array|WebExtractStyleguideParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param array<string,mixed>|WebScrapeParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<WebScrapeResponse>
+     *
+     * @throws APIException
+     */
+    public function scrape(
+        array|WebScrapeParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;
 
