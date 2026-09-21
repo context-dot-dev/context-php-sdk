@@ -16,6 +16,13 @@ use ContextDev\Web\WebExtractParams\Pdf;
 use ContextDev\Web\WebExtractResponse;
 use ContextDev\Web\WebExtractStyleguideParams\ColorScheme;
 use ContextDev\Web\WebExtractStyleguideResponse;
+use ContextDev\Web\WebScrapeParams\Formats;
+use ContextDev\Web\WebScrapeParams\ImageParams;
+use ContextDev\Web\WebScrapeParams\MarkdownParams;
+use ContextDev\Web\WebScrapeParams\ParseParams;
+use ContextDev\Web\WebScrapeParams\ScreenshotParams;
+use ContextDev\Web\WebScrapeParams\SharedParams;
+use ContextDev\Web\WebScrapeResponse;
 use ContextDev\Web\WebScreenshotParams\Country;
 use ContextDev\Web\WebScreenshotParams\FullScreenshot;
 use ContextDev\Web\WebScreenshotParams\Page;
@@ -41,6 +48,12 @@ use ContextDev\Web\WebWebScrapeSitemapResponse;
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebExtractCompetitorsParams\TimeoutOpts as TimeoutOptsShape2
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebExtractFontsParams\TimeoutOpts as TimeoutOptsShape3
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebExtractStyleguideParams\TimeoutOpts as TimeoutOptsShape4
+ * @phpstan-import-type FormatsShape from \ContextDev\Web\WebScrapeParams\Formats
+ * @phpstan-import-type ImageParamsShape from \ContextDev\Web\WebScrapeParams\ImageParams
+ * @phpstan-import-type MarkdownParamsShape from \ContextDev\Web\WebScrapeParams\MarkdownParams
+ * @phpstan-import-type ParseParamsShape from \ContextDev\Web\WebScrapeParams\ParseParams
+ * @phpstan-import-type ScreenshotParamsShape from \ContextDev\Web\WebScrapeParams\ScreenshotParams
+ * @phpstan-import-type SharedParamsShape from \ContextDev\Web\WebScrapeParams\SharedParams
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebScreenshotParams\TimeoutOpts as TimeoutOptsShape5
  * @phpstan-import-type ViewportShape from \ContextDev\Web\WebScreenshotParams\Viewport
  * @phpstan-import-type MarkdownOptionsShape from \ContextDev\Web\WebSearchParams\MarkdownOptions
@@ -199,6 +212,39 @@ interface WebContract
         \ContextDev\Web\WebExtractStyleguideParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): WebExtractStyleguideResponse;
+
+    /**
+     * @api
+     *
+     * @param Formats|FormatsShape $formats Outputs to return. Enable at least one; omitted formats are false.
+     * @param string $url the URL to scrape
+     * @param ImageParams|ImageParamsShape $imageParams Image options. Requires formats.images: true.
+     * @param MarkdownParams|MarkdownParamsShape $markdownParams Markdown options. Requires formats.markdown: true.
+     * @param int $maxAgeMs Maximum age for the entire capture, including bytes. Defaults to 1 day; 0 fetches fresh. Captures with hosted image files refresh after 23 hours.
+     * @param ParseParams|ParseParamsShape $parseParams Required when formats.parse is true.
+     * @param ScreenshotParams|ScreenshotParamsShape $screenshotParams Screenshot options. Requires formats.screenshot: true.
+     * @param SharedParams|SharedParamsShape $sharedParams Shared browser and content settings. Content filters leave screenshots and original bytes unchanged.
+     * @param list<string> $tags Labels for tracking request usage. Not retained when zdr is enabled.
+     * @param int $timeoutMs total deadline, including navigation, actions, waiting, and all outputs
+     * @param \ContextDev\Web\WebScrapeParams\Zdr|value-of<\ContextDev\Web\WebScrapeParams\Zdr> $zdr Zero data retention. Bypasses caches and uploads; excludes request/response content and tags from logs. Must be enabled for your organization.
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function scrape(
+        Formats|array $formats,
+        string $url,
+        ImageParams|array|null $imageParams = null,
+        MarkdownParams|array|null $markdownParams = null,
+        int $maxAgeMs = 86400000,
+        ParseParams|array|null $parseParams = null,
+        ScreenshotParams|array|null $screenshotParams = null,
+        SharedParams|array|null $sharedParams = null,
+        ?array $tags = null,
+        int $timeoutMs = 60000,
+        \ContextDev\Web\WebScrapeParams\Zdr|string $zdr = 'disabled',
+        RequestOptions|array|null $requestOptions = null,
+    ): WebScrapeResponse;
 
     /**
      * @api
