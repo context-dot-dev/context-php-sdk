@@ -325,6 +325,7 @@ final class WebTest extends TestCase
             url: 'https://example.com',
             country: 'de',
             headers: ['foo' => 'J!'],
+            maxAgeMs: 0,
             tags: ['production', 'team-alpha'],
             timeoutOpts: ['milliseconds' => 1, 'behavior' => 'fail'],
             waitForMs: 0,
@@ -401,6 +402,7 @@ final class WebTest extends TestCase
         $result = $this->client->web->webScrapeImages(
             url: 'https://example.com',
             actions: [['do' => 'wait', 'timeMs' => 0]],
+            country: 'de',
             dedupe: true,
             enrichment: [
                 'classification' => true,

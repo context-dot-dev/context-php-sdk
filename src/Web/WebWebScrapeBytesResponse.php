@@ -8,14 +8,17 @@ use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebWebScrapeBytesResponse\CacheMetadata;
 use ContextDev\Web\WebWebScrapeBytesResponse\Encoding;
 use ContextDev\Web\WebWebScrapeBytesResponse\KeyMetadata;
 
 /**
+ * @phpstan-import-type CacheMetadataShape from \ContextDev\Web\WebWebScrapeBytesResponse\CacheMetadata
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Web\WebWebScrapeBytesResponse\KeyMetadata
  *
  * @phpstan-type WebWebScrapeBytesResponseShape = array{
  *   bytes: string,
+ *   cacheMetadata: CacheMetadata|CacheMetadataShape,
  *   contentLength: int,
  *   contentType: string,
  *   encoding: Encoding|value-of<Encoding>,
@@ -37,6 +40,12 @@ final class WebWebScrapeBytesResponse implements BaseModel
      */
     #[Required]
     public string $bytes;
+
+    /**
+     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     */
+    #[Required('cache_metadata')]
+    public CacheMetadata $cacheMetadata;
 
     /**
      * Number of decoded resource bytes, before base64 encoding.
@@ -94,6 +103,7 @@ final class WebWebScrapeBytesResponse implements BaseModel
      * ```
      * WebWebScrapeBytesResponse::with(
      *   bytes: ...,
+     *   cacheMetadata: ...,
      *   contentLength: ...,
      *   contentType: ...,
      *   encoding: ...,
@@ -110,6 +120,7 @@ final class WebWebScrapeBytesResponse implements BaseModel
      * ```
      * (new WebWebScrapeBytesResponse)
      *   ->withBytes(...)
+     *   ->withCacheMetadata(...)
      *   ->withContentLength(...)
      *   ->withContentType(...)
      *   ->withEncoding(...)
@@ -130,11 +141,13 @@ final class WebWebScrapeBytesResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      * @param Encoding|value-of<Encoding> $encoding
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
     public static function with(
         string $bytes,
+        CacheMetadata|array $cacheMetadata,
         int $contentLength,
         string $contentType,
         Encoding|string $encoding,
@@ -148,6 +161,7 @@ final class WebWebScrapeBytesResponse implements BaseModel
         $self = new self;
 
         $self['bytes'] = $bytes;
+        $self['cacheMetadata'] = $cacheMetadata;
         $self['contentLength'] = $contentLength;
         $self['contentType'] = $contentType;
         $self['encoding'] = $encoding;
@@ -169,6 +183,19 @@ final class WebWebScrapeBytesResponse implements BaseModel
     {
         $self = clone $this;
         $self['bytes'] = $bytes;
+
+        return $self;
+    }
+
+    /**
+     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     *
+     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
+     */
+    public function withCacheMetadata(CacheMetadata|array $cacheMetadata): self
+    {
+        $self = clone $this;
+        $self['cacheMetadata'] = $cacheMetadata;
 
         return $self;
     }

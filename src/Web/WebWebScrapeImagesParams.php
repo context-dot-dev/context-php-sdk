@@ -10,6 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebWebScrapeImagesParams\Action;
+use ContextDev\Web\WebWebScrapeImagesParams\Country;
 use ContextDev\Web\WebWebScrapeImagesParams\Enrichment;
 use ContextDev\Web\WebWebScrapeImagesParams\TimeoutOpts;
 use ContextDev\Web\WebWebScrapeImagesParams\Zdr;
@@ -27,6 +28,7 @@ use ContextDev\Web\WebWebScrapeImagesParams\Zdr;
  * @phpstan-type WebWebScrapeImagesParamsShape = array{
  *   url: string,
  *   actions?: list<ActionShape>|null,
+ *   country?: null|Country|value-of<Country>,
  *   dedupe?: bool|null,
  *   enrichment?: null|Enrichment|EnrichmentShape,
  *   headers?: array<string,string>|null,
@@ -56,6 +58,14 @@ final class WebWebScrapeImagesParams implements BaseModel
      */
     #[Optional(list: Action::class, nullable: true)]
     public ?array $actions;
+
+    /**
+     * Fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2).
+     *
+     * @var value-of<Country>|null $country
+     */
+    #[Optional(enum: Country::class)]
+    public ?string $country;
 
     /**
      * When true, visually duplicate images are removed: every image is loaded and perceptually hashed, and only the highest-resolution copy of each duplicate group is kept. Images that cannot be downloaded or hashed are kept. Default: false.
@@ -136,6 +146,7 @@ final class WebWebScrapeImagesParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param list<ActionShape>|null $actions
+     * @param Country|value-of<Country>|null $country
      * @param Enrichment|EnrichmentShape|null $enrichment
      * @param array<string,string>|null $headers
      * @param list<string>|null $tags
@@ -145,6 +156,7 @@ final class WebWebScrapeImagesParams implements BaseModel
     public static function with(
         string $url,
         ?array $actions = null,
+        Country|string|null $country = null,
         ?bool $dedupe = null,
         Enrichment|array|null $enrichment = null,
         ?array $headers = null,
@@ -159,6 +171,7 @@ final class WebWebScrapeImagesParams implements BaseModel
         $self['url'] = $url;
 
         null !== $actions && $self['actions'] = $actions;
+        null !== $country && $self['country'] = $country;
         null !== $dedupe && $self['dedupe'] = $dedupe;
         null !== $enrichment && $self['enrichment'] = $enrichment;
         null !== $headers && $self['headers'] = $headers;
@@ -191,6 +204,19 @@ final class WebWebScrapeImagesParams implements BaseModel
     {
         $self = clone $this;
         $self['actions'] = $actions;
+
+        return $self;
+    }
+
+    /**
+     * Fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2).
+     *
+     * @param Country|value-of<Country> $country
+     */
+    public function withCountry(Country|string $country): self
+    {
+        $self = clone $this;
+        $self['country'] = $country;
 
         return $self;
     }

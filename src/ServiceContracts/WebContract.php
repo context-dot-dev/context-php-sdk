@@ -336,7 +336,8 @@ interface WebContract
      *
      * @param string $url full HTTP(S) URL of the resource to download, such as an image, PDF, or page
      * @param \ContextDev\Web\WebWebScrapeBytesParams\Country|value-of<\ContextDev\Web\WebWebScrapeBytesParams\Country> $country fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2)
-     * @param array<string,string> $headers Optional outbound HTTP headers, such as Referer, Cookie, or Authorization. Send as a JSON object or deep-object query params such as headers[Referer]=https://example.com/. Host, Content-Length, and hop-by-hop transport headers are rejected. Authorization and cookies are removed when a redirect changes origin.
+     * @param array<string,string> $headers Optional outbound HTTP headers, such as Referer, Cookie, or Authorization. Send as a JSON object or deep-object query params such as headers[Referer]=https://example.com/. Host, Content-Length, and hop-by-hop transport headers are rejected. Authorization and cookies are removed when a redirect changes origin. Credential-bearing headers bypass cache reads and writes; other headers are included in the cache key.
+     * @param int|null $maxAgeMs Return a cached result if a prior scrape for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always scrape fresh.
      * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
      * @param \ContextDev\Web\WebWebScrapeBytesParams\TimeoutOpts|TimeoutOptsShape8 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
      * @param int|null $waitForMs Optional browser wait time after initial page load, in milliseconds (0–30000; 0 uses 500). When supplied, HTML is rendered with JavaScript and returned as UTF-8 bytes. Other resources keep their original bytes without a browser wait. Omit to download the original HTTP response. When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
@@ -349,6 +350,7 @@ interface WebContract
         string $url,
         \ContextDev\Web\WebWebScrapeBytesParams\Country|string|null $country = null,
         ?array $headers = null,
+        ?int $maxAgeMs = 86400000,
         ?array $tags = null,
         \ContextDev\Web\WebWebScrapeBytesParams\TimeoutOpts|array|null $timeoutOpts = null,
         ?int $waitForMs = null,
@@ -406,6 +408,7 @@ interface WebContract
      *
      * @param string $url Page URL to inspect. Must include http:// or https://.
      * @param list<ActionShape2>|null $actions Optional browser actions executed in array order after the page loads and before content is captured. Requires a paid plan. Send a JSON array in the query parameter. Maximum: 5 actions.
+     * @param \ContextDev\Web\WebWebScrapeImagesParams\Country|value-of<\ContextDev\Web\WebWebScrapeImagesParams\Country> $country fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2)
      * @param bool $dedupe When true, visually duplicate images are removed: every image is loaded and perceptually hashed, and only the highest-resolution copy of each duplicate group is kept. Images that cannot be downloaded or hashed are kept. Default: false.
      * @param Enrichment|EnrichmentShape|null $enrichment optional per-image processing, sent as deep-object query params such as enrichment[resolution]=true
      * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
@@ -421,6 +424,7 @@ interface WebContract
     public function webScrapeImages(
         string $url,
         ?array $actions = null,
+        \ContextDev\Web\WebWebScrapeImagesParams\Country|string|null $country = null,
         bool $dedupe = false,
         Enrichment|array|null $enrichment = null,
         ?array $headers = null,
