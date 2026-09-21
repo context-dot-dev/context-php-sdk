@@ -306,7 +306,7 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Capture the requested formats from one page visit. Shared settings apply once. HTML-only requests use the existing fast acquisition path. One credit per capture, or two with browser actions; PDF OCR adds one credit per recovered page. Original response bytes and screenshots are limited to 20 MiB each, screenshots to 40 megapixels, and the combined browser capture to 60 MiB.
+     * Reuse cached outputs independently and capture missing formats in one page visit. Each cache key includes only the settings that affect that output. HTML is shared with Markdown and parsed fields. Cached outputs can come from different visits within maxAgeMs; use 0 for a fresh capture. HTML-only requests use the existing fast acquisition path. One credit per request, including cache hits, or two with browser actions; PDF OCR adds one credit per recovered page on fresh extraction. Original response bytes and screenshots are limited to 20 MiB each, screenshots to 40 megapixels, and the combined browser capture to 60 MiB.
      *
      * @param array{
      *   formats: Formats|FormatsShape,
