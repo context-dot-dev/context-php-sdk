@@ -40,6 +40,7 @@ use ContextDev\Web\WebScrapeResponse\Screenshot;
  *   requestID: string,
  *   screenshot: Screenshot|ScreenshotShape,
  *   url: string,
+ *   isPartial?: bool|null,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  * }
  */
@@ -107,6 +108,12 @@ final class WebScrapeResponse implements BaseModel
      */
     #[Required]
     public string $url;
+
+    /**
+     * Present when return-partial captures a page that is still loading or returns images before image processing finishes. Partial responses are not cached.
+     */
+    #[Optional]
+    public ?bool $isPartial;
 
     /**
      * Credit usage, included whenever a valid API key is provided.
@@ -180,6 +187,7 @@ final class WebScrapeResponse implements BaseModel
         string $requestID,
         Screenshot|array $screenshot,
         string $url,
+        ?bool $isPartial = null,
         KeyMetadata|array|null $keyMetadata = null,
     ): self {
         $self = new self;
@@ -195,6 +203,7 @@ final class WebScrapeResponse implements BaseModel
         $self['screenshot'] = $screenshot;
         $self['url'] = $url;
 
+        null !== $isPartial && $self['isPartial'] = $isPartial;
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
 
         return $self;
@@ -322,6 +331,17 @@ final class WebScrapeResponse implements BaseModel
     {
         $self = clone $this;
         $self['url'] = $url;
+
+        return $self;
+    }
+
+    /**
+     * Present when return-partial captures a page that is still loading or returns images before image processing finishes. Partial responses are not cached.
+     */
+    public function withIsPartial(bool $isPartial): self
+    {
+        $self = clone $this;
+        $self['isPartial'] = $isPartial;
 
         return $self;
     }

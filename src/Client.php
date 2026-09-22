@@ -7,7 +7,6 @@ namespace ContextDev;
 use ContextDev\Core\BaseClient;
 use ContextDev\Core\Implementation\StreamingHttpClient;
 use ContextDev\Core\Util;
-use ContextDev\Services\AIService;
 use ContextDev\Services\BatchService;
 use ContextDev\Services\BrandService;
 use ContextDev\Services\IndustryService;
@@ -39,11 +38,6 @@ class Client extends BaseClient
      * @api
      */
     public WebService $web;
-
-    /**
-     * @api
-     */
-    public AIService $ai;
 
     /**
      * @api
@@ -150,7 +144,6 @@ class Client extends BaseClient
 
         $this->parse = new ParseService($this);
         $this->web = new WebService($this);
-        $this->ai = new AIService($this);
         $this->brand = new BrandService($this);
         $this->industry = new IndustryService($this);
         $this->utility = new UtilityService($this);

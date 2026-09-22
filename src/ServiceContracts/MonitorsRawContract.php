@@ -13,6 +13,7 @@ use ContextDev\Monitors\MonitorGetCreditUsageParams;
 use ContextDev\Monitors\MonitorGetCreditUsageResponse;
 use ContextDev\Monitors\MonitorGetLimitsResponse;
 use ContextDev\Monitors\MonitorGetResponse;
+use ContextDev\Monitors\MonitorGetRunResponse;
 use ContextDev\Monitors\MonitorListAccountChangesParams;
 use ContextDev\Monitors\MonitorListAccountChangesResponse;
 use ContextDev\Monitors\MonitorListAccountRunsParams;
@@ -24,6 +25,8 @@ use ContextDev\Monitors\MonitorListResponse;
 use ContextDev\Monitors\MonitorListRunsParams;
 use ContextDev\Monitors\MonitorListRunsResponse;
 use ContextDev\Monitors\MonitorNewResponse;
+use ContextDev\Monitors\MonitorRetrieveRunParams;
+use ContextDev\Monitors\MonitorRotateWebhookSecretResponse;
 use ContextDev\Monitors\MonitorRunResponse;
 use ContextDev\Monitors\MonitorUpdateParams;
 use ContextDev\Monitors\MonitorUpdateResponse;
@@ -209,6 +212,36 @@ interface MonitorsRawContract
      */
     public function retrieveChange(
         string $changeID,
+        RequestOptions|array|null $requestOptions = null
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param array<string,mixed>|MonitorRetrieveRunParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<MonitorGetRunResponse>
+     *
+     * @throws APIException
+     */
+    public function retrieveRun(
+        string $runID,
+        array|MonitorRetrieveRunParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<MonitorRotateWebhookSecretResponse>
+     *
+     * @throws APIException
+     */
+    public function rotateWebhookSecret(
+        string $monitorID,
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse;
 

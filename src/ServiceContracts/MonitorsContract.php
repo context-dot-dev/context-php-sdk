@@ -18,6 +18,7 @@ use ContextDev\Monitors\MonitorGetChangeResponse;
 use ContextDev\Monitors\MonitorGetCreditUsageResponse;
 use ContextDev\Monitors\MonitorGetLimitsResponse;
 use ContextDev\Monitors\MonitorGetResponse;
+use ContextDev\Monitors\MonitorGetRunResponse;
 use ContextDev\Monitors\MonitorListAccountChangesResponse;
 use ContextDev\Monitors\MonitorListAccountRunsResponse;
 use ContextDev\Monitors\MonitorListChangesResponse;
@@ -28,6 +29,7 @@ use ContextDev\Monitors\MonitorListParams\TargetType;
 use ContextDev\Monitors\MonitorListResponse;
 use ContextDev\Monitors\MonitorListRunsResponse;
 use ContextDev\Monitors\MonitorNewResponse;
+use ContextDev\Monitors\MonitorRotateWebhookSecretResponse;
 use ContextDev\Monitors\MonitorRunResponse;
 use ContextDev\Monitors\MonitorUpdateParams\Status;
 use ContextDev\Monitors\MonitorUpdateResponse;
@@ -271,6 +273,31 @@ interface MonitorsContract
         string $changeID,
         RequestOptions|array|null $requestOptions = null
     ): MonitorGetChangeResponse;
+
+    /**
+     * @api
+     *
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function retrieveRun(
+        string $runID,
+        string $monitorID,
+        RequestOptions|array|null $requestOptions = null,
+    ): MonitorGetRunResponse;
+
+    /**
+     * @api
+     *
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function rotateWebhookSecret(
+        string $monitorID,
+        RequestOptions|array|null $requestOptions = null
+    ): MonitorRotateWebhookSecretResponse;
 
     /**
      * @api

@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace ContextDev\Services;
 
 use ContextDev\Brand\BrandGetResponse;
-use ContextDev\Brand\BrandGetSimplifiedResponse;
 use ContextDev\Brand\BrandRetrieveParams;
 use ContextDev\Brand\BrandRetrieveParams\ForceLanguage;
 use ContextDev\Brand\BrandRetrieveParams\TimeoutOpts;
 use ContextDev\Brand\BrandRetrieveParams\Type;
-use ContextDev\Brand\BrandRetrieveSimplifiedParams;
-use ContextDev\Brand\BrandRetrieveSimplifiedParams\Theme;
 use ContextDev\Brand\BrandSearchParams;
 use ContextDev\Brand\BrandSearchParams\QueryBy;
 use ContextDev\Brand\BrandSearchResponse;
@@ -25,7 +22,6 @@ use ContextDev\ServiceContracts\BrandRawContract;
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Brand\BrandRetrieveParams\TimeoutOpts
  * @phpstan-import-type MccShape from \ContextDev\Brand\BrandRetrieveParams\Mcc
  * @phpstan-import-type PhoneShape from \ContextDev\Brand\BrandRetrieveParams\Phone
- * @phpstan-import-type TimeoutOptsShape from \ContextDev\Brand\BrandRetrieveSimplifiedParams\TimeoutOpts as TimeoutOptsShape1
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class BrandRawService implements BrandRawContract
@@ -83,43 +79,6 @@ final class BrandRawService implements BrandRawContract
             body: (object) $parsed,
             options: $options,
             convert: BrandGetResponse::class,
-        );
-    }
-
-    /**
-     * @api
-     *
-     * Returns a simplified version of brand data containing only essential information: domain, title, colors, logos, and backdrops. Optimized for faster responses and reduced data transfer.
-     *
-     * @param array{
-     *   domain: string,
-     *   maxAgeMs?: int|null,
-     *   tags?: list<string>,
-     *   theme?: Theme|value-of<Theme>,
-     *   timeoutOpts?: BrandRetrieveSimplifiedParams\TimeoutOpts|TimeoutOptsShape1,
-     * }|BrandRetrieveSimplifiedParams $params
-     * @param RequestOpts|null $requestOptions
-     *
-     * @return BaseResponse<BrandGetSimplifiedResponse>
-     *
-     * @throws APIException
-     */
-    public function retrieveSimplified(
-        array|BrandRetrieveSimplifiedParams $params,
-        RequestOptions|array|null $requestOptions = null,
-    ): BaseResponse {
-        [$parsed, $options] = BrandRetrieveSimplifiedParams::parseRequest(
-            $params,
-            $requestOptions,
-        );
-
-        // @phpstan-ignore-next-line return.type
-        return $this->client->request(
-            method: 'get',
-            path: 'brand/retrieve-simplified',
-            query: $parsed,
-            options: $options,
-            convert: BrandGetSimplifiedResponse::class,
         );
     }
 

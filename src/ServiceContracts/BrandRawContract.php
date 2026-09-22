@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\ServiceContracts;
 
 use ContextDev\Brand\BrandGetResponse;
-use ContextDev\Brand\BrandGetSimplifiedResponse;
 use ContextDev\Brand\BrandRetrieveParams;
-use ContextDev\Brand\BrandRetrieveSimplifiedParams;
 use ContextDev\Brand\BrandSearchParams;
 use ContextDev\Brand\BrandSearchResponse;
 use ContextDev\Core\Contracts\BaseResponse;
@@ -31,21 +29,6 @@ interface BrandRawContract
      */
     public function retrieve(
         array|BrandRetrieveParams $params,
-        RequestOptions|array|null $requestOptions = null,
-    ): BaseResponse;
-
-    /**
-     * @api
-     *
-     * @param array<string,mixed>|BrandRetrieveSimplifiedParams $params
-     * @param RequestOpts|null $requestOptions
-     *
-     * @return BaseResponse<BrandGetSimplifiedResponse>
-     *
-     * @throws APIException
-     */
-    public function retrieveSimplified(
-        array|BrandRetrieveSimplifiedParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;
 

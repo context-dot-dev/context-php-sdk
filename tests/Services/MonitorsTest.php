@@ -9,12 +9,14 @@ use ContextDev\Monitors\MonitorGetChangeResponse;
 use ContextDev\Monitors\MonitorGetCreditUsageResponse;
 use ContextDev\Monitors\MonitorGetLimitsResponse;
 use ContextDev\Monitors\MonitorGetResponse;
+use ContextDev\Monitors\MonitorGetRunResponse;
 use ContextDev\Monitors\MonitorListAccountChangesResponse;
 use ContextDev\Monitors\MonitorListAccountRunsResponse;
 use ContextDev\Monitors\MonitorListChangesResponse;
 use ContextDev\Monitors\MonitorListResponse;
 use ContextDev\Monitors\MonitorListRunsResponse;
 use ContextDev\Monitors\MonitorNewResponse;
+use ContextDev\Monitors\MonitorRotateWebhookSecretResponse;
 use ContextDev\Monitors\MonitorRunResponse;
 use ContextDev\Monitors\MonitorUpdateResponse;
 use PHPUnit\Framework\Attributes\CoversNothing;
@@ -229,6 +231,51 @@ final class MonitorsTest extends TestCase
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(MonitorGetChangeResponse::class, $result);
+    }
+
+    #[Test]
+    public function testRetrieveRun(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->monitors->retrieveRun(
+            'run_123',
+            monitorID: 'mon_123'
+        );
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(MonitorGetRunResponse::class, $result);
+    }
+
+    #[Test]
+    public function testRetrieveRunWithOptionalParams(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->monitors->retrieveRun(
+            'run_123',
+            monitorID: 'mon_123'
+        );
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(MonitorGetRunResponse::class, $result);
+    }
+
+    #[Test]
+    public function testRotateWebhookSecret(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->monitors->rotateWebhookSecret('mon_123');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(MonitorRotateWebhookSecretResponse::class, $result);
     }
 
     #[Test]

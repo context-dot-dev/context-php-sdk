@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace ContextDev\ServiceContracts;
 
 use ContextDev\Brand\BrandGetResponse;
-use ContextDev\Brand\BrandGetSimplifiedResponse;
 use ContextDev\Brand\BrandRetrieveParams\ForceLanguage;
 use ContextDev\Brand\BrandRetrieveParams\TimeoutOpts;
 use ContextDev\Brand\BrandRetrieveParams\Type;
-use ContextDev\Brand\BrandRetrieveSimplifiedParams\Theme;
 use ContextDev\Brand\BrandSearchParams\QueryBy;
 use ContextDev\Brand\BrandSearchResponse;
 use ContextDev\Core\Exceptions\APIException;
@@ -19,7 +17,6 @@ use ContextDev\RequestOptions;
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Brand\BrandRetrieveParams\TimeoutOpts
  * @phpstan-import-type MccShape from \ContextDev\Brand\BrandRetrieveParams\Mcc
  * @phpstan-import-type PhoneShape from \ContextDev\Brand\BrandRetrieveParams\Phone
- * @phpstan-import-type TimeoutOptsShape from \ContextDev\Brand\BrandRetrieveSimplifiedParams\TimeoutOpts as TimeoutOptsShape1
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 interface BrandContract
@@ -70,27 +67,6 @@ interface BrandContract
         string|float|null $phone = null,
         RequestOptions|array|null $requestOptions = null,
     ): BrandGetResponse;
-
-    /**
-     * @api
-     *
-     * @param string $domain Domain name to retrieve simplified brand data for
-     * @param int|null $maxAgeMs Maximum age in milliseconds for cached brand data before the API performs a hard refresh. Defaults to 3 months (7776000000 ms). Set to 0 to always perform a hard refresh. Negative values are clamped to 0; values above 1 year (31536000000 ms) are clamped to 1 year.
-     * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
-     * @param Theme|value-of<Theme> $theme optional theme preference used when selecting brand assets
-     * @param \ContextDev\Brand\BrandRetrieveSimplifiedParams\TimeoutOpts|TimeoutOptsShape1 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
-     * @param RequestOpts|null $requestOptions
-     *
-     * @throws APIException
-     */
-    public function retrieveSimplified(
-        string $domain,
-        ?int $maxAgeMs = 7776000000,
-        ?array $tags = null,
-        Theme|string|null $theme = null,
-        \ContextDev\Brand\BrandRetrieveSimplifiedParams\TimeoutOpts|array|null $timeoutOpts = null,
-        RequestOptions|array|null $requestOptions = null,
-    ): BrandGetSimplifiedResponse;
 
     /**
      * @api

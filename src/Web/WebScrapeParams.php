@@ -15,6 +15,7 @@ use ContextDev\Web\WebScrapeParams\MarkdownParams;
 use ContextDev\Web\WebScrapeParams\ParseParams;
 use ContextDev\Web\WebScrapeParams\ScreenshotParams;
 use ContextDev\Web\WebScrapeParams\SharedParams;
+use ContextDev\Web\WebScrapeParams\TimeoutOpts;
 use ContextDev\Web\WebScrapeParams\Zdr;
 
 /**
@@ -28,6 +29,7 @@ use ContextDev\Web\WebScrapeParams\Zdr;
  * @phpstan-import-type ParseParamsShape from \ContextDev\Web\WebScrapeParams\ParseParams
  * @phpstan-import-type ScreenshotParamsShape from \ContextDev\Web\WebScrapeParams\ScreenshotParams
  * @phpstan-import-type SharedParamsShape from \ContextDev\Web\WebScrapeParams\SharedParams
+ * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebScrapeParams\TimeoutOpts
  *
  * @phpstan-type WebScrapeParamsShape = array{
  *   formats: Formats|FormatsShape,
@@ -39,7 +41,7 @@ use ContextDev\Web\WebScrapeParams\Zdr;
  *   screenshotParams?: null|ScreenshotParams|ScreenshotParamsShape,
  *   sharedParams?: null|SharedParams|SharedParamsShape,
  *   tags?: list<string>|null,
- *   timeoutMs?: int|null,
+ *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  *   zdr?: null|Zdr|value-of<Zdr>,
  * }
  */
@@ -106,10 +108,10 @@ final class WebScrapeParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Total deadline, including navigation, actions, waiting, and all outputs.
+     * Total deadline, including navigation, actions, waiting, and all outputs. Defaults to 60000 milliseconds with behavior fail. Use return-partial to capture the current page state and return captured images if image processing cannot finish before the deadline; these responses set isPartial and are not cached. Every requested format must still be available. Fixed waits must fit before a response reserve of up to 5000 milliseconds (at most one quarter of the timeout) when using return-partial.
      */
     #[Optional]
-    public ?int $timeoutMs;
+    public ?TimeoutOpts $timeoutOpts;
 
     /**
      * Zero data retention. Bypasses caches and uploads; excludes request/response content and tags from logs. Must be enabled for your organization.
@@ -150,6 +152,7 @@ final class WebScrapeParams implements BaseModel
      * @param ScreenshotParams|ScreenshotParamsShape|null $screenshotParams
      * @param SharedParams|SharedParamsShape|null $sharedParams
      * @param list<string>|null $tags
+     * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
@@ -162,7 +165,7 @@ final class WebScrapeParams implements BaseModel
         ScreenshotParams|array|null $screenshotParams = null,
         SharedParams|array|null $sharedParams = null,
         ?array $tags = null,
-        ?int $timeoutMs = null,
+        TimeoutOpts|array|null $timeoutOpts = null,
         Zdr|string|null $zdr = null,
     ): self {
         $self = new self;
@@ -177,7 +180,7 @@ final class WebScrapeParams implements BaseModel
         null !== $screenshotParams && $self['screenshotParams'] = $screenshotParams;
         null !== $sharedParams && $self['sharedParams'] = $sharedParams;
         null !== $tags && $self['tags'] = $tags;
-        null !== $timeoutMs && $self['timeoutMs'] = $timeoutMs;
+        null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
         null !== $zdr && $self['zdr'] = $zdr;
 
         return $self;
@@ -299,12 +302,14 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Total deadline, including navigation, actions, waiting, and all outputs.
+     * Total deadline, including navigation, actions, waiting, and all outputs. Defaults to 60000 milliseconds with behavior fail. Use return-partial to capture the current page state and return captured images if image processing cannot finish before the deadline; these responses set isPartial and are not cached. Every requested format must still be available. Fixed waits must fit before a response reserve of up to 5000 milliseconds (at most one quarter of the timeout) when using return-partial.
+     *
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
-    public function withTimeoutMs(int $timeoutMs): self
+    public function withTimeoutOpts(TimeoutOpts|array $timeoutOpts): self
     {
         $self = clone $this;
-        $self['timeoutMs'] = $timeoutMs;
+        $self['timeoutOpts'] = $timeoutOpts;
 
         return $self;
     }
