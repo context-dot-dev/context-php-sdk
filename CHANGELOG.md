@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.19.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.18.0...v2.19.0) (2026-09-22)
+
+
+### Features
+
+* **billing:** charge for 404s and skip fraud accounting ([#1152](https://github.com/context-dot-dev/context-php-sdk/issues/1152)) ([780b335](https://github.com/context-dot-dev/context-php-sdk/commit/780b335c451883490d44a76e67f1aebad4cd1596))
+* **scrape:** add cache age support to byte downloads ([#1171](https://github.com/context-dot-dev/context-php-sdk/issues/1171)) ([c8c9ed3](https://github.com/context-dot-dev/context-php-sdk/commit/c8c9ed3873fa84a4c61e1f8748f9009377aeeb76))
+* **scrape:** add unified scrape API ([#1182](https://github.com/context-dot-dev/context-php-sdk/issues/1182)) ([7de59fc](https://github.com/context-dot-dev/context-php-sdk/commit/7de59fc620ff26f9ba6373bbdb62a69521d2ff57))
+* **scrape:** align timeout options and public SDK methods ([#1207](https://github.com/context-dot-dev/context-php-sdk/issues/1207)) ([42e8a3d](https://github.com/context-dot-dev/context-php-sdk/commit/42e8a3d0a05191157857741f8df4b7b4bdb13d92))
+* **scrape:** support country for image scraping ([#1172](https://github.com/context-dot-dev/context-php-sdk/issues/1172)) ([c8c9ed3](https://github.com/context-dot-dev/context-php-sdk/commit/c8c9ed3873fa84a4c61e1f8748f9009377aeeb76))
+* **scrape:** support custom screenshot headers ([#1169](https://github.com/context-dot-dev/context-php-sdk/issues/1169)) ([ac70e57](https://github.com/context-dot-dev/context-php-sdk/commit/ac70e57b21323850343b2711be98c5c046afa648))
+* **scrape:** support waitForMs for byte downloads ([#1170](https://github.com/context-dot-dev/context-php-sdk/issues/1170)) ([a270ff4](https://github.com/context-dot-dev/context-php-sdk/commit/a270ff4334781f06ccdd227ca2d2978287eb66f7))
+
+
+### Bug Fixes
+
+* **scrape:** reuse legacy caches across all output formats ([#1197](https://github.com/context-dot-dev/context-php-sdk/issues/1197)) ([424354f](https://github.com/context-dot-dev/context-php-sdk/commit/424354f8c9b4fff8316c20f1a345ffca269831af))
+
 ## [2.18.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.17.1...v2.18.0) (2026-09-18)
 
 
