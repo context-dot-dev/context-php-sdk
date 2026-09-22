@@ -20,6 +20,7 @@ use ContextDev\Monitors\MonitorGetChangeResponse;
 use ContextDev\Monitors\MonitorGetCreditUsageResponse;
 use ContextDev\Monitors\MonitorGetLimitsResponse;
 use ContextDev\Monitors\MonitorGetResponse;
+use ContextDev\Monitors\MonitorGetRunResponse;
 use ContextDev\Monitors\MonitorListAccountChangesResponse;
 use ContextDev\Monitors\MonitorListAccountRunsResponse;
 use ContextDev\Monitors\MonitorListChangesResponse;
@@ -30,6 +31,7 @@ use ContextDev\Monitors\MonitorListParams\TargetType;
 use ContextDev\Monitors\MonitorListResponse;
 use ContextDev\Monitors\MonitorListRunsResponse;
 use ContextDev\Monitors\MonitorNewResponse;
+use ContextDev\Monitors\MonitorRotateWebhookSecretResponse;
 use ContextDev\Monitors\MonitorRunResponse;
 use ContextDev\Monitors\MonitorUpdateParams\Status;
 use ContextDev\Monitors\MonitorUpdateResponse;
@@ -442,6 +444,47 @@ final class MonitorsService implements MonitorsContract
     ): MonitorGetChangeResponse {
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->retrieveChange($changeID, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Fetches one run for a monitor, including lifecycle status, timing, credits charged, and any detected change.
+     *
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function retrieveRun(
+        string $runID,
+        string $monitorID,
+        RequestOptions|array|null $requestOptions = null,
+    ): MonitorGetRunResponse {
+        $params = Util::removeNulls(['monitorID' => $monitorID]);
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->retrieveRun($runID, params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Generates a new signing secret for the monitor's webhook and returns the updated monitor (including the new `webhook.secret`). The previous secret stops signing deliveries immediately, so update your endpoint before rotating.
+     *
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function rotateWebhookSecret(
+        string $monitorID,
+        RequestOptions|array|null $requestOptions = null
+    ): MonitorRotateWebhookSecretResponse {
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->rotateWebhookSecret($monitorID, requestOptions: $requestOptions);
 
         return $response->parse();
     }

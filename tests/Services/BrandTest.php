@@ -3,7 +3,6 @@
 namespace Tests\Services;
 
 use ContextDev\Brand\BrandGetResponse;
-use ContextDev\Brand\BrandGetSimplifiedResponse;
 use ContextDev\Brand\BrandSearchResponse;
 use ContextDev\Client;
 use ContextDev\Core\Util;
@@ -81,38 +80,6 @@ final class BrandTest extends TestCase
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(BrandGetResponse::class, $result);
-    }
-
-    #[Test]
-    public function testRetrieveSimplified(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->brand->retrieveSimplified(domain: 'xxx');
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(BrandGetSimplifiedResponse::class, $result);
-    }
-
-    #[Test]
-    public function testRetrieveSimplifiedWithOptionalParams(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->brand->retrieveSimplified(
-            domain: 'xxx',
-            maxAgeMs: 0,
-            tags: ['production', 'team-alpha'],
-            theme: 'light',
-            timeoutOpts: ['milliseconds' => 1000, 'behavior' => 'fail'],
-        );
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(BrandGetSimplifiedResponse::class, $result);
     }
 
     #[Test]

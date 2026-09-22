@@ -18,6 +18,7 @@ use ContextDev\Monitors\MonitorGetCreditUsageParams;
 use ContextDev\Monitors\MonitorGetCreditUsageResponse;
 use ContextDev\Monitors\MonitorGetLimitsResponse;
 use ContextDev\Monitors\MonitorGetResponse;
+use ContextDev\Monitors\MonitorGetRunResponse;
 use ContextDev\Monitors\MonitorListAccountChangesParams;
 use ContextDev\Monitors\MonitorListAccountChangesResponse;
 use ContextDev\Monitors\MonitorListAccountRunsParams;
@@ -33,6 +34,8 @@ use ContextDev\Monitors\MonitorListResponse;
 use ContextDev\Monitors\MonitorListRunsParams;
 use ContextDev\Monitors\MonitorListRunsResponse;
 use ContextDev\Monitors\MonitorNewResponse;
+use ContextDev\Monitors\MonitorRetrieveRunParams;
+use ContextDev\Monitors\MonitorRotateWebhookSecretResponse;
 use ContextDev\Monitors\MonitorRunResponse;
 use ContextDev\Monitors\MonitorUpdateParams;
 use ContextDev\Monitors\MonitorUpdateParams\Status;
@@ -471,6 +474,63 @@ final class MonitorsRawService implements MonitorsRawContract
             path: ['monitors/changes/%1$s', $changeID],
             options: $requestOptions,
             convert: MonitorGetChangeResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Fetches one run for a monitor, including lifecycle status, timing, credits charged, and any detected change.
+     *
+     * @param array{monitorID: string}|MonitorRetrieveRunParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<MonitorGetRunResponse>
+     *
+     * @throws APIException
+     */
+    public function retrieveRun(
+        string $runID,
+        array|MonitorRetrieveRunParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = MonitorRetrieveRunParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+        $monitorID = $parsed['monitorID'];
+        unset($parsed['monitorID']);
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: ['monitors/%1$s/runs/%2$s', $monitorID, $runID],
+            options: $options,
+            convert: MonitorGetRunResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Generates a new signing secret for the monitor's webhook and returns the updated monitor (including the new `webhook.secret`). The previous secret stops signing deliveries immediately, so update your endpoint before rotating.
+     *
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<MonitorRotateWebhookSecretResponse>
+     *
+     * @throws APIException
+     */
+    public function rotateWebhookSecret(
+        string $monitorID,
+        RequestOptions|array|null $requestOptions = null
+    ): BaseResponse {
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'post',
+            path: ['monitors/%1$s/webhook/rotate-secret', $monitorID],
+            options: $requestOptions,
+            convert: MonitorRotateWebhookSecretResponse::class,
         );
     }
 

@@ -6,19 +6,12 @@ use ContextDev\Client;
 use ContextDev\Core\Util;
 use ContextDev\Web\WebAnswersResponse;
 use ContextDev\Web\WebExtractCompetitorsResponse;
-use ContextDev\Web\WebExtractFontsResponse;
-use ContextDev\Web\WebExtractResponse;
 use ContextDev\Web\WebExtractStyleguideResponse;
+use ContextDev\Web\WebMapURLsResponse;
 use ContextDev\Web\WebScrapeResponse;
 use ContextDev\Web\WebScreenshotResponse;
 use ContextDev\Web\WebSearchResponse;
 use ContextDev\Web\WebWebCrawlMdResponse;
-use ContextDev\Web\WebWebScrapeBytesResponse;
-use ContextDev\Web\WebWebScrapeHTMLResponse;
-use ContextDev\Web\WebWebScrapeImagesResponse;
-use ContextDev\Web\WebWebScrapeMdResponse;
-use ContextDev\Web\WebWebScrapeScreenshotResponse;
-use ContextDev\Web\WebWebScrapeSitemapResponse;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -78,63 +71,6 @@ final class WebTest extends TestCase
     }
 
     #[Test]
-    public function testExtract(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->web->extract(
-            schema: [
-                'type' => 'bar',
-                'properties' => 'bar',
-                'required' => 'bar',
-                'additionalProperties' => 'bar',
-            ],
-            url: 'https://example.com',
-        );
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(WebExtractResponse::class, $result);
-    }
-
-    #[Test]
-    public function testExtractWithOptionalParams(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->web->extract(
-            schema: [
-                'type' => 'bar',
-                'properties' => 'bar',
-                'required' => 'bar',
-                'additionalProperties' => 'bar',
-            ],
-            url: 'https://example.com',
-            actions: [['do' => 'wait', 'timeMs' => 0]],
-            factCheck: true,
-            followSubdomains: true,
-            includeFrames: true,
-            instructions: 'instructions',
-            maxAgeMs: 0,
-            maxDepth: 0,
-            maxPages: 1,
-            pdf: ['end' => 1, 'shouldParse' => true, 'start' => 1],
-            settleAnimations: true,
-            stopAfterMs: 10000,
-            tags: ['production', 'team-alpha'],
-            timeoutOpts: ['milliseconds' => 1000, 'behavior' => 'fail'],
-            waitForMs: 0,
-            zdr: 'enabled',
-        );
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(WebExtractResponse::class, $result);
-    }
-
-    #[Test]
     public function testExtractCompetitors(): void
     {
         if (UnsupportedMockTests::$skip) {
@@ -167,19 +103,6 @@ final class WebTest extends TestCase
     }
 
     #[Test]
-    public function testExtractFonts(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->web->extractFonts();
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(WebExtractFontsResponse::class, $result);
-    }
-
-    #[Test]
     public function testExtractStyleguide(): void
     {
         if (UnsupportedMockTests::$skip) {
@@ -190,6 +113,43 @@ final class WebTest extends TestCase
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(WebExtractStyleguideResponse::class, $result);
+    }
+
+    #[Test]
+    public function testMapURLs(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->web->mapUrls(domain: 'xxx');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(WebMapURLsResponse::class, $result);
+    }
+
+    #[Test]
+    public function testMapURLsWithOptionalParams(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->web->mapUrls(
+            domain: 'xxx',
+            headers: ['foo' => 'J!'],
+            includeSubdomains: true,
+            maxLinks: 1,
+            search: 'help center and troubleshooting articles',
+            sitemapURL: 'https://example.com',
+            tags: ['production', 'team-alpha'],
+            timeoutOpts: ['milliseconds' => 1, 'behavior' => 'fail'],
+            urlRegex: '^https?://[^/]+/blog/',
+            zdr: 'enabled',
+        );
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(WebMapURLsResponse::class, $result);
     }
 
     #[Test]
@@ -260,7 +220,7 @@ final class WebTest extends TestCase
                 'waitFor' => 500,
             ],
             tags: ['production', 'team-alpha'],
-            timeoutMs: 1,
+            timeoutOpts: ['milliseconds' => 1, 'behavior' => 'fail'],
             zdr: 'enabled',
         );
 
@@ -376,252 +336,5 @@ final class WebTest extends TestCase
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(WebWebCrawlMdResponse::class, $result);
-    }
-
-    #[Test]
-    public function testWebScrapeBytes(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->web->webScrapeBytes(url: 'https://example.com');
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(WebWebScrapeBytesResponse::class, $result);
-    }
-
-    #[Test]
-    public function testWebScrapeBytesWithOptionalParams(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->web->webScrapeBytes(
-            url: 'https://example.com',
-            country: 'de',
-            headers: ['foo' => 'J!'],
-            maxAgeMs: 0,
-            tags: ['production', 'team-alpha'],
-            timeoutOpts: ['milliseconds' => 1, 'behavior' => 'fail'],
-            waitForMs: 0,
-            zdr: 'enabled',
-        );
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(WebWebScrapeBytesResponse::class, $result);
-    }
-
-    #[Test]
-    public function testWebScrapeHTML(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->web->webScrapeHTML(url: 'https://example.com');
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(WebWebScrapeHTMLResponse::class, $result);
-    }
-
-    #[Test]
-    public function testWebScrapeHTMLWithOptionalParams(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->web->webScrapeHTML(
-            url: 'https://example.com',
-            actions: [['do' => 'wait', 'timeMs' => 0]],
-            country: 'de',
-            excludeSelectors: ['x'],
-            extractRules: ['foo' => 'x'],
-            headers: ['foo' => 'J!'],
-            includeFrames: true,
-            includeSelectors: ['x'],
-            maxAgeMs: 0,
-            pdf: ['end' => 1, 'ocr' => true, 'shouldParse' => true, 'start' => 1],
-            settleAnimations: true,
-            tags: ['production', 'team-alpha'],
-            timeoutOpts: ['milliseconds' => 1, 'behavior' => 'fail'],
-            useMainContentOnly: true,
-            waitForMs: 0,
-            zdr: 'enabled',
-        );
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(WebWebScrapeHTMLResponse::class, $result);
-    }
-
-    #[Test]
-    public function testWebScrapeImages(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->web->webScrapeImages(url: 'https://example.com');
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(WebWebScrapeImagesResponse::class, $result);
-    }
-
-    #[Test]
-    public function testWebScrapeImagesWithOptionalParams(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->web->webScrapeImages(
-            url: 'https://example.com',
-            actions: [['do' => 'wait', 'timeMs' => 0]],
-            country: 'de',
-            dedupe: true,
-            enrichment: [
-                'classification' => true,
-                'hostedURL' => true,
-                'maxTimePerMs' => 1,
-                'resolution' => true,
-            ],
-            headers: ['foo' => 'J!'],
-            maxAgeMs: 0,
-            tags: ['production', 'team-alpha'],
-            timeoutOpts: ['milliseconds' => 1, 'behavior' => 'fail'],
-            waitForMs: 0,
-            zdr: 'enabled',
-        );
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(WebWebScrapeImagesResponse::class, $result);
-    }
-
-    #[Test]
-    public function testWebScrapeMd(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->web->webScrapeMd(url: 'https://example.com');
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(WebWebScrapeMdResponse::class, $result);
-    }
-
-    #[Test]
-    public function testWebScrapeMdWithOptionalParams(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->web->webScrapeMd(
-            url: 'https://example.com',
-            actions: [['do' => 'wait', 'timeMs' => 0]],
-            country: 'de',
-            excludeSelectors: ['x'],
-            headers: ['foo' => 'J!'],
-            includeFrames: true,
-            includeHTML: true,
-            includeImages: true,
-            includeLinks: true,
-            includeSelectors: ['x'],
-            maxAgeMs: 0,
-            pdf: ['end' => 1, 'ocr' => true, 'shouldParse' => true, 'start' => 1],
-            settleAnimations: true,
-            shortenBase64Images: true,
-            tags: ['production', 'team-alpha'],
-            timeoutOpts: ['milliseconds' => 1, 'behavior' => 'fail'],
-            useMainContentOnly: true,
-            waitForMs: 0,
-            zdr: 'enabled',
-        );
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(WebWebScrapeMdResponse::class, $result);
-    }
-
-    #[Test]
-    public function testWebScrapeScreenshot(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->web->webScrapeScreenshot(
-            url: 'https://example.com'
-        );
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(WebWebScrapeScreenshotResponse::class, $result);
-    }
-
-    #[Test]
-    public function testWebScrapeScreenshotWithOptionalParams(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->web->webScrapeScreenshot(
-            url: 'https://example.com',
-            clearPopups: true,
-            colorScheme: 'light',
-            country: 'de',
-            fullScreenshot: 'true',
-            handleCookiePopup: true,
-            headers: ['foo' => 'J!'],
-            maxAgeMs: 0,
-            scrollOffset: 0,
-            tags: ['production', 'team-alpha'],
-            timeoutOpts: ['milliseconds' => 1, 'behavior' => 'fail'],
-            viewport: ['height' => 240, 'width' => 240],
-            waitForMs: 0,
-            zdr: 'enabled',
-        );
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(WebWebScrapeScreenshotResponse::class, $result);
-    }
-
-    #[Test]
-    public function testWebScrapeSitemap(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->web->webScrapeSitemap(domain: 'xxx');
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(WebWebScrapeSitemapResponse::class, $result);
-    }
-
-    #[Test]
-    public function testWebScrapeSitemapWithOptionalParams(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->web->webScrapeSitemap(
-            domain: 'xxx',
-            headers: ['foo' => 'J!'],
-            includeSubdomains: true,
-            maxLinks: 1,
-            search: 'help center and troubleshooting articles',
-            sitemapURL: 'https://example.com',
-            tags: ['production', 'team-alpha'],
-            timeoutOpts: ['milliseconds' => 1, 'behavior' => 'fail'],
-            urlRegex: '^https?://[^/]+/blog/',
-            zdr: 'enabled',
-        );
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(WebWebScrapeSitemapResponse::class, $result);
     }
 }

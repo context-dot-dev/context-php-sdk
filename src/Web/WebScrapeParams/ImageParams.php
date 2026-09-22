@@ -32,7 +32,7 @@ final class ImageParams implements BaseModel
     public ?string $dedupe;
 
     /**
-     * Add dimensions, a visual category, or a hosted file URL.
+     * Add dimensions, a visual category, or a hosted file URL. Each image has a maximum processing time of 30000 milliseconds, bounded by the remaining request deadline.
      *
      * @var list<value-of<Enrich>>|null $enrich
      */
@@ -78,7 +78,7 @@ final class ImageParams implements BaseModel
     }
 
     /**
-     * Add dimensions, a visual category, or a hosted file URL.
+     * Add dimensions, a visual category, or a hosted file URL. Each image has a maximum processing time of 30000 milliseconds, bounded by the remaining request deadline.
      *
      * @param list<Enrich|value-of<Enrich>> $enrich
      */
