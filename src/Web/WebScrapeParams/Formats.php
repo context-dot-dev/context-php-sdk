@@ -35,7 +35,7 @@ final class Formats implements BaseModel
     public ?bool $bytes;
 
     /**
-     * Relevant passages for your question or topic. Adds 3 credits.
+     * Relevant passages for your question or topic, with headings included when needed for context. Adds 3 credits.
      */
     #[Optional]
     public ?bool $highlights;
@@ -130,7 +130,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * Relevant passages for your question or topic. Adds 3 credits.
+     * Relevant passages for your question or topic, with headings included when needed for context. Adds 3 credits.
      */
     public function withHighlights(bool $highlights): self
     {

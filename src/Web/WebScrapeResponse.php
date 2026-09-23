@@ -71,7 +71,7 @@ final class WebScrapeResponse implements BaseModel
     public CacheMetadata $cacheMetadata;
 
     /**
-     * Relevant passages for your question or topic.
+     * Relevant passages for your question or topic, in page order. A heading in square brackets is included when needed to interpret a passage. Empty when the page has no text.
      */
     #[Required]
     public Highlights $highlights;
@@ -278,7 +278,7 @@ final class WebScrapeResponse implements BaseModel
     }
 
     /**
-     * Relevant passages for your question or topic.
+     * Relevant passages for your question or topic, in page order. A heading in square brackets is included when needed to interpret a passage. Empty when the page has no text.
      *
      * @param Highlights|HighlightsShape $highlights
      */

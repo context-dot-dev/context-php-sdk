@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Relevant passages for your question or topic.
+ * Relevant passages for your question or topic, in page order. A heading in square brackets is included when needed to interpret a passage. Empty when the page has no text.
  *
  * @phpstan-type HighlightsShape = array{data: list<string>|null, requested: bool}
  */
