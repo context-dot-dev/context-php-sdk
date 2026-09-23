@@ -10,7 +10,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebScrapeResponse\Product\Data;
 
 /**
- * Product detail page classification and the extracted product.
+ * Product details found on the page.
  *
  * @phpstan-import-type DataShape from \ContextDev\Web\WebScrapeResponse\Product\Data
  *
