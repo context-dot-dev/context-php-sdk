@@ -10,6 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebScrapeParams\Formats;
+use ContextDev\Web\WebScrapeParams\HighlightsParams;
 use ContextDev\Web\WebScrapeParams\ImageParams;
 use ContextDev\Web\WebScrapeParams\JsonParams;
 use ContextDev\Web\WebScrapeParams\MarkdownParams;
@@ -20,11 +21,12 @@ use ContextDev\Web\WebScrapeParams\TimeoutOpts;
 use ContextDev\Web\WebScrapeParams\Zdr;
 
 /**
- * Reuse cached outputs independently and capture missing formats in one page visit. Each cache key includes only the settings that affect that output. HTML is shared with Markdown, parsed fields, and JSON extraction. Cached outputs can come from different visits within maxAgeMs; use 0 for a fresh capture. HTML-only requests use the existing fast acquisition path. One credit per request, including cache hits and missing pages, or two with browser actions; JSON extraction adds four credits and runs an LLM over the page Markdown on every request that has text to extract; PDF OCR adds one credit per recovered page on fresh extraction. Original response bytes and screenshots are limited to 20 MiB each, screenshots to 40 megapixels, and the combined browser capture to 60 MiB.
+ * Reuse cached outputs independently and capture missing formats in one page visit. Each cache key includes only the settings that affect that output. HTML is shared with Markdown, parsed fields, highlights, and JSON extraction. Cached outputs can come from different visits within maxAgeMs; use 0 for a fresh capture. HTML-only requests use the existing fast acquisition path. Highlights return the plain-text passages most relevant to highlightsParams.query. One credit per request, including cache hits and missing pages, or two with browser actions; highlights add 3 credits when passages are returned; JSON extraction adds four credits and runs an LLM over the page Markdown on every request that has text to extract; PDF OCR adds one credit per recovered page on fresh extraction. Original response bytes and screenshots are limited to 20 MiB each, screenshots to 40 megapixels, and the combined browser capture to 60 MiB.
  *
  * @see ContextDev\Services\WebService::scrape()
  *
  * @phpstan-import-type FormatsShape from \ContextDev\Web\WebScrapeParams\Formats
+ * @phpstan-import-type HighlightsParamsShape from \ContextDev\Web\WebScrapeParams\HighlightsParams
  * @phpstan-import-type ImageParamsShape from \ContextDev\Web\WebScrapeParams\ImageParams
  * @phpstan-import-type JsonParamsShape from \ContextDev\Web\WebScrapeParams\JsonParams
  * @phpstan-import-type MarkdownParamsShape from \ContextDev\Web\WebScrapeParams\MarkdownParams
@@ -36,6 +38,7 @@ use ContextDev\Web\WebScrapeParams\Zdr;
  * @phpstan-type WebScrapeParamsShape = array{
  *   formats: Formats|FormatsShape,
  *   url: string,
+ *   highlightsParams?: null|HighlightsParams|HighlightsParamsShape,
  *   imageParams?: null|ImageParams|ImageParamsShape,
  *   jsonParams?: null|JsonParams|JsonParamsShape,
  *   markdownParams?: null|MarkdownParams|MarkdownParamsShape,
@@ -65,6 +68,12 @@ final class WebScrapeParams implements BaseModel
      */
     #[Required]
     public string $url;
+
+    /**
+     * Highlight options. Requires formats.highlights: true.
+     */
+    #[Optional]
+    public ?HighlightsParams $highlightsParams;
 
     /**
      * Image options. Requires formats.images: true.
@@ -123,7 +132,7 @@ final class WebScrapeParams implements BaseModel
     public ?TimeoutOpts $timeoutOpts;
 
     /**
-     * Zero data retention. Bypasses caches and uploads; excludes request/response content and tags from logs. Must be enabled for your organization.
+     * Zero data retention. Bypasses caches and uploads; excludes request/response content and tags from logs. Must be enabled for your organization. Not available with the highlights output.
      *
      * @var value-of<Zdr>|null $zdr
      */
@@ -155,6 +164,7 @@ final class WebScrapeParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param Formats|FormatsShape $formats
+     * @param HighlightsParams|HighlightsParamsShape|null $highlightsParams
      * @param ImageParams|ImageParamsShape|null $imageParams
      * @param JsonParams|JsonParamsShape|null $jsonParams
      * @param MarkdownParams|MarkdownParamsShape|null $markdownParams
@@ -168,6 +178,7 @@ final class WebScrapeParams implements BaseModel
     public static function with(
         Formats|array $formats,
         string $url,
+        HighlightsParams|array|null $highlightsParams = null,
         ImageParams|array|null $imageParams = null,
         JsonParams|array|null $jsonParams = null,
         MarkdownParams|array|null $markdownParams = null,
@@ -184,6 +195,7 @@ final class WebScrapeParams implements BaseModel
         $self['formats'] = $formats;
         $self['url'] = $url;
 
+        null !== $highlightsParams && $self['highlightsParams'] = $highlightsParams;
         null !== $imageParams && $self['imageParams'] = $imageParams;
         null !== $jsonParams && $self['jsonParams'] = $jsonParams;
         null !== $markdownParams && $self['markdownParams'] = $markdownParams;
@@ -218,6 +230,20 @@ final class WebScrapeParams implements BaseModel
     {
         $self = clone $this;
         $self['url'] = $url;
+
+        return $self;
+    }
+
+    /**
+     * Highlight options. Requires formats.highlights: true.
+     *
+     * @param HighlightsParams|HighlightsParamsShape $highlightsParams
+     */
+    public function withHighlightsParams(
+        HighlightsParams|array $highlightsParams
+    ): self {
+        $self = clone $this;
+        $self['highlightsParams'] = $highlightsParams;
 
         return $self;
     }
@@ -340,7 +366,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Zero data retention. Bypasses caches and uploads; excludes request/response content and tags from logs. Must be enabled for your organization.
+     * Zero data retention. Bypasses caches and uploads; excludes request/response content and tags from logs. Must be enabled for your organization. Not available with the highlights output.
      *
      * @param Zdr|value-of<Zdr> $zdr
      */

@@ -178,6 +178,7 @@ final class WebTest extends TestCase
         $result = $this->client->web->scrape(
             formats: [
                 'bytes' => true,
+                'highlights' => true,
                 'html' => true,
                 'images' => true,
                 'json' => true,
@@ -186,6 +187,7 @@ final class WebTest extends TestCase
                 'screenshot' => true,
             ],
             url: 'https://example.com',
+            highlightsParams: ['query' => 'x', 'maxCharacters' => 100],
             imageParams: ['dedupe' => 'none', 'enrich' => ['dimensions']],
             jsonParams: [
                 'schema' => [
