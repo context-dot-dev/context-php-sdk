@@ -18,6 +18,7 @@ use ContextDev\Web\WebScrapeResponse\KeyMetadata;
 use ContextDev\Web\WebScrapeResponse\Markdown;
 use ContextDev\Web\WebScrapeResponse\Metadata;
 use ContextDev\Web\WebScrapeResponse\Parsed;
+use ContextDev\Web\WebScrapeResponse\Product;
 use ContextDev\Web\WebScrapeResponse\Screenshot;
 
 /**
@@ -30,6 +31,7 @@ use ContextDev\Web\WebScrapeResponse\Screenshot;
  * @phpstan-import-type MarkdownShape from \ContextDev\Web\WebScrapeResponse\Markdown
  * @phpstan-import-type MetadataShape from \ContextDev\Web\WebScrapeResponse\Metadata
  * @phpstan-import-type ParsedShape from \ContextDev\Web\WebScrapeResponse\Parsed
+ * @phpstan-import-type ProductShape from \ContextDev\Web\WebScrapeResponse\Product
  * @phpstan-import-type ScreenshotShape from \ContextDev\Web\WebScrapeResponse\Screenshot
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Web\WebScrapeResponse\KeyMetadata
  *
@@ -43,6 +45,7 @@ use ContextDev\Web\WebScrapeResponse\Screenshot;
  *   markdown: Markdown|MarkdownShape,
  *   metadata: Metadata|MetadataShape,
  *   parsed: Parsed|ParsedShape,
+ *   product: Product|ProductShape,
  *   requestID: string,
  *   screenshot: Screenshot|ScreenshotShape,
  *   url: string,
@@ -110,6 +113,12 @@ final class WebScrapeResponse implements BaseModel
     public Parsed $parsed;
 
     /**
+     * Product detail page classification and the extracted product.
+     */
+    #[Required]
+    public Product $product;
+
+    /**
      * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
      */
     #[Required('request_id')]
@@ -128,7 +137,7 @@ final class WebScrapeResponse implements BaseModel
     public string $url;
 
     /**
-     * Present when return-partial captures a page that is still loading or returns images before image processing finishes. Partial responses are not cached.
+     * Present when return-partial captures a page that is still loading, returns images before image processing finishes, or cuts product AI extraction short. Also present if the optional product AI fallback fails. Partial responses are not cached.
      */
     #[Optional]
     public ?bool $isPartial;
@@ -154,6 +163,7 @@ final class WebScrapeResponse implements BaseModel
      *   markdown: ...,
      *   metadata: ...,
      *   parsed: ...,
+     *   product: ...,
      *   requestID: ...,
      *   screenshot: ...,
      *   url: ...,
@@ -173,6 +183,7 @@ final class WebScrapeResponse implements BaseModel
      *   ->withMarkdown(...)
      *   ->withMetadata(...)
      *   ->withParsed(...)
+     *   ->withProduct(...)
      *   ->withRequestID(...)
      *   ->withScreenshot(...)
      *   ->withURL(...)
@@ -197,6 +208,7 @@ final class WebScrapeResponse implements BaseModel
      * @param Markdown|MarkdownShape $markdown
      * @param Metadata|MetadataShape $metadata
      * @param Parsed|ParsedShape $parsed
+     * @param Product|ProductShape $product
      * @param Screenshot|ScreenshotShape $screenshot
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
@@ -210,6 +222,7 @@ final class WebScrapeResponse implements BaseModel
         Markdown|array $markdown,
         Metadata|array $metadata,
         Parsed|array $parsed,
+        Product|array $product,
         string $requestID,
         Screenshot|array $screenshot,
         string $url,
@@ -227,6 +240,7 @@ final class WebScrapeResponse implements BaseModel
         $self['markdown'] = $markdown;
         $self['metadata'] = $metadata;
         $self['parsed'] = $parsed;
+        $self['product'] = $product;
         $self['requestID'] = $requestID;
         $self['screenshot'] = $screenshot;
         $self['url'] = $url;
@@ -355,6 +369,19 @@ final class WebScrapeResponse implements BaseModel
     }
 
     /**
+     * Product detail page classification and the extracted product.
+     *
+     * @param Product|ProductShape $product
+     */
+    public function withProduct(Product|array $product): self
+    {
+        $self = clone $this;
+        $self['product'] = $product;
+
+        return $self;
+    }
+
+    /**
      * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
      */
     public function withRequestID(string $requestID): self
@@ -390,7 +417,7 @@ final class WebScrapeResponse implements BaseModel
     }
 
     /**
-     * Present when return-partial captures a page that is still loading or returns images before image processing finishes. Partial responses are not cached.
+     * Present when return-partial captures a page that is still loading, returns images before image processing finishes, or cuts product AI extraction short. Also present if the optional product AI fallback fails. Partial responses are not cached.
      */
     public function withIsPartial(bool $isPartial): self
     {

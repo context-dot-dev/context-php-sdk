@@ -29,6 +29,7 @@ use ContextDev\Web\WebScrapeParams\ImageParams;
 use ContextDev\Web\WebScrapeParams\JsonParams;
 use ContextDev\Web\WebScrapeParams\MarkdownParams;
 use ContextDev\Web\WebScrapeParams\ParseParams;
+use ContextDev\Web\WebScrapeParams\ProductParams;
 use ContextDev\Web\WebScrapeParams\ScreenshotParams;
 use ContextDev\Web\WebScrapeParams\SharedParams;
 use ContextDev\Web\WebScrapeResponse;
@@ -57,6 +58,7 @@ use ContextDev\Web\WebWebCrawlMdResponse;
  * @phpstan-import-type JsonParamsShape from \ContextDev\Web\WebScrapeParams\JsonParams
  * @phpstan-import-type MarkdownParamsShape from \ContextDev\Web\WebScrapeParams\MarkdownParams
  * @phpstan-import-type ParseParamsShape from \ContextDev\Web\WebScrapeParams\ParseParams
+ * @phpstan-import-type ProductParamsShape from \ContextDev\Web\WebScrapeParams\ProductParams
  * @phpstan-import-type ScreenshotParamsShape from \ContextDev\Web\WebScrapeParams\ScreenshotParams
  * @phpstan-import-type SharedParamsShape from \ContextDev\Web\WebScrapeParams\SharedParams
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebScrapeParams\TimeoutOpts as TimeoutOptsShape4
@@ -238,7 +240,7 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Reuse cached outputs independently and capture missing formats in one page visit. Each cache key includes only the settings that affect that output. HTML is shared with Markdown, parsed fields, highlights, and JSON extraction. Cached outputs can come from different visits within maxAgeMs; use 0 for a fresh capture. HTML-only requests use the existing fast acquisition path. Highlights return the plain-text passages most relevant to highlightsParams.query. One credit per request, including cache hits and missing pages, or two with browser actions; highlights add 3 credits when passages are returned; JSON extraction adds four credits and runs an LLM over the page Markdown on every request that has text to extract; PDF OCR adds one credit per recovered page on fresh extraction. Original response bytes and screenshots are limited to 20 MiB each, screenshots to 40 megapixels, and the combined browser capture to 60 MiB.
+     * Reuse cached outputs independently and capture missing formats in one page visit. Each cache key includes only the settings that affect that output. HTML is shared with Markdown, parsed fields, product data, highlights, and JSON extraction. Cached outputs can come from different visits within maxAgeMs; use 0 for a fresh capture. HTML-only requests use the existing fast acquisition path. Highlights return the plain-text passages most relevant to highlightsParams.query. One credit per request, including cache hits and missing pages, or two with browser actions; highlights add 3 credits when passages are returned; JSON extraction adds four credits and runs an LLM over the page Markdown on every request that has text to extract; PDF OCR adds one credit per recovered page on fresh extraction; the product output adds one credit, plus six more when the specialized model is used. Original response bytes and screenshots are limited to 20 MiB each, screenshots to 40 megapixels, and the combined browser capture to 60 MiB.
      *
      * @param array{
      *   formats: Formats|FormatsShape,
@@ -249,6 +251,7 @@ final class WebRawService implements WebRawContract
      *   markdownParams?: MarkdownParams|MarkdownParamsShape,
      *   maxAgeMs?: int,
      *   parseParams?: ParseParams|ParseParamsShape,
+     *   productParams?: ProductParams|ProductParamsShape,
      *   screenshotParams?: ScreenshotParams|ScreenshotParamsShape,
      *   sharedParams?: SharedParams|SharedParamsShape,
      *   tags?: list<string>,

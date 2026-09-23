@@ -15,13 +15,14 @@ use ContextDev\Web\WebScrapeParams\ImageParams;
 use ContextDev\Web\WebScrapeParams\JsonParams;
 use ContextDev\Web\WebScrapeParams\MarkdownParams;
 use ContextDev\Web\WebScrapeParams\ParseParams;
+use ContextDev\Web\WebScrapeParams\ProductParams;
 use ContextDev\Web\WebScrapeParams\ScreenshotParams;
 use ContextDev\Web\WebScrapeParams\SharedParams;
 use ContextDev\Web\WebScrapeParams\TimeoutOpts;
 use ContextDev\Web\WebScrapeParams\Zdr;
 
 /**
- * Reuse cached outputs independently and capture missing formats in one page visit. Each cache key includes only the settings that affect that output. HTML is shared with Markdown, parsed fields, highlights, and JSON extraction. Cached outputs can come from different visits within maxAgeMs; use 0 for a fresh capture. HTML-only requests use the existing fast acquisition path. Highlights return the plain-text passages most relevant to highlightsParams.query. One credit per request, including cache hits and missing pages, or two with browser actions; highlights add 3 credits when passages are returned; JSON extraction adds four credits and runs an LLM over the page Markdown on every request that has text to extract; PDF OCR adds one credit per recovered page on fresh extraction. Original response bytes and screenshots are limited to 20 MiB each, screenshots to 40 megapixels, and the combined browser capture to 60 MiB.
+ * Reuse cached outputs independently and capture missing formats in one page visit. Each cache key includes only the settings that affect that output. HTML is shared with Markdown, parsed fields, product data, highlights, and JSON extraction. Cached outputs can come from different visits within maxAgeMs; use 0 for a fresh capture. HTML-only requests use the existing fast acquisition path. Highlights return the plain-text passages most relevant to highlightsParams.query. One credit per request, including cache hits and missing pages, or two with browser actions; highlights add 3 credits when passages are returned; JSON extraction adds four credits and runs an LLM over the page Markdown on every request that has text to extract; PDF OCR adds one credit per recovered page on fresh extraction; the product output adds one credit, plus six more when the specialized model is used. Original response bytes and screenshots are limited to 20 MiB each, screenshots to 40 megapixels, and the combined browser capture to 60 MiB.
  *
  * @see ContextDev\Services\WebService::scrape()
  *
@@ -31,6 +32,7 @@ use ContextDev\Web\WebScrapeParams\Zdr;
  * @phpstan-import-type JsonParamsShape from \ContextDev\Web\WebScrapeParams\JsonParams
  * @phpstan-import-type MarkdownParamsShape from \ContextDev\Web\WebScrapeParams\MarkdownParams
  * @phpstan-import-type ParseParamsShape from \ContextDev\Web\WebScrapeParams\ParseParams
+ * @phpstan-import-type ProductParamsShape from \ContextDev\Web\WebScrapeParams\ProductParams
  * @phpstan-import-type ScreenshotParamsShape from \ContextDev\Web\WebScrapeParams\ScreenshotParams
  * @phpstan-import-type SharedParamsShape from \ContextDev\Web\WebScrapeParams\SharedParams
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebScrapeParams\TimeoutOpts
@@ -44,6 +46,7 @@ use ContextDev\Web\WebScrapeParams\Zdr;
  *   markdownParams?: null|MarkdownParams|MarkdownParamsShape,
  *   maxAgeMs?: int|null,
  *   parseParams?: null|ParseParams|ParseParamsShape,
+ *   productParams?: null|ProductParams|ProductParamsShape,
  *   screenshotParams?: null|ScreenshotParams|ScreenshotParamsShape,
  *   sharedParams?: null|SharedParams|SharedParamsShape,
  *   tags?: list<string>|null,
@@ -104,6 +107,12 @@ final class WebScrapeParams implements BaseModel
      */
     #[Optional]
     public ?ParseParams $parseParams;
+
+    /**
+     * Product options. Requires formats.product: true.
+     */
+    #[Optional]
+    public ?ProductParams $productParams;
 
     /**
      * Screenshot options. Requires formats.screenshot: true.
@@ -169,6 +178,7 @@ final class WebScrapeParams implements BaseModel
      * @param JsonParams|JsonParamsShape|null $jsonParams
      * @param MarkdownParams|MarkdownParamsShape|null $markdownParams
      * @param ParseParams|ParseParamsShape|null $parseParams
+     * @param ProductParams|ProductParamsShape|null $productParams
      * @param ScreenshotParams|ScreenshotParamsShape|null $screenshotParams
      * @param SharedParams|SharedParamsShape|null $sharedParams
      * @param list<string>|null $tags
@@ -184,6 +194,7 @@ final class WebScrapeParams implements BaseModel
         MarkdownParams|array|null $markdownParams = null,
         ?int $maxAgeMs = null,
         ParseParams|array|null $parseParams = null,
+        ProductParams|array|null $productParams = null,
         ScreenshotParams|array|null $screenshotParams = null,
         SharedParams|array|null $sharedParams = null,
         ?array $tags = null,
@@ -201,6 +212,7 @@ final class WebScrapeParams implements BaseModel
         null !== $markdownParams && $self['markdownParams'] = $markdownParams;
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
         null !== $parseParams && $self['parseParams'] = $parseParams;
+        null !== $productParams && $self['productParams'] = $productParams;
         null !== $screenshotParams && $self['screenshotParams'] = $screenshotParams;
         null !== $sharedParams && $self['sharedParams'] = $sharedParams;
         null !== $tags && $self['tags'] = $tags;
@@ -308,6 +320,19 @@ final class WebScrapeParams implements BaseModel
     {
         $self = clone $this;
         $self['parseParams'] = $parseParams;
+
+        return $self;
+    }
+
+    /**
+     * Product options. Requires formats.product: true.
+     *
+     * @param ProductParams|ProductParamsShape $productParams
+     */
+    public function withProductParams(ProductParams|array $productParams): self
+    {
+        $self = clone $this;
+        $self['productParams'] = $productParams;
 
         return $self;
     }
