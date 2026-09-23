@@ -20,6 +20,7 @@ use ContextDev\Web\WebScrapeParams\ImageParams;
 use ContextDev\Web\WebScrapeParams\JsonParams;
 use ContextDev\Web\WebScrapeParams\MarkdownParams;
 use ContextDev\Web\WebScrapeParams\ParseParams;
+use ContextDev\Web\WebScrapeParams\ProductParams;
 use ContextDev\Web\WebScrapeParams\ScreenshotParams;
 use ContextDev\Web\WebScrapeParams\SharedParams;
 use ContextDev\Web\WebScrapeResponse;
@@ -45,6 +46,7 @@ use ContextDev\Web\WebWebCrawlMdResponse;
  * @phpstan-import-type JsonParamsShape from \ContextDev\Web\WebScrapeParams\JsonParams
  * @phpstan-import-type MarkdownParamsShape from \ContextDev\Web\WebScrapeParams\MarkdownParams
  * @phpstan-import-type ParseParamsShape from \ContextDev\Web\WebScrapeParams\ParseParams
+ * @phpstan-import-type ProductParamsShape from \ContextDev\Web\WebScrapeParams\ProductParams
  * @phpstan-import-type ScreenshotParamsShape from \ContextDev\Web\WebScrapeParams\ScreenshotParams
  * @phpstan-import-type SharedParamsShape from \ContextDev\Web\WebScrapeParams\SharedParams
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebScrapeParams\TimeoutOpts as TimeoutOptsShape4
@@ -169,6 +171,7 @@ interface WebContract
      * @param MarkdownParams|MarkdownParamsShape $markdownParams Markdown options. Requires formats.markdown: true.
      * @param int $maxAgeMs Maximum age of each cached output. Defaults to 1 day; 0 fetches fresh and updates the requested outputs. Compatible outputs are shared with the individual scrape endpoints. Image results with hosted files refresh after 23 hours; other outputs retain their own freshness.
      * @param ParseParams|ParseParamsShape $parseParams Required when formats.parse is true.
+     * @param ProductParams|ProductParamsShape $productParams Product options. Requires formats.product: true.
      * @param ScreenshotParams|ScreenshotParamsShape $screenshotParams Screenshot options. Requires formats.screenshot: true.
      * @param SharedParams|SharedParamsShape $sharedParams Shared browser and content settings. Content filters leave screenshots and original bytes unchanged.
      * @param list<string> $tags Labels for tracking request usage. Not retained when zdr is enabled.
@@ -187,6 +190,7 @@ interface WebContract
         MarkdownParams|array|null $markdownParams = null,
         int $maxAgeMs = 86400000,
         ParseParams|array|null $parseParams = null,
+        ProductParams|array|null $productParams = null,
         ScreenshotParams|array|null $screenshotParams = null,
         SharedParams|array|null $sharedParams = null,
         ?array $tags = null,

@@ -19,6 +19,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   json?: bool|null,
  *   markdown?: bool|null,
  *   parse?: bool|null,
+ *   product?: bool|null,
  *   screenshot?: bool|null,
  * }
  */
@@ -70,6 +71,12 @@ final class Formats implements BaseModel
     public ?bool $parse;
 
     /**
+     * Structured product data for product detail pages. Adds one credit.
+     */
+    #[Optional]
+    public ?bool $product;
+
+    /**
      * An inline image of the page.
      */
     #[Optional]
@@ -93,6 +100,7 @@ final class Formats implements BaseModel
         ?bool $json = null,
         ?bool $markdown = null,
         ?bool $parse = null,
+        ?bool $product = null,
         ?bool $screenshot = null,
     ): self {
         $self = new self;
@@ -104,6 +112,7 @@ final class Formats implements BaseModel
         null !== $json && $self['json'] = $json;
         null !== $markdown && $self['markdown'] = $markdown;
         null !== $parse && $self['parse'] = $parse;
+        null !== $product && $self['product'] = $product;
         null !== $screenshot && $self['screenshot'] = $screenshot;
 
         return $self;
@@ -182,6 +191,17 @@ final class Formats implements BaseModel
     {
         $self = clone $this;
         $self['parse'] = $parse;
+
+        return $self;
+    }
+
+    /**
+     * Structured product data for product detail pages. Adds one credit.
+     */
+    public function withProduct(bool $product): self
+    {
+        $self = clone $this;
+        $self['product'] = $product;
 
         return $self;
     }

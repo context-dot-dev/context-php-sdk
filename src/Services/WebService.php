@@ -23,6 +23,7 @@ use ContextDev\Web\WebScrapeParams\ImageParams;
 use ContextDev\Web\WebScrapeParams\JsonParams;
 use ContextDev\Web\WebScrapeParams\MarkdownParams;
 use ContextDev\Web\WebScrapeParams\ParseParams;
+use ContextDev\Web\WebScrapeParams\ProductParams;
 use ContextDev\Web\WebScrapeParams\ScreenshotParams;
 use ContextDev\Web\WebScrapeParams\SharedParams;
 use ContextDev\Web\WebScrapeResponse;
@@ -48,6 +49,7 @@ use ContextDev\Web\WebWebCrawlMdResponse;
  * @phpstan-import-type JsonParamsShape from \ContextDev\Web\WebScrapeParams\JsonParams
  * @phpstan-import-type MarkdownParamsShape from \ContextDev\Web\WebScrapeParams\MarkdownParams
  * @phpstan-import-type ParseParamsShape from \ContextDev\Web\WebScrapeParams\ParseParams
+ * @phpstan-import-type ProductParamsShape from \ContextDev\Web\WebScrapeParams\ProductParams
  * @phpstan-import-type ScreenshotParamsShape from \ContextDev\Web\WebScrapeParams\ScreenshotParams
  * @phpstan-import-type SharedParamsShape from \ContextDev\Web\WebScrapeParams\SharedParams
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebScrapeParams\TimeoutOpts as TimeoutOptsShape4
@@ -253,7 +255,7 @@ final class WebService implements WebContract
     /**
      * @api
      *
-     * Reuse cached outputs independently and capture missing formats in one page visit. Each cache key includes only the settings that affect that output. HTML is shared with Markdown, parsed fields, highlights, and JSON extraction. Cached outputs can come from different visits within maxAgeMs; use 0 for a fresh capture. HTML-only requests use the existing fast acquisition path. Highlights return the plain-text passages most relevant to highlightsParams.query. One credit per request, including cache hits and missing pages, or two with browser actions; highlights add 3 credits when passages are returned; JSON extraction adds four credits and runs an LLM over the page Markdown on every request that has text to extract; PDF OCR adds one credit per recovered page on fresh extraction. Original response bytes and screenshots are limited to 20 MiB each, screenshots to 40 megapixels, and the combined browser capture to 60 MiB.
+     * Reuse cached outputs independently and capture missing formats in one page visit. Each cache key includes only the settings that affect that output. HTML is shared with Markdown, parsed fields, product data, highlights, and JSON extraction. Cached outputs can come from different visits within maxAgeMs; use 0 for a fresh capture. HTML-only requests use the existing fast acquisition path. Highlights return the plain-text passages most relevant to highlightsParams.query. One credit per request, including cache hits and missing pages, or two with browser actions; highlights add 3 credits when passages are returned; JSON extraction adds four credits and runs an LLM over the page Markdown on every request that has text to extract; PDF OCR adds one credit per recovered page on fresh extraction; the product output adds one credit, plus six more when the specialized model is used. Original response bytes and screenshots are limited to 20 MiB each, screenshots to 40 megapixels, and the combined browser capture to 60 MiB.
      *
      * @param Formats|FormatsShape $formats Outputs to return. Enable at least one; omitted formats are false.
      * @param string $url the URL to scrape
@@ -263,6 +265,7 @@ final class WebService implements WebContract
      * @param MarkdownParams|MarkdownParamsShape $markdownParams Markdown options. Requires formats.markdown: true.
      * @param int $maxAgeMs Maximum age of each cached output. Defaults to 1 day; 0 fetches fresh and updates the requested outputs. Compatible outputs are shared with the individual scrape endpoints. Image results with hosted files refresh after 23 hours; other outputs retain their own freshness.
      * @param ParseParams|ParseParamsShape $parseParams Required when formats.parse is true.
+     * @param ProductParams|ProductParamsShape $productParams Product options. Requires formats.product: true.
      * @param ScreenshotParams|ScreenshotParamsShape $screenshotParams Screenshot options. Requires formats.screenshot: true.
      * @param SharedParams|SharedParamsShape $sharedParams Shared browser and content settings. Content filters leave screenshots and original bytes unchanged.
      * @param list<string> $tags Labels for tracking request usage. Not retained when zdr is enabled.
@@ -281,6 +284,7 @@ final class WebService implements WebContract
         MarkdownParams|array|null $markdownParams = null,
         int $maxAgeMs = 86400000,
         ParseParams|array|null $parseParams = null,
+        ProductParams|array|null $productParams = null,
         ScreenshotParams|array|null $screenshotParams = null,
         SharedParams|array|null $sharedParams = null,
         ?array $tags = null,
@@ -300,6 +304,7 @@ final class WebService implements WebContract
                 'markdownParams' => $markdownParams,
                 'maxAgeMs' => $maxAgeMs,
                 'parseParams' => $parseParams,
+                'productParams' => $productParams,
                 'screenshotParams' => $screenshotParams,
                 'sharedParams' => $sharedParams,
                 'tags' => $tags,

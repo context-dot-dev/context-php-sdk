@@ -184,6 +184,7 @@ final class WebTest extends TestCase
                 'json' => true,
                 'markdown' => true,
                 'parse' => true,
+                'product' => true,
                 'screenshot' => true,
             ],
             url: 'https://example.com',
@@ -210,6 +211,7 @@ final class WebTest extends TestCase
                     'links' => ['selector' => 'a', 'output' => '@href', 'type' => 'list'],
                 ],
             ],
+            productParams: ['useAIFallback' => true],
             screenshotParams: ['area' => 'viewport', 'format' => 'png'],
             sharedParams: [
                 'actions' => [
