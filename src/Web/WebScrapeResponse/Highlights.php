@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Plain-text passages relevant to highlightsParams.query, in page order, each prefixed with its section heading in square brackets. Empty when the page has no text.
+ * Relevant passages for your question or topic.
  *
  * @phpstan-type HighlightsShape = array{data: list<string>|null, requested: bool}
  */

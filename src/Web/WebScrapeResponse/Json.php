@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Page data extracted into jsonParams.schema, after shared content filters. Values are grounded in the page; optional fields the page does not state are omitted, or null when their type allows null. An empty object when the filters leave no text.
+ * Page data extracted using your schema.
  *
  * @phpstan-type JsonShape = array{data: array<string,mixed>|null, requested: bool}
  */

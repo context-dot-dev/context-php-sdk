@@ -71,7 +71,7 @@ final class WebScrapeResponse implements BaseModel
     public CacheMetadata $cacheMetadata;
 
     /**
-     * Plain-text passages relevant to highlightsParams.query, in page order, each prefixed with its section heading in square brackets. Empty when the page has no text.
+     * Relevant passages for your question or topic.
      */
     #[Required]
     public Highlights $highlights;
@@ -89,7 +89,7 @@ final class WebScrapeResponse implements BaseModel
     public Images $images;
 
     /**
-     * Page data extracted into jsonParams.schema, after shared content filters. Values are grounded in the page; optional fields the page does not state are omitted, or null when their type allows null. An empty object when the filters leave no text.
+     * Page data extracted using your schema.
      */
     #[Required]
     public Json $json;
@@ -113,7 +113,7 @@ final class WebScrapeResponse implements BaseModel
     public Parsed $parsed;
 
     /**
-     * Product detail page classification and the extracted product.
+     * Product details found on the page.
      */
     #[Required]
     public Product $product;
@@ -278,7 +278,7 @@ final class WebScrapeResponse implements BaseModel
     }
 
     /**
-     * Plain-text passages relevant to highlightsParams.query, in page order, each prefixed with its section heading in square brackets. Empty when the page has no text.
+     * Relevant passages for your question or topic.
      *
      * @param Highlights|HighlightsShape $highlights
      */
@@ -317,7 +317,7 @@ final class WebScrapeResponse implements BaseModel
     }
 
     /**
-     * Page data extracted into jsonParams.schema, after shared content filters. Values are grounded in the page; optional fields the page does not state are omitted, or null when their type allows null. An empty object when the filters leave no text.
+     * Page data extracted using your schema.
      *
      * @param Json|JsonShape $json
      */
@@ -369,7 +369,7 @@ final class WebScrapeResponse implements BaseModel
     }
 
     /**
-     * Product detail page classification and the extracted product.
+     * Product details found on the page.
      *
      * @param Product|ProductShape $product
      */

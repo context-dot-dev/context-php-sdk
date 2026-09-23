@@ -176,7 +176,7 @@ interface WebContract
      * @param SharedParams|SharedParamsShape $sharedParams Shared browser and content settings. Content filters leave screenshots and original bytes unchanged.
      * @param list<string> $tags Labels for tracking request usage. Not retained when zdr is enabled.
      * @param \ContextDev\Web\WebScrapeParams\TimeoutOpts|TimeoutOptsShape4 $timeoutOpts Total deadline, including navigation, actions, waiting, and all outputs. Defaults to 60000 milliseconds with behavior fail. Use return-partial to capture the current page state and return captured images if image processing cannot finish before the deadline; these responses set isPartial and are not cached. Every requested format must still be available. Fixed waits must fit before a response reserve of up to 5000 milliseconds (at most one quarter of the timeout) when using return-partial.
-     * @param \ContextDev\Web\WebScrapeParams\Zdr|value-of<\ContextDev\Web\WebScrapeParams\Zdr> $zdr Zero data retention. Bypasses caches and uploads; excludes request/response content and tags from logs. Must be enabled for your organization. Not available with the highlights output.
+     * @param \ContextDev\Web\WebScrapeParams\Zdr|value-of<\ContextDev\Web\WebScrapeParams\Zdr> $zdr Zero data retention. Bypasses caches and uploads; excludes request/response content and tags from logs. Must be enabled for your organization.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

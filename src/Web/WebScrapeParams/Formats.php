@@ -35,7 +35,7 @@ final class Formats implements BaseModel
     public ?bool $bytes;
 
     /**
-     * Plain-text passages from the page that are most relevant to highlightsParams.query, each prefixed with its section heading. Adds 3 credits. Not available with zdr enabled.
+     * Relevant passages for your question or topic. Adds 3 credits.
      */
     #[Optional]
     public ?bool $highlights;
@@ -53,7 +53,7 @@ final class Formats implements BaseModel
     public ?bool $images;
 
     /**
-     * Page data extracted by an LLM from the page Markdown into jsonParams.schema; values carried only in attributes or CSS classes need formats.parse instead. Adds four credits when the page has text to extract; when shared content filters leave no text the result is an empty object and only the base price applies.
+     * Page data extracted using your schema. Adds 4 credits.
      */
     #[Optional]
     public ?bool $json;
@@ -71,7 +71,7 @@ final class Formats implements BaseModel
     public ?bool $parse;
 
     /**
-     * Structured product data for product detail pages. Adds one credit.
+     * Product details such as name, price, and availability. Adds 1 credit.
      */
     #[Optional]
     public ?bool $product;
@@ -130,7 +130,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * Plain-text passages from the page that are most relevant to highlightsParams.query, each prefixed with its section heading. Adds 3 credits. Not available with zdr enabled.
+     * Relevant passages for your question or topic. Adds 3 credits.
      */
     public function withHighlights(bool $highlights): self
     {
@@ -163,7 +163,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * Page data extracted by an LLM from the page Markdown into jsonParams.schema; values carried only in attributes or CSS classes need formats.parse instead. Adds four credits when the page has text to extract; when shared content filters leave no text the result is an empty object and only the base price applies.
+     * Page data extracted using your schema. Adds 4 credits.
      */
     public function withJson(bool $json): self
     {
@@ -196,7 +196,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * Structured product data for product detail pages. Adds one credit.
+     * Product details such as name, price, and availability. Adds 1 credit.
      */
     public function withProduct(bool $product): self
     {
