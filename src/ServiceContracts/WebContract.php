@@ -15,6 +15,7 @@ use ContextDev\Web\WebExtractStyleguideParams\ColorScheme;
 use ContextDev\Web\WebExtractStyleguideResponse;
 use ContextDev\Web\WebMapURLsResponse;
 use ContextDev\Web\WebScrapeParams\Formats;
+use ContextDev\Web\WebScrapeParams\HighlightsParams;
 use ContextDev\Web\WebScrapeParams\ImageParams;
 use ContextDev\Web\WebScrapeParams\JsonParams;
 use ContextDev\Web\WebScrapeParams\MarkdownParams;
@@ -39,6 +40,7 @@ use ContextDev\Web\WebWebCrawlMdResponse;
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebExtractStyleguideParams\TimeoutOpts as TimeoutOptsShape2
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebMapURLsParams\TimeoutOpts as TimeoutOptsShape3
  * @phpstan-import-type FormatsShape from \ContextDev\Web\WebScrapeParams\Formats
+ * @phpstan-import-type HighlightsParamsShape from \ContextDev\Web\WebScrapeParams\HighlightsParams
  * @phpstan-import-type ImageParamsShape from \ContextDev\Web\WebScrapeParams\ImageParams
  * @phpstan-import-type JsonParamsShape from \ContextDev\Web\WebScrapeParams\JsonParams
  * @phpstan-import-type MarkdownParamsShape from \ContextDev\Web\WebScrapeParams\MarkdownParams
@@ -161,6 +163,7 @@ interface WebContract
      *
      * @param Formats|FormatsShape $formats Outputs to return. Enable at least one; omitted formats are false.
      * @param string $url the URL to scrape
+     * @param HighlightsParams|HighlightsParamsShape $highlightsParams Highlight options. Requires formats.highlights: true.
      * @param ImageParams|ImageParamsShape $imageParams Image options. Requires formats.images: true.
      * @param JsonParams|JsonParamsShape $jsonParams Required when formats.json is true.
      * @param MarkdownParams|MarkdownParamsShape $markdownParams Markdown options. Requires formats.markdown: true.
@@ -170,7 +173,7 @@ interface WebContract
      * @param SharedParams|SharedParamsShape $sharedParams Shared browser and content settings. Content filters leave screenshots and original bytes unchanged.
      * @param list<string> $tags Labels for tracking request usage. Not retained when zdr is enabled.
      * @param \ContextDev\Web\WebScrapeParams\TimeoutOpts|TimeoutOptsShape4 $timeoutOpts Total deadline, including navigation, actions, waiting, and all outputs. Defaults to 60000 milliseconds with behavior fail. Use return-partial to capture the current page state and return captured images if image processing cannot finish before the deadline; these responses set isPartial and are not cached. Every requested format must still be available. Fixed waits must fit before a response reserve of up to 5000 milliseconds (at most one quarter of the timeout) when using return-partial.
-     * @param \ContextDev\Web\WebScrapeParams\Zdr|value-of<\ContextDev\Web\WebScrapeParams\Zdr> $zdr Zero data retention. Bypasses caches and uploads; excludes request/response content and tags from logs. Must be enabled for your organization.
+     * @param \ContextDev\Web\WebScrapeParams\Zdr|value-of<\ContextDev\Web\WebScrapeParams\Zdr> $zdr Zero data retention. Bypasses caches and uploads; excludes request/response content and tags from logs. Must be enabled for your organization. Not available with the highlights output.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -178,6 +181,7 @@ interface WebContract
     public function scrape(
         Formats|array $formats,
         string $url,
+        HighlightsParams|array|null $highlightsParams = null,
         ImageParams|array|null $imageParams = null,
         JsonParams|array|null $jsonParams = null,
         MarkdownParams|array|null $markdownParams = null,

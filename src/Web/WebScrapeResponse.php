@@ -10,6 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebScrapeResponse\Bytes;
 use ContextDev\Web\WebScrapeResponse\CacheMetadata;
+use ContextDev\Web\WebScrapeResponse\Highlights;
 use ContextDev\Web\WebScrapeResponse\HTML;
 use ContextDev\Web\WebScrapeResponse\Images;
 use ContextDev\Web\WebScrapeResponse\Json;
@@ -22,6 +23,7 @@ use ContextDev\Web\WebScrapeResponse\Screenshot;
 /**
  * @phpstan-import-type BytesShape from \ContextDev\Web\WebScrapeResponse\Bytes
  * @phpstan-import-type CacheMetadataShape from \ContextDev\Web\WebScrapeResponse\CacheMetadata
+ * @phpstan-import-type HighlightsShape from \ContextDev\Web\WebScrapeResponse\Highlights
  * @phpstan-import-type HTMLShape from \ContextDev\Web\WebScrapeResponse\HTML
  * @phpstan-import-type ImagesShape from \ContextDev\Web\WebScrapeResponse\Images
  * @phpstan-import-type JsonShape from \ContextDev\Web\WebScrapeResponse\Json
@@ -34,6 +36,7 @@ use ContextDev\Web\WebScrapeResponse\Screenshot;
  * @phpstan-type WebScrapeResponseShape = array{
  *   bytes: Bytes|BytesShape,
  *   cacheMetadata: CacheMetadata|CacheMetadataShape,
+ *   highlights: Highlights|HighlightsShape,
  *   html: HTML|HTMLShape,
  *   images: Images|ImagesShape,
  *   json: Json|JsonShape,
@@ -63,6 +66,12 @@ final class WebScrapeResponse implements BaseModel
      */
     #[Required('cache_metadata')]
     public CacheMetadata $cacheMetadata;
+
+    /**
+     * Plain-text passages relevant to highlightsParams.query, in page order, each prefixed with its section heading in square brackets. Empty when the page has no text.
+     */
+    #[Required]
+    public Highlights $highlights;
 
     /**
      * Rendered HTML after content filters.
@@ -138,6 +147,7 @@ final class WebScrapeResponse implements BaseModel
      * WebScrapeResponse::with(
      *   bytes: ...,
      *   cacheMetadata: ...,
+     *   highlights: ...,
      *   html: ...,
      *   images: ...,
      *   json: ...,
@@ -156,6 +166,7 @@ final class WebScrapeResponse implements BaseModel
      * (new WebScrapeResponse)
      *   ->withBytes(...)
      *   ->withCacheMetadata(...)
+     *   ->withHighlights(...)
      *   ->withHTML(...)
      *   ->withImages(...)
      *   ->withJson(...)
@@ -179,6 +190,7 @@ final class WebScrapeResponse implements BaseModel
      *
      * @param Bytes|BytesShape $bytes
      * @param CacheMetadata|CacheMetadataShape $cacheMetadata
+     * @param Highlights|HighlightsShape $highlights
      * @param HTML|HTMLShape $html
      * @param Images|ImagesShape $images
      * @param Json|JsonShape $json
@@ -191,6 +203,7 @@ final class WebScrapeResponse implements BaseModel
     public static function with(
         Bytes|array $bytes,
         CacheMetadata|array $cacheMetadata,
+        Highlights|array $highlights,
         HTML|array $html,
         Images|array $images,
         Json|array $json,
@@ -207,6 +220,7 @@ final class WebScrapeResponse implements BaseModel
 
         $self['bytes'] = $bytes;
         $self['cacheMetadata'] = $cacheMetadata;
+        $self['highlights'] = $highlights;
         $self['html'] = $html;
         $self['images'] = $images;
         $self['json'] = $json;
@@ -245,6 +259,19 @@ final class WebScrapeResponse implements BaseModel
     {
         $self = clone $this;
         $self['cacheMetadata'] = $cacheMetadata;
+
+        return $self;
+    }
+
+    /**
+     * Plain-text passages relevant to highlightsParams.query, in page order, each prefixed with its section heading in square brackets. Empty when the page has no text.
+     *
+     * @param Highlights|HighlightsShape $highlights
+     */
+    public function withHighlights(Highlights|array $highlights): self
+    {
+        $self = clone $this;
+        $self['highlights'] = $highlights;
 
         return $self;
     }

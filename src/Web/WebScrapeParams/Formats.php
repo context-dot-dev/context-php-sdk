@@ -13,6 +13,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *
  * @phpstan-type FormatsShape = array{
  *   bytes?: bool|null,
+ *   highlights?: bool|null,
  *   html?: bool|null,
  *   images?: bool|null,
  *   json?: bool|null,
@@ -31,6 +32,12 @@ final class Formats implements BaseModel
      */
     #[Optional]
     public ?bool $bytes;
+
+    /**
+     * Plain-text passages from the page that are most relevant to highlightsParams.query, each prefixed with its section heading. Adds 3 credits. Not available with zdr enabled.
+     */
+    #[Optional]
+    public ?bool $highlights;
 
     /**
      * Rendered HTML.
@@ -80,6 +87,7 @@ final class Formats implements BaseModel
      */
     public static function with(
         ?bool $bytes = null,
+        ?bool $highlights = null,
         ?bool $html = null,
         ?bool $images = null,
         ?bool $json = null,
@@ -90,6 +98,7 @@ final class Formats implements BaseModel
         $self = new self;
 
         null !== $bytes && $self['bytes'] = $bytes;
+        null !== $highlights && $self['highlights'] = $highlights;
         null !== $html && $self['html'] = $html;
         null !== $images && $self['images'] = $images;
         null !== $json && $self['json'] = $json;
@@ -107,6 +116,17 @@ final class Formats implements BaseModel
     {
         $self = clone $this;
         $self['bytes'] = $bytes;
+
+        return $self;
+    }
+
+    /**
+     * Plain-text passages from the page that are most relevant to highlightsParams.query, each prefixed with its section heading. Adds 3 credits. Not available with zdr enabled.
+     */
+    public function withHighlights(bool $highlights): self
+    {
+        $self = clone $this;
+        $self['highlights'] = $highlights;
 
         return $self;
     }
