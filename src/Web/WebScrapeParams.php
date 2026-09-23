@@ -11,6 +11,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebScrapeParams\Formats;
 use ContextDev\Web\WebScrapeParams\ImageParams;
+use ContextDev\Web\WebScrapeParams\JsonParams;
 use ContextDev\Web\WebScrapeParams\MarkdownParams;
 use ContextDev\Web\WebScrapeParams\ParseParams;
 use ContextDev\Web\WebScrapeParams\ScreenshotParams;
@@ -19,12 +20,13 @@ use ContextDev\Web\WebScrapeParams\TimeoutOpts;
 use ContextDev\Web\WebScrapeParams\Zdr;
 
 /**
- * Reuse cached outputs independently and capture missing formats in one page visit. Each cache key includes only the settings that affect that output. HTML is shared with Markdown and parsed fields. Cached outputs can come from different visits within maxAgeMs; use 0 for a fresh capture. HTML-only requests use the existing fast acquisition path. One credit per request, including cache hits, or two with browser actions; PDF OCR adds one credit per recovered page on fresh extraction. Original response bytes and screenshots are limited to 20 MiB each, screenshots to 40 megapixels, and the combined browser capture to 60 MiB.
+ * Reuse cached outputs independently and capture missing formats in one page visit. Each cache key includes only the settings that affect that output. HTML is shared with Markdown, parsed fields, and JSON extraction. Cached outputs can come from different visits within maxAgeMs; use 0 for a fresh capture. HTML-only requests use the existing fast acquisition path. One credit per request, including cache hits and missing pages, or two with browser actions; JSON extraction adds four credits and runs an LLM over the page Markdown on every request that has text to extract; PDF OCR adds one credit per recovered page on fresh extraction. Original response bytes and screenshots are limited to 20 MiB each, screenshots to 40 megapixels, and the combined browser capture to 60 MiB.
  *
  * @see ContextDev\Services\WebService::scrape()
  *
  * @phpstan-import-type FormatsShape from \ContextDev\Web\WebScrapeParams\Formats
  * @phpstan-import-type ImageParamsShape from \ContextDev\Web\WebScrapeParams\ImageParams
+ * @phpstan-import-type JsonParamsShape from \ContextDev\Web\WebScrapeParams\JsonParams
  * @phpstan-import-type MarkdownParamsShape from \ContextDev\Web\WebScrapeParams\MarkdownParams
  * @phpstan-import-type ParseParamsShape from \ContextDev\Web\WebScrapeParams\ParseParams
  * @phpstan-import-type ScreenshotParamsShape from \ContextDev\Web\WebScrapeParams\ScreenshotParams
@@ -35,6 +37,7 @@ use ContextDev\Web\WebScrapeParams\Zdr;
  *   formats: Formats|FormatsShape,
  *   url: string,
  *   imageParams?: null|ImageParams|ImageParamsShape,
+ *   jsonParams?: null|JsonParams|JsonParamsShape,
  *   markdownParams?: null|MarkdownParams|MarkdownParamsShape,
  *   maxAgeMs?: int|null,
  *   parseParams?: null|ParseParams|ParseParamsShape,
@@ -68,6 +71,12 @@ final class WebScrapeParams implements BaseModel
      */
     #[Optional]
     public ?ImageParams $imageParams;
+
+    /**
+     * Required when formats.json is true.
+     */
+    #[Optional]
+    public ?JsonParams $jsonParams;
 
     /**
      * Markdown options. Requires formats.markdown: true.
@@ -147,6 +156,7 @@ final class WebScrapeParams implements BaseModel
      *
      * @param Formats|FormatsShape $formats
      * @param ImageParams|ImageParamsShape|null $imageParams
+     * @param JsonParams|JsonParamsShape|null $jsonParams
      * @param MarkdownParams|MarkdownParamsShape|null $markdownParams
      * @param ParseParams|ParseParamsShape|null $parseParams
      * @param ScreenshotParams|ScreenshotParamsShape|null $screenshotParams
@@ -159,6 +169,7 @@ final class WebScrapeParams implements BaseModel
         Formats|array $formats,
         string $url,
         ImageParams|array|null $imageParams = null,
+        JsonParams|array|null $jsonParams = null,
         MarkdownParams|array|null $markdownParams = null,
         ?int $maxAgeMs = null,
         ParseParams|array|null $parseParams = null,
@@ -174,6 +185,7 @@ final class WebScrapeParams implements BaseModel
         $self['url'] = $url;
 
         null !== $imageParams && $self['imageParams'] = $imageParams;
+        null !== $jsonParams && $self['jsonParams'] = $jsonParams;
         null !== $markdownParams && $self['markdownParams'] = $markdownParams;
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
         null !== $parseParams && $self['parseParams'] = $parseParams;
@@ -219,6 +231,19 @@ final class WebScrapeParams implements BaseModel
     {
         $self = clone $this;
         $self['imageParams'] = $imageParams;
+
+        return $self;
+    }
+
+    /**
+     * Required when formats.json is true.
+     *
+     * @param JsonParams|JsonParamsShape $jsonParams
+     */
+    public function withJsonParams(JsonParams|array $jsonParams): self
+    {
+        $self = clone $this;
+        $self['jsonParams'] = $jsonParams;
 
         return $self;
     }
