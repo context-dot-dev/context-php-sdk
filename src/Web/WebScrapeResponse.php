@@ -12,6 +12,7 @@ use ContextDev\Web\WebScrapeResponse\Bytes;
 use ContextDev\Web\WebScrapeResponse\CacheMetadata;
 use ContextDev\Web\WebScrapeResponse\HTML;
 use ContextDev\Web\WebScrapeResponse\Images;
+use ContextDev\Web\WebScrapeResponse\Json;
 use ContextDev\Web\WebScrapeResponse\KeyMetadata;
 use ContextDev\Web\WebScrapeResponse\Markdown;
 use ContextDev\Web\WebScrapeResponse\Metadata;
@@ -23,6 +24,7 @@ use ContextDev\Web\WebScrapeResponse\Screenshot;
  * @phpstan-import-type CacheMetadataShape from \ContextDev\Web\WebScrapeResponse\CacheMetadata
  * @phpstan-import-type HTMLShape from \ContextDev\Web\WebScrapeResponse\HTML
  * @phpstan-import-type ImagesShape from \ContextDev\Web\WebScrapeResponse\Images
+ * @phpstan-import-type JsonShape from \ContextDev\Web\WebScrapeResponse\Json
  * @phpstan-import-type MarkdownShape from \ContextDev\Web\WebScrapeResponse\Markdown
  * @phpstan-import-type MetadataShape from \ContextDev\Web\WebScrapeResponse\Metadata
  * @phpstan-import-type ParsedShape from \ContextDev\Web\WebScrapeResponse\Parsed
@@ -34,6 +36,7 @@ use ContextDev\Web\WebScrapeResponse\Screenshot;
  *   cacheMetadata: CacheMetadata|CacheMetadataShape,
  *   html: HTML|HTMLShape,
  *   images: Images|ImagesShape,
+ *   json: Json|JsonShape,
  *   markdown: Markdown|MarkdownShape,
  *   metadata: Metadata|MetadataShape,
  *   parsed: Parsed|ParsedShape,
@@ -72,6 +75,12 @@ final class WebScrapeResponse implements BaseModel
      */
     #[Required]
     public Images $images;
+
+    /**
+     * Page data extracted into jsonParams.schema, after shared content filters. Values are grounded in the page; optional fields the page does not state are omitted, or null when their type allows null. An empty object when the filters leave no text.
+     */
+    #[Required]
+    public Json $json;
 
     /**
      * Markdown after content filters.
@@ -131,6 +140,7 @@ final class WebScrapeResponse implements BaseModel
      *   cacheMetadata: ...,
      *   html: ...,
      *   images: ...,
+     *   json: ...,
      *   markdown: ...,
      *   metadata: ...,
      *   parsed: ...,
@@ -148,6 +158,7 @@ final class WebScrapeResponse implements BaseModel
      *   ->withCacheMetadata(...)
      *   ->withHTML(...)
      *   ->withImages(...)
+     *   ->withJson(...)
      *   ->withMarkdown(...)
      *   ->withMetadata(...)
      *   ->withParsed(...)
@@ -170,6 +181,7 @@ final class WebScrapeResponse implements BaseModel
      * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      * @param HTML|HTMLShape $html
      * @param Images|ImagesShape $images
+     * @param Json|JsonShape $json
      * @param Markdown|MarkdownShape $markdown
      * @param Metadata|MetadataShape $metadata
      * @param Parsed|ParsedShape $parsed
@@ -181,6 +193,7 @@ final class WebScrapeResponse implements BaseModel
         CacheMetadata|array $cacheMetadata,
         HTML|array $html,
         Images|array $images,
+        Json|array $json,
         Markdown|array $markdown,
         Metadata|array $metadata,
         Parsed|array $parsed,
@@ -196,6 +209,7 @@ final class WebScrapeResponse implements BaseModel
         $self['cacheMetadata'] = $cacheMetadata;
         $self['html'] = $html;
         $self['images'] = $images;
+        $self['json'] = $json;
         $self['markdown'] = $markdown;
         $self['metadata'] = $metadata;
         $self['parsed'] = $parsed;
@@ -257,6 +271,19 @@ final class WebScrapeResponse implements BaseModel
     {
         $self = clone $this;
         $self['images'] = $images;
+
+        return $self;
+    }
+
+    /**
+     * Page data extracted into jsonParams.schema, after shared content filters. Values are grounded in the page; optional fields the page does not state are omitted, or null when their type allows null. An empty object when the filters leave no text.
+     *
+     * @param Json|JsonShape $json
+     */
+    public function withJson(Json|array $json): self
+    {
+        $self = clone $this;
+        $self['json'] = $json;
 
         return $self;
     }

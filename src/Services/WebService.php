@@ -19,6 +19,7 @@ use ContextDev\Web\WebExtractStyleguideResponse;
 use ContextDev\Web\WebMapURLsResponse;
 use ContextDev\Web\WebScrapeParams\Formats;
 use ContextDev\Web\WebScrapeParams\ImageParams;
+use ContextDev\Web\WebScrapeParams\JsonParams;
 use ContextDev\Web\WebScrapeParams\MarkdownParams;
 use ContextDev\Web\WebScrapeParams\ParseParams;
 use ContextDev\Web\WebScrapeParams\ScreenshotParams;
@@ -42,6 +43,7 @@ use ContextDev\Web\WebWebCrawlMdResponse;
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebMapURLsParams\TimeoutOpts as TimeoutOptsShape3
  * @phpstan-import-type FormatsShape from \ContextDev\Web\WebScrapeParams\Formats
  * @phpstan-import-type ImageParamsShape from \ContextDev\Web\WebScrapeParams\ImageParams
+ * @phpstan-import-type JsonParamsShape from \ContextDev\Web\WebScrapeParams\JsonParams
  * @phpstan-import-type MarkdownParamsShape from \ContextDev\Web\WebScrapeParams\MarkdownParams
  * @phpstan-import-type ParseParamsShape from \ContextDev\Web\WebScrapeParams\ParseParams
  * @phpstan-import-type ScreenshotParamsShape from \ContextDev\Web\WebScrapeParams\ScreenshotParams
@@ -249,11 +251,12 @@ final class WebService implements WebContract
     /**
      * @api
      *
-     * Reuse cached outputs independently and capture missing formats in one page visit. Each cache key includes only the settings that affect that output. HTML is shared with Markdown and parsed fields. Cached outputs can come from different visits within maxAgeMs; use 0 for a fresh capture. HTML-only requests use the existing fast acquisition path. One credit per request, including cache hits, or two with browser actions; PDF OCR adds one credit per recovered page on fresh extraction. Original response bytes and screenshots are limited to 20 MiB each, screenshots to 40 megapixels, and the combined browser capture to 60 MiB.
+     * Reuse cached outputs independently and capture missing formats in one page visit. Each cache key includes only the settings that affect that output. HTML is shared with Markdown, parsed fields, and JSON extraction. Cached outputs can come from different visits within maxAgeMs; use 0 for a fresh capture. HTML-only requests use the existing fast acquisition path. One credit per request, including cache hits and missing pages, or two with browser actions; JSON extraction adds four credits and runs an LLM over the page Markdown on every request that has text to extract; PDF OCR adds one credit per recovered page on fresh extraction. Original response bytes and screenshots are limited to 20 MiB each, screenshots to 40 megapixels, and the combined browser capture to 60 MiB.
      *
      * @param Formats|FormatsShape $formats Outputs to return. Enable at least one; omitted formats are false.
      * @param string $url the URL to scrape
      * @param ImageParams|ImageParamsShape $imageParams Image options. Requires formats.images: true.
+     * @param JsonParams|JsonParamsShape $jsonParams Required when formats.json is true.
      * @param MarkdownParams|MarkdownParamsShape $markdownParams Markdown options. Requires formats.markdown: true.
      * @param int $maxAgeMs Maximum age of each cached output. Defaults to 1 day; 0 fetches fresh and updates the requested outputs. Compatible outputs are shared with the individual scrape endpoints. Image results with hosted files refresh after 23 hours; other outputs retain their own freshness.
      * @param ParseParams|ParseParamsShape $parseParams Required when formats.parse is true.
@@ -270,6 +273,7 @@ final class WebService implements WebContract
         Formats|array $formats,
         string $url,
         ImageParams|array|null $imageParams = null,
+        JsonParams|array|null $jsonParams = null,
         MarkdownParams|array|null $markdownParams = null,
         int $maxAgeMs = 86400000,
         ParseParams|array|null $parseParams = null,
@@ -287,6 +291,7 @@ final class WebService implements WebContract
                 'formats' => $formats,
                 'url' => $url,
                 'imageParams' => $imageParams,
+                'jsonParams' => $jsonParams,
                 'markdownParams' => $markdownParams,
                 'maxAgeMs' => $maxAgeMs,
                 'parseParams' => $parseParams,

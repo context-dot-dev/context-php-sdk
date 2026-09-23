@@ -15,6 +15,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   bytes?: bool|null,
  *   html?: bool|null,
  *   images?: bool|null,
+ *   json?: bool|null,
  *   markdown?: bool|null,
  *   parse?: bool|null,
  *   screenshot?: bool|null,
@@ -42,6 +43,12 @@ final class Formats implements BaseModel
      */
     #[Optional]
     public ?bool $images;
+
+    /**
+     * Page data extracted by an LLM from the page Markdown into jsonParams.schema; values carried only in attributes or CSS classes need formats.parse instead. Adds four credits when the page has text to extract; when shared content filters leave no text the result is an empty object and only the base price applies.
+     */
+    #[Optional]
+    public ?bool $json;
 
     /**
      * Page content as Markdown.
@@ -75,6 +82,7 @@ final class Formats implements BaseModel
         ?bool $bytes = null,
         ?bool $html = null,
         ?bool $images = null,
+        ?bool $json = null,
         ?bool $markdown = null,
         ?bool $parse = null,
         ?bool $screenshot = null,
@@ -84,6 +92,7 @@ final class Formats implements BaseModel
         null !== $bytes && $self['bytes'] = $bytes;
         null !== $html && $self['html'] = $html;
         null !== $images && $self['images'] = $images;
+        null !== $json && $self['json'] = $json;
         null !== $markdown && $self['markdown'] = $markdown;
         null !== $parse && $self['parse'] = $parse;
         null !== $screenshot && $self['screenshot'] = $screenshot;
@@ -120,6 +129,17 @@ final class Formats implements BaseModel
     {
         $self = clone $this;
         $self['images'] = $images;
+
+        return $self;
+    }
+
+    /**
+     * Page data extracted by an LLM from the page Markdown into jsonParams.schema; values carried only in attributes or CSS classes need formats.parse instead. Adds four credits when the page has text to extract; when shared content filters leave no text the result is an empty object and only the base price applies.
+     */
+    public function withJson(bool $json): self
+    {
+        $self = clone $this;
+        $self['json'] = $json;
 
         return $self;
     }
