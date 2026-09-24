@@ -19,7 +19,7 @@ final class ProductParams implements BaseModel
     use SdkModel;
 
     /**
-     * Extract the product with a specialized model when the page has no structured product data. Adds six credits when the model returns a verdict. If the fallback fails, returns a partial response with the deterministic result and no fallback charge. Request deadlines and client disconnects still apply.
+     * Extract the product with a specialized model when the page has no structured product data. Adds six credits when the model verdict is returned successfully. If the fallback fails, the product output has success: false and data: null with no fallback charge; other outputs remain available. Request deadlines and client disconnects still apply.
      */
     #[Optional]
     public ?bool $useAIFallback;
@@ -44,7 +44,7 @@ final class ProductParams implements BaseModel
     }
 
     /**
-     * Extract the product with a specialized model when the page has no structured product data. Adds six credits when the model returns a verdict. If the fallback fails, returns a partial response with the deterministic result and no fallback charge. Request deadlines and client disconnects still apply.
+     * Extract the product with a specialized model when the page has no structured product data. Adds six credits when the model verdict is returned successfully. If the fallback fails, the product output has success: false and data: null with no fallback charge; other outputs remain available. Request deadlines and client disconnects still apply.
      */
     public function withUseAIFallback(bool $useAIFallback): self
     {

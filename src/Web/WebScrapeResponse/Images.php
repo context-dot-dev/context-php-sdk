@@ -15,7 +15,7 @@ use ContextDev\Web\WebScrapeResponse\Images\Data;
  * @phpstan-import-type DataShape from \ContextDev\Web\WebScrapeResponse\Images\Data
  *
  * @phpstan-type ImagesShape = array{
- *   data: list<Data|DataShape>|null, requested: bool
+ *   data: list<Data|DataShape>|null, requested: bool, success: bool|null
  * }
  */
 final class Images implements BaseModel
@@ -31,17 +31,23 @@ final class Images implements BaseModel
     public bool $requested;
 
     /**
+     * True when retrieved, false when retrieval failed, and null when not requested.
+     */
+    #[Required]
+    public ?bool $success;
+
+    /**
      * `new Images()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * Images::with(data: ..., requested: ...)
+     * Images::with(data: ..., requested: ..., success: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new Images)->withData(...)->withRequested(...)
+     * (new Images)->withData(...)->withRequested(...)->withSuccess(...)
      * ```
      */
     public function __construct()
@@ -56,12 +62,16 @@ final class Images implements BaseModel
      *
      * @param list<Data|DataShape>|null $data
      */
-    public static function with(?array $data, bool $requested): self
-    {
+    public static function with(
+        ?array $data,
+        bool $requested,
+        ?bool $success
+    ): self {
         $self = new self;
 
         $self['data'] = $data;
         $self['requested'] = $requested;
+        $self['success'] = $success;
 
         return $self;
     }
@@ -81,6 +91,17 @@ final class Images implements BaseModel
     {
         $self = clone $this;
         $self['requested'] = $requested;
+
+        return $self;
+    }
+
+    /**
+     * True when retrieved, false when retrieval failed, and null when not requested.
+     */
+    public function withSuccess(?bool $success): self
+    {
+        $self = clone $this;
+        $self['success'] = $success;
 
         return $self;
     }

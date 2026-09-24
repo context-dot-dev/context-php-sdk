@@ -137,7 +137,7 @@ final class WebScrapeResponse implements BaseModel
     public string $url;
 
     /**
-     * Present when return-partial captures a page that is still loading, returns images before image processing finishes, or cuts product AI extraction short. Also present if the optional product AI fallback fails. Partial responses are not cached.
+     * Present when a requested output fails, capture returns a page that is still loading, images return before processing finishes, or the optional product AI fallback fails or is cut short. Check each output's success field for its result. Valid captured pieces may be cached independently; failed retrievals and incomplete captures are not cached.
      */
     #[Optional]
     public ?bool $isPartial;
@@ -417,7 +417,7 @@ final class WebScrapeResponse implements BaseModel
     }
 
     /**
-     * Present when return-partial captures a page that is still loading, returns images before image processing finishes, or cuts product AI extraction short. Also present if the optional product AI fallback fails. Partial responses are not cached.
+     * Present when a requested output fails, capture returns a page that is still loading, images return before processing finishes, or the optional product AI fallback fails or is cut short. Check each output's success field for its result. Valid captured pieces may be cached independently; failed retrievals and incomplete captures are not cached.
      */
     public function withIsPartial(bool $isPartial): self
     {

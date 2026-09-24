@@ -11,7 +11,9 @@ use ContextDev\Core\Contracts\BaseModel;
 /**
  * Relevant passages for your question or topic, in page order. A heading in square brackets is included when needed to interpret a passage. Empty when the page has no text.
  *
- * @phpstan-type HighlightsShape = array{data: list<string>|null, requested: bool}
+ * @phpstan-type HighlightsShape = array{
+ *   data: list<string>|null, requested: bool, success: bool|null
+ * }
  */
 final class Highlights implements BaseModel
 {
@@ -26,17 +28,23 @@ final class Highlights implements BaseModel
     public bool $requested;
 
     /**
+     * True when retrieved, false when retrieval failed, and null when not requested.
+     */
+    #[Required]
+    public ?bool $success;
+
+    /**
      * `new Highlights()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * Highlights::with(data: ..., requested: ...)
+     * Highlights::with(data: ..., requested: ..., success: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new Highlights)->withData(...)->withRequested(...)
+     * (new Highlights)->withData(...)->withRequested(...)->withSuccess(...)
      * ```
      */
     public function __construct()
@@ -51,12 +59,16 @@ final class Highlights implements BaseModel
      *
      * @param list<string>|null $data
      */
-    public static function with(?array $data, bool $requested): self
-    {
+    public static function with(
+        ?array $data,
+        bool $requested,
+        ?bool $success
+    ): self {
         $self = new self;
 
         $self['data'] = $data;
         $self['requested'] = $requested;
+        $self['success'] = $success;
 
         return $self;
     }
@@ -76,6 +88,17 @@ final class Highlights implements BaseModel
     {
         $self = clone $this;
         $self['requested'] = $requested;
+
+        return $self;
+    }
+
+    /**
+     * True when retrieved, false when retrieval failed, and null when not requested.
+     */
+    public function withSuccess(?bool $success): self
+    {
+        $self = clone $this;
+        $self['success'] = $success;
 
         return $self;
     }
