@@ -12,7 +12,7 @@ use ContextDev\Core\Contracts\BaseModel;
  * Fields produced by parseParams.rules, after shared content filters.
  *
  * @phpstan-type ParsedShape = array{
- *   data: array<string,mixed>|null, requested: bool
+ *   data: array<string,mixed>|null, requested: bool, success: bool|null
  * }
  */
 final class Parsed implements BaseModel
@@ -28,17 +28,23 @@ final class Parsed implements BaseModel
     public bool $requested;
 
     /**
+     * True when retrieved, false when retrieval failed, and null when not requested.
+     */
+    #[Required]
+    public ?bool $success;
+
+    /**
      * `new Parsed()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * Parsed::with(data: ..., requested: ...)
+     * Parsed::with(data: ..., requested: ..., success: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new Parsed)->withData(...)->withRequested(...)
+     * (new Parsed)->withData(...)->withRequested(...)->withSuccess(...)
      * ```
      */
     public function __construct()
@@ -53,12 +59,16 @@ final class Parsed implements BaseModel
      *
      * @param array<string,mixed>|null $data
      */
-    public static function with(?array $data, bool $requested): self
-    {
+    public static function with(
+        ?array $data,
+        bool $requested,
+        ?bool $success
+    ): self {
         $self = new self;
 
         $self['data'] = $data;
         $self['requested'] = $requested;
+        $self['success'] = $success;
 
         return $self;
     }
@@ -78,6 +88,17 @@ final class Parsed implements BaseModel
     {
         $self = clone $this;
         $self['requested'] = $requested;
+
+        return $self;
+    }
+
+    /**
+     * True when retrieved, false when retrieval failed, and null when not requested.
+     */
+    public function withSuccess(?bool $success): self
+    {
+        $self = clone $this;
+        $self['success'] = $success;
 
         return $self;
     }

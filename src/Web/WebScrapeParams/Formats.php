@@ -35,7 +35,7 @@ final class Formats implements BaseModel
     public ?bool $bytes;
 
     /**
-     * Relevant passages for your question or topic, with headings included when needed for context. Adds 3 credits.
+     * Relevant passages for your question or topic, with headings included when needed for context. Adds 3 credits when passages are returned.
      */
     #[Optional]
     public ?bool $highlights;
@@ -53,7 +53,7 @@ final class Formats implements BaseModel
     public ?bool $images;
 
     /**
-     * Page data extracted using your schema. Adds 4 credits.
+     * Page data extracted using your schema. Adds 4 credits when extraction succeeds and its result is returned.
      */
     #[Optional]
     public ?bool $json;
@@ -71,7 +71,7 @@ final class Formats implements BaseModel
     public ?bool $parse;
 
     /**
-     * Product details such as name, price, and availability. Adds 1 credit.
+     * Product details such as name, price, and availability. Adds 1 credit when its successful result is returned or the target page is missing.
      */
     #[Optional]
     public ?bool $product;
@@ -130,7 +130,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * Relevant passages for your question or topic, with headings included when needed for context. Adds 3 credits.
+     * Relevant passages for your question or topic, with headings included when needed for context. Adds 3 credits when passages are returned.
      */
     public function withHighlights(bool $highlights): self
     {
@@ -163,7 +163,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * Page data extracted using your schema. Adds 4 credits.
+     * Page data extracted using your schema. Adds 4 credits when extraction succeeds and its result is returned.
      */
     public function withJson(bool $json): self
     {
@@ -196,7 +196,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * Product details such as name, price, and availability. Adds 1 credit.
+     * Product details such as name, price, and availability. Adds 1 credit when its successful result is returned or the target page is missing.
      */
     public function withProduct(bool $product): self
     {

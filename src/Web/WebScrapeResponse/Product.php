@@ -14,7 +14,9 @@ use ContextDev\Web\WebScrapeResponse\Product\Data;
  *
  * @phpstan-import-type DataShape from \ContextDev\Web\WebScrapeResponse\Product\Data
  *
- * @phpstan-type ProductShape = array{data: null|Data|DataShape, requested: bool}
+ * @phpstan-type ProductShape = array{
+ *   data: null|Data|DataShape, requested: bool, success: bool|null
+ * }
  */
 final class Product implements BaseModel
 {
@@ -28,17 +30,23 @@ final class Product implements BaseModel
     public bool $requested;
 
     /**
+     * True when retrieved, false when retrieval failed, and null when not requested.
+     */
+    #[Required]
+    public ?bool $success;
+
+    /**
      * `new Product()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * Product::with(data: ..., requested: ...)
+     * Product::with(data: ..., requested: ..., success: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new Product)->withData(...)->withRequested(...)
+     * (new Product)->withData(...)->withRequested(...)->withSuccess(...)
      * ```
      */
     public function __construct()
@@ -53,12 +61,16 @@ final class Product implements BaseModel
      *
      * @param Data|DataShape|null $data
      */
-    public static function with(Data|array|null $data, bool $requested): self
-    {
+    public static function with(
+        Data|array|null $data,
+        bool $requested,
+        ?bool $success
+    ): self {
         $self = new self;
 
         $self['data'] = $data;
         $self['requested'] = $requested;
+        $self['success'] = $success;
 
         return $self;
     }
@@ -78,6 +90,17 @@ final class Product implements BaseModel
     {
         $self = clone $this;
         $self['requested'] = $requested;
+
+        return $self;
+    }
+
+    /**
+     * True when retrieved, false when retrieval failed, and null when not requested.
+     */
+    public function withSuccess(?bool $success): self
+    {
+        $self = clone $this;
+        $self['success'] = $success;
 
         return $self;
     }

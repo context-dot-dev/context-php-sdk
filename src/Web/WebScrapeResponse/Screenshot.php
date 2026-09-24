@@ -11,7 +11,9 @@ use ContextDev\Core\Contracts\BaseModel;
 /**
  * An image data URL. Use directly as an image src.
  *
- * @phpstan-type ScreenshotShape = array{data: string|null, requested: bool}
+ * @phpstan-type ScreenshotShape = array{
+ *   data: string|null, requested: bool, success: bool|null
+ * }
  */
 final class Screenshot implements BaseModel
 {
@@ -25,17 +27,23 @@ final class Screenshot implements BaseModel
     public bool $requested;
 
     /**
+     * True when retrieved, false when retrieval failed, and null when not requested.
+     */
+    #[Required]
+    public ?bool $success;
+
+    /**
      * `new Screenshot()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * Screenshot::with(data: ..., requested: ...)
+     * Screenshot::with(data: ..., requested: ..., success: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new Screenshot)->withData(...)->withRequested(...)
+     * (new Screenshot)->withData(...)->withRequested(...)->withSuccess(...)
      * ```
      */
     public function __construct()
@@ -48,12 +56,16 @@ final class Screenshot implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(?string $data, bool $requested): self
-    {
+    public static function with(
+        ?string $data,
+        bool $requested,
+        ?bool $success
+    ): self {
         $self = new self;
 
         $self['data'] = $data;
         $self['requested'] = $requested;
+        $self['success'] = $success;
 
         return $self;
     }
@@ -70,6 +82,17 @@ final class Screenshot implements BaseModel
     {
         $self = clone $this;
         $self['requested'] = $requested;
+
+        return $self;
+    }
+
+    /**
+     * True when retrieved, false when retrieval failed, and null when not requested.
+     */
+    public function withSuccess(?bool $success): self
+    {
+        $self = clone $this;
+        $self['success'] = $success;
 
         return $self;
     }
