@@ -13,7 +13,7 @@ use ContextDev\News\NewsSearchParams\FilterBy\Date;
 use ContextDev\News\NewsSearchParams\FilterBy\SourceCountry;
 
 /**
- * Optional result filters.
+ * Optional result filters. Use at most one of sourceDomain, sourceCountry, articleLanguage, or articleType. A date range may accompany that category; date.from must not exceed date.to.
  *
  * @phpstan-import-type DateShape from \ContextDev\News\NewsSearchParams\FilterBy\Date
  *
@@ -47,7 +47,7 @@ final class FilterBy implements BaseModel
     public ?array $articleType;
 
     /**
-     * Published-at window in epoch milliseconds.
+     * Published-at window in epoch milliseconds. from must be before or equal to to.
      */
     #[Optional]
     public ?Date $date;
@@ -129,7 +129,7 @@ final class FilterBy implements BaseModel
     }
 
     /**
-     * Published-at window in epoch milliseconds.
+     * Published-at window in epoch milliseconds. from must be before or equal to to.
      *
      * @param Date|DateShape $date
      */

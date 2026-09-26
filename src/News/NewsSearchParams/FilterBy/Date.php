@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Published-at window in epoch milliseconds.
+ * Published-at window in epoch milliseconds. from must be before or equal to to.
  *
  * @phpstan-type DateShape = array{from?: int|null, to?: int|null}
  */
