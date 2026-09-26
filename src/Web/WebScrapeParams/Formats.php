@@ -35,7 +35,7 @@ final class Formats implements BaseModel
     public ?bool $bytes;
 
     /**
-     * Relevant passages for your question or topic, with headings included when needed for context. Adds 3 credits when passages are returned.
+     * Relevant Markdown excerpts for your question or topic, preserving code, lists, and tables, with headings included when needed for context. Adds 3 credits when passages are returned.
      */
     #[Optional]
     public ?bool $highlights;
@@ -130,7 +130,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * Relevant passages for your question or topic, with headings included when needed for context. Adds 3 credits when passages are returned.
+     * Relevant Markdown excerpts for your question or topic, preserving code, lists, and tables, with headings included when needed for context. Adds 3 credits when passages are returned.
      */
     public function withHighlights(bool $highlights): self
     {
