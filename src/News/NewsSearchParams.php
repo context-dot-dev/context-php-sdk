@@ -14,7 +14,7 @@ use ContextDev\News\NewsSearchParams\SearchBy;
 use ContextDev\News\NewsSearchParams\SortBy;
 
 /**
- * Searches live and historical company news for one company, identified in searchBy by name, domain, ticker (optionally disambiguated by exchange), or ISIN. Results can be filtered by publisher domain, publisher country, article language, article type, and published-at date, and include stable story IDs, source metadata, verified entity relevance, and cursor pagination.
+ * Searches live and historical company news for one company, identified in searchBy by name, domain, ticker (optionally disambiguated by exchange), or ISIN. Results can be filtered by one of publisher domain, publisher country, article language, or article type, optionally combined with a published-at date range, and include stable story IDs, source metadata, verified entity relevance, and cursor pagination.
  *
  * @see ContextDev\Services\NewsService::search()
  *
@@ -50,7 +50,7 @@ final class NewsSearchParams implements BaseModel
     public ?string $cursor;
 
     /**
-     * Optional result filters.
+     * Optional result filters. Use at most one of sourceDomain, sourceCountry, articleLanguage, or articleType. A date range may accompany that category; date.from must not exceed date.to.
      */
     #[Optional]
     public ?FilterBy $filterBy;
@@ -150,7 +150,7 @@ final class NewsSearchParams implements BaseModel
     }
 
     /**
-     * Optional result filters.
+     * Optional result filters. Use at most one of sourceDomain, sourceCountry, articleLanguage, or articleType. A date range may accompany that category; date.from must not exceed date.to.
      *
      * @param FilterBy|FilterByShape $filterBy
      */
