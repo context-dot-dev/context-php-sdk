@@ -36,7 +36,7 @@ final class WebAnswersParams implements BaseModel
     use SdkParams;
 
     /**
-     * Research task. Name a domain to have it read before searching.
+     * Research task. The agent selects company/profile lookups, web searches, or page reads. Include domains or URLs to focus the research.
      */
     #[Required]
     public string $task;
@@ -50,7 +50,7 @@ final class WebAnswersParams implements BaseModel
     public ?array $jsonFormat;
 
     /**
-     * `fast` for short tasks; `ultra` for deeper research (default).
+     * `fast` prioritizes speed, with extra verification for people and companies; `ultra` supports deeper research (default).
      *
      * @var value-of<Mode>|null $mode
      */
@@ -131,7 +131,7 @@ final class WebAnswersParams implements BaseModel
     }
 
     /**
-     * Research task. Name a domain to have it read before searching.
+     * Research task. The agent selects company/profile lookups, web searches, or page reads. Include domains or URLs to focus the research.
      */
     public function withTask(string $task): self
     {
@@ -155,7 +155,7 @@ final class WebAnswersParams implements BaseModel
     }
 
     /**
-     * `fast` for short tasks; `ultra` for deeper research (default).
+     * `fast` prioritizes speed, with extra verification for people and companies; `ultra` supports deeper research (default).
      *
      * @param Mode|value-of<Mode> $mode
      */
