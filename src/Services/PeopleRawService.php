@@ -37,7 +37,7 @@ final class PeopleRawService implements PeopleRawContract
     /**
      * @api
      *
-     * Finds and normalizes the best available person candidate from additive identity clues, then assigns an identity match score from 0 to 100. Available on all paid plans. Successful requests cost 20 credits. Disposable and free email addresses (like gmail.com, yahoo.com) will throw a 422 error.
+     * Find a person from identity clues and return their profile with a match score. Requires a paid plan; free or disposable email addresses return 422.
      *
      * @param array{
      *   company?: Company|CompanyShape,

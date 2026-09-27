@@ -10,6 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Monitors\MonitorGetRunResponse\ChangeDetectionType;
 use ContextDev\Monitors\MonitorGetRunResponse\Error;
+use ContextDev\Monitors\MonitorGetRunResponse\KeyMetadata;
 use ContextDev\Monitors\MonitorGetRunResponse\RunType;
 use ContextDev\Monitors\MonitorGetRunResponse\SkipReason;
 use ContextDev\Monitors\MonitorGetRunResponse\Status;
@@ -17,6 +18,7 @@ use ContextDev\Monitors\MonitorGetRunResponse\TargetType;
 
 /**
  * @phpstan-import-type ErrorShape from \ContextDev\Monitors\MonitorGetRunResponse\Error
+ * @phpstan-import-type KeyMetadataShape from \ContextDev\Monitors\MonitorGetRunResponse\KeyMetadata
  * @phpstan-import-type WebhookDeliveryShape from \ContextDev\Monitors\WebhookDelivery
  *
  * @phpstan-type MonitorGetRunResponseShape = array{
@@ -26,12 +28,14 @@ use ContextDev\Monitors\MonitorGetRunResponse\TargetType;
  *   changeDetectionType: ChangeDetectionType|value-of<ChangeDetectionType>,
  *   creditsCharged: int,
  *   monitorID: string,
+ *   requestID: string,
  *   runType: RunType|value-of<RunType>,
  *   status: Status|value-of<Status>,
  *   targetType: TargetType|value-of<TargetType>,
  *   changeID?: string|null,
  *   completedAt?: \DateTimeInterface|null,
  *   error?: null|Error|ErrorShape,
+ *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  *   skipReason?: null|SkipReason|value-of<SkipReason>,
  *   startedAt?: \DateTimeInterface|null,
  *   webhookDeliveries?: list<WebhookDelivery|WebhookDeliveryShape>|null,
@@ -70,7 +74,13 @@ final class MonitorGetRunResponse implements BaseModel
     public string $monitorID;
 
     /**
-     * The first run after monitor creation is a baseline run.
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
+     */
+    #[Required('request_id')]
+    public string $requestID;
+
+    /**
+     * A baseline run follows creation or a target or detection change.
      *
      * @var value-of<RunType> $runType
      */
@@ -99,6 +109,12 @@ final class MonitorGetRunResponse implements BaseModel
     public ?Error $error;
 
     /**
+     * Credits this request used and your remaining balance.
+     */
+    #[Optional('key_metadata')]
+    public ?KeyMetadata $keyMetadata;
+
+    /**
      * Why a skipped run never executed; null unless status is `skipped`.
      *
      * @var value-of<SkipReason>|null $skipReason
@@ -120,7 +136,7 @@ final class MonitorGetRunResponse implements BaseModel
     /**
      * @deprecated
      *
-     * Deprecated: use `webhook_deliveries`, which records every attempt now that a run can deliver multiple events. Omitted when no webhook was attempted, including historical runs created before delivery tracking was added.
+     * Deprecated. Use `webhook_deliveries` for all attempts.
      */
     #[Optional('webhook_delivery')]
     public ?WebhookDelivery $webhookDelivery;
@@ -145,6 +161,7 @@ final class MonitorGetRunResponse implements BaseModel
      *   changeDetectionType: ...,
      *   creditsCharged: ...,
      *   monitorID: ...,
+     *   requestID: ...,
      *   runType: ...,
      *   status: ...,
      *   targetType: ...,
@@ -161,6 +178,7 @@ final class MonitorGetRunResponse implements BaseModel
      *   ->withChangeDetectionType(...)
      *   ->withCreditsCharged(...)
      *   ->withMonitorID(...)
+     *   ->withRequestID(...)
      *   ->withRunType(...)
      *   ->withStatus(...)
      *   ->withTargetType(...)
@@ -181,6 +199,7 @@ final class MonitorGetRunResponse implements BaseModel
      * @param Status|value-of<Status> $status
      * @param TargetType|value-of<TargetType> $targetType
      * @param Error|ErrorShape|null $error
+     * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      * @param SkipReason|value-of<SkipReason>|null $skipReason
      * @param list<WebhookDelivery|WebhookDeliveryShape>|null $webhookDeliveries
      * @param WebhookDelivery|WebhookDeliveryShape|null $webhookDelivery
@@ -193,12 +212,14 @@ final class MonitorGetRunResponse implements BaseModel
         ChangeDetectionType|string $changeDetectionType,
         int $creditsCharged,
         string $monitorID,
+        string $requestID,
         RunType|string $runType,
         Status|string $status,
         TargetType|string $targetType,
         ?string $changeID = null,
         ?\DateTimeInterface $completedAt = null,
         Error|array|null $error = null,
+        KeyMetadata|array|null $keyMetadata = null,
         SkipReason|string|null $skipReason = null,
         ?\DateTimeInterface $startedAt = null,
         ?array $webhookDeliveries = null,
@@ -213,6 +234,7 @@ final class MonitorGetRunResponse implements BaseModel
         $self['changeDetectionType'] = $changeDetectionType;
         $self['creditsCharged'] = $creditsCharged;
         $self['monitorID'] = $monitorID;
+        $self['requestID'] = $requestID;
         $self['runType'] = $runType;
         $self['status'] = $status;
         $self['targetType'] = $targetType;
@@ -220,6 +242,7 @@ final class MonitorGetRunResponse implements BaseModel
         null !== $changeID && $self['changeID'] = $changeID;
         null !== $completedAt && $self['completedAt'] = $completedAt;
         null !== $error && $self['error'] = $error;
+        null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
         null !== $skipReason && $self['skipReason'] = $skipReason;
         null !== $startedAt && $self['startedAt'] = $startedAt;
         null !== $webhookDeliveries && $self['webhookDeliveries'] = $webhookDeliveries;
@@ -288,7 +311,18 @@ final class MonitorGetRunResponse implements BaseModel
     }
 
     /**
-     * The first run after monitor creation is a baseline run.
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
+
+        return $self;
+    }
+
+    /**
+     * A baseline run follows creation or a target or detection change.
      *
      * @param RunType|value-of<RunType> $runType
      */
@@ -352,6 +386,19 @@ final class MonitorGetRunResponse implements BaseModel
     }
 
     /**
+     * Credits this request used and your remaining balance.
+     *
+     * @param KeyMetadata|KeyMetadataShape $keyMetadata
+     */
+    public function withKeyMetadata(KeyMetadata|array $keyMetadata): self
+    {
+        $self = clone $this;
+        $self['keyMetadata'] = $keyMetadata;
+
+        return $self;
+    }
+
+    /**
      * Why a skipped run never executed; null unless status is `skipped`.
      *
      * @param SkipReason|value-of<SkipReason>|null $skipReason
@@ -386,7 +433,7 @@ final class MonitorGetRunResponse implements BaseModel
     }
 
     /**
-     * Deprecated: use `webhook_deliveries`, which records every attempt now that a run can deliver multiple events. Omitted when no webhook was attempted, including historical runs created before delivery tracking was added.
+     * Deprecated. Use `webhook_deliveries` for all attempts.
      *
      * @param WebhookDelivery|WebhookDeliveryShape $webhookDelivery
      */

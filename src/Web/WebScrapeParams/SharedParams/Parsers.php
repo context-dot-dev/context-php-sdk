@@ -22,7 +22,7 @@ final class Parsers implements BaseModel
     use SdkModel;
 
     /**
-     * PDF text options for HTML, Markdown, and parsed fields.
+     * PDF page range and OCR.
      */
     #[Optional]
     public ?Pdf $pdf;
@@ -49,7 +49,7 @@ final class Parsers implements BaseModel
     }
 
     /**
-     * PDF text options for HTML, Markdown, and parsed fields.
+     * PDF page range and OCR.
      *
      * @param Pdf|PdfShape $pdf
      */

@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Browser dimensions in pixels.
+ * Browser size in pixels. Omit for 1920 × 1080. When provided, missing dimensions default to 1440 × 900.
  *
  * @phpstan-type ViewportShape = array{height?: int|null, width?: int|null}
  */
@@ -18,9 +18,15 @@ final class Viewport implements BaseModel
     /** @use SdkModel<ViewportShape> */
     use SdkModel;
 
+    /**
+     * Browser viewport height in pixels.
+     */
     #[Optional]
     public ?int $height;
 
+    /**
+     * Browser viewport width in pixels.
+     */
     #[Optional]
     public ?int $width;
 
@@ -44,6 +50,9 @@ final class Viewport implements BaseModel
         return $self;
     }
 
+    /**
+     * Browser viewport height in pixels.
+     */
     public function withHeight(int $height): self
     {
         $self = clone $this;
@@ -52,6 +61,9 @@ final class Viewport implements BaseModel
         return $self;
     }
 
+    /**
+     * Browser viewport width in pixels.
+     */
     public function withWidth(int $width): self
     {
         $self = clone $this;

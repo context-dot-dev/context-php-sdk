@@ -44,7 +44,7 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\MonitorsRawContract;
 
 /**
- * Monitor pages, sitemaps, and extracted website data for exact or semantic changes. Webhook payloads are documented by the MonitorsChangeDetectedWebhookPayload and MonitorsRunCompletedWebhookPayload schemas.
+ * Watch websites for exact or meaningful changes.
  *
  * @phpstan-import-type TargetShape from \ContextDev\Monitors\MonitorCreateParams\Target
  * @phpstan-import-type ChangeDetectionShape from \ContextDev\Monitors\MonitorCreateParams\ChangeDetection
@@ -67,7 +67,7 @@ final class MonitorsRawService implements MonitorsRawContract
     /**
      * @api
      *
-     * Creates a monitor. The request body is a union of the supported target/change detection combinations. The monitor runs immediately after creation to create its initial baseline.
+     * Watch a page, URL inventory, or extracted website data on a schedule. A run starts immediately to capture the baseline.
      *
      * @param array{
      *   name: string,
@@ -106,8 +106,9 @@ final class MonitorsRawService implements MonitorsRawContract
     /**
      * @api
      *
-     * Get a monitor
+     * Retrieve a monitor’s configuration and current state.
      *
+     * @param string $monitorID ID of the monitor
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<MonitorGetResponse>
@@ -130,8 +131,9 @@ final class MonitorsRawService implements MonitorsRawContract
     /**
      * @api
      *
-     * Updates a monitor. If `target` or `change_detection` changes, the monitor creates a new baseline. Unsupported target/change detection combinations are rejected.
+     * Update a monitor. Changing its target or change detection replaces the baseline and queues a new baseline run.
      *
+     * @param string $monitorID ID of the monitor
      * @param array{
      *   changeDetection?: ChangeDetectionShape1,
      *   name?: string,
@@ -170,7 +172,7 @@ final class MonitorsRawService implements MonitorsRawContract
     /**
      * @api
      *
-     * Lists monitors for the authenticated organization. Supports free-text search (`q` over `search_by` fields, `prefix` or `exact` via `search_type`) plus status/type/tag filters. Results are paginated via the opaque `cursor`.
+     * List your monitors with optional search and filters.
      *
      * @param array{
      *   changeDetectionType?: ChangeDetectionType|value-of<ChangeDetectionType>,
@@ -220,8 +222,9 @@ final class MonitorsRawService implements MonitorsRawContract
     /**
      * @api
      *
-     * Delete a monitor
+     * Delete a monitor and stop future runs and webhook retries.
      *
+     * @param string $monitorID ID of the monitor
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<MonitorDeleteResponse>
@@ -244,7 +247,7 @@ final class MonitorsRawService implements MonitorsRawContract
     /**
      * @api
      *
-     * Returns credits charged per monitor over an optional [since, until] window, newest spenders first.
+     * Return usage per monitor, highest first, for up to the 10,000 most recent runs in the requested window.
      *
      * @param array{
      *   since?: \DateTimeInterface, until?: \DateTimeInterface
@@ -277,7 +280,7 @@ final class MonitorsRawService implements MonitorsRawContract
     /**
      * @api
      *
-     * Returns how many monitors the account has and the maximum it allows.
+     * Retrieve your organization’s monitor allowance and usage.
      *
      * @param RequestOpts|null $requestOptions
      *
@@ -300,7 +303,7 @@ final class MonitorsRawService implements MonitorsRawContract
     /**
      * @api
      *
-     * Returns an account-wide feed of detected changes across monitors.
+     * List full change records across your monitors, newest first.
      *
      * @param array{
      *   changeDetectionType?: MonitorListAccountChangesParams\ChangeDetectionType|value-of<MonitorListAccountChangesParams\ChangeDetectionType>,
@@ -347,7 +350,7 @@ final class MonitorsRawService implements MonitorsRawContract
     /**
      * @api
      *
-     * Returns an account-wide feed of monitor runs across all monitors.
+     * List runs across your monitors, newest first.
      *
      * @param array{
      *   cursor?: string,
@@ -382,8 +385,9 @@ final class MonitorsRawService implements MonitorsRawContract
     /**
      * @api
      *
-     * List changes for a monitor
+     * List full change records for a monitor, newest first.
      *
+     * @param string $monitorID ID of the monitor
      * @param array{
      *   cursor?: string,
      *   limit?: int,
@@ -420,8 +424,9 @@ final class MonitorsRawService implements MonitorsRawContract
     /**
      * @api
      *
-     * List monitor runs
+     * List a monitor’s runs, newest first.
      *
+     * @param string $monitorID ID of the monitor
      * @param array{
      *   cursor?: string,
      *   limit?: int,
@@ -456,8 +461,9 @@ final class MonitorsRawService implements MonitorsRawContract
     /**
      * @api
      *
-     * Get a change
+     * Retrieve a detected change, including its diff and available evidence.
      *
+     * @param string $changeID ID of the detected change
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<MonitorGetChangeResponse>
@@ -480,8 +486,9 @@ final class MonitorsRawService implements MonitorsRawContract
     /**
      * @api
      *
-     * Fetches one run for a monitor, including lifecycle status, timing, credits charged, and any detected change.
+     * Retrieve the status, timing, and results of one monitor run.
      *
+     * @param string $runID ID of the monitor run
      * @param array{monitorID: string}|MonitorRetrieveRunParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -513,8 +520,9 @@ final class MonitorsRawService implements MonitorsRawContract
     /**
      * @api
      *
-     * Generates a new signing secret for the monitor's webhook and returns the updated monitor (including the new `webhook.secret`). The previous secret stops signing deliveries immediately, so update your endpoint before rotating.
+     * Generate and return a new signing secret. It takes effect immediately for all subsequent delivery attempts.
      *
+     * @param string $monitorID ID of the monitor
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<MonitorRotateWebhookSecretResponse>
@@ -537,8 +545,9 @@ final class MonitorsRawService implements MonitorsRawContract
     /**
      * @api
      *
-     * Triggers an immediate run of the monitor outside its normal schedule. The run is queued and processed asynchronously.
+     * Queue a run without changing the regular schedule. Paused monitors return 409.
      *
+     * @param string $monitorID ID of the monitor
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<MonitorRunResponse>

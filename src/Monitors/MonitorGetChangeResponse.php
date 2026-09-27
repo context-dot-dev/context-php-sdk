@@ -11,13 +11,13 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Monitors\MonitorGetChangeResponse\ChangeDetectionType;
 use ContextDev\Monitors\MonitorGetChangeResponse\Evidence;
 use ContextDev\Monitors\MonitorGetChangeResponse\Importance;
+use ContextDev\Monitors\MonitorGetChangeResponse\KeyMetadata;
 use ContextDev\Monitors\MonitorGetChangeResponse\Mode;
 use ContextDev\Monitors\MonitorGetChangeResponse\TargetType;
 
 /**
- * A detected change. `mode` is the constant `web`; `target_type` and `change_detection_type` describe the change, and which optional fields are present depends on them (page: `diff` + excerpts; sitemap: `added_urls`/`removed_urls`; semantic: `confidence`/`importance`/`evidence`/`matched_urls`).
- *
  * @phpstan-import-type EvidenceShape from \ContextDev\Monitors\MonitorGetChangeResponse\Evidence
+ * @phpstan-import-type KeyMetadataShape from \ContextDev\Monitors\MonitorGetChangeResponse\KeyMetadata
  *
  * @phpstan-type MonitorGetChangeResponseShape = array{
  *   id: string,
@@ -25,6 +25,7 @@ use ContextDev\Monitors\MonitorGetChangeResponse\TargetType;
  *   detectedAt: \DateTimeInterface,
  *   mode: Mode|value-of<Mode>,
  *   monitorID: string,
+ *   requestID: string,
  *   runID: string,
  *   summary: string,
  *   tags: list<string>,
@@ -39,6 +40,7 @@ use ContextDev\Monitors\MonitorGetChangeResponse\TargetType;
  *   diff?: string|null,
  *   evidence?: list<Evidence|EvidenceShape>|null,
  *   importance?: null|Importance|value-of<Importance>,
+ *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  *   matchedURLCount?: int|null,
  *   matchedURLs?: list<string>|null,
  *   removedURLCount?: int|null,
@@ -61,7 +63,7 @@ final class MonitorGetChangeResponse implements BaseModel
     public \DateTimeInterface $detectedAt;
 
     /**
-     * Top-level monitor category. Always `web` today; the concrete behavior is described by `target` and `change_detection`.
+     * Always `web`. Optional.
      *
      * @var value-of<Mode> $mode
      */
@@ -70,6 +72,12 @@ final class MonitorGetChangeResponse implements BaseModel
 
     #[Required('monitor_id')]
     public string $monitorID;
+
+    /**
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
+     */
+    #[Required('request_id')]
+    public string $requestID;
 
     /**
      * The run that detected this change.
@@ -81,7 +89,7 @@ final class MonitorGetChangeResponse implements BaseModel
     public string $summary;
 
     /**
-     * User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
+     * Labels for filtering monitors, their changes, and their usage.
      *
      * @var list<string> $tags
      */
@@ -132,6 +140,12 @@ final class MonitorGetChangeResponse implements BaseModel
     #[Optional(enum: Importance::class)]
     public ?string $importance;
 
+    /**
+     * Credits this request used and your remaining balance.
+     */
+    #[Optional('key_metadata')]
+    public ?KeyMetadata $keyMetadata;
+
     #[Optional('matched_url_count')]
     public ?int $matchedURLCount;
 
@@ -165,6 +179,7 @@ final class MonitorGetChangeResponse implements BaseModel
      *   detectedAt: ...,
      *   mode: ...,
      *   monitorID: ...,
+     *   requestID: ...,
      *   runID: ...,
      *   summary: ...,
      *   tags: ...,
@@ -183,6 +198,7 @@ final class MonitorGetChangeResponse implements BaseModel
      *   ->withDetectedAt(...)
      *   ->withMode(...)
      *   ->withMonitorID(...)
+     *   ->withRequestID(...)
      *   ->withRunID(...)
      *   ->withSummary(...)
      *   ->withTags(...)
@@ -208,6 +224,7 @@ final class MonitorGetChangeResponse implements BaseModel
      * @param list<string>|null $addedURLs
      * @param list<Evidence|EvidenceShape>|null $evidence
      * @param Importance|value-of<Importance>|null $importance
+     * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      * @param list<string>|null $matchedURLs
      * @param list<string>|null $removedURLs
      */
@@ -217,6 +234,7 @@ final class MonitorGetChangeResponse implements BaseModel
         \DateTimeInterface $detectedAt,
         Mode|string $mode,
         string $monitorID,
+        string $requestID,
         string $runID,
         string $summary,
         array $tags,
@@ -231,6 +249,7 @@ final class MonitorGetChangeResponse implements BaseModel
         ?string $diff = null,
         ?array $evidence = null,
         Importance|string|null $importance = null,
+        KeyMetadata|array|null $keyMetadata = null,
         ?int $matchedURLCount = null,
         ?array $matchedURLs = null,
         ?int $removedURLCount = null,
@@ -243,6 +262,7 @@ final class MonitorGetChangeResponse implements BaseModel
         $self['detectedAt'] = $detectedAt;
         $self['mode'] = $mode;
         $self['monitorID'] = $monitorID;
+        $self['requestID'] = $requestID;
         $self['runID'] = $runID;
         $self['summary'] = $summary;
         $self['tags'] = $tags;
@@ -258,6 +278,7 @@ final class MonitorGetChangeResponse implements BaseModel
         null !== $diff && $self['diff'] = $diff;
         null !== $evidence && $self['evidence'] = $evidence;
         null !== $importance && $self['importance'] = $importance;
+        null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
         null !== $matchedURLCount && $self['matchedURLCount'] = $matchedURLCount;
         null !== $matchedURLs && $self['matchedURLs'] = $matchedURLs;
         null !== $removedURLCount && $self['removedURLCount'] = $removedURLCount;
@@ -295,7 +316,7 @@ final class MonitorGetChangeResponse implements BaseModel
     }
 
     /**
-     * Top-level monitor category. Always `web` today; the concrete behavior is described by `target` and `change_detection`.
+     * Always `web`. Optional.
      *
      * @param Mode|value-of<Mode> $mode
      */
@@ -311,6 +332,17 @@ final class MonitorGetChangeResponse implements BaseModel
     {
         $self = clone $this;
         $self['monitorID'] = $monitorID;
+
+        return $self;
+    }
+
+    /**
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }
@@ -335,7 +367,7 @@ final class MonitorGetChangeResponse implements BaseModel
     }
 
     /**
-     * User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
+     * Labels for filtering monitors, their changes, and their usage.
      *
      * @param list<string> $tags
      */
@@ -448,6 +480,19 @@ final class MonitorGetChangeResponse implements BaseModel
     {
         $self = clone $this;
         $self['importance'] = $importance;
+
+        return $self;
+    }
+
+    /**
+     * Credits this request used and your remaining balance.
+     *
+     * @param KeyMetadata|KeyMetadataShape $keyMetadata
+     */
+    public function withKeyMetadata(KeyMetadata|array $keyMetadata): self
+    {
+        $self = clone $this;
+        $self['keyMetadata'] = $keyMetadata;
 
         return $self;
     }

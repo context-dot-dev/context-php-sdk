@@ -21,7 +21,7 @@ final class KeyMetadata implements BaseModel
     use SdkModel;
 
     /**
-     * Credits used by this request.
+     * Credits charged for this request.
      */
     #[Required('credits_consumed')]
     public int $creditsConsumed;
@@ -69,7 +69,7 @@ final class KeyMetadata implements BaseModel
     }
 
     /**
-     * Credits used by this request.
+     * Credits charged for this request.
      */
     public function withCreditsConsumed(int $creditsConsumed): self
     {

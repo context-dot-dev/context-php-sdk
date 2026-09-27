@@ -71,7 +71,7 @@ final class Data implements BaseModel
     public string $monitorID;
 
     /**
-     * The first run after monitor creation is a baseline run.
+     * A baseline run follows creation or a target or detection change.
      *
      * @var value-of<RunType> $runType
      */
@@ -121,7 +121,7 @@ final class Data implements BaseModel
     /**
      * @deprecated
      *
-     * Deprecated: use `webhook_deliveries`, which records every attempt now that a run can deliver multiple events. Omitted when no webhook was attempted, including historical runs created before delivery tracking was added.
+     * Deprecated. Use `webhook_deliveries` for all attempts.
      */
     #[Optional('webhook_delivery')]
     public ?WebhookDelivery $webhookDelivery;
@@ -289,7 +289,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * The first run after monitor creation is a baseline run.
+     * A baseline run follows creation or a target or detection change.
      *
      * @param RunType|value-of<RunType> $runType
      */
@@ -387,7 +387,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Deprecated: use `webhook_deliveries`, which records every attempt now that a run can deliver multiple events. Omitted when no webhook was attempted, including historical runs created before delivery tracking was added.
+     * Deprecated. Use `webhook_deliveries` for all attempts.
      *
      * @param WebhookDelivery|WebhookDeliveryShape $webhookDelivery
      */

@@ -60,7 +60,7 @@ final class Logo implements BaseModel
     public ?string $type;
 
     /**
-     * CDN hosted url of the logo (ready for display).
+     * Hosted logo URL.
      */
     #[Optional]
     public ?string $url;
@@ -151,7 +151,7 @@ final class Logo implements BaseModel
     }
 
     /**
-     * CDN hosted url of the logo (ready for display).
+     * Hosted logo URL.
      */
     public function withURL(string $url): self
     {

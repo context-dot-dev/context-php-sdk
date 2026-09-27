@@ -11,7 +11,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebSearchParams\MarkdownOptions\TimeoutOpts\Behavior;
 
 /**
- * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+ * Request deadline and what to return when it passes.
  *
  * @phpstan-type TimeoutOptsShape = array{
  *   milliseconds: int, behavior?: null|Behavior|value-of<Behavior>
@@ -23,13 +23,13 @@ final class TimeoutOpts implements BaseModel
     use SdkModel;
 
     /**
-     * Request deadline in milliseconds. Maximum: 300000 (5 minutes).
+     * Deadline in milliseconds.
      */
     #[Required]
     public int $milliseconds;
 
     /**
-     * What to do at the deadline. "fail" returns 408 REQUEST_TIMEOUT without charging credits. "return-partial" returns usable results collected so far; if none are available, the request still fails without charging credits. Partial results are not cached as complete results. "return-partial" requires milliseconds of at least 5000.
+     * "fail" returns 408 at the deadline. "return-partial" returns available results; inspect the response’s partial flag. "return-partial" requires at least 5000 ms.
      *
      * @var value-of<Behavior>|null $behavior
      */
@@ -76,7 +76,7 @@ final class TimeoutOpts implements BaseModel
     }
 
     /**
-     * Request deadline in milliseconds. Maximum: 300000 (5 minutes).
+     * Deadline in milliseconds.
      */
     public function withMilliseconds(int $milliseconds): self
     {
@@ -87,7 +87,7 @@ final class TimeoutOpts implements BaseModel
     }
 
     /**
-     * What to do at the deadline. "fail" returns 408 REQUEST_TIMEOUT without charging credits. "return-partial" returns usable results collected so far; if none are available, the request still fails without charging credits. Partial results are not cached as complete results. "return-partial" requires milliseconds of at least 5000.
+     * "fail" returns 408 at the deadline. "return-partial" returns available results; inspect the response’s partial flag. "return-partial" requires at least 5000 ms.
      *
      * @param Behavior|value-of<Behavior> $behavior
      */

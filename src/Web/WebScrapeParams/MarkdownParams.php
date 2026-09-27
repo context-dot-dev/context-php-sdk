@@ -10,7 +10,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebScrapeParams\MarkdownParams\InlineImages;
 
 /**
- * Markdown options. Requires formats.markdown: true.
+ * Markdown options. Requires `formats.markdown`.
  *
  * @phpstan-type MarkdownParamsShape = array{
  *   includeImages?: bool|null,
@@ -23,14 +23,20 @@ final class MarkdownParams implements BaseModel
     /** @use SdkModel<MarkdownParamsShape> */
     use SdkModel;
 
+    /**
+     * Include images in the Markdown using image syntax with URLs and alt text.
+     */
     #[Optional]
     public ?bool $includeImages;
 
+    /**
+     * Keep link URLs in the Markdown. Set false to return link text without URLs.
+     */
     #[Optional]
     public ?bool $includeLinks;
 
     /**
-     * Base64 images use placeholders by default. Requires includeImages: true.
+     * How base64 images appear: `placeholder` (default) or `preserve`. Requires `includeImages`.
      *
      * @var value-of<InlineImages>|null $inlineImages
      */
@@ -63,6 +69,9 @@ final class MarkdownParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Include images in the Markdown using image syntax with URLs and alt text.
+     */
     public function withIncludeImages(bool $includeImages): self
     {
         $self = clone $this;
@@ -71,6 +80,9 @@ final class MarkdownParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Keep link URLs in the Markdown. Set false to return link text without URLs.
+     */
     public function withIncludeLinks(bool $includeLinks): self
     {
         $self = clone $this;
@@ -80,7 +92,7 @@ final class MarkdownParams implements BaseModel
     }
 
     /**
-     * Base64 images use placeholders by default. Requires includeImages: true.
+     * How base64 images appear: `placeholder` (default) or `preserve`. Requires `includeImages`.
      *
      * @param InlineImages|value-of<InlineImages> $inlineImages
      */

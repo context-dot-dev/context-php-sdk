@@ -11,7 +11,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Webhooks\RetryConfig;
 
 /**
- * Completion webhook settings. Cannot be combined with webhookUrl. Omitting retry preserves legacy delivery; retry: {} opts into durable retries.
+ * Where to send the batch's final-status event. Omit `retry` for one attempt; `{}` uses the default retry schedule.
  *
  * @phpstan-import-type RetryConfigShape from \ContextDev\Webhooks\RetryConfig
  *
@@ -24,6 +24,9 @@ final class Webhook implements BaseModel
     /** @use SdkModel<WebhookShape> */
     use SdkModel;
 
+    /**
+     * Public HTTP(S) URL that receives batch completion, failure, or cancellation events.
+     */
     #[Required]
     public string $url;
 
@@ -72,6 +75,9 @@ final class Webhook implements BaseModel
         return $self;
     }
 
+    /**
+     * Public HTTP(S) URL that receives batch completion, failure, or cancellation events.
+     */
     public function withURL(string $url): self
     {
         $self = clone $this;

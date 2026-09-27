@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Get a webhook delivery, including its status and latest attempt.
+ * Retrieve a webhook delivery’s status and original payload.
  *
  * @see ContextDev\Services\Webhooks\DeliveriesService::retrieve()
  *
@@ -23,7 +23,7 @@ final class DeliveryRetrieveParams implements BaseModel
     use SdkParams;
 
     /**
-     * Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      *
      * @var list<string>|null $tags
      */
@@ -52,7 +52,7 @@ final class DeliveryRetrieveParams implements BaseModel
     }
 
     /**
-     * Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      *
      * @param list<string> $tags
      */

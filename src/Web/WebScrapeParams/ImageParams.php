@@ -24,7 +24,7 @@ final class ImageParams implements BaseModel
     use SdkModel;
 
     /**
-     * For visual duplicates, keep the largest image.
+     * Set `visual` to drop visual duplicates, keeping the largest copy.
      *
      * @var value-of<Dedupe>|null $dedupe
      */
@@ -32,7 +32,7 @@ final class ImageParams implements BaseModel
     public ?string $dedupe;
 
     /**
-     * Add dimensions, a visual category, or a hosted file URL. Each image has a maximum processing time of 30000 milliseconds, bounded by the remaining request deadline.
+     * Extra data per image: `dimensions`, `classification`, or a hosted `file` URL.
      *
      * @var list<value-of<Enrich>>|null $enrich
      */
@@ -65,7 +65,7 @@ final class ImageParams implements BaseModel
     }
 
     /**
-     * For visual duplicates, keep the largest image.
+     * Set `visual` to drop visual duplicates, keeping the largest copy.
      *
      * @param Dedupe|value-of<Dedupe> $dedupe
      */
@@ -78,7 +78,7 @@ final class ImageParams implements BaseModel
     }
 
     /**
-     * Add dimensions, a visual category, or a hosted file URL. Each image has a maximum processing time of 30000 milliseconds, bounded by the remaining request deadline.
+     * Extra data per image: `dimensions`, `classification`, or a hosted `file` URL.
      *
      * @param list<Enrich|value-of<Enrich>> $enrich
      */

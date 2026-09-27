@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Webhooks\Deliveries\DeliverySummary\Source\Batch;
 
 /**
- * Delivery source.
+ * Which deliveries to list: `batch` or `monitor`.
  */
 enum Type: string
 {

@@ -77,7 +77,7 @@ final class MarkdownOptions implements BaseModel
     public ?bool $shortenBase64Images;
 
     /**
-     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * Request deadline and what to return when it passes.
      */
     #[Optional]
     public ?TimeoutOpts $timeoutOpts;
@@ -215,7 +215,7 @@ final class MarkdownOptions implements BaseModel
     }
 
     /**
-     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * Request deadline and what to return when it passes.
      *
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */

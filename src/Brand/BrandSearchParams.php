@@ -12,7 +12,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Search indexed brands by name or domain.
+ * Find up to 10 brands by name or domain, ordered by popularity. Use the returned domain to retrieve a full brand profile.
  *
  * @see ContextDev\Services\BrandService::search()
  *
@@ -51,7 +51,7 @@ final class BrandSearchParams implements BaseModel
     public ?array $queryBy;
 
     /**
-     * Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      *
      * @var list<string>|null $tags
      */
@@ -146,7 +146,7 @@ final class BrandSearchParams implements BaseModel
     }
 
     /**
-     * Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      *
      * @param list<string> $tags
      */

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace ContextDev\Logs\LogGetResponse\Data;
+namespace ContextDev\Monitors\MonitorListRunsResponse;
 
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Credit usage, included whenever a valid API key is provided.
+ * Credits this request used and your remaining balance.
  *
  * @phpstan-type KeyMetadataShape = array{
  *   creditsConsumed: int, creditsRemaining: int
@@ -21,7 +21,7 @@ final class KeyMetadata implements BaseModel
     use SdkModel;
 
     /**
-     * Credits used by this request.
+     * Credits charged for this request.
      */
     #[Required('credits_consumed')]
     public int $creditsConsumed;
@@ -69,7 +69,7 @@ final class KeyMetadata implements BaseModel
     }
 
     /**
-     * Credits used by this request.
+     * Credits charged for this request.
      */
     public function withCreditsConsumed(int $creditsConsumed): self
     {

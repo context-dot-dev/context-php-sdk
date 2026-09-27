@@ -33,7 +33,7 @@ final class IndustryGetSicResponse implements BaseModel
     use SdkModel;
 
     /**
-     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
      */
     #[Required('request_id')]
     public string $requestID;
@@ -61,7 +61,7 @@ final class IndustryGetSicResponse implements BaseModel
     public ?string $domain;
 
     /**
-     * Credit usage, included whenever a valid API key is provided.
+     * Credits this request used and your remaining balance.
      */
     #[Optional('key_metadata')]
     public ?KeyMetadata $keyMetadata;
@@ -73,7 +73,7 @@ final class IndustryGetSicResponse implements BaseModel
     public ?bool $partial;
 
     /**
-     * Status of the response, e.g., 'ok'.
+     * Always `ok` on success.
      */
     #[Optional]
     public ?string $status;
@@ -138,7 +138,7 @@ final class IndustryGetSicResponse implements BaseModel
     }
 
     /**
-     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
      */
     public function withRequestID(string $requestID): self
     {
@@ -187,7 +187,7 @@ final class IndustryGetSicResponse implements BaseModel
     }
 
     /**
-     * Credit usage, included whenever a valid API key is provided.
+     * Credits this request used and your remaining balance.
      *
      * @param KeyMetadata|KeyMetadataShape $keyMetadata
      */
@@ -211,7 +211,7 @@ final class IndustryGetSicResponse implements BaseModel
     }
 
     /**
-     * Status of the response, e.g., 'ok'.
+     * Always `ok` on success.
      */
     public function withStatus(string $status): self
     {

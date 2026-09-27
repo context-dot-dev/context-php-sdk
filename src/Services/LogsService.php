@@ -13,7 +13,7 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\LogsContract;
 
 /**
- * Read your organization's API request logs to debug failed calls. These endpoints cost no credits and use a separate rate limit.
+ * Read your organization's API request logs.
  *
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
@@ -35,7 +35,7 @@ final class LogsService implements LogsContract
     /**
      * @api
      *
-     * Get one logged API call, including its request input and response body.
+     * Retrieve a request’s metadata, retained input, and response.
      *
      * @param string $requestID the request ID of the logged API call
      * @param RequestOpts|null $requestOptions
@@ -55,7 +55,7 @@ final class LogsService implements LogsContract
     /**
      * @api
      *
-     * List your organization's API requests, newest first. Defaults to the last 24 hours.
+     * List your organization’s request logs with filters and pagination. Logs also include batch settlements and monitor runs.
      *
      * @param string $errorCode filter by the `error_code` returned in the response
      * @param bool $errorsOnly only include requests that returned a 4xx or 5xx status

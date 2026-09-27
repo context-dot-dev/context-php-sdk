@@ -28,11 +28,19 @@ final class Schedule implements BaseModel
     #[Required]
     public int $frequency;
 
-    /** @var value-of<Type> $type */
+    /**
+     * Use `interval` to run on a repeating schedule.
+     *
+     * @var value-of<Type> $type
+     */
     #[Required(enum: Type::class)]
     public string $type;
 
-    /** @var value-of<Unit> $unit */
+    /**
+     * Time unit used with `frequency` to set the run interval.
+     *
+     * @var value-of<Unit> $unit
+     */
     #[Required(enum: Unit::class)]
     public string $unit;
 
@@ -89,6 +97,8 @@ final class Schedule implements BaseModel
     }
 
     /**
+     * Use `interval` to run on a repeating schedule.
+     *
      * @param Type|value-of<Type> $type
      */
     public function withType(Type|string $type): self
@@ -100,6 +110,8 @@ final class Schedule implements BaseModel
     }
 
     /**
+     * Time unit used with `frequency` to set the run interval.
+     *
      * @param Unit|value-of<Unit> $unit
      */
     public function withUnit(Unit|string $unit): self

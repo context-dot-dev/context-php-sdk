@@ -15,7 +15,7 @@ use ContextDev\Web\WebScrapeResponse\Metadata\OpenGraph;
 use ContextDev\Web\WebScrapeResponse\Metadata\Twitter;
 
 /**
- * Page details, when available.
+ * Page metadata. Fields are omitted when not found.
  *
  * @phpstan-import-type AdditionalMetaVariants from \ContextDev\Web\WebScrapeResponse\Metadata\AdditionalMeta
  * @phpstan-import-type OpenGraphVariants from \ContextDev\Web\WebScrapeResponse\Metadata\OpenGraph
@@ -93,7 +93,7 @@ final class Metadata implements BaseModel
     public ?string $favicon;
 
     /**
-     * Page headings (h1–h6) in document order, extracted from the unfiltered document. Capped at the first 500 headings. Omitted when the page has none.
+     * Up to 500 h1–h6 headings in document order, before content filtering.
      *
      * @var list<Heading>|null $headings
      */
@@ -307,7 +307,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Page headings (h1–h6) in document order, extracted from the unfiltered document. Capped at the first 500 headings. Omitted when the page has none.
+     * Up to 500 h1–h6 headings in document order, before content filtering.
      *
      * @param list<Heading|HeadingShape> $headings
      */

@@ -9,6 +9,8 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
+ * School or university, identified by name or domain.
+ *
  * @phpstan-type InstitutionShape = array{domain?: string|null, name?: string|null}
  */
 final class Institution implements BaseModel
@@ -16,9 +18,15 @@ final class Institution implements BaseModel
     /** @use SdkModel<InstitutionShape> */
     use SdkModel;
 
+    /**
+     * Website domain of the school or university.
+     */
     #[Optional]
     public ?string $domain;
 
+    /**
+     * Name of the school or university.
+     */
     #[Optional]
     public ?string $name;
 
@@ -44,6 +52,9 @@ final class Institution implements BaseModel
         return $self;
     }
 
+    /**
+     * Website domain of the school or university.
+     */
     public function withDomain(string $domain): self
     {
         $self = clone $this;
@@ -52,6 +63,9 @@ final class Institution implements BaseModel
         return $self;
     }
 
+    /**
+     * Name of the school or university.
+     */
     public function withName(string $name): self
     {
         $self = clone $this;

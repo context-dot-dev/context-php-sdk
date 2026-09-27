@@ -22,7 +22,7 @@ use ContextDev\Web\WebScrapeParams\TimeoutOpts;
 use ContextDev\Web\WebScrapeParams\Zdr;
 
 /**
- * Reuse cached outputs independently and capture missing formats in one page visit. Each cache key includes only the settings that affect that output. HTML is shared with Markdown, parsed fields, product data, highlights, and JSON extraction. Cached outputs can come from different visits within maxAgeMs; use 0 for a fresh capture. HTML-only requests use the existing fast acquisition path. Highlights return Markdown excerpts most relevant to highlightsParams.query. Requests with at least one successful output cost one base credit, including cache hits, or two with browser actions. All-failed responses are unbilled except missing pages, which retain the base price and the one-credit product charge when product was requested. Highlights add 3 credits when passages are returned. JSON extraction runs an LLM over nonempty page Markdown and adds four credits only when its result is returned successfully. PDF OCR adds one credit per recovered page on fresh extraction. Product adds one credit when its successful result is returned, plus six if that result used the specialized model. Original response bytes and screenshots are limited to 20 MiB each, screenshots to 40 megapixels, and the combined response to 60 MiB. An oversized output has success: false and data: null. If the combined response exceeds its limit, the largest outputs are marked failed until the remaining outputs fit. Valid captured pieces may still be cached when omitted to meet the response size limit.
+ * Returns the outputs you enable in `formats` from one visit to a URL. Each output reports its own `success`, so a failed output does not fail the request.
  *
  * @see ContextDev\Services\WebService::scrape()
  *
@@ -61,19 +61,19 @@ final class WebScrapeParams implements BaseModel
     use SdkParams;
 
     /**
-     * Outputs to return. Enable at least one; omitted formats are false.
+     * Outputs to return. Set at least one to `true`.
      */
     #[Required]
     public Formats $formats;
 
     /**
-     * The URL to scrape.
+     * Public HTTP or HTTPS URL to scrape.
      */
     #[Required]
     public string $url;
 
     /**
-     * Highlight options. Requires formats.highlights: true.
+     * Required when `formats.highlights` is `true`.
      */
     #[Optional]
     public ?HighlightsParams $highlightsParams;
@@ -91,13 +91,13 @@ final class WebScrapeParams implements BaseModel
     public ?JsonParams $jsonParams;
 
     /**
-     * Markdown options. Requires formats.markdown: true.
+     * Markdown options. Requires `formats.markdown`.
      */
     #[Optional]
     public ?MarkdownParams $markdownParams;
 
     /**
-     * Maximum age of each cached output. Defaults to 1 day; 0 fetches fresh and updates the requested outputs. Compatible outputs are shared with the individual scrape endpoints. Image results with hosted files refresh after 23 hours; other outputs retain their own freshness.
+     * Maximum age of a cached output, in milliseconds. `0` fetches fresh. Defaults to 1 day.
      */
     #[Optional]
     public ?int $maxAgeMs;
@@ -121,7 +121,7 @@ final class WebScrapeParams implements BaseModel
     public ?ScreenshotParams $screenshotParams;
 
     /**
-     * Shared browser and content settings. Content filters leave screenshots and original bytes unchanged.
+     * Browser and content settings shared by all outputs.
      */
     #[Optional]
     public ?SharedParams $sharedParams;
@@ -135,13 +135,13 @@ final class WebScrapeParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Total deadline, including navigation, actions, waiting, and all outputs. Defaults to 60000 milliseconds with behavior fail. Individual outputs have internal deadlines that reserve time to return completed outputs; timed-out outputs have success: false and data: null under either behavior. The overall request deadline remains enforced: fail returns an error if that deadline is reached. Use return-partial to allow the current page state and available outputs when the page is still loading. Partial responses set isPartial. Failed retrievals and incomplete captures are not cached; valid captured pieces may be cached independently. Fixed waits must fit before a response reserve of up to 5000 milliseconds (at most one quarter of the timeout) when using return-partial.
+     * Deadline for the whole request. Defaults to 60000 ms with `fail`. Fixed waits must end before it.
      */
     #[Optional]
     public ?TimeoutOpts $timeoutOpts;
 
     /**
-     * Zero data retention. Bypasses caches and uploads; excludes request/response content and tags from logs. Must be enabled for your organization.
+     * `enabled` turns on zero data retention. Your organization must have ZDR enabled.
      *
      * @var value-of<Zdr>|null $zdr
      */
@@ -223,7 +223,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Outputs to return. Enable at least one; omitted formats are false.
+     * Outputs to return. Set at least one to `true`.
      *
      * @param Formats|FormatsShape $formats
      */
@@ -236,7 +236,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * The URL to scrape.
+     * Public HTTP or HTTPS URL to scrape.
      */
     public function withURL(string $url): self
     {
@@ -247,7 +247,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Highlight options. Requires formats.highlights: true.
+     * Required when `formats.highlights` is `true`.
      *
      * @param HighlightsParams|HighlightsParamsShape $highlightsParams
      */
@@ -287,7 +287,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Markdown options. Requires formats.markdown: true.
+     * Markdown options. Requires `formats.markdown`.
      *
      * @param MarkdownParams|MarkdownParamsShape $markdownParams
      */
@@ -301,7 +301,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Maximum age of each cached output. Defaults to 1 day; 0 fetches fresh and updates the requested outputs. Compatible outputs are shared with the individual scrape endpoints. Image results with hosted files refresh after 23 hours; other outputs retain their own freshness.
+     * Maximum age of a cached output, in milliseconds. `0` fetches fresh. Defaults to 1 day.
      */
     public function withMaxAgeMs(int $maxAgeMs): self
     {
@@ -352,7 +352,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Shared browser and content settings. Content filters leave screenshots and original bytes unchanged.
+     * Browser and content settings shared by all outputs.
      *
      * @param SharedParams|SharedParamsShape $sharedParams
      */
@@ -378,7 +378,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Total deadline, including navigation, actions, waiting, and all outputs. Defaults to 60000 milliseconds with behavior fail. Individual outputs have internal deadlines that reserve time to return completed outputs; timed-out outputs have success: false and data: null under either behavior. The overall request deadline remains enforced: fail returns an error if that deadline is reached. Use return-partial to allow the current page state and available outputs when the page is still loading. Partial responses set isPartial. Failed retrievals and incomplete captures are not cached; valid captured pieces may be cached independently. Fixed waits must fit before a response reserve of up to 5000 milliseconds (at most one quarter of the timeout) when using return-partial.
+     * Deadline for the whole request. Defaults to 60000 ms with `fail`. Fixed waits must end before it.
      *
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
@@ -391,7 +391,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Zero data retention. Bypasses caches and uploads; excludes request/response content and tags from logs. Must be enabled for your organization.
+     * `enabled` turns on zero data retention. Your organization must have ZDR enabled.
      *
      * @param Zdr|value-of<Zdr> $zdr
      */

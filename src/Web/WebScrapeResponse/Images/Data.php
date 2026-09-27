@@ -42,7 +42,7 @@ final class Data implements BaseModel
     public ?string $classification;
 
     /**
-     * Hosted copy when file enrichment is requested and zdr is disabled. Valid for 24 hours from the original capture.
+     * Hosted image URL, valid for 24 hours after capture. Requires `file` enrichment and ZDR disabled.
      */
     #[Optional('fileUrl')]
     public ?string $fileURL;
@@ -135,7 +135,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Hosted copy when file enrichment is requested and zdr is disabled. Valid for 24 hours from the original capture.
+     * Hosted image URL, valid for 24 hours after capture. Requires `file` enrichment and ZDR disabled.
      */
     public function withFileURL(string $fileURL): self
     {

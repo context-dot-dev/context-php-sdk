@@ -46,9 +46,9 @@ final class BatchService implements BatchContract
     /**
      * @api
      *
-     * Check progress, and get download links once the batch finishes.
+     * Get batch progress and result download links. Result files are deleted 7 days after the batch finishes.
      *
-     * @param string $batchID ID of the batch to retrieve or cancel
+     * @param string $batchID batch ID
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -66,7 +66,7 @@ final class BatchService implements BatchContract
     /**
      * @api
      *
-     * List your batches from newest to oldest. Filter by status or continue with a cursor.
+     * List your batches, newest first, with optional filters.
      *
      * @param string $cursor cursor from the previous page
      * @param int $limit Batches per page. Defaults to 25.
@@ -107,9 +107,9 @@ final class BatchService implements BatchContract
     /**
      * @api
      *
-     * Permanently delete a finished batch and its stored results. Active batches must settle first.
+     * Permanently delete a finished batch and its results. Its webhook deliveries can no longer be retried.
      *
-     * @param string $batchID ID of the batch to retrieve or cancel
+     * @param string $batchID batch ID
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -127,9 +127,9 @@ final class BatchService implements BatchContract
     /**
      * @api
      *
-     * Stop a batch from starting new pages. In-progress pages finish, and unused credits are refunded.
+     * Stop a batch from starting new pages. Pages already in progress finish before the batch becomes cancelled.
      *
-     * @param string $batchID ID of the batch to retrieve or cancel
+     * @param string $batchID batch ID
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -147,9 +147,9 @@ final class BatchService implements BatchContract
     /**
      * @api
      *
-     * Page through a finished batch's results as JSON instead of downloading the NDJSON files.
+     * Page through a finished batch’s results as JSON. Results remain available for 7 days.
      *
-     * @param string $batchID ID of the batch to retrieve or cancel
+     * @param string $batchID batch ID
      * @param string $cursor next_cursor from the previous page
      * @param int $limit Records per page. Defaults to 25. A page can close early so its payload stays under ~8 MB; rely on next_cursor rather than counting records.
      * @param RequestOpts|null $requestOptions
@@ -173,13 +173,13 @@ final class BatchService implements BatchContract
     /**
      * @api
      *
-     * Scrape 25K URLs or crawl large websites asynchronously.
+     * Scrape up to 25,000 URLs, or crawl a site, asynchronously. Poll the batch ID or receive a webhook when it finishes.
      *
      * @param InputShape $input body param: Choose a URL list or a site crawl
      * @param list<string> $tags Body param: Tags stored on the batch. Filter the batch list by them later.
-     * @param Webhook|WebhookShape $webhook Body param: Completion webhook settings. Cannot be combined with webhookUrl. Omitting retry preserves legacy delivery; retry: {} opts into durable retries.
+     * @param Webhook|WebhookShape $webhook Body param: Where to send the batch's final-status event. Omit `retry` for one attempt; `{}` uses the default retry schedule.
      * @param string $webhookURL Body param: Legacy URL notified when the batch finishes. Preserves one best-effort attempt. Cannot be combined with webhook.
-     * @param string $idempotencyKey Header param: Any string unique to this submission. Retries with the same key return the original batch.
+     * @param string $idempotencyKey Header param: Unique key per submission. Retrying with the same key and body returns the original batch; a different body returns `409`.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

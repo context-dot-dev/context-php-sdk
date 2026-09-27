@@ -18,7 +18,11 @@ final class MonitorsExactChangeDetection implements BaseModel
     /** @use SdkModel<MonitorsExactChangeDetectionShape> */
     use SdkModel;
 
-    /** @var 'exact' $type */
+    /**
+     * Use `exact` to compare visible text or sitemap URLs.
+     *
+     * @var 'exact' $type
+     */
     #[Required]
     public string $type = 'exact';
 
@@ -38,6 +42,8 @@ final class MonitorsExactChangeDetection implements BaseModel
     }
 
     /**
+     * Use `exact` to compare visible text or sitemap URLs.
+     *
      * @param 'exact' $type
      */
     public function withType(string $type): self

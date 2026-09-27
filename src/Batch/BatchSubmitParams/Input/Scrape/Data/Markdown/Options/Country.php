@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\Markdown\Options;
 
 /**
- * Fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2).
+ * Fetch from this country (ISO 3166-1 alpha-2).
  */
 enum Country: string
 {

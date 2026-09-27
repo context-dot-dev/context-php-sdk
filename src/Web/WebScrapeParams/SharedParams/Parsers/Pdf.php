@@ -10,7 +10,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebScrapeParams\SharedParams\Parsers\Pdf\Ocr;
 
 /**
- * PDF text options for HTML, Markdown, and parsed fields.
+ * PDF page range and OCR.
  *
  * @phpstan-type PdfShape = array{
  *   endPage?: int|null, ocr?: null|Ocr|value-of<Ocr>, startPage?: int|null
@@ -22,13 +22,13 @@ final class Pdf implements BaseModel
     use SdkModel;
 
     /**
-     * Last page to parse. Must be at least startPage.
+     * Last page to parse. Must be at least `startPage`.
      */
     #[Optional]
     public ?int $endPage;
 
     /**
-     * Read text from scanned pages.
+     * Set `auto` to read scanned pages with OCR.
      *
      * @var value-of<Ocr>|null $ocr
      */
@@ -68,7 +68,7 @@ final class Pdf implements BaseModel
     }
 
     /**
-     * Last page to parse. Must be at least startPage.
+     * Last page to parse. Must be at least `startPage`.
      */
     public function withEndPage(int $endPage): self
     {
@@ -79,7 +79,7 @@ final class Pdf implements BaseModel
     }
 
     /**
-     * Read text from scanned pages.
+     * Set `auto` to read scanned pages with OCR.
      *
      * @param Ocr|value-of<Ocr> $ocr
      */

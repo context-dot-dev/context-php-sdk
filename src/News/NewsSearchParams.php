@@ -14,7 +14,7 @@ use ContextDev\News\NewsSearchParams\SearchBy;
 use ContextDev\News\NewsSearchParams\SortBy;
 
 /**
- * Searches live and historical company news for one company, identified in searchBy by name, domain, ticker (optionally disambiguated by exchange), or ISIN. Results can be filtered by one of publisher domain, publisher country, article language, or article type, optionally combined with a published-at date range, and include stable story IDs, source metadata, verified entity relevance, and cursor pagination.
+ * Find company news by name, domain, ticker, or ISIN. Filter articles and continue through results with a cursor.
  *
  * @see ContextDev\Services\NewsService::search()
  *
@@ -68,7 +68,7 @@ final class NewsSearchParams implements BaseModel
     public ?SortBy $sortBy;
 
     /**
-     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * Labels for filtering usage in the dashboard.
      *
      * @var list<string>|null $tags
      */
@@ -187,7 +187,7 @@ final class NewsSearchParams implements BaseModel
     }
 
     /**
-     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * Labels for filtering usage in the dashboard.
      *
      * @param list<string> $tags
      */

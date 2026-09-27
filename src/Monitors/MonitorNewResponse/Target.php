@@ -12,7 +12,7 @@ use ContextDev\Monitors\MonitorNewResponse\Target\MonitorsPageTarget;
 use ContextDev\Monitors\MonitorNewResponse\Target\MonitorsSitemapTarget;
 
 /**
- * Discriminated union describing what the monitor watches.
+ * What to watch: a page, a sitemap, or data extracted from a site.
  *
  * @phpstan-import-type MonitorsPageTargetShape from \ContextDev\Monitors\MonitorNewResponse\Target\MonitorsPageTarget
  * @phpstan-import-type MonitorsSitemapTargetShape from \ContextDev\Monitors\MonitorNewResponse\Target\MonitorsSitemapTarget

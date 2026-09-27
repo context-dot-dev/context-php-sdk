@@ -16,7 +16,7 @@ use ContextDev\People\PersonEnrichParams\TimeoutOpts;
 use ContextDev\People\PersonEnrichParams\Zdr;
 
 /**
- * Finds and normalizes the best available person candidate from additive identity clues, then assigns an identity match score from 0 to 100. Available on all paid plans. Successful requests cost 20 credits. Disposable and free email addresses (like gmail.com, yahoo.com) will throw a 422 error.
+ * Find a person from identity clues and return their profile with a match score. Requires a paid plan; free or disposable email addresses return 422.
  *
  * @see ContextDev\Services\PeopleService::enrich()
  *
@@ -44,28 +44,48 @@ final class PersonEnrichParams implements BaseModel
     use SdkModel;
     use SdkParams;
 
+    /**
+     * Company context to help identify the person. Provide a name or domain.
+     */
     #[Optional]
     public ?Company $company;
 
-    /** @var list<Education>|null $education */
+    /**
+     * Education history to help distinguish people with similar names.
+     *
+     * @var list<Education>|null $education
+     */
     #[Optional(list: Education::class)]
     public ?array $education;
 
+    /**
+     * Email address of the person to find.
+     */
     #[Optional]
     public ?string $email;
 
+    /**
+     * Location context to help identify the person. Provide a city, region, or country.
+     */
     #[Optional]
     public ?Location $location;
 
+    /**
+     * Person name. Without an email or person-profile URL, provide both first and last name plus company, education, or location.
+     */
     #[Optional]
     public ?Name $name;
 
-    /** @var list<string>|null $socialURLs */
+    /**
+     * Public profile URLs for the person. A person-profile URL can identify the person without a name.
+     *
+     * @var list<string>|null $socialURLs
+     */
     #[Optional('social_urls', list: 'string')]
     public ?array $socialURLs;
 
     /**
-     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * Labels for filtering usage in the dashboard.
      *
      * @var list<string>|null $tags
      */
@@ -73,13 +93,13 @@ final class PersonEnrichParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * Request deadline and what to return when it passes.
      */
     #[Optional]
     public ?TimeoutOpts $timeoutOpts;
 
     /**
-     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @var value-of<Zdr>|null $zdr
      */
@@ -132,6 +152,8 @@ final class PersonEnrichParams implements BaseModel
     }
 
     /**
+     * Company context to help identify the person. Provide a name or domain.
+     *
      * @param Company|CompanyShape $company
      */
     public function withCompany(Company|array $company): self
@@ -143,6 +165,8 @@ final class PersonEnrichParams implements BaseModel
     }
 
     /**
+     * Education history to help distinguish people with similar names.
+     *
      * @param list<Education|EducationShape> $education
      */
     public function withEducation(array $education): self
@@ -153,6 +177,9 @@ final class PersonEnrichParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Email address of the person to find.
+     */
     public function withEmail(string $email): self
     {
         $self = clone $this;
@@ -162,6 +189,8 @@ final class PersonEnrichParams implements BaseModel
     }
 
     /**
+     * Location context to help identify the person. Provide a city, region, or country.
+     *
      * @param Location|LocationShape $location
      */
     public function withLocation(Location|array $location): self
@@ -173,6 +202,8 @@ final class PersonEnrichParams implements BaseModel
     }
 
     /**
+     * Person name. Without an email or person-profile URL, provide both first and last name plus company, education, or location.
+     *
      * @param Name|NameShape $name
      */
     public function withName(Name|array $name): self
@@ -184,6 +215,8 @@ final class PersonEnrichParams implements BaseModel
     }
 
     /**
+     * Public profile URLs for the person. A person-profile URL can identify the person without a name.
+     *
      * @param list<string> $socialURLs
      */
     public function withSocialURLs(array $socialURLs): self
@@ -195,7 +228,7 @@ final class PersonEnrichParams implements BaseModel
     }
 
     /**
-     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * Labels for filtering usage in the dashboard.
      *
      * @param list<string> $tags
      */
@@ -208,7 +241,7 @@ final class PersonEnrichParams implements BaseModel
     }
 
     /**
-     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * Request deadline and what to return when it passes.
      *
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
@@ -221,7 +254,7 @@ final class PersonEnrichParams implements BaseModel
     }
 
     /**
-     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @param Zdr|value-of<Zdr> $zdr
      */

@@ -122,7 +122,7 @@ final class WebTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->web->mapUrls(domain: 'xxx');
+        $result = $this->client->web->mapUrls(domain: 'stripe.com');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(WebMapURLsResponse::class, $result);
@@ -136,7 +136,7 @@ final class WebTest extends TestCase
         }
 
         $result = $this->client->web->mapUrls(
-            domain: 'xxx',
+            domain: 'stripe.com',
             headers: ['foo' => 'J!'],
             includeSubdomains: true,
             maxLinks: 1,
@@ -262,7 +262,7 @@ final class WebTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->web->search(query: 'x');
+        $result = $this->client->web->search(query: 'Stripe API authentication');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(WebSearchResponse::class, $result);
@@ -276,7 +276,7 @@ final class WebTest extends TestCase
         }
 
         $result = $this->client->web->search(
-            query: 'x',
+            query: 'Stripe API authentication',
             country: 'af',
             excludeDomains: ['string'],
             freshness: 'last_24_hours',
@@ -335,7 +335,7 @@ final class WebTest extends TestCase
             includeSelectors: ['string'],
             maxAgeMs: 0,
             maxDepth: 0,
-            maxPages: 1,
+            maxPages: 10,
             pdf: ['end' => 1, 'ocr' => true, 'shouldParse' => true, 'start' => 1],
             settleAnimations: true,
             shortenBase64Images: true,

@@ -32,7 +32,7 @@ final class P implements BaseModel
     public array $fontFallbacks;
 
     /**
-     * Primary face (first family in the computed stack).
+     * First font in the stack.
      */
     #[Required]
     public string $fontFamily;
@@ -122,7 +122,7 @@ final class P implements BaseModel
     }
 
     /**
-     * Primary face (first family in the computed stack).
+     * First font in the stack.
      */
     public function withFontFamily(string $fontFamily): self
     {

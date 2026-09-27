@@ -11,7 +11,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Monitors\MonitorListRunsParams\Status;
 
 /**
- * List monitor runs.
+ * List a monitor’s runs, newest first.
  *
  * @see ContextDev\Services\MonitorsService::listRuns()
  *

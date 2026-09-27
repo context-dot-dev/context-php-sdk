@@ -63,12 +63,12 @@ interface WebContract
     /**
      * @api
      *
-     * @param string $task What to research and answer, in plain language. Naming a domain in the task (for example "pricing on context.dev") makes the agent read that site before it searches.
-     * @param array<string,mixed> $jsonFormat An example object with placeholder values (for example {"pricing_page_url": "", "plans": [{"name": "", "price": 0}]}). Object keys and value types are preserved; unknown values may be null. Empty arrays accept any JSON items. Defaults to {"result": ""}. Maximum 8 levels, 500 values, and 16000 characters.
-     * @param Mode|value-of<Mode> $mode Research level: fast uses a smaller model and research budget for 10 credits; ultra uses deeper reasoning and research for 100 credits. Defaults to ultra. Only successful requests consume credits.
-     * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
-     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
-     * @param Zdr|value-of<Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * @param string $task Research task. Name a domain to have it read before searching.
+     * @param array<string,mixed> $jsonFormat Example answer object, not JSON Schema. Up to 8 levels, 500 values, and 16000 characters; unknowns may be null.
+     * @param Mode|value-of<Mode> $mode `fast` for short tasks; `ultra` for deeper research (default)
+     * @param list<string> $tags labels for filtering usage in the dashboard
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts request deadline and what to return when it passes
+     * @param Zdr|value-of<Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -88,9 +88,9 @@ interface WebContract
      *
      * @param string $domain Company domain to analyze, such as `stripe.com`. Full http(s) URLs are accepted and normalized to their domain.
      * @param int $numCompetitors Exact number of direct competitors to return. Defaults to 5.
-     * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
-     * @param \ContextDev\Web\WebExtractCompetitorsParams\TimeoutOpts|TimeoutOptsShape1 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
-     * @param \ContextDev\Web\WebExtractCompetitorsParams\Zdr|value-of<\ContextDev\Web\WebExtractCompetitorsParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * @param list<string> $tags Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * @param \ContextDev\Web\WebExtractCompetitorsParams\TimeoutOpts|TimeoutOptsShape1 $timeoutOpts request deadline and what to return when it passes
+     * @param \ContextDev\Web\WebExtractCompetitorsParams\Zdr|value-of<\ContextDev\Web\WebExtractCompetitorsParams\Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -108,12 +108,12 @@ interface WebContract
      * @api
      *
      * @param ColorScheme|value-of<ColorScheme> $colorScheme Optional browser color scheme to emulate for websites that respond to prefers-color-scheme. This value is part of the styleguide cache key.
-     * @param string $directURL A specific URL to fetch the styleguide from directly, bypassing domain resolution (e.g., 'https://example.com/design-system'). When provided, the styleguide is extracted from this exact URL. You must provide either 'domain' or 'directUrl', but not both.
+     * @param string $directURL Exact URL to inspect. Provide either `domain` or `directUrl`, not both.
      * @param string $domain Domain name to extract styleguide from (e.g., 'example.com', 'google.com'). The domain will be automatically normalized and validated. You must provide either 'domain' or 'directUrl', but not both.
-     * @param int|null $maxAgeMs Maximum age in milliseconds for cached brand data before the API performs a hard refresh. Defaults to 3 months (7776000000 ms). Set to 0 to always perform a hard refresh. Negative values are clamped to 0; values above 1 year (31536000000 ms) are clamped to 1 year.
-     * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
-     * @param \ContextDev\Web\WebExtractStyleguideParams\TimeoutOpts|TimeoutOptsShape2 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
-     * @param \ContextDev\Web\WebExtractStyleguideParams\Zdr|value-of<\ContextDev\Web\WebExtractStyleguideParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * @param int|null $maxAgeMs Maximum age of cached brand data in ms. Defaults to 3 months; clamped to 0–1 year. `0` refreshes.
+     * @param list<string> $tags Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * @param \ContextDev\Web\WebExtractStyleguideParams\TimeoutOpts|TimeoutOptsShape2 $timeoutOpts request deadline and what to return when it passes
+     * @param \ContextDev\Web\WebExtractStyleguideParams\Zdr|value-of<\ContextDev\Web\WebExtractStyleguideParams\Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -132,16 +132,16 @@ interface WebContract
     /**
      * @api
      *
-     * @param string $domain Domain to build a sitemap for
-     * @param array<string,string> $headers Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
-     * @param bool $includeSubdomains When true, discover and include public pages and sitemaps on subdomains of the requested domain. Defaults to false.
-     * @param int $maxLinks Maximum number of links to return from the sitemap crawl. Defaults to 10,000. Minimum is 1, maximum is 100,000.
-     * @param string $search Optional search phrase. When provided, the crawled sitemap is filtered to the pages whose URLs are about that phrase, most relevant first, and the request costs 2 credits instead of 1.
-     * @param string $sitemapURL Optional explicit sitemap URL. When provided, exactly this sitemap is crawled instead of discovering the domain's sitemaps.
-     * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
-     * @param \ContextDev\Web\WebMapURLsParams\TimeoutOpts|TimeoutOptsShape3 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * @param string $domain Domain to map, e.g. `stripe.com`.
+     * @param array<string,string> $headers HTTP headers for the target origin. Non-empty headers bypass caching.
+     * @param bool $includeSubdomains include URLs on subdomains
+     * @param int $maxLinks maximum number of URLs to return
+     * @param string $search filter URLs by a topic or phrase, most relevant first
+     * @param string $sitemapURL Fetch this sitemap instead of discovering sitemaps. Must belong to the domain or a subdomain.
+     * @param list<string> $tags Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * @param \ContextDev\Web\WebMapURLsParams\TimeoutOpts|TimeoutOptsShape3 $timeoutOpts request deadline and what to return when it passes
      * @param string $urlRegex Optional RE2-compatible regex pattern. Only URLs matching this pattern are returned and counted against maxLinks.
-     * @param \ContextDev\Web\WebMapURLsParams\Zdr|value-of<\ContextDev\Web\WebMapURLsParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * @param \ContextDev\Web\WebMapURLsParams\Zdr|value-of<\ContextDev\Web\WebMapURLsParams\Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -163,20 +163,20 @@ interface WebContract
     /**
      * @api
      *
-     * @param Formats|FormatsShape $formats Outputs to return. Enable at least one; omitted formats are false.
-     * @param string $url the URL to scrape
-     * @param HighlightsParams|HighlightsParamsShape $highlightsParams Highlight options. Requires formats.highlights: true.
+     * @param Formats|FormatsShape $formats Outputs to return. Set at least one to `true`.
+     * @param string $url public HTTP or HTTPS URL to scrape
+     * @param HighlightsParams|HighlightsParamsShape $highlightsParams Required when `formats.highlights` is `true`.
      * @param ImageParams|ImageParamsShape $imageParams Image options. Requires formats.images: true.
      * @param JsonParams|JsonParamsShape $jsonParams Required when formats.json is true.
-     * @param MarkdownParams|MarkdownParamsShape $markdownParams Markdown options. Requires formats.markdown: true.
-     * @param int $maxAgeMs Maximum age of each cached output. Defaults to 1 day; 0 fetches fresh and updates the requested outputs. Compatible outputs are shared with the individual scrape endpoints. Image results with hosted files refresh after 23 hours; other outputs retain their own freshness.
+     * @param MarkdownParams|MarkdownParamsShape $markdownParams Markdown options. Requires `formats.markdown`.
+     * @param int $maxAgeMs Maximum age of a cached output, in milliseconds. `0` fetches fresh. Defaults to 1 day.
      * @param ParseParams|ParseParamsShape $parseParams Required when formats.parse is true.
      * @param ProductParams|ProductParamsShape $productParams Product options. Requires formats.product: true.
      * @param ScreenshotParams|ScreenshotParamsShape $screenshotParams Screenshot options. Requires formats.screenshot: true.
-     * @param SharedParams|SharedParamsShape $sharedParams Shared browser and content settings. Content filters leave screenshots and original bytes unchanged.
+     * @param SharedParams|SharedParamsShape $sharedParams browser and content settings shared by all outputs
      * @param list<string> $tags Labels for tracking request usage. Not retained when zdr is enabled.
-     * @param \ContextDev\Web\WebScrapeParams\TimeoutOpts|TimeoutOptsShape4 $timeoutOpts Total deadline, including navigation, actions, waiting, and all outputs. Defaults to 60000 milliseconds with behavior fail. Individual outputs have internal deadlines that reserve time to return completed outputs; timed-out outputs have success: false and data: null under either behavior. The overall request deadline remains enforced: fail returns an error if that deadline is reached. Use return-partial to allow the current page state and available outputs when the page is still loading. Partial responses set isPartial. Failed retrievals and incomplete captures are not cached; valid captured pieces may be cached independently. Fixed waits must fit before a response reserve of up to 5000 milliseconds (at most one quarter of the timeout) when using return-partial.
-     * @param \ContextDev\Web\WebScrapeParams\Zdr|value-of<\ContextDev\Web\WebScrapeParams\Zdr> $zdr Zero data retention. Bypasses caches and uploads; excludes request/response content and tags from logs. Must be enabled for your organization.
+     * @param \ContextDev\Web\WebScrapeParams\TimeoutOpts|TimeoutOptsShape4 $timeoutOpts Deadline for the whole request. Defaults to 60000 ms with `fail`. Fixed waits must end before it.
+     * @param \ContextDev\Web\WebScrapeParams\Zdr|value-of<\ContextDev\Web\WebScrapeParams\Zdr> $zdr `enabled` turns on zero data retention. Your organization must have ZDR enabled.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -206,7 +206,7 @@ interface WebContract
      *
      * @param bool $clearPopups Optional parameter for comprehensive popup cleanup. If 'true', the browser dismisses detected cookie/consent UI and clears other detected obstructive popups and overlays before capture. If 'false' or not provided, this parameter requests no cleanup; handleCookiePopup can still request cookie/consent handling independently.
      * @param \ContextDev\Web\WebScreenshotParams\ColorScheme|value-of<\ContextDev\Web\WebScreenshotParams\ColorScheme> $colorScheme Optional parameter to choose the site's visual theme in the screenshot. Use 'light' or 'dark' when the site offers both appearances.
-     * @param Country|value-of<Country> $country fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2)
+     * @param Country|value-of<Country> $country fetch from this country (ISO 3166-1 alpha-2)
      * @param string $directURL A specific URL to screenshot directly, bypassing domain resolution (e.g., 'https://example.com/pricing'). When provided, the screenshot is taken of this exact URL. You must provide either 'domain' or 'directUrl', but not both.
      * @param string $domain Domain name to take screenshot of (e.g., 'example.com', 'google.com'). The domain will be automatically normalized and validated. You must provide either 'domain' or 'directUrl', but not both.
      * @param FullScreenshot|value-of<FullScreenshot> $fullScreenshot Optional parameter to determine screenshot type. If 'true', takes a full page screenshot capturing all content. If 'false' or not provided, takes a viewport screenshot (standard browser view).
@@ -215,11 +215,11 @@ interface WebContract
      * @param int|null $maxAgeMs Return a cached screenshot if a prior screenshot for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always capture fresh.
      * @param Page|value-of<Page> $page Optional parameter to specify which page type to screenshot. If provided, the system will scrape the domain's links and use heuristics to find the most appropriate URL for the specified page type (30 supported languages). If not provided, screenshots the main domain landing page. Only applicable when using 'domain', not 'directUrl'.
      * @param int|null $scrollOffset Optional vertical scroll offset in pixels for capturing a long page in viewport-sized chunks. When provided, the full page is captured once and the returned image is the viewport-sized slice that begins at this Y offset (e.g. request scrollOffset=0, then 1080, then 2160 to walk a 1920x1080 landing page top to bottom). The final slice may be shorter than the viewport height. Takes precedence over fullScreenshot. Max: 100000.
-     * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
-     * @param \ContextDev\Web\WebScreenshotParams\TimeoutOpts|TimeoutOptsShape5 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * @param list<string> $tags Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * @param \ContextDev\Web\WebScreenshotParams\TimeoutOpts|TimeoutOptsShape5 $timeoutOpts request deadline and what to return when it passes
      * @param Viewport|ViewportShape $viewport Optional browser viewport dimensions for the screenshot. Defaults to 1920x1080.
      * @param int|null $waitForMs Optional browser wait time in milliseconds after initial page load before taking the screenshot. Min: 0. Max: 30000 (30 seconds). Defaults to 3000 ms when omitted. When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
-     * @param \ContextDev\Web\WebScreenshotParams\Zdr|value-of<\ContextDev\Web\WebScreenshotParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * @param \ContextDev\Web\WebScreenshotParams\Zdr|value-of<\ContextDev\Web\WebScreenshotParams\Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -254,10 +254,10 @@ interface WebContract
      * @param list<string> $includeDomains Allowlist — only return results from these domains. Example: ["arxiv.org", "github.com"].
      * @param MarkdownOptions|MarkdownOptionsShape $markdownOptions Inline Markdown scraping for each result. Set `enabled: true` to activate.
      * @param int $numResults Number of results to request and return (10–100). Defaults to 10.
-     * @param bool $queryFanout expand the query into multiple parallel variants for broader recall
-     * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
-     * @param \ContextDev\Web\WebSearchParams\TimeoutOpts|TimeoutOptsShape6 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
-     * @param \ContextDev\Web\WebSearchParams\Zdr|value-of<\ContextDev\Web\WebSearchParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * @param bool $queryFanout currently has no effect
+     * @param list<string> $tags labels for filtering usage in the dashboard
+     * @param \ContextDev\Web\WebSearchParams\TimeoutOpts|TimeoutOptsShape6 $timeoutOpts request deadline and what to return when it passes
+     * @param \ContextDev\Web\WebSearchParams\Zdr|value-of<\ContextDev\Web\WebSearchParams\Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -280,27 +280,27 @@ interface WebContract
     /**
      * @api
      *
-     * @param string $url The starting URL for the crawl (must include http:// or https:// protocol)
-     * @param \ContextDev\Web\WebWebCrawlMdParams\Country|value-of<\ContextDev\Web\WebWebCrawlMdParams\Country> $country fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2)
-     * @param list<string> $excludeSelectors CSS selectors to remove before each crawled page is converted to Markdown. Applied after includeSelectors. Exclusion takes precedence: an element matching both is removed. Examples: "nav", "footer", ".ad-banner", "[aria-hidden=true]".
+     * @param string $url start URL, including `http://` or `https://`
+     * @param \ContextDev\Web\WebWebCrawlMdParams\Country|value-of<\ContextDev\Web\WebWebCrawlMdParams\Country> $country fetch from this country (ISO 3166-1 alpha-2)
+     * @param list<string> $excludeSelectors Remove matching elements after inclusions. Exclusions take precedence.
      * @param bool $followSubdomains When true, follow links on subdomains of the starting URL's domain (e.g. docs.example.com when starting from example.com). www and apex are always treated as equivalent.
      * @param bool $includeFrames when true, the contents of iframes are rendered to Markdown for each crawled page
      * @param bool $includeImages Include image references in the Markdown output
      * @param bool $includeLinks Preserve hyperlinks in the Markdown output
-     * @param list<string> $includeSelectors CSS selectors. When provided, only matching HTML subtrees (and their descendants) are kept before each crawled page is converted to Markdown. When omitted, the entire document is kept. Examples: "article.main", "#content", "[role=main]".
-     * @param int $maxAgeMs Return a cached result if a prior scrape for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always scrape fresh.
+     * @param list<string> $includeSelectors keep matching HTML subtrees before converting each page to Markdown
+     * @param int $maxAgeMs Maximum cache age in milliseconds. Defaults to 1 day; `0` fetches fresh.
      * @param int $maxDepth Maximum link depth from the starting URL (0 = only the starting page)
-     * @param int $maxPages Maximum number of pages to crawl. Hard cap: 500.
-     * @param Pdf|PdfShape $pdf PDF parsing controls. Use start/end to limit text extraction and embedded-image detection/OCR to an inclusive 1-based page range.
-     * @param bool $settleAnimations When true, waits briefly for CSS and transition animations to settle before extracting each crawled page. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
+     * @param int $maxPages maximum pages to crawl
+     * @param Pdf|PdfShape $pdf PDF handling. `start`/`end` limit parsing to an inclusive, 1-based page range.
+     * @param bool $settleAnimations wait briefly for CSS animations and transitions to settle before reading each page
      * @param bool $shortenBase64Images Truncate base64-encoded image data in the Markdown output
-     * @param int $stopAfterMs Soft time budget for the crawl in milliseconds. After each scrape, the crawler checks the elapsed time and, if exceeded, returns the pages collected so far instead of continuing. Min: 10000 (10s). Max: 110000 (110s). Default: 80000 (80s).
-     * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
-     * @param \ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts|TimeoutOptsShape7 $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * @param int $stopAfterMs Soft crawl deadline in milliseconds. Returns pages collected before the next deadline check.
+     * @param list<string> $tags labels for filtering usage in the dashboard
+     * @param \ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts|TimeoutOptsShape7 $timeoutOpts request deadline and what to return when it passes
      * @param string $urlRegex Regex pattern. Only URLs matching this pattern will be followed and scraped. An automatic prefix scope in the form ^<starting URL> follows a redirect of the starting page.
      * @param bool $useMainContentOnly Extract only the main content, stripping headers, footers, sidebars, and navigation
      * @param int $waitForMs Browser wait time in milliseconds after initial page load for each crawled page. Defaults to 3500 (3.5 seconds). Min: 0. Max: 30000 (30 seconds).
-     * @param \ContextDev\Web\WebWebCrawlMdParams\Zdr|value-of<\ContextDev\Web\WebWebCrawlMdParams\Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * @param \ContextDev\Web\WebWebCrawlMdParams\Zdr|value-of<\ContextDev\Web\WebWebCrawlMdParams\Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

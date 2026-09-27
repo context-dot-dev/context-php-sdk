@@ -30,13 +30,13 @@ final class LogGetResponse implements BaseModel
     public Data $data;
 
     /**
-     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
      */
     #[Required('request_id')]
     public string $requestID;
 
     /**
-     * Credit usage, included whenever a valid API key is provided.
+     * Credits this request used and your remaining balance.
      */
     #[Optional('key_metadata')]
     public ?KeyMetadata $keyMetadata;
@@ -95,7 +95,7 @@ final class LogGetResponse implements BaseModel
     }
 
     /**
-     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
      */
     public function withRequestID(string $requestID): self
     {
@@ -106,7 +106,7 @@ final class LogGetResponse implements BaseModel
     }
 
     /**
-     * Credit usage, included whenever a valid API key is provided.
+     * Credits this request used and your remaining balance.
      *
      * @param KeyMetadata|KeyMetadataShape $keyMetadata
      */

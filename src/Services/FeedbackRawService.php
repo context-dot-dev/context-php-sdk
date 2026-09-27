@@ -14,7 +14,7 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\FeedbackRawContract;
 
 /**
- * Report bugs, docs mismatches, and friction with any Context.dev API. Submissions cost no credits and use a separate rate limit.
+ * Report API issues and documentation mismatches.
  *
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
@@ -29,7 +29,7 @@ final class FeedbackRawService implements FeedbackRawContract
     /**
      * @api
      *
-     * Report a problem with a Context.dev API call, docs page, SDK, or CLI. Include request_id, url, or both.
+     * Report an API issue or documentation mismatch, including request IDs when available.
      *
      * @param array{
      *   category: Category|value-of<Category>,

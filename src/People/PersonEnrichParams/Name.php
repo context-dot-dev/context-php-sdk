@@ -9,6 +9,8 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
+ * Person name. Without an email or person-profile URL, provide both first and last name plus company, education, or location.
+ *
  * @phpstan-type NameShape = array{first?: string|null, last?: string|null}
  */
 final class Name implements BaseModel
@@ -16,9 +18,15 @@ final class Name implements BaseModel
     /** @use SdkModel<NameShape> */
     use SdkModel;
 
+    /**
+     * First or given name.
+     */
     #[Optional]
     public ?string $first;
 
+    /**
+     * Last or family name.
+     */
     #[Optional]
     public ?string $last;
 
@@ -42,6 +50,9 @@ final class Name implements BaseModel
         return $self;
     }
 
+    /**
+     * First or given name.
+     */
     public function withFirst(string $first): self
     {
         $self = clone $this;
@@ -50,6 +61,9 @@ final class Name implements BaseModel
         return $self;
     }
 
+    /**
+     * Last or family name.
+     */
     public function withLast(string $last): self
     {
         $self = clone $this;

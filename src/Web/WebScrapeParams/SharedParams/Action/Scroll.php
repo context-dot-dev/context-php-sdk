@@ -29,18 +29,33 @@ final class Scroll implements BaseModel
     /** @use SdkModel<ScrollShape> */
     use SdkModel;
 
-    /** @var 'scroll' $type */
+    /**
+     * Use `scroll` to move through the page or a container.
+     *
+     * @var 'scroll' $type
+     */
     #[Required]
     public string $type = 'scroll';
 
-    /** @var AmountVariants|null $amount */
+    /**
+     * Distance per scroll: pixels, one `viewport`, or `max` to reach the end.
+     *
+     * @var AmountVariants|null $amount
+     */
     #[Optional(union: Amount::class)]
     public int|string|null $amount;
 
-    /** @var value-of<Direction>|null $direction */
+    /**
+     * Direction to scroll.
+     *
+     * @var value-of<Direction>|null $direction
+     */
     #[Optional(enum: Direction::class)]
     public ?string $direction;
 
+    /**
+     * Maximum number of scroll steps for this action.
+     */
     #[Optional]
     public ?int $maxScrolls;
 
@@ -80,6 +95,8 @@ final class Scroll implements BaseModel
     }
 
     /**
+     * Use `scroll` to move through the page or a container.
+     *
      * @param 'scroll' $type
      */
     public function withType(string $type): self
@@ -91,6 +108,8 @@ final class Scroll implements BaseModel
     }
 
     /**
+     * Distance per scroll: pixels, one `viewport`, or `max` to reach the end.
+     *
      * @param AmountShape $amount
      */
     public function withAmount(int|UnionMember1|string $amount): self
@@ -102,6 +121,8 @@ final class Scroll implements BaseModel
     }
 
     /**
+     * Direction to scroll.
+     *
      * @param Direction|value-of<Direction> $direction
      */
     public function withDirection(Direction|string $direction): self
@@ -112,6 +133,9 @@ final class Scroll implements BaseModel
         return $self;
     }
 
+    /**
+     * Maximum number of scroll steps for this action.
+     */
     public function withMaxScrolls(int $maxScrolls): self
     {
         $self = clone $this;

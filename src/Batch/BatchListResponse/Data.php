@@ -53,19 +53,19 @@ final class Data implements BaseModel
     use SdkModel;
 
     /**
-     * Batch ID used to retrieve or cancel the job.
+     * Batch ID.
      */
     #[Required]
     public string $id;
 
     /**
-     * The crawl controls as submitted, so the limits requested can be compared against what the crawl reached.
+     * Crawl settings as submitted.
      */
     #[Required]
     public ?CrawlControls $crawl;
 
     /**
-     * What this batch has done to your credit balance.
+     * Batch credit usage and settlement.
      */
     #[Required]
     public Credits $credits;
@@ -85,13 +85,13 @@ final class Data implements BaseModel
     public string $format;
 
     /**
-     * What submission took in, and what it charged for.
+     * What the submission accepted.
      */
     #[Required]
     public Intake $input;
 
     /**
-     * How pages were selected. Matches `input.mode` on the submit request.
+     * `scrape` (URL list) or `crawl`.
      *
      * @var value-of<Mode> $mode
      */
@@ -113,7 +113,7 @@ final class Data implements BaseModel
     public Progress $progress;
 
     /**
-     * Download links, available once the batch reaches a final status and null before then. GET /batch/{batch_id}/results serves the same records as paginated JSON.
+     * Result download links; null until the batch finishes. Files are deleted 7 days after the batch finishes.
      */
     #[Required]
     public ?Results $results;
@@ -236,7 +236,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Batch ID used to retrieve or cancel the job.
+     * Batch ID.
      */
     public function withID(string $id): self
     {
@@ -247,7 +247,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * The crawl controls as submitted, so the limits requested can be compared against what the crawl reached.
+     * Crawl settings as submitted.
      *
      * @param CrawlControls|CrawlControlsShape|null $crawl
      */
@@ -260,7 +260,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * What this batch has done to your credit balance.
+     * Batch credit usage and settlement.
      *
      * @param Credits|CreditsShape $credits
      */
@@ -299,7 +299,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * What submission took in, and what it charged for.
+     * What the submission accepted.
      *
      * @param Intake|IntakeShape $input
      */
@@ -312,7 +312,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * How pages were selected. Matches `input.mode` on the submit request.
+     * `scrape` (URL list) or `crawl`.
      *
      * @param Mode|value-of<Mode> $mode
      */
@@ -351,7 +351,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Download links, available once the batch reaches a final status and null before then. GET /batch/{batch_id}/results serves the same records as paginated JSON.
+     * Result download links; null until the batch finishes. Files are deleted 7 days after the batch finishes.
      *
      * @param Results|ResultsShape|null $results
      */

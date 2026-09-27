@@ -13,7 +13,7 @@ use ContextDev\Industry\IndustryRetrieveNaicsParams\TimeoutOpts;
 use ContextDev\Industry\IndustryRetrieveNaicsParams\Zdr;
 
 /**
- * Classify any brand into 2022 NAICS industry codes from its domain or name.
+ * Classify a company into NAICS industry codes.
  *
  * @see ContextDev\Services\IndustryService::retrieveNaics()
  *
@@ -53,7 +53,7 @@ final class IndustryRetrieveNaicsParams implements BaseModel
     public ?int $minResults;
 
     /**
-     * Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      *
      * @var list<string>|null $tags
      */
@@ -61,13 +61,13 @@ final class IndustryRetrieveNaicsParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * Request deadline and what to return when it passes.
      */
     #[Optional]
     public ?TimeoutOpts $timeoutOpts;
 
     /**
-     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @var value-of<Zdr>|null $zdr
      */
@@ -157,7 +157,7 @@ final class IndustryRetrieveNaicsParams implements BaseModel
     }
 
     /**
-     * Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      *
      * @param list<string> $tags
      */
@@ -170,7 +170,7 @@ final class IndustryRetrieveNaicsParams implements BaseModel
     }
 
     /**
-     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * Request deadline and what to return when it passes.
      *
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
@@ -183,7 +183,7 @@ final class IndustryRetrieveNaicsParams implements BaseModel
     }
 
     /**
-     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @param Zdr|value-of<Zdr> $zdr
      */

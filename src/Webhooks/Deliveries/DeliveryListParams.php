@@ -13,7 +13,7 @@ use ContextDev\Webhooks\Deliveries\DeliveryListParams\Status;
 use ContextDev\Webhooks\Deliveries\DeliveryListParams\Type;
 
 /**
- * List your batch or monitor webhook deliveries, newest first.
+ * List batch and monitor webhook deliveries from the last 30 days.
  *
  * @see ContextDev\Services\Webhooks\DeliveriesService::list()
  *
@@ -76,7 +76,7 @@ final class DeliveryListParams implements BaseModel
     public ?string $status;
 
     /**
-     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * Labels for filtering usage in the dashboard.
      *
      * @var list<string>|null $tags
      */
@@ -221,7 +221,7 @@ final class DeliveryListParams implements BaseModel
     }
 
     /**
-     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * Labels for filtering usage in the dashboard.
      *
      * @param list<string> $tags
      */

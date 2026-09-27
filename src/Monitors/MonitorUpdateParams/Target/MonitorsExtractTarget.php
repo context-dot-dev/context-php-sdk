@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Watch the monitor-relevant pages of a site for meaningful changes. A crawl guided by `schema`/`instructions` selects up to `max_pages` relevant pages to track; each run re-checks exactly those pages, and confirmed content changes are judged for relevance against the monitor's `instructions` (and `schema`, when provided). The tracked page set is refreshed by a periodic re-discovery crawl.
+ * Track relevant pages selected by `schema` and `instructions`; refresh the page set periodically.
  *
  * @phpstan-type MonitorsExtractTargetShape = array{
  *   instructions: string,
@@ -27,7 +27,11 @@ final class MonitorsExtractTarget implements BaseModel
     /** @use SdkModel<MonitorsExtractTargetShape> */
     use SdkModel;
 
-    /** @var 'extract' $type */
+    /**
+     * Use `extract` to watch structured data across selected pages.
+     *
+     * @var 'extract' $type
+     */
     #[Required]
     public string $type = 'extract';
 
@@ -43,6 +47,9 @@ final class MonitorsExtractTarget implements BaseModel
     #[Required]
     public string $url;
 
+    /**
+     * Allow page discovery on subdomains of the target site.
+     */
     #[Optional('follow_subdomains')]
     public ?bool $followSubdomains;
 
@@ -59,7 +66,7 @@ final class MonitorsExtractTarget implements BaseModel
     public ?int $maxPages;
 
     /**
-     * JSON Schema describing the data you care about. It is used three ways: it guides which pages are selected for tracking, it gives the change judge extra context on which changes matter (alongside `instructions`), and it defines the shape of the baseline `data` snapshot on GET /monitors/{monitor_id} (refreshed at most about once a day). It is not a response format for changes: change events and webhook payloads always contain diffs, summaries, and evidence excerpts — never data in this schema's shape. If omitted, a default summary + key-points schema is used.
+     * JSON Schema for page selection and the baseline snapshot. Changes return diffs and evidence.
      *
      * @var array<string,mixed>|null $schema
      */
@@ -125,6 +132,8 @@ final class MonitorsExtractTarget implements BaseModel
     }
 
     /**
+     * Use `extract` to watch structured data across selected pages.
+     *
      * @param 'extract' $type
      */
     public function withType(string $type): self
@@ -146,6 +155,9 @@ final class MonitorsExtractTarget implements BaseModel
         return $self;
     }
 
+    /**
+     * Allow page discovery on subdomains of the target site.
+     */
     public function withFollowSubdomains(bool $followSubdomains): self
     {
         $self = clone $this;
@@ -177,7 +189,7 @@ final class MonitorsExtractTarget implements BaseModel
     }
 
     /**
-     * JSON Schema describing the data you care about. It is used three ways: it guides which pages are selected for tracking, it gives the change judge extra context on which changes matter (alongside `instructions`), and it defines the shape of the baseline `data` snapshot on GET /monitors/{monitor_id} (refreshed at most about once a day). It is not a response format for changes: change events and webhook payloads always contain diffs, summaries, and evidence excerpts — never data in this schema's shape. If omitted, a default summary + key-points schema is used.
+     * JSON Schema for page selection and the baseline snapshot. Changes return diffs and evidence.
      *
      * @param array<string,mixed> $schema
      */

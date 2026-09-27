@@ -81,7 +81,7 @@ final class Link implements BaseModel
     public string $minHeight;
 
     /**
-     * Sampled minimum width of the button box (typically px).
+     * Minimum width (usually px).
      */
     #[Required]
     public string $minWidth;
@@ -311,7 +311,7 @@ final class Link implements BaseModel
     }
 
     /**
-     * Sampled minimum width of the button box (typically px).
+     * Minimum width (usually px).
      */
     public function withMinWidth(string $minWidth): self
     {

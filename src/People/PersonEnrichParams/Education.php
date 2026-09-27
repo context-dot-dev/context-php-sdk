@@ -24,15 +24,27 @@ final class Education implements BaseModel
     /** @use SdkModel<EducationShape> */
     use SdkModel;
 
+    /**
+     * Degree or qualification earned.
+     */
     #[Optional]
     public ?string $degree;
 
+    /**
+     * Subject or major studied.
+     */
     #[Optional('field_of_study')]
     public ?string $fieldOfStudy;
 
+    /**
+     * Four-digit graduation year.
+     */
     #[Optional('graduation_year')]
     public ?int $graduationYear;
 
+    /**
+     * School or university, identified by name or domain.
+     */
     #[Optional]
     public ?Institution $institution;
 
@@ -64,6 +76,9 @@ final class Education implements BaseModel
         return $self;
     }
 
+    /**
+     * Degree or qualification earned.
+     */
     public function withDegree(string $degree): self
     {
         $self = clone $this;
@@ -72,6 +87,9 @@ final class Education implements BaseModel
         return $self;
     }
 
+    /**
+     * Subject or major studied.
+     */
     public function withFieldOfStudy(string $fieldOfStudy): self
     {
         $self = clone $this;
@@ -80,6 +98,9 @@ final class Education implements BaseModel
         return $self;
     }
 
+    /**
+     * Four-digit graduation year.
+     */
     public function withGraduationYear(int $graduationYear): self
     {
         $self = clone $this;
@@ -89,6 +110,8 @@ final class Education implements BaseModel
     }
 
     /**
+     * School or university, identified by name or domain.
+     *
      * @param Institution|InstitutionShape $institution
      */
     public function withInstitution(Institution|array $institution): self

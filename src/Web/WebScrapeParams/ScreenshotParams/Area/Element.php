@@ -17,7 +17,7 @@ final class Element implements BaseModel
     use SdkModel;
 
     /**
-     * Must match one visible element.
+     * CSS selector matching exactly one visible element.
      */
     #[Required]
     public string $selector;
@@ -56,7 +56,7 @@ final class Element implements BaseModel
     }
 
     /**
-     * Must match one visible element.
+     * CSS selector matching exactly one visible element.
      */
     public function withSelector(string $selector): self
     {

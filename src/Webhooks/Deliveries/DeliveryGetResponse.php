@@ -101,7 +101,7 @@ final class DeliveryGetResponse implements BaseModel
     public RetryConfig $retry;
 
     /**
-     * Manual retry deadline, seven days after event creation.
+     * Last time you can retry manually (7 days after the event).
      */
     #[Required('retry_expires_at')]
     public \DateTimeInterface $retryExpiresAt;
@@ -115,7 +115,7 @@ final class DeliveryGetResponse implements BaseModel
     public Batch|Monitor $source;
 
     /**
-     * Current delivery status.
+     * `pending`, `delivering`, `retrying`, `delivered`, `failed`, or `cancelled` (source or its webhook was removed).
      *
      * @var value-of<Status> $status
      */
@@ -129,13 +129,13 @@ final class DeliveryGetResponse implements BaseModel
     public string $url;
 
     /**
-     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
      */
     #[Required('request_id')]
     public string $requestID;
 
     /**
-     * Credit usage, included whenever a valid API key is provided.
+     * Credits this request used and your remaining balance.
      */
     #[Optional('key_metadata')]
     public ?KeyMetadata $keyMetadata;
@@ -346,7 +346,7 @@ final class DeliveryGetResponse implements BaseModel
     }
 
     /**
-     * Manual retry deadline, seven days after event creation.
+     * Last time you can retry manually (7 days after the event).
      */
     public function withRetryExpiresAt(\DateTimeInterface $retryExpiresAt): self
     {
@@ -370,7 +370,7 @@ final class DeliveryGetResponse implements BaseModel
     }
 
     /**
-     * Current delivery status.
+     * `pending`, `delivering`, `retrying`, `delivered`, `failed`, or `cancelled` (source or its webhook was removed).
      *
      * @param Status|value-of<Status> $status
      */
@@ -394,7 +394,7 @@ final class DeliveryGetResponse implements BaseModel
     }
 
     /**
-     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
      */
     public function withRequestID(string $requestID): self
     {
@@ -405,7 +405,7 @@ final class DeliveryGetResponse implements BaseModel
     }
 
     /**
-     * Credit usage, included whenever a valid API key is provided.
+     * Credits this request used and your remaining balance.
      *
      * @param KeyMetadata|KeyMetadataShape $keyMetadata
      */

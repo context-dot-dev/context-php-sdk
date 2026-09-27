@@ -19,7 +19,7 @@ final class Credits implements BaseModel
     use SdkModel;
 
     /**
-     * Credits just debited from your balance. Whatever the batch does not spend is refunded when it settles.
+     * Credits held at submission.
      */
     #[Required]
     public int $reserved;
@@ -58,7 +58,7 @@ final class Credits implements BaseModel
     }
 
     /**
-     * Credits just debited from your balance. Whatever the batch does not spend is refunded when it settles.
+     * Credits held at submission.
      */
     public function withReserved(int $reserved): self
     {

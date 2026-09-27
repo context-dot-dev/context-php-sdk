@@ -25,7 +25,7 @@ final class Progress implements BaseModel
     public int $failed;
 
     /**
-     * Reserved pages that will now be skipped, and refunded when the batch settles.
+     * Pages that will be skipped.
      */
     #[Required]
     public int $pending;
@@ -83,7 +83,7 @@ final class Progress implements BaseModel
     }
 
     /**
-     * Reserved pages that will now be skipped, and refunded when the batch settles.
+     * Pages that will be skipped.
      */
     public function withPending(int $pending): self
     {

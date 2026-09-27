@@ -15,7 +15,7 @@ use ContextDev\Monitors\MonitorListParams\Status;
 use ContextDev\Monitors\MonitorListParams\TargetType;
 
 /**
- * Lists monitors for the authenticated organization. Supports free-text search (`q` over `search_by` fields, `prefix` or `exact` via `search_type`) plus status/type/tag filters. Results are paginated via the opaque `cursor`.
+ * List your monitors with optional search and filters.
  *
  * @see ContextDev\Services\MonitorsService::list()
  *
@@ -65,7 +65,7 @@ final class MonitorListParams implements BaseModel
     public ?string $q;
 
     /**
-     * Comma-separated fields to search with `q`. Defaults to all of them. Note `instructions` only exists on extract monitors.
+     * Fields to search with `q`. Defaults to all fields; page and extract targets can have instructions.
      *
      * @var list<value-of<SearchBy>>|null $searchBy
      */
@@ -203,7 +203,7 @@ final class MonitorListParams implements BaseModel
     }
 
     /**
-     * Comma-separated fields to search with `q`. Defaults to all of them. Note `instructions` only exists on extract monitors.
+     * Fields to search with `q`. Defaults to all fields; page and extract targets can have instructions.
      *
      * @param list<SearchBy|value-of<SearchBy>>|null $searchBy
      */

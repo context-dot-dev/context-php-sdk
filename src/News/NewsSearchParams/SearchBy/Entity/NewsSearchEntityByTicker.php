@@ -22,7 +22,11 @@ final class NewsSearchEntityByTicker implements BaseModel
     /** @use SdkModel<NewsSearchEntityByTickerShape> */
     use SdkModel;
 
-    /** @var 'ticker' $type */
+    /**
+     * Use `ticker` to identify a publicly traded company.
+     *
+     * @var 'ticker' $type
+     */
     #[Required]
     public string $type = 'ticker';
 
@@ -91,6 +95,8 @@ final class NewsSearchEntityByTicker implements BaseModel
     }
 
     /**
+     * Use `ticker` to identify a publicly traded company.
+     *
      * @param 'ticker' $type
      */
     public function withType(string $type): self

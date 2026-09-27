@@ -14,7 +14,7 @@ use ContextDev\Industry\IndustryRetrieveSicParams\Type;
 use ContextDev\Industry\IndustryRetrieveSicParams\Zdr;
 
 /**
- * Classify any brand into Standard Industrial Classification (SIC) codes from its domain or name. Choose between the original SIC system (`original_sic`) or the latest SIC list maintained by the SEC (`latest_sec`).
+ * Classify a company into SIC industry codes.
  *
  * @see ContextDev\Services\IndustryService::retrieveSic()
  *
@@ -55,7 +55,7 @@ final class IndustryRetrieveSicParams implements BaseModel
     public ?int $minResults;
 
     /**
-     * Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      *
      * @var list<string>|null $tags
      */
@@ -63,13 +63,13 @@ final class IndustryRetrieveSicParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * Request deadline and what to return when it passes.
      */
     #[Optional]
     public ?TimeoutOpts $timeoutOpts;
 
     /**
-     * Which SIC dataset to classify against. `original_sic` uses the 1987 Standard Industrial Classification system; `latest_sec` uses the current SIC list as published by the SEC. Defaults to `original_sic`.
+     * SIC dataset: `original_sic` (1987) or `latest_sec` (current SEC list).
      *
      * @var value-of<Type>|null $type
      */
@@ -77,7 +77,7 @@ final class IndustryRetrieveSicParams implements BaseModel
     public ?string $type;
 
     /**
-     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @var value-of<Zdr>|null $zdr
      */
@@ -170,7 +170,7 @@ final class IndustryRetrieveSicParams implements BaseModel
     }
 
     /**
-     * Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      *
      * @param list<string> $tags
      */
@@ -183,7 +183,7 @@ final class IndustryRetrieveSicParams implements BaseModel
     }
 
     /**
-     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * Request deadline and what to return when it passes.
      *
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
@@ -196,7 +196,7 @@ final class IndustryRetrieveSicParams implements BaseModel
     }
 
     /**
-     * Which SIC dataset to classify against. `original_sic` uses the 1987 Standard Industrial Classification system; `latest_sec` uses the current SIC list as published by the SEC. Defaults to `original_sic`.
+     * SIC dataset: `original_sic` (1987) or `latest_sec` (current SEC list).
      *
      * @param Type|value-of<Type> $type
      */
@@ -209,7 +209,7 @@ final class IndustryRetrieveSicParams implements BaseModel
     }
 
     /**
-     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @param Zdr|value-of<Zdr> $zdr
      */

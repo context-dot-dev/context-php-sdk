@@ -4,16 +4,23 @@ declare(strict_types=1);
 
 namespace ContextDev\Monitors;
 
+use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Monitors\MonitorListResponse\Data;
+use ContextDev\Monitors\MonitorListResponse\KeyMetadata;
 
 /**
  * @phpstan-import-type DataShape from \ContextDev\Monitors\MonitorListResponse\Data
+ * @phpstan-import-type KeyMetadataShape from \ContextDev\Monitors\MonitorListResponse\KeyMetadata
  *
  * @phpstan-type MonitorListResponseShape = array{
- *   data: list<Data|DataShape>, hasMore: bool, nextCursor: string|null
+ *   data: list<Data|DataShape>,
+ *   hasMore: bool,
+ *   nextCursor: string|null,
+ *   requestID: string,
+ *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  * }
  */
 final class MonitorListResponse implements BaseModel
@@ -32,17 +39,35 @@ final class MonitorListResponse implements BaseModel
     public ?string $nextCursor;
 
     /**
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
+     */
+    #[Required('request_id')]
+    public string $requestID;
+
+    /**
+     * Credits this request used and your remaining balance.
+     */
+    #[Optional('key_metadata')]
+    public ?KeyMetadata $keyMetadata;
+
+    /**
      * `new MonitorListResponse()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * MonitorListResponse::with(data: ..., hasMore: ..., nextCursor: ...)
+     * MonitorListResponse::with(
+     *   data: ..., hasMore: ..., nextCursor: ..., requestID: ...
+     * )
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new MonitorListResponse)->withData(...)->withHasMore(...)->withNextCursor(...)
+     * (new MonitorListResponse)
+     *   ->withData(...)
+     *   ->withHasMore(...)
+     *   ->withNextCursor(...)
+     *   ->withRequestID(...)
      * ```
      */
     public function __construct()
@@ -56,17 +81,23 @@ final class MonitorListResponse implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param list<Data|DataShape> $data
+     * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
     public static function with(
         array $data,
         bool $hasMore,
-        ?string $nextCursor
+        ?string $nextCursor,
+        string $requestID,
+        KeyMetadata|array|null $keyMetadata = null,
     ): self {
         $self = new self;
 
         $self['data'] = $data;
         $self['hasMore'] = $hasMore;
         $self['nextCursor'] = $nextCursor;
+        $self['requestID'] = $requestID;
+
+        null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
 
         return $self;
     }
@@ -94,6 +125,30 @@ final class MonitorListResponse implements BaseModel
     {
         $self = clone $this;
         $self['nextCursor'] = $nextCursor;
+
+        return $self;
+    }
+
+    /**
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
+
+        return $self;
+    }
+
+    /**
+     * Credits this request used and your remaining balance.
+     *
+     * @param KeyMetadata|KeyMetadataShape $keyMetadata
+     */
+    public function withKeyMetadata(KeyMetadata|array $keyMetadata): self
+    {
+        $self = clone $this;
+        $self['keyMetadata'] = $keyMetadata;
 
         return $self;
     }

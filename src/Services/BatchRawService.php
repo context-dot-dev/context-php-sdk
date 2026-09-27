@@ -41,9 +41,9 @@ final class BatchRawService implements BatchRawContract
     /**
      * @api
      *
-     * Check progress, and get download links once the batch finishes.
+     * Get batch progress and result download links. Result files are deleted 7 days after the batch finishes.
      *
-     * @param string $batchID ID of the batch to retrieve or cancel
+     * @param string $batchID batch ID
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<BatchGetResponse>
@@ -66,7 +66,7 @@ final class BatchRawService implements BatchRawContract
     /**
      * @api
      *
-     * List your batches from newest to oldest. Filter by status or continue with a cursor.
+     * List your batches, newest first, with optional filters.
      *
      * @param array{
      *   cursor?: string,
@@ -107,9 +107,9 @@ final class BatchRawService implements BatchRawContract
     /**
      * @api
      *
-     * Permanently delete a finished batch and its stored results. Active batches must settle first.
+     * Permanently delete a finished batch and its results. Its webhook deliveries can no longer be retried.
      *
-     * @param string $batchID ID of the batch to retrieve or cancel
+     * @param string $batchID batch ID
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<BatchDeleteResponse>
@@ -132,9 +132,9 @@ final class BatchRawService implements BatchRawContract
     /**
      * @api
      *
-     * Stop a batch from starting new pages. In-progress pages finish, and unused credits are refunded.
+     * Stop a batch from starting new pages. Pages already in progress finish before the batch becomes cancelled.
      *
-     * @param string $batchID ID of the batch to retrieve or cancel
+     * @param string $batchID batch ID
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<BatchCancelResponse>
@@ -157,9 +157,9 @@ final class BatchRawService implements BatchRawContract
     /**
      * @api
      *
-     * Page through a finished batch's results as JSON instead of downloading the NDJSON files.
+     * Page through a finished batch’s results as JSON. Results remain available for 7 days.
      *
-     * @param string $batchID ID of the batch to retrieve or cancel
+     * @param string $batchID batch ID
      * @param array{cursor?: string, limit?: int}|BatchGetResultsParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -190,7 +190,7 @@ final class BatchRawService implements BatchRawContract
     /**
      * @api
      *
-     * Scrape 25K URLs or crawl large websites asynchronously.
+     * Scrape up to 25,000 URLs, or crawl a site, asynchronously. Poll the batch ID or receive a webhook when it finishes.
      *
      * @param array{
      *   input: InputShape,

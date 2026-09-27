@@ -13,7 +13,7 @@ use ContextDev\Web\WebScrapeParams\SharedParams\Theme;
 use ContextDev\Web\WebScrapeParams\SharedParams\Viewport;
 
 /**
- * Shared browser and content settings. Content filters leave screenshots and original bytes unchanged.
+ * Browser and content settings shared by all outputs.
  *
  * @phpstan-import-type ActionVariants from \ContextDev\Web\WebScrapeParams\SharedParams\Action
  * @phpstan-import-type WaitForVariants from \ContextDev\Web\WebScrapeParams\SharedParams\WaitFor
@@ -45,7 +45,7 @@ final class SharedParams implements BaseModel
     use SdkModel;
 
     /**
-     * Run in order before capture. A failed action fails the request. Bypasses caching.
+     * Browser steps run in order before capture. Requires a paid plan. Skips the cache.
      *
      * @var list<ActionVariants>|null $actions
      */
@@ -53,25 +53,25 @@ final class SharedParams implements BaseModel
     public ?array $actions;
 
     /**
-     * Supported two-letter country code, case-insensitive. Applies to every output, including image downloads.
+     * Proxy country as a two-letter code, such as `US`. Case-insensitive.
      */
     #[Optional]
     public ?string $country;
 
     /**
-     * Dismiss cookie banners by accepting cookies before actions.
+     * Accept cookie banners before actions and capture.
      */
     #[Optional]
     public ?bool $dismissCookies;
 
     /**
-     * Dismiss other popups before actions.
+     * Close other popups before actions and capture.
      */
     #[Optional]
     public ?bool $dismissPopups;
 
     /**
-     * Remove matching content. Exclusions win.
+     * Remove elements matching these CSS selectors. Overrides `includeSelectors`.
      *
      * @var list<string>|null $excludeSelectors
      */
@@ -79,7 +79,7 @@ final class SharedParams implements BaseModel
     public ?array $excludeSelectors;
 
     /**
-     * Headers for the target origin. Requests with custom headers bypass caching.
+     * HTTP headers to send to the target site. Requests with headers skip the cache.
      *
      * @var array<string,string>|null $headers
      */
@@ -87,13 +87,13 @@ final class SharedParams implements BaseModel
     public ?array $headers;
 
     /**
-     * Include iframe content in extraction. Screenshots show visible frames regardless.
+     * Include iframe content in HTML and text outputs. Screenshots always show visible frames.
      */
     #[Optional]
     public ?bool $includeFrames;
 
     /**
-     * Keep matching content after mainContentOnly.
+     * Keep only elements matching these CSS selectors.
      *
      * @var list<string>|null $includeSelectors
      */
@@ -101,7 +101,7 @@ final class SharedParams implements BaseModel
     public ?array $includeSelectors;
 
     /**
-     * Keep only main content in HTML, Markdown, images, and parsed fields.
+     * Keep only the main content. Doesn't affect `screenshot`, `bytes`, or `product`.
      */
     #[Optional]
     public ?bool $mainContentOnly;
@@ -113,13 +113,13 @@ final class SharedParams implements BaseModel
     public ?Parsers $parsers;
 
     /**
-     * Settle animations before capture. Defaults to true with screenshots, otherwise false.
+     * Wait for CSS animations to finish before capture. Defaults to `true` when `screenshot` is requested.
      */
     #[Optional]
     public ?bool $settleAnimations;
 
     /**
-     * Override the browser color scheme.
+     * Emulate a light or dark color scheme.
      *
      * @var value-of<Theme>|null $theme
      */
@@ -127,13 +127,13 @@ final class SharedParams implements BaseModel
     public ?string $theme;
 
     /**
-     * Browser dimensions in pixels.
+     * Browser size in pixels. Omit for 1920 × 1080. When provided, missing dimensions default to 1440 × 900.
      */
     #[Optional]
     public ?Viewport $viewport;
 
     /**
-     * After actions, wait this many milliseconds or until a CSS selector is visible. Defaults to 500 ms, or 2000 ms with frames or an XML URL. Set 0 to skip.
+     * Milliseconds, or a CSS selector to wait for, after actions. Defaults to 500 (2000 with frames or XML).
      *
      * @var WaitForVariants|null $waitFor
      */
@@ -196,7 +196,7 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * Run in order before capture. A failed action fails the request. Bypasses caching.
+     * Browser steps run in order before capture. Requires a paid plan. Skips the cache.
      *
      * @param list<ActionShape> $actions
      */
@@ -209,7 +209,7 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * Supported two-letter country code, case-insensitive. Applies to every output, including image downloads.
+     * Proxy country as a two-letter code, such as `US`. Case-insensitive.
      */
     public function withCountry(string $country): self
     {
@@ -220,7 +220,7 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * Dismiss cookie banners by accepting cookies before actions.
+     * Accept cookie banners before actions and capture.
      */
     public function withDismissCookies(bool $dismissCookies): self
     {
@@ -231,7 +231,7 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * Dismiss other popups before actions.
+     * Close other popups before actions and capture.
      */
     public function withDismissPopups(bool $dismissPopups): self
     {
@@ -242,7 +242,7 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * Remove matching content. Exclusions win.
+     * Remove elements matching these CSS selectors. Overrides `includeSelectors`.
      *
      * @param list<string> $excludeSelectors
      */
@@ -255,7 +255,7 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * Headers for the target origin. Requests with custom headers bypass caching.
+     * HTTP headers to send to the target site. Requests with headers skip the cache.
      *
      * @param array<string,string> $headers
      */
@@ -268,7 +268,7 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * Include iframe content in extraction. Screenshots show visible frames regardless.
+     * Include iframe content in HTML and text outputs. Screenshots always show visible frames.
      */
     public function withIncludeFrames(bool $includeFrames): self
     {
@@ -279,7 +279,7 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * Keep matching content after mainContentOnly.
+     * Keep only elements matching these CSS selectors.
      *
      * @param list<string> $includeSelectors
      */
@@ -292,7 +292,7 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * Keep only main content in HTML, Markdown, images, and parsed fields.
+     * Keep only the main content. Doesn't affect `screenshot`, `bytes`, or `product`.
      */
     public function withMainContentOnly(bool $mainContentOnly): self
     {
@@ -316,7 +316,7 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * Settle animations before capture. Defaults to true with screenshots, otherwise false.
+     * Wait for CSS animations to finish before capture. Defaults to `true` when `screenshot` is requested.
      */
     public function withSettleAnimations(bool $settleAnimations): self
     {
@@ -327,7 +327,7 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * Override the browser color scheme.
+     * Emulate a light or dark color scheme.
      *
      * @param Theme|value-of<Theme> $theme
      */
@@ -340,7 +340,7 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * Browser dimensions in pixels.
+     * Browser size in pixels. Omit for 1920 × 1080. When provided, missing dimensions default to 1440 × 900.
      *
      * @param Viewport|ViewportShape $viewport
      */
@@ -353,7 +353,7 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * After actions, wait this many milliseconds or until a CSS selector is visible. Defaults to 500 ms, or 2000 ms with frames or an XML URL. Set 0 to skip.
+     * Milliseconds, or a CSS selector to wait for, after actions. Defaults to 500 (2000 with frames or XML).
      *
      * @param WaitForShape $waitFor
      */

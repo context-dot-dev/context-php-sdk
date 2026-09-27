@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Web\WebAnswersParams;
 
 /**
- * Research level: fast uses a smaller model and research budget for 10 credits; ultra uses deeper reasoning and research for 100 credits. Defaults to ultra. Only successful requests consume credits.
+ * `fast` for short tasks; `ultra` for deeper research (default).
  */
 enum Mode: string
 {

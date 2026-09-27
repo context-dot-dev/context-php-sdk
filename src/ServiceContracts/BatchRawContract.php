@@ -25,7 +25,7 @@ interface BatchRawContract
     /**
      * @api
      *
-     * @param string $batchID ID of the batch to retrieve or cancel
+     * @param string $batchID batch ID
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<BatchGetResponse>
@@ -55,7 +55,7 @@ interface BatchRawContract
     /**
      * @api
      *
-     * @param string $batchID ID of the batch to retrieve or cancel
+     * @param string $batchID batch ID
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<BatchDeleteResponse>
@@ -70,7 +70,7 @@ interface BatchRawContract
     /**
      * @api
      *
-     * @param string $batchID ID of the batch to retrieve or cancel
+     * @param string $batchID batch ID
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<BatchCancelResponse>
@@ -85,7 +85,7 @@ interface BatchRawContract
     /**
      * @api
      *
-     * @param string $batchID ID of the batch to retrieve or cancel
+     * @param string $batchID batch ID
      * @param array<string,mixed>|BatchGetResultsParams $params
      * @param RequestOpts|null $requestOptions
      *

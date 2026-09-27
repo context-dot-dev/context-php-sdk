@@ -12,7 +12,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Feedback\FeedbackSubmitParams\Category;
 
 /**
- * Report a problem with a Context.dev API call, docs page, SDK, or CLI. Include request_id, url, or both.
+ * Report an API issue or documentation mismatch, including request IDs when available.
  *
  * @see ContextDev\Services\FeedbackService::submit()
  *
@@ -51,7 +51,7 @@ final class FeedbackSubmitParams implements BaseModel
     public ?string $requestID;
 
     /**
-     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * Labels for filtering usage in the dashboard.
      *
      * @var list<string>|null $tags
      */
@@ -146,7 +146,7 @@ final class FeedbackSubmitParams implements BaseModel
     }
 
     /**
-     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * Labels for filtering usage in the dashboard.
      *
      * @param list<string> $tags
      */

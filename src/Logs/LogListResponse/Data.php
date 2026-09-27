@@ -53,7 +53,7 @@ final class Data implements BaseModel
     public float $latencyMs;
 
     /**
-     * HTTP method.
+     * HTTP method, or `MONITOR` / `BATCH` for monitor-run and batch-settlement entries.
      */
     #[Required]
     public string $method;
@@ -220,7 +220,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * HTTP method.
+     * HTTP method, or `MONITOR` / `BATCH` for monitor-run and batch-settlement entries.
      */
     public function withMethod(string $method): self
     {

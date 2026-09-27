@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * List your organization's API requests, newest first. Defaults to the last 24 hours.
+ * List your organization’s request logs with filters and pagination. Logs also include batch settlements and monitor runs.
  *
  * @see ContextDev\Services\LogsService::list()
  *

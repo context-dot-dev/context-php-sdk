@@ -14,6 +14,7 @@ use ContextDev\Monitors\MonitorNewResponse\Baseline\MonitorsSitemapBaseline;
 use ContextDev\Monitors\MonitorNewResponse\ChangeDetection;
 use ContextDev\Monitors\MonitorNewResponse\ChangeDetection\MonitorsExactChangeDetection;
 use ContextDev\Monitors\MonitorNewResponse\ChangeDetection\MonitorsSemanticChangeDetection;
+use ContextDev\Monitors\MonitorNewResponse\KeyMetadata;
 use ContextDev\Monitors\MonitorNewResponse\LastError;
 use ContextDev\Monitors\MonitorNewResponse\Mode;
 use ContextDev\Monitors\MonitorNewResponse\Schedule;
@@ -26,16 +27,15 @@ use ContextDev\Monitors\MonitorNewResponse\Webhook;
 use ContextDev\Monitors\MonitorNewResponse\WebhookFailure;
 
 /**
- * A newly created monitor plus `initial_run_id`, the id of the baseline run queued at creation.
- *
  * @phpstan-import-type ChangeDetectionVariants from \ContextDev\Monitors\MonitorNewResponse\ChangeDetection
  * @phpstan-import-type TargetVariants from \ContextDev\Monitors\MonitorNewResponse\Target
  * @phpstan-import-type BaselineVariants from \ContextDev\Monitors\MonitorNewResponse\Baseline
  * @phpstan-import-type ChangeDetectionShape from \ContextDev\Monitors\MonitorNewResponse\ChangeDetection
- * @phpstan-import-type ScheduleShape from \ContextDev\Monitors\MonitorNewResponse\Schedule
  * @phpstan-import-type TargetShape from \ContextDev\Monitors\MonitorNewResponse\Target
  * @phpstan-import-type BaselineShape from \ContextDev\Monitors\MonitorNewResponse\Baseline
+ * @phpstan-import-type KeyMetadataShape from \ContextDev\Monitors\MonitorNewResponse\KeyMetadata
  * @phpstan-import-type LastErrorShape from \ContextDev\Monitors\MonitorNewResponse\LastError
+ * @phpstan-import-type ScheduleShape from \ContextDev\Monitors\MonitorNewResponse\Schedule
  * @phpstan-import-type WebhookShape from \ContextDev\Monitors\MonitorNewResponse\Webhook
  * @phpstan-import-type WebhookFailureShape from \ContextDev\Monitors\MonitorNewResponse\WebhookFailure
  *
@@ -46,15 +46,17 @@ use ContextDev\Monitors\MonitorNewResponse\WebhookFailure;
  *   initialRunID: string|null,
  *   mode: Mode|value-of<Mode>,
  *   name: string,
- *   schedule: Schedule|ScheduleShape,
+ *   requestID: string,
  *   status: Status|value-of<Status>,
  *   target: TargetShape,
  *   updatedAt: \DateTimeInterface,
  *   baseline?: BaselineShape|null,
+ *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  *   lastChangeAt?: \DateTimeInterface|null,
  *   lastError?: null|LastError|LastErrorShape,
  *   lastRunAt?: \DateTimeInterface|null,
  *   nextRunAt?: \DateTimeInterface|null,
+ *   schedule?: null|Schedule|ScheduleShape,
  *   tags?: list<string>|null,
  *   webhook?: null|Webhook|WebhookShape,
  *   webhookFailure?: null|WebhookFailure|WebhookFailureShape,
@@ -69,7 +71,7 @@ final class MonitorNewResponse implements BaseModel
     public string $id;
 
     /**
-     * Discriminated union describing how changes are detected.
+     * How changes are judged. Defaults to `semantic` for extract targets and page targets with `instructions`, otherwise `exact`.
      *
      * @var ChangeDetectionVariants $changeDetection
      */
@@ -80,13 +82,13 @@ final class MonitorNewResponse implements BaseModel
     public \DateTimeInterface $createdAt;
 
     /**
-     * The baseline run queued by this create call, or null if it could not be queued immediately (in which case the baseline runs on the next scheduled tick). Poll GET /monitors/{monitor_id}/runs/{run_id}.
+     * ID of the baseline run queued at creation; null if it will start on the next scheduled tick.
      */
     #[Required('initial_run_id')]
     public ?string $initialRunID;
 
     /**
-     * Top-level monitor category. Always `web` today; the concrete behavior is described by `target` and `change_detection`.
+     * Always `web`. Optional.
      *
      * @var value-of<Mode> $mode
      */
@@ -97,13 +99,13 @@ final class MonitorNewResponse implements BaseModel
     public string $name;
 
     /**
-     * Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
      */
-    #[Required]
-    public Schedule $schedule;
+    #[Required('request_id')]
+    public string $requestID;
 
     /**
-     * Monitor lifecycle status. `failed` means the most recent run failed (see the monitor's `last_error`); failed monitors keep running on schedule and flip back to `active` on the next successful run. Monitors are auto-`paused` after repeated consecutive failures or insufficient-credit skips; resume by PATCHing status to `active`.
+     * Current state. Failed monitors keep running; paused monitors must be resumed with `status: "active"`.
      *
      * @var value-of<Status> $status
      */
@@ -111,7 +113,7 @@ final class MonitorNewResponse implements BaseModel
     public string $status;
 
     /**
-     * Discriminated union describing what the monitor watches.
+     * What to watch: a page, a sitemap, or data extracted from a site.
      *
      * @var TargetVariants $target
      */
@@ -122,12 +124,18 @@ final class MonitorNewResponse implements BaseModel
     public \DateTimeInterface $updatedAt;
 
     /**
-     * Current baseline: the last observed value the monitor compares new snapshots against. Its shape follows `target.type` (page/sitemap/extract). Only populated on GET /monitors/{monitor_id}; null until the first baseline run completes (and after a target or change_detection update, which resets the baseline).
+     * Comparison baseline, included on Retrieve. Null until capture completes or after target changes.
      *
      * @var BaselineVariants|null $baseline
      */
     #[Optional(nullable: true)]
     public MonitorsPageBaseline|MonitorsSitemapBaseline|MonitorsExtractBaseline|null $baseline;
+
+    /**
+     * Credits this request used and your remaining balance.
+     */
+    #[Optional('key_metadata')]
+    public ?KeyMetadata $keyMetadata;
 
     #[Optional('last_change_at', nullable: true)]
     public ?\DateTimeInterface $lastChangeAt;
@@ -142,19 +150,28 @@ final class MonitorNewResponse implements BaseModel
     public ?\DateTimeInterface $lastRunAt;
 
     /**
-     * When the next scheduled run is due.
+     * When the next scheduled run is due; null while paused.
      */
     #[Optional('next_run_at', nullable: true)]
     public ?\DateTimeInterface $nextRunAt;
 
     /**
-     * User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
+     * Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
+     */
+    #[Optional]
+    public ?Schedule $schedule;
+
+    /**
+     * Labels for filtering monitors, their changes, and their usage.
      *
      * @var list<string>|null $tags
      */
     #[Optional(list: 'string')]
     public ?array $tags;
 
+    /**
+     * Webhook destination and delivery settings. Null means no webhook is configured.
+     */
     #[Optional(nullable: true)]
     public ?Webhook $webhook;
 
@@ -176,7 +193,7 @@ final class MonitorNewResponse implements BaseModel
      *   initialRunID: ...,
      *   mode: ...,
      *   name: ...,
-     *   schedule: ...,
+     *   requestID: ...,
      *   status: ...,
      *   target: ...,
      *   updatedAt: ...,
@@ -193,7 +210,7 @@ final class MonitorNewResponse implements BaseModel
      *   ->withInitialRunID(...)
      *   ->withMode(...)
      *   ->withName(...)
-     *   ->withSchedule(...)
+     *   ->withRequestID(...)
      *   ->withStatus(...)
      *   ->withTarget(...)
      *   ->withUpdatedAt(...)
@@ -211,11 +228,12 @@ final class MonitorNewResponse implements BaseModel
      *
      * @param ChangeDetectionShape $changeDetection
      * @param Mode|value-of<Mode> $mode
-     * @param Schedule|ScheduleShape $schedule
      * @param Status|value-of<Status> $status
      * @param TargetShape $target
      * @param BaselineShape|null $baseline
+     * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      * @param LastError|LastErrorShape|null $lastError
+     * @param Schedule|ScheduleShape|null $schedule
      * @param list<string>|null $tags
      * @param Webhook|WebhookShape|null $webhook
      * @param WebhookFailure|WebhookFailureShape|null $webhookFailure
@@ -227,15 +245,17 @@ final class MonitorNewResponse implements BaseModel
         ?string $initialRunID,
         Mode|string $mode,
         string $name,
-        Schedule|array $schedule,
+        string $requestID,
         Status|string $status,
         MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget $target,
         \DateTimeInterface $updatedAt,
         MonitorsPageBaseline|array|MonitorsSitemapBaseline|MonitorsExtractBaseline|null $baseline = null,
+        KeyMetadata|array|null $keyMetadata = null,
         ?\DateTimeInterface $lastChangeAt = null,
         LastError|array|null $lastError = null,
         ?\DateTimeInterface $lastRunAt = null,
         ?\DateTimeInterface $nextRunAt = null,
+        Schedule|array|null $schedule = null,
         ?array $tags = null,
         Webhook|array|null $webhook = null,
         WebhookFailure|array|null $webhookFailure = null,
@@ -248,16 +268,18 @@ final class MonitorNewResponse implements BaseModel
         $self['initialRunID'] = $initialRunID;
         $self['mode'] = $mode;
         $self['name'] = $name;
-        $self['schedule'] = $schedule;
+        $self['requestID'] = $requestID;
         $self['status'] = $status;
         $self['target'] = $target;
         $self['updatedAt'] = $updatedAt;
 
         null !== $baseline && $self['baseline'] = $baseline;
+        null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
         null !== $lastChangeAt && $self['lastChangeAt'] = $lastChangeAt;
         null !== $lastError && $self['lastError'] = $lastError;
         null !== $lastRunAt && $self['lastRunAt'] = $lastRunAt;
         null !== $nextRunAt && $self['nextRunAt'] = $nextRunAt;
+        null !== $schedule && $self['schedule'] = $schedule;
         null !== $tags && $self['tags'] = $tags;
         null !== $webhook && $self['webhook'] = $webhook;
         null !== $webhookFailure && $self['webhookFailure'] = $webhookFailure;
@@ -274,7 +296,7 @@ final class MonitorNewResponse implements BaseModel
     }
 
     /**
-     * Discriminated union describing how changes are detected.
+     * How changes are judged. Defaults to `semantic` for extract targets and page targets with `instructions`, otherwise `exact`.
      *
      * @param ChangeDetectionShape $changeDetection
      */
@@ -296,7 +318,7 @@ final class MonitorNewResponse implements BaseModel
     }
 
     /**
-     * The baseline run queued by this create call, or null if it could not be queued immediately (in which case the baseline runs on the next scheduled tick). Poll GET /monitors/{monitor_id}/runs/{run_id}.
+     * ID of the baseline run queued at creation; null if it will start on the next scheduled tick.
      */
     public function withInitialRunID(?string $initialRunID): self
     {
@@ -307,7 +329,7 @@ final class MonitorNewResponse implements BaseModel
     }
 
     /**
-     * Top-level monitor category. Always `web` today; the concrete behavior is described by `target` and `change_detection`.
+     * Always `web`. Optional.
      *
      * @param Mode|value-of<Mode> $mode
      */
@@ -328,20 +350,18 @@ final class MonitorNewResponse implements BaseModel
     }
 
     /**
-     * Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
-     *
-     * @param Schedule|ScheduleShape $schedule
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
      */
-    public function withSchedule(Schedule|array $schedule): self
+    public function withRequestID(string $requestID): self
     {
         $self = clone $this;
-        $self['schedule'] = $schedule;
+        $self['requestID'] = $requestID;
 
         return $self;
     }
 
     /**
-     * Monitor lifecycle status. `failed` means the most recent run failed (see the monitor's `last_error`); failed monitors keep running on schedule and flip back to `active` on the next successful run. Monitors are auto-`paused` after repeated consecutive failures or insufficient-credit skips; resume by PATCHing status to `active`.
+     * Current state. Failed monitors keep running; paused monitors must be resumed with `status: "active"`.
      *
      * @param Status|value-of<Status> $status
      */
@@ -354,7 +374,7 @@ final class MonitorNewResponse implements BaseModel
     }
 
     /**
-     * Discriminated union describing what the monitor watches.
+     * What to watch: a page, a sitemap, or data extracted from a site.
      *
      * @param TargetShape $target
      */
@@ -376,7 +396,7 @@ final class MonitorNewResponse implements BaseModel
     }
 
     /**
-     * Current baseline: the last observed value the monitor compares new snapshots against. Its shape follows `target.type` (page/sitemap/extract). Only populated on GET /monitors/{monitor_id}; null until the first baseline run completes (and after a target or change_detection update, which resets the baseline).
+     * Comparison baseline, included on Retrieve. Null until capture completes or after target changes.
      *
      * @param BaselineShape|null $baseline
      */
@@ -385,6 +405,19 @@ final class MonitorNewResponse implements BaseModel
     ): self {
         $self = clone $this;
         $self['baseline'] = $baseline;
+
+        return $self;
+    }
+
+    /**
+     * Credits this request used and your remaining balance.
+     *
+     * @param KeyMetadata|KeyMetadataShape $keyMetadata
+     */
+    public function withKeyMetadata(KeyMetadata|array $keyMetadata): self
+    {
+        $self = clone $this;
+        $self['keyMetadata'] = $keyMetadata;
 
         return $self;
     }
@@ -419,7 +452,7 @@ final class MonitorNewResponse implements BaseModel
     }
 
     /**
-     * When the next scheduled run is due.
+     * When the next scheduled run is due; null while paused.
      */
     public function withNextRunAt(?\DateTimeInterface $nextRunAt): self
     {
@@ -430,7 +463,20 @@ final class MonitorNewResponse implements BaseModel
     }
 
     /**
-     * User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
+     * Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
+     *
+     * @param Schedule|ScheduleShape $schedule
+     */
+    public function withSchedule(Schedule|array $schedule): self
+    {
+        $self = clone $this;
+        $self['schedule'] = $schedule;
+
+        return $self;
+    }
+
+    /**
+     * Labels for filtering monitors, their changes, and their usage.
      *
      * @param list<string> $tags
      */
@@ -443,6 +489,8 @@ final class MonitorNewResponse implements BaseModel
     }
 
     /**
+     * Webhook destination and delivery settings. Null means no webhook is configured.
+     *
      * @param Webhook|WebhookShape|null $webhook
      */
     public function withWebhook(Webhook|array|null $webhook): self

@@ -38,12 +38,12 @@ final class UtilityService implements UtilityContract
     /**
      * @api
      *
-     * Signal that you may fetch data soon to improve latency. The type field selects what to prefetch ('brand' queues a brand data fetch, 'styleguide' queues a styleguide extraction) and identifier carries exactly one lookup key: a domain, or an email whose domain is extracted and validated (free email providers and disposable email addresses are not allowed).
+     * Queue brand or styleguide data so a later lookup can return sooner.
      *
      * @param IdentifierShape $identifier Identifier of the target to prefetch. Provide exactly one of domain or email.
-     * @param Type|value-of<Type> $type what to prefetch: 'brand' warms the brand data cache, 'styleguide' warms the styleguide cache
-     * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
-     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * @param Type|value-of<Type> $type data to prefetch
+     * @param list<string> $tags labels for filtering usage in the dashboard
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts request deadline and what to return when it passes
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

@@ -27,7 +27,7 @@ final class MonitorsExtractBaseline implements BaseModel
     public \DateTimeInterface $capturedAt;
 
     /**
-     * The extracted structured data, matching the monitor's extraction schema (same shape as the /web/extract endpoint's `data`). Refreshed when the monitor re-discovers its page set (at most about once a day); `null` when no extraction has been captured yet.
+     * Latest structured snapshot matching the extraction schema, refreshed at most daily; `null` before capture.
      */
     #[Required]
     public mixed $data;
@@ -95,7 +95,7 @@ final class MonitorsExtractBaseline implements BaseModel
     }
 
     /**
-     * The extracted structured data, matching the monitor's extraction schema (same shape as the /web/extract endpoint's `data`). Refreshed when the monitor re-discovers its page set (at most about once a day); `null` when no extraction has been captured yet.
+     * Latest structured snapshot matching the extraction schema, refreshed at most daily; `null` before capture.
      */
     public function withData(mixed $data): self
     {

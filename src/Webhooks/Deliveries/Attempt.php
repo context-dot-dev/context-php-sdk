@@ -59,7 +59,7 @@ final class Attempt implements BaseModel
     public \DateTimeInterface $startedAt;
 
     /**
-     * What started this attempt.
+     * `initial`, `automatic` (scheduled retry), or `manual` (Retry endpoint).
      *
      * @var value-of<Trigger> $trigger
      */
@@ -194,7 +194,7 @@ final class Attempt implements BaseModel
     }
 
     /**
-     * What started this attempt.
+     * `initial`, `automatic` (scheduled retry), or `manual` (Retry endpoint).
      *
      * @param Trigger|value-of<Trigger> $trigger
      */

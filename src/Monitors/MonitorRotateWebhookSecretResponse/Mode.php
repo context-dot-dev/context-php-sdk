@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Monitors\MonitorRotateWebhookSecretResponse;
 
 /**
- * Top-level monitor category. Always `web` today; the concrete behavior is described by `target` and `change_detection`.
+ * Always `web`. Optional.
  */
 enum Mode: string
 {

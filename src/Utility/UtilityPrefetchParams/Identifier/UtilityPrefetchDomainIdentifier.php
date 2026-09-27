@@ -19,7 +19,7 @@ final class UtilityPrefetchDomainIdentifier implements BaseModel
     use SdkModel;
 
     /**
-     * Domain name to prefetch data for.
+     * Domain, e.g. `stripe.com`.
      */
     #[Required]
     public string $domain;
@@ -58,7 +58,7 @@ final class UtilityPrefetchDomainIdentifier implements BaseModel
     }
 
     /**
-     * Domain name to prefetch data for.
+     * Domain, e.g. `stripe.com`.
      */
     public function withDomain(string $domain): self
     {

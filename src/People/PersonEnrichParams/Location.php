@@ -9,6 +9,8 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
+ * Location context to help identify the person. Provide a city, region, or country.
+ *
  * @phpstan-type LocationShape = array{
  *   city?: string|null, country?: string|null, region?: string|null
  * }
@@ -18,12 +20,21 @@ final class Location implements BaseModel
     /** @use SdkModel<LocationShape> */
     use SdkModel;
 
+    /**
+     * City associated with the person.
+     */
     #[Optional]
     public ?string $city;
 
+    /**
+     * Country associated with the person.
+     */
     #[Optional]
     public ?string $country;
 
+    /**
+     * State, province, or region associated with the person.
+     */
     #[Optional]
     public ?string $region;
 
@@ -51,6 +62,9 @@ final class Location implements BaseModel
         return $self;
     }
 
+    /**
+     * City associated with the person.
+     */
     public function withCity(string $city): self
     {
         $self = clone $this;
@@ -59,6 +73,9 @@ final class Location implements BaseModel
         return $self;
     }
 
+    /**
+     * Country associated with the person.
+     */
     public function withCountry(string $country): self
     {
         $self = clone $this;
@@ -67,6 +84,9 @@ final class Location implements BaseModel
         return $self;
     }
 
+    /**
+     * State, province, or region associated with the person.
+     */
     public function withRegion(string $region): self
     {
         $self = clone $this;

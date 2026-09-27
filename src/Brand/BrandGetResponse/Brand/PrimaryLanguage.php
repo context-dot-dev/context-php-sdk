@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Brand\BrandGetResponse\Brand;
 
 /**
- * Language to force for the retrieved brand data.
+ * Language, e.g. `english`.
  */
 enum PrimaryLanguage: string
 {

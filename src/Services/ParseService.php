@@ -37,19 +37,19 @@ final class ParseService implements ParseContract
     /**
      * @api
      *
-     * Converts raw text, source code, web/data, PDF, Microsoft Office, and image bytes into LLM-usable Markdown.
+     * Convert uploaded file bytes into Markdown and optional HTML.
      *
      * @param string|FileParam $body Body param
      * @param string $client query param: Optional client identifier used for usage attribution
      * @param Extension|value-of<Extension> $extension query param: Optional file extension hint, such as pdf, docx, xlsx, pptx, html, json, csv, md, py, rtf, jpg, png, or txt
      * @param bool $includeImages Query param: Include image references in Markdown output
      * @param bool $includeLinks Query param: Preserve hyperlinks in Markdown output
-     * @param bool $ocr Query param: When true for PDF inputs, OCR the selected pages that have no usable text layer (scans), replacing each recovered page's text with the OCR result while pages with a real text layer keep it. pdf.start/pdf.end limit the inclusive page range. Billed at 1 credit per page OCR actually recovered, on top of the base request cost. When false, no OCR runs.
+     * @param bool $ocr Query param: Read text from images and scanned PDF pages. PDF page ranges still apply.
      * @param Pdf|PdfShape $pdf Query param: PDF page-range options as a JSON object, e.g. {"start": 2, "end": 5}.
      * @param bool $shortenBase64Images Query param: Shorten base64-encoded image data in the Markdown output
-     * @param list<string> $tags Query param: Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * @param list<string> $tags Query param: Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      * @param bool $useMainContentOnly Query param: Extract only the main content from HTML-like inputs
-     * @param Zdr|value-of<Zdr> $zdr Query param: Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * @param Zdr|value-of<Zdr> $zdr Query param: `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

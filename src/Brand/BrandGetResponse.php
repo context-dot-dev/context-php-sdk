@@ -39,7 +39,7 @@ final class BrandGetResponse implements BaseModel
     public Brand $brand;
 
     /**
-     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     * Whether this response came from cache.
      */
     #[Required('cache_metadata')]
     public CacheMetadata $cacheMetadata;
@@ -51,19 +51,19 @@ final class BrandGetResponse implements BaseModel
     public int $code;
 
     /**
-     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
      */
     #[Required('request_id')]
     public string $requestID;
 
     /**
-     * Status of the response, e.g., 'ok'.
+     * Always `ok` on success.
      */
     #[Required]
     public string $status;
 
     /**
-     * Credit usage, included whenever a valid API key is provided.
+     * Credits this request used and your remaining balance.
      */
     #[Optional('key_metadata')]
     public ?KeyMetadata $keyMetadata;
@@ -146,7 +146,7 @@ final class BrandGetResponse implements BaseModel
     }
 
     /**
-     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     * Whether this response came from cache.
      *
      * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      */
@@ -170,7 +170,7 @@ final class BrandGetResponse implements BaseModel
     }
 
     /**
-     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
      */
     public function withRequestID(string $requestID): self
     {
@@ -181,7 +181,7 @@ final class BrandGetResponse implements BaseModel
     }
 
     /**
-     * Status of the response, e.g., 'ok'.
+     * Always `ok` on success.
      */
     public function withStatus(string $status): self
     {
@@ -192,7 +192,7 @@ final class BrandGetResponse implements BaseModel
     }
 
     /**
-     * Credit usage, included whenever a valid API key is provided.
+     * Credits this request used and your remaining balance.
      *
      * @param KeyMetadata|KeyMetadataShape $keyMetadata
      */

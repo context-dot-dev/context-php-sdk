@@ -22,7 +22,7 @@ final class JsonParams implements BaseModel
     use SdkModel;
 
     /**
-     * JSON Schema for the returned object. Must describe a top-level object; at most 50 KB serialized. Optional fields the page does not state are omitted, or null when their type allows null, while required non-nullable fields always receive a best-effort value, so prefer nullable or optional fields for data a page may omit. Zod users can pass the output of z.toJSONSchema().
+     * JSON Schema for a top-level object, up to 50 KB. Use optional or nullable fields for missing facts.
      *
      * @var array<string,mixed> $schema
      */
@@ -30,7 +30,7 @@ final class JsonParams implements BaseModel
     public array $schema;
 
     /**
-     * Optional guidance on which facts to prioritize or how to interpret schema fields.
+     * Extra guidance, such as which facts to prefer or how to read a field.
      */
     #[Optional]
     public ?string $instructions;
@@ -75,7 +75,7 @@ final class JsonParams implements BaseModel
     }
 
     /**
-     * JSON Schema for the returned object. Must describe a top-level object; at most 50 KB serialized. Optional fields the page does not state are omitted, or null when their type allows null, while required non-nullable fields always receive a best-effort value, so prefer nullable or optional fields for data a page may omit. Zod users can pass the output of z.toJSONSchema().
+     * JSON Schema for a top-level object, up to 50 KB. Use optional or nullable fields for missing facts.
      *
      * @param array<string,mixed> $schema
      */
@@ -88,7 +88,7 @@ final class JsonParams implements BaseModel
     }
 
     /**
-     * Optional guidance on which facts to prioritize or how to interpret schema fields.
+     * Extra guidance, such as which facts to prefer or how to read a field.
      */
     public function withInstructions(string $instructions): self
     {

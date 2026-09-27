@@ -55,6 +55,7 @@ interface MonitorsRawContract
     /**
      * @api
      *
+     * @param string $monitorID ID of the monitor
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<MonitorGetResponse>
@@ -69,6 +70,7 @@ interface MonitorsRawContract
     /**
      * @api
      *
+     * @param string $monitorID ID of the monitor
      * @param array<string,mixed>|MonitorUpdateParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -100,6 +102,7 @@ interface MonitorsRawContract
     /**
      * @api
      *
+     * @param string $monitorID ID of the monitor
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<MonitorDeleteResponse>
@@ -172,6 +175,7 @@ interface MonitorsRawContract
     /**
      * @api
      *
+     * @param string $monitorID ID of the monitor
      * @param array<string,mixed>|MonitorListChangesParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -188,6 +192,7 @@ interface MonitorsRawContract
     /**
      * @api
      *
+     * @param string $monitorID ID of the monitor
      * @param array<string,mixed>|MonitorListRunsParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -204,6 +209,7 @@ interface MonitorsRawContract
     /**
      * @api
      *
+     * @param string $changeID ID of the detected change
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<MonitorGetChangeResponse>
@@ -218,6 +224,7 @@ interface MonitorsRawContract
     /**
      * @api
      *
+     * @param string $runID ID of the monitor run
      * @param array<string,mixed>|MonitorRetrieveRunParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -234,6 +241,7 @@ interface MonitorsRawContract
     /**
      * @api
      *
+     * @param string $monitorID ID of the monitor
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<MonitorRotateWebhookSecretResponse>
@@ -248,6 +256,7 @@ interface MonitorsRawContract
     /**
      * @api
      *
+     * @param string $monitorID ID of the monitor
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<MonitorRunResponse>

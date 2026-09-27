@@ -13,7 +13,7 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\FeedbackContract;
 
 /**
- * Report bugs, docs mismatches, and friction with any Context.dev API. Submissions cost no credits and use a separate rate limit.
+ * Report API issues and documentation mismatches.
  *
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
@@ -35,12 +35,12 @@ final class FeedbackService implements FeedbackContract
     /**
      * @api
      *
-     * Report a problem with a Context.dev API call, docs page, SDK, or CLI. Include request_id, url, or both.
+     * Report an API issue or documentation mismatch, including request IDs when available.
      *
      * @param Category|value-of<Category> $category kind of issue
      * @param string $note what went wrong and what you expected instead
      * @param string $requestID the request_id of the API call the feedback is about, from its response body or X-Request-Id header
-     * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * @param list<string> $tags labels for filtering usage in the dashboard
      * @param string $url the page the feedback is about, such as one page of a crawl or a docs page
      * @param RequestOpts|null $requestOptions
      *

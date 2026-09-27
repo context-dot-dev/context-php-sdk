@@ -16,10 +16,17 @@ final class WaitForElement implements BaseModel
     /** @use SdkModel<WaitForElementShape> */
     use SdkModel;
 
-    /** @var 'waitFor' $type */
+    /**
+     * Use `waitFor` to wait for a matching element.
+     *
+     * @var 'waitFor' $type
+     */
     #[Required]
     public string $type = 'waitFor';
 
+    /**
+     * CSS selector to wait for before continuing.
+     */
     #[Required]
     public string $selector;
 
@@ -56,6 +63,9 @@ final class WaitForElement implements BaseModel
         return $self;
     }
 
+    /**
+     * CSS selector to wait for before continuing.
+     */
     public function withSelector(string $selector): self
     {
         $self = clone $this;
@@ -65,6 +75,8 @@ final class WaitForElement implements BaseModel
     }
 
     /**
+     * Use `waitFor` to wait for a matching element.
+     *
      * @param 'waitFor' $type
      */
     public function withType(string $type): self

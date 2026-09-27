@@ -15,7 +15,7 @@ use ContextDev\Utility\UtilityPrefetchParams\TimeoutOpts;
 use ContextDev\Utility\UtilityPrefetchParams\Type;
 
 /**
- * Signal that you may fetch data soon to improve latency. The type field selects what to prefetch ('brand' queues a brand data fetch, 'styleguide' queues a styleguide extraction) and identifier carries exactly one lookup key: a domain, or an email whose domain is extracted and validated (free email providers and disposable email addresses are not allowed).
+ * Queue brand or styleguide data so a later lookup can return sooner.
  *
  * @see ContextDev\Services\UtilityService::prefetch()
  *
@@ -45,7 +45,7 @@ final class UtilityPrefetchParams implements BaseModel
     public UtilityPrefetchDomainIdentifier|UtilityPrefetchEmailIdentifier $identifier;
 
     /**
-     * What to prefetch: 'brand' warms the brand data cache, 'styleguide' warms the styleguide cache.
+     * Data to prefetch.
      *
      * @var value-of<Type> $type
      */
@@ -53,7 +53,7 @@ final class UtilityPrefetchParams implements BaseModel
     public string $type;
 
     /**
-     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * Labels for filtering usage in the dashboard.
      *
      * @var list<string>|null $tags
      */
@@ -61,7 +61,7 @@ final class UtilityPrefetchParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * Request deadline and what to return when it passes.
      */
     #[Optional]
     public ?TimeoutOpts $timeoutOpts;
@@ -127,7 +127,7 @@ final class UtilityPrefetchParams implements BaseModel
     }
 
     /**
-     * What to prefetch: 'brand' warms the brand data cache, 'styleguide' warms the styleguide cache.
+     * Data to prefetch.
      *
      * @param Type|value-of<Type> $type
      */
@@ -140,7 +140,7 @@ final class UtilityPrefetchParams implements BaseModel
     }
 
     /**
-     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * Labels for filtering usage in the dashboard.
      *
      * @param list<string> $tags
      */
@@ -153,7 +153,7 @@ final class UtilityPrefetchParams implements BaseModel
     }
 
     /**
-     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * Request deadline and what to return when it passes.
      *
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */

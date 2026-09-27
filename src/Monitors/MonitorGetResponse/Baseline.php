@@ -12,7 +12,7 @@ use ContextDev\Monitors\MonitorGetResponse\Baseline\MonitorsPageBaseline;
 use ContextDev\Monitors\MonitorGetResponse\Baseline\MonitorsSitemapBaseline;
 
 /**
- * Current baseline: the last observed value the monitor compares new snapshots against. Its shape follows `target.type` (page/sitemap/extract). Only populated on GET /monitors/{monitor_id}; null until the first baseline run completes (and after a target or change_detection update, which resets the baseline).
+ * Comparison baseline, included on Retrieve. Null until capture completes or after target changes.
  *
  * @phpstan-import-type MonitorsPageBaselineShape from \ContextDev\Monitors\MonitorGetResponse\Baseline\MonitorsPageBaseline
  * @phpstan-import-type MonitorsSitemapBaselineShape from \ContextDev\Monitors\MonitorGetResponse\Baseline\MonitorsSitemapBaseline

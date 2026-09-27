@@ -34,7 +34,7 @@ final class WebWebCrawlMdResponse implements BaseModel
     use SdkModel;
 
     /**
-     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     * Whether this response came from cache.
      */
     #[Required('cache_metadata')]
     public CacheMetadata $cacheMetadata;
@@ -43,7 +43,7 @@ final class WebWebCrawlMdResponse implements BaseModel
     public Metadata $metadata;
 
     /**
-     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
      */
     #[Required('request_id')]
     public string $requestID;
@@ -53,7 +53,7 @@ final class WebWebCrawlMdResponse implements BaseModel
     public array $results;
 
     /**
-     * Credit usage, included whenever a valid API key is provided.
+     * Credits this request used and your remaining balance.
      */
     #[Optional('key_metadata')]
     public ?KeyMetadata $keyMetadata;
@@ -121,7 +121,7 @@ final class WebWebCrawlMdResponse implements BaseModel
     }
 
     /**
-     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     * Whether this response came from cache.
      *
      * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      */
@@ -145,7 +145,7 @@ final class WebWebCrawlMdResponse implements BaseModel
     }
 
     /**
-     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
      */
     public function withRequestID(string $requestID): self
     {
@@ -167,7 +167,7 @@ final class WebWebCrawlMdResponse implements BaseModel
     }
 
     /**
-     * Credit usage, included whenever a valid API key is provided.
+     * Credits this request used and your remaining balance.
      *
      * @param KeyMetadata|KeyMetadataShape $keyMetadata
      */

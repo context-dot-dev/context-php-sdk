@@ -14,7 +14,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Retrieve logos, backdrops, colors, industry, description, and more. Provide exactly one lookup identifier in the request body: a domain, company name, email address, stock ticker, transaction descriptor, or direct URL. Note: `by_direct_url` fetches brand data only from the provided URL — not from the entire internet.
+ * Retrieve logos, colors, company details, and social links using one lookup identifier. A direct URL limits extraction to that page.
  *
  * @see ContextDev\Services\BrandService::retrieve()
  *
@@ -70,7 +70,7 @@ final class BrandRetrieveParams implements BaseModel
     public ?string $forceLanguage;
 
     /**
-     * Maximum age in milliseconds for cached brand data before the API performs a hard refresh. Defaults to 3 months (7776000000 ms). Set to 0 to always perform a hard refresh. Negative values are clamped to 0; values above 1 year (31536000000 ms) are clamped to 1 year.
+     * Maximum age of cached brand data in ms. Defaults to 3 months; clamped to 0–1 year. `0` refreshes.
      */
     #[Optional]
     public ?int $maxAgeMs;
@@ -82,7 +82,7 @@ final class BrandRetrieveParams implements BaseModel
     public ?bool $maxSpeed;
 
     /**
-     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * Labels for filtering usage in the dashboard.
      *
      * @var list<string>|null $tags
      */
@@ -90,7 +90,7 @@ final class BrandRetrieveParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * Request deadline and what to return when it passes.
      */
     #[Optional]
     public ?TimeoutOpts $timeoutOpts;
@@ -293,7 +293,7 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * Maximum age in milliseconds for cached brand data before the API performs a hard refresh. Defaults to 3 months (7776000000 ms). Set to 0 to always perform a hard refresh. Negative values are clamped to 0; values above 1 year (31536000000 ms) are clamped to 1 year.
+     * Maximum age of cached brand data in ms. Defaults to 3 months; clamped to 0–1 year. `0` refreshes.
      */
     public function withMaxAgeMs(int $maxAgeMs): self
     {
@@ -315,7 +315,7 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * Labels for filtering usage in the dashboard.
      *
      * @param list<string> $tags
      */
@@ -328,7 +328,7 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * Request deadline and what to return when it passes.
      *
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */

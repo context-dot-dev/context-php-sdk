@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Relevant Markdown excerpts for your question or topic, in page order. Headings in square brackets supply necessary context; ellipses mark omitted portions. Empty when the page has no text.
+ * Relevant Markdown excerpts in page order. `[Heading]` adds context; `…` marks omitted text.
  *
  * @phpstan-type HighlightsShape = array{
  *   data: list<string>|null, requested: bool, success: bool|null
@@ -28,7 +28,7 @@ final class Highlights implements BaseModel
     public bool $requested;
 
     /**
-     * True when retrieved, false when retrieval failed, and null when not requested.
+     * `true` if returned, `false` if it failed, `null` if not requested.
      */
     #[Required]
     public ?bool $success;
@@ -93,7 +93,7 @@ final class Highlights implements BaseModel
     }
 
     /**
-     * True when retrieved, false when retrieval failed, and null when not requested.
+     * `true` if returned, `false` if it failed, `null` if not requested.
      */
     public function withSuccess(?bool $success): self
     {

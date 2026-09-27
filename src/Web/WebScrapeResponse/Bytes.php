@@ -10,7 +10,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebScrapeResponse\Bytes\Data;
 
 /**
- * Original HTTP response body. Waiting, actions, and content filters never change it.
+ * The original HTTP response body, unchanged by waits, actions, and filters.
  *
  * @phpstan-import-type DataShape from \ContextDev\Web\WebScrapeResponse\Bytes\Data
  *
@@ -30,7 +30,7 @@ final class Bytes implements BaseModel
     public bool $requested;
 
     /**
-     * True when retrieved, false when retrieval failed, and null when not requested.
+     * `true` if returned, `false` if it failed, `null` if not requested.
      */
     #[Required]
     public ?bool $success;
@@ -95,7 +95,7 @@ final class Bytes implements BaseModel
     }
 
     /**
-     * True when retrieved, false when retrieval failed, and null when not requested.
+     * `true` if returned, `false` if it failed, `null` if not requested.
      */
     public function withSuccess(?bool $success): self
     {

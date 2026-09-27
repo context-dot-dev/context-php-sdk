@@ -23,7 +23,7 @@ final class ParseParams implements BaseModel
     use SdkModel;
 
     /**
-     * Map field names to CSS selectors or rules. Missing items return null; missing lists return [].
+     * Field names mapped to CSS selectors (`h1`, `a@href`) or rule objects. Max 100 fields, 5 levels.
      *
      * @var array<string,RuleVariants> $rules
      */
@@ -66,7 +66,7 @@ final class ParseParams implements BaseModel
     }
 
     /**
-     * Map field names to CSS selectors or rules. Missing items return null; missing lists return [].
+     * Field names mapped to CSS selectors (`h1`, `a@href`) or rule objects. Max 100 fields, 5 levels.
      *
      * @param array<string,RuleShape> $rules
      */

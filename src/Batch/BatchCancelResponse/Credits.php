@@ -19,7 +19,7 @@ final class Credits implements BaseModel
     use SdkModel;
 
     /**
-     * Credits debited at submission. The unspent remainder is refunded once the batch settles — read `credits.refunded` from GET /batch/{batch_id} then.
+     * Credits held at submission; unused credits are refunded when the batch settles.
      */
     #[Required]
     public int $reserved;
@@ -58,7 +58,7 @@ final class Credits implements BaseModel
     }
 
     /**
-     * Credits debited at submission. The unspent remainder is refunded once the batch settles — read `credits.refunded` from GET /batch/{batch_id} then.
+     * Credits held at submission; unused credits are refunded when the batch settles.
      */
     public function withReserved(int $reserved): self
     {

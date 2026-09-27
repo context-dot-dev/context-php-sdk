@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Highlight options. Requires formats.highlights: true.
+ * Required when `formats.highlights` is `true`.
  *
  * @phpstan-type HighlightsParamsShape = array{
  *   query: string, maxCharacters?: int|null
@@ -28,7 +28,7 @@ final class HighlightsParams implements BaseModel
     public string $query;
 
     /**
-     * Maximum combined length of the returned passages, in characters.
+     * Maximum combined length of returned passages.
      */
     #[Optional]
     public ?int $maxCharacters;
@@ -80,7 +80,7 @@ final class HighlightsParams implements BaseModel
     }
 
     /**
-     * Maximum combined length of the returned passages, in characters.
+     * Maximum combined length of returned passages.
      */
     public function withMaxCharacters(int $maxCharacters): self
     {

@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Outputs to return. Enable at least one; omitted formats are false.
+ * Outputs to return. Set at least one to `true`.
  *
  * @phpstan-type FormatsShape = array{
  *   bytes?: bool|null,
@@ -35,7 +35,7 @@ final class Formats implements BaseModel
     public ?bool $bytes;
 
     /**
-     * Relevant Markdown excerpts for your question or topic, preserving code, lists, and tables, with headings included when needed for context. Adds 3 credits when passages are returned.
+     * Markdown excerpts relevant to `highlightsParams.query`.
      */
     #[Optional]
     public ?bool $highlights;
@@ -53,7 +53,7 @@ final class Formats implements BaseModel
     public ?bool $images;
 
     /**
-     * Page data extracted using your schema. Adds 4 credits when extraction succeeds and its result is returned.
+     * An object matching `jsonParams.schema`, extracted from the page.
      */
     #[Optional]
     public ?bool $json;
@@ -65,19 +65,19 @@ final class Formats implements BaseModel
     public ?bool $markdown;
 
     /**
-     * Fields selected by parseParams.rules.
+     * Fields extracted with `parseParams.rules`, returned as `parsed`.
      */
     #[Optional]
     public ?bool $parse;
 
     /**
-     * Product details such as name, price, and availability. Adds 1 credit when its successful result is returned or the target page is missing.
+     * Product details such as name, price, and availability.
      */
     #[Optional]
     public ?bool $product;
 
     /**
-     * An inline image of the page.
+     * A screenshot of the page.
      */
     #[Optional]
     public ?bool $screenshot;
@@ -130,7 +130,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * Relevant Markdown excerpts for your question or topic, preserving code, lists, and tables, with headings included when needed for context. Adds 3 credits when passages are returned.
+     * Markdown excerpts relevant to `highlightsParams.query`.
      */
     public function withHighlights(bool $highlights): self
     {
@@ -163,7 +163,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * Page data extracted using your schema. Adds 4 credits when extraction succeeds and its result is returned.
+     * An object matching `jsonParams.schema`, extracted from the page.
      */
     public function withJson(bool $json): self
     {
@@ -185,7 +185,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * Fields selected by parseParams.rules.
+     * Fields extracted with `parseParams.rules`, returned as `parsed`.
      */
     public function withParse(bool $parse): self
     {
@@ -196,7 +196,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * Product details such as name, price, and availability. Adds 1 credit when its successful result is returned or the target page is missing.
+     * Product details such as name, price, and availability.
      */
     public function withProduct(bool $product): self
     {
@@ -207,7 +207,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * An inline image of the page.
+     * A screenshot of the page.
      */
     public function withScreenshot(bool $screenshot): self
     {

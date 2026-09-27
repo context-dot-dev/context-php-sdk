@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * There is no finish time yet — the batch is still winding down.
+ * Batch timestamps.
  *
  * @phpstan-type TimingShape = array{createdAt: string, startedAt: string|null}
  */

@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Watch a sitemap for URL additions and removals. Crawled URLs are normalized (lowercased host, no trailing slash/fragment) and scoped to the monitored site and its subdomains before comparison. On a detected difference the sitemap is re-fetched within the same run and only URLs both observations agree on are reported, suppressing transient crawl flaps.
+ * Watch a site’s URL inventory for confirmed additions and removals.
  *
  * @phpstan-type MonitorsSitemapTargetShape = array{
  *   type: 'sitemap',
@@ -25,7 +25,11 @@ final class MonitorsSitemapTarget implements BaseModel
     /** @use SdkModel<MonitorsSitemapTargetShape> */
     use SdkModel;
 
-    /** @var 'sitemap' $type */
+    /**
+     * Use `sitemap` to watch a site for added or removed URLs.
+     *
+     * @var 'sitemap' $type
+     */
     #[Required]
     public string $type = 'sitemap';
 
@@ -102,6 +106,8 @@ final class MonitorsSitemapTarget implements BaseModel
     }
 
     /**
+     * Use `sitemap` to watch a site for added or removed URLs.
+     *
      * @param 'sitemap' $type
      */
     public function withType(string $type): self

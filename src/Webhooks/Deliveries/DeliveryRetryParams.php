@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Retry a webhook delivery within seven days of creation.
+ * Resend the original payload using the source’s current URL and secret. Available for 7 days after the event.
  *
  * @see ContextDev\Services\Webhooks\DeliveriesService::retry()
  *
@@ -25,13 +25,13 @@ final class DeliveryRetryParams implements BaseModel
     use SdkParams;
 
     /**
-     * Resend a delivery that already succeeded.
+     * Resend even if the delivery already succeeded. Defaults to false.
      */
     #[Optional]
     public ?bool $force;
 
     /**
-     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * Labels for filtering usage in the dashboard.
      *
      * @var list<string>|null $tags
      */
@@ -71,7 +71,7 @@ final class DeliveryRetryParams implements BaseModel
     }
 
     /**
-     * Resend a delivery that already succeeded.
+     * Resend even if the delivery already succeeded. Defaults to false.
      */
     public function withForce(bool $force): self
     {
@@ -82,7 +82,7 @@ final class DeliveryRetryParams implements BaseModel
     }
 
     /**
-     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * Labels for filtering usage in the dashboard.
      *
      * @param list<string> $tags
      */

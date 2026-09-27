@@ -30,7 +30,7 @@ final class Product implements BaseModel
     public bool $requested;
 
     /**
-     * True when retrieved, false when retrieval failed, and null when not requested.
+     * `true` if returned, `false` if it failed, `null` if not requested.
      */
     #[Required]
     public ?bool $success;
@@ -95,7 +95,7 @@ final class Product implements BaseModel
     }
 
     /**
-     * True when retrieved, false when retrieval failed, and null when not requested.
+     * `true` if returned, `false` if it failed, `null` if not requested.
      */
     public function withSuccess(?bool $success): self
     {

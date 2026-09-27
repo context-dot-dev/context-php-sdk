@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace ContextDev\Monitors\MonitorCreateParams\Schedule;
 
+/**
+ * Time unit used with `frequency` to set the run interval.
+ */
 enum Unit: string
 {
     case MINUTES = 'minutes';

@@ -16,7 +16,7 @@ use ContextDev\Web\WebSearchParams\TimeoutOpts;
 use ContextDev\Web\WebSearchParams\Zdr;
 
 /**
- * Search the web and optionally scrape each result to Markdown in one round-trip.
+ * Search the web and optionally return page content with each result.
  *
  * @see ContextDev\Services\WebService::search()
  *
@@ -94,13 +94,13 @@ final class WebSearchParams implements BaseModel
     public ?int $numResults;
 
     /**
-     * Expand the query into multiple parallel variants for broader recall.
+     * Currently has no effect.
      */
     #[Optional]
     public ?bool $queryFanout;
 
     /**
-     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * Labels for filtering usage in the dashboard.
      *
      * @var list<string>|null $tags
      */
@@ -108,13 +108,13 @@ final class WebSearchParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * Request deadline and what to return when it passes.
      */
     #[Optional]
     public ?TimeoutOpts $timeoutOpts;
 
     /**
-     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @var value-of<Zdr>|null $zdr
      */
@@ -274,7 +274,7 @@ final class WebSearchParams implements BaseModel
     }
 
     /**
-     * Expand the query into multiple parallel variants for broader recall.
+     * Currently has no effect.
      */
     public function withQueryFanout(bool $queryFanout): self
     {
@@ -285,7 +285,7 @@ final class WebSearchParams implements BaseModel
     }
 
     /**
-     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * Labels for filtering usage in the dashboard.
      *
      * @param list<string> $tags
      */
@@ -298,7 +298,7 @@ final class WebSearchParams implements BaseModel
     }
 
     /**
-     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * Request deadline and what to return when it passes.
      *
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
@@ -311,7 +311,7 @@ final class WebSearchParams implements BaseModel
     }
 
     /**
-     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @param Zdr|value-of<Zdr> $zdr
      */
