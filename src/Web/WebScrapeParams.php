@@ -97,7 +97,7 @@ final class WebScrapeParams implements BaseModel
     public ?MarkdownParams $markdownParams;
 
     /**
-     * Maximum age of a cached output, in milliseconds. `0` fetches fresh. Defaults to 1 day.
+     * Maximum age of a cached output, in milliseconds. `0` fetches fresh. Defaults to 3 days (259200000 ms). Maximum: 1 year (31536000000 ms).
      */
     #[Optional]
     public ?int $maxAgeMs;
@@ -301,7 +301,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Maximum age of a cached output, in milliseconds. `0` fetches fresh. Defaults to 1 day.
+     * Maximum age of a cached output, in milliseconds. `0` fetches fresh. Defaults to 3 days (259200000 ms). Maximum: 1 year (31536000000 ms).
      */
     public function withMaxAgeMs(int $maxAgeMs): self
     {
