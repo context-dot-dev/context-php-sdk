@@ -263,7 +263,7 @@ final class WebService implements WebContract
      * @param ImageParams|ImageParamsShape $imageParams Image options. Requires formats.images: true.
      * @param JsonParams|JsonParamsShape $jsonParams Required when formats.json is true.
      * @param MarkdownParams|MarkdownParamsShape $markdownParams Markdown options. Requires `formats.markdown`.
-     * @param int $maxAgeMs Maximum age of a cached output, in milliseconds. `0` fetches fresh. Defaults to 1 day.
+     * @param int $maxAgeMs Maximum age of a cached output, in milliseconds. `0` fetches fresh. Defaults to 3 days (259200000 ms). Maximum: 1 year (31536000000 ms).
      * @param ParseParams|ParseParamsShape $parseParams Required when formats.parse is true.
      * @param ProductParams|ProductParamsShape $productParams Product options. Requires formats.product: true.
      * @param ScreenshotParams|ScreenshotParamsShape $screenshotParams Screenshot options. Requires formats.screenshot: true.
@@ -282,7 +282,7 @@ final class WebService implements WebContract
         ImageParams|array|null $imageParams = null,
         JsonParams|array|null $jsonParams = null,
         MarkdownParams|array|null $markdownParams = null,
-        int $maxAgeMs = 86400000,
+        int $maxAgeMs = 259200000,
         ParseParams|array|null $parseParams = null,
         ProductParams|array|null $productParams = null,
         ScreenshotParams|array|null $screenshotParams = null,
