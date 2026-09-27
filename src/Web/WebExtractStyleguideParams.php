@@ -13,7 +13,7 @@ use ContextDev\Web\WebExtractStyleguideParams\TimeoutOpts;
 use ContextDev\Web\WebExtractStyleguideParams\Zdr;
 
 /**
- * Extract a comprehensive design system from a website including colors, typography, spacing, shadows, and UI components.
+ * Extract colors, typography, spacing, and component styles from a website.
  *
  * @see ContextDev\Services\WebService::extractStyleguide()
  *
@@ -44,7 +44,7 @@ final class WebExtractStyleguideParams implements BaseModel
     public ?string $colorScheme;
 
     /**
-     * A specific URL to fetch the styleguide from directly, bypassing domain resolution (e.g., 'https://example.com/design-system'). When provided, the styleguide is extracted from this exact URL. You must provide either 'domain' or 'directUrl', but not both.
+     * Exact URL to inspect. Provide either `domain` or `directUrl`, not both.
      */
     #[Optional]
     public ?string $directURL;
@@ -56,13 +56,13 @@ final class WebExtractStyleguideParams implements BaseModel
     public ?string $domain;
 
     /**
-     * Maximum age in milliseconds for cached brand data before the API performs a hard refresh. Defaults to 3 months (7776000000 ms). Set to 0 to always perform a hard refresh. Negative values are clamped to 0; values above 1 year (31536000000 ms) are clamped to 1 year.
+     * Maximum age of cached brand data in ms. Defaults to 3 months; clamped to 0–1 year. `0` refreshes.
      */
     #[Optional(nullable: true)]
     public ?int $maxAgeMs;
 
     /**
-     * Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      *
      * @var list<string>|null $tags
      */
@@ -70,13 +70,13 @@ final class WebExtractStyleguideParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * Request deadline and what to return when it passes.
      */
     #[Optional]
     public ?TimeoutOpts $timeoutOpts;
 
     /**
-     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @var value-of<Zdr>|null $zdr
      */
@@ -134,7 +134,7 @@ final class WebExtractStyleguideParams implements BaseModel
     }
 
     /**
-     * A specific URL to fetch the styleguide from directly, bypassing domain resolution (e.g., 'https://example.com/design-system'). When provided, the styleguide is extracted from this exact URL. You must provide either 'domain' or 'directUrl', but not both.
+     * Exact URL to inspect. Provide either `domain` or `directUrl`, not both.
      */
     public function withDirectURL(string $directURL): self
     {
@@ -156,7 +156,7 @@ final class WebExtractStyleguideParams implements BaseModel
     }
 
     /**
-     * Maximum age in milliseconds for cached brand data before the API performs a hard refresh. Defaults to 3 months (7776000000 ms). Set to 0 to always perform a hard refresh. Negative values are clamped to 0; values above 1 year (31536000000 ms) are clamped to 1 year.
+     * Maximum age of cached brand data in ms. Defaults to 3 months; clamped to 0–1 year. `0` refreshes.
      */
     public function withMaxAgeMs(?int $maxAgeMs): self
     {
@@ -167,7 +167,7 @@ final class WebExtractStyleguideParams implements BaseModel
     }
 
     /**
-     * Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      *
      * @param list<string> $tags
      */
@@ -180,7 +180,7 @@ final class WebExtractStyleguideParams implements BaseModel
     }
 
     /**
-     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * Request deadline and what to return when it passes.
      *
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
@@ -193,7 +193,7 @@ final class WebExtractStyleguideParams implements BaseModel
     }
 
     /**
-     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @param Zdr|value-of<Zdr> $zdr
      */

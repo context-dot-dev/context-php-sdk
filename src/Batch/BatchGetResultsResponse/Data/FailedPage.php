@@ -53,7 +53,7 @@ final class FailedPage implements BaseModel
     public string $url;
 
     /**
-     * Caller-supplied identifier echoed from submission.
+     * Your `itemId` from submission.
      */
     #[Optional('itemId')]
     public ?string $itemID;
@@ -158,7 +158,7 @@ final class FailedPage implements BaseModel
     }
 
     /**
-     * Caller-supplied identifier echoed from submission.
+     * Your `itemId` from submission.
      */
     public function withItemID(string $itemID): self
     {

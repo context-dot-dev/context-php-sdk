@@ -45,7 +45,7 @@ final class ScrapedPage implements BaseModel
     public string $status = 'ok';
 
     /**
-     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     * Whether this response came from cache.
      */
     #[Required('cache_metadata')]
     public CacheMetadata $cacheMetadata;
@@ -81,7 +81,7 @@ final class ScrapedPage implements BaseModel
     public ?string $html;
 
     /**
-     * Caller-supplied identifier echoed from submission.
+     * Your `itemId` from submission.
      */
     #[Optional('itemId')]
     public ?string $itemID;
@@ -101,7 +101,7 @@ final class ScrapedPage implements BaseModel
     public ?array $meta;
 
     /**
-     * PDF pages of this document recovered by OCR (pdf.ocr=true). Each recovered page bills 1 credit on top of the page base credit; absent when no OCR ran.
+     * Number of PDF pages recovered by OCR. Omitted when OCR did not run.
      */
     #[Optional('ocr_pages')]
     public ?int $ocrPages;
@@ -171,7 +171,7 @@ final class ScrapedPage implements BaseModel
     }
 
     /**
-     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     * Whether this response came from cache.
      *
      * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      */
@@ -254,7 +254,7 @@ final class ScrapedPage implements BaseModel
     }
 
     /**
-     * Caller-supplied identifier echoed from submission.
+     * Your `itemId` from submission.
      */
     public function withItemID(string $itemID): self
     {
@@ -289,7 +289,7 @@ final class ScrapedPage implements BaseModel
     }
 
     /**
-     * PDF pages of this document recovered by OCR (pdf.ocr=true). Each recovered page bills 1 credit on top of the page base credit; absent when no OCR ran.
+     * Number of PDF pages recovered by OCR. Omitted when OCR did not run.
      */
     public function withOcrPages(int $ocrPages): self
     {

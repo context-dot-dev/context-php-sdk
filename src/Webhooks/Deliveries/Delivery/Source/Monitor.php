@@ -32,7 +32,7 @@ final class Monitor implements BaseModel
     public string $runID;
 
     /**
-     * Delivery source.
+     * Which deliveries to list: `batch` or `monitor`.
      *
      * @var value-of<Type> $type
      */
@@ -102,7 +102,7 @@ final class Monitor implements BaseModel
     }
 
     /**
-     * Delivery source.
+     * Which deliveries to list: `batch` or `monitor`.
      *
      * @param Type|value-of<Type> $type
      */

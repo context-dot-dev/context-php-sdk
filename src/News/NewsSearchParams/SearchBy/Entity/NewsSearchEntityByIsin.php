@@ -18,7 +18,11 @@ final class NewsSearchEntityByIsin implements BaseModel
     /** @use SdkModel<NewsSearchEntityByIsinShape> */
     use SdkModel;
 
-    /** @var 'isin' $type */
+    /**
+     * Use `isin` to identify the company by its securities identifier.
+     *
+     * @var 'isin' $type
+     */
     #[Required]
     public string $type = 'isin';
 
@@ -73,6 +77,8 @@ final class NewsSearchEntityByIsin implements BaseModel
     }
 
     /**
+     * Use `isin` to identify the company by its securities identifier.
+     *
      * @param 'isin' $type
      */
     public function withType(string $type): self

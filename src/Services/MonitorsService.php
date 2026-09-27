@@ -39,7 +39,7 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\MonitorsContract;
 
 /**
- * Monitor pages, sitemaps, and extracted website data for exact or semantic changes. Webhook payloads are documented by the MonitorsChangeDetectedWebhookPayload and MonitorsRunCompletedWebhookPayload schemas.
+ * Watch websites for exact or meaningful changes.
  *
  * @phpstan-import-type TargetShape from \ContextDev\Monitors\MonitorCreateParams\Target
  * @phpstan-import-type ChangeDetectionShape from \ContextDev\Monitors\MonitorCreateParams\ChangeDetection
@@ -69,14 +69,15 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Creates a monitor. The request body is a union of the supported target/change detection combinations. The monitor runs immediately after creation to create its initial baseline.
+     * Watch a page, URL inventory, or extracted website data on a schedule. A run starts immediately to capture the baseline.
      *
-     * @param TargetShape $target discriminated union describing what the monitor watches
-     * @param ChangeDetectionShape $changeDetection discriminated union describing how changes are detected
-     * @param Mode|value-of<Mode> $mode Top-level monitor category. Always `web` today; the concrete behavior is described by `target` and `change_detection`.
+     * @param string $name display name for the monitor
+     * @param TargetShape $target what to watch: a page, a sitemap, or data extracted from a site
+     * @param ChangeDetectionShape $changeDetection How changes are judged. Defaults to `semantic` for extract targets and page targets with `instructions`, otherwise `exact`.
+     * @param Mode|value-of<Mode> $mode Always `web`. Optional.
      * @param Schedule|ScheduleShape $schedule Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
-     * @param list<string> $tags User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
-     * @param Webhook|WebhookShape|null $webhook
+     * @param list<string> $tags labels for filtering monitors, their changes, and their usage
+     * @param Webhook|WebhookShape|null $webhook Webhook destination and delivery settings. Null means no webhook is configured.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -112,8 +113,9 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Get a monitor
+     * Retrieve a monitor’s configuration and current state.
      *
+     * @param string $monitorID ID of the monitor
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -131,14 +133,16 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Updates a monitor. If `target` or `change_detection` changes, the monitor creates a new baseline. Unsupported target/change detection combinations are rejected.
+     * Update a monitor. Changing its target or change detection replaces the baseline and queues a new baseline run.
      *
-     * @param ChangeDetectionShape1 $changeDetection discriminated union describing how changes are detected
+     * @param string $monitorID ID of the monitor
+     * @param ChangeDetectionShape1 $changeDetection How changes are judged. Defaults to `semantic` for extract targets and page targets with `instructions`, otherwise `exact`.
+     * @param string $name display name for the monitor
      * @param \ContextDev\Monitors\MonitorUpdateParams\Schedule|ScheduleShape1 $schedule Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
-     * @param Status|value-of<Status> $status
-     * @param list<string> $tags User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
-     * @param TargetShape1 $target discriminated union describing what the monitor watches
-     * @param \ContextDev\Monitors\MonitorUpdateParams\Webhook|WebhookShape1|null $webhook set to null to remove the webhook
+     * @param Status|value-of<Status> $status set `paused` to stop scheduled runs or `active` to resume them
+     * @param list<string> $tags labels for filtering monitors, their changes, and their usage
+     * @param TargetShape1 $target what to watch: a page, a sitemap, or data extracted from a site
+     * @param \ContextDev\Monitors\MonitorUpdateParams\Webhook|WebhookShape1|null $webhook Set to null to remove the webhook. Changing `url` issues a new secret.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -175,13 +179,13 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Lists monitors for the authenticated organization. Supports free-text search (`q` over `search_by` fields, `prefix` or `exact` via `search_type`) plus status/type/tag filters. Results are paginated via the opaque `cursor`.
+     * List your monitors with optional search and filters.
      *
      * @param ChangeDetectionType|value-of<ChangeDetectionType> $changeDetectionType filter by change detection type
      * @param string $cursor opaque pagination cursor from a previous response
      * @param int $limit Maximum number of items to return per page (1-100). Defaults to 25.
      * @param string $q free-text search term, matched against the fields named in `search_by`
-     * @param list<SearchBy|value-of<SearchBy>>|null $searchBy Comma-separated fields to search with `q`. Defaults to all of them. Note `instructions` only exists on extract monitors.
+     * @param list<SearchBy|value-of<SearchBy>>|null $searchBy Fields to search with `q`. Defaults to all fields; page and extract targets can have instructions.
      * @param SearchType|value-of<SearchType> $searchType `prefix` for as-you-type prefix matching (default), `exact` for full-token matching
      * @param \ContextDev\Monitors\MonitorListParams\Status|value-of<\ContextDev\Monitors\MonitorListParams\Status> $status filter monitors by lifecycle status
      * @param string $tag filter to items that have this tag
@@ -228,8 +232,9 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Delete a monitor
+     * Delete a monitor and stop future runs and webhook retries.
      *
+     * @param string $monitorID ID of the monitor
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -247,7 +252,7 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Returns credits charged per monitor over an optional [since, until] window, newest spenders first.
+     * Return usage per monitor, highest first, for up to the 10,000 most recent runs in the requested window.
      *
      * @param \DateTimeInterface $since only include items at or after this ISO 8601 timestamp
      * @param \DateTimeInterface $until only include items before this ISO 8601 timestamp
@@ -271,7 +276,7 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Returns how many monitors the account has and the maximum it allows.
+     * Retrieve your organization’s monitor allowance and usage.
      *
      * @param RequestOpts|null $requestOptions
      *
@@ -289,7 +294,7 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Returns an account-wide feed of detected changes across monitors.
+     * List full change records across your monitors, newest first.
      *
      * @param \ContextDev\Monitors\MonitorListAccountChangesParams\ChangeDetectionType|value-of<\ContextDev\Monitors\MonitorListAccountChangesParams\ChangeDetectionType> $changeDetectionType filter by change detection type
      * @param string $cursor opaque pagination cursor from a previous response
@@ -336,7 +341,7 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Returns an account-wide feed of monitor runs across all monitors.
+     * List runs across your monitors, newest first.
      *
      * @param string $cursor opaque pagination cursor from a previous response
      * @param int $limit Maximum number of items to return per page (1-100). Defaults to 25.
@@ -364,8 +369,9 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * List changes for a monitor
+     * List full change records for a monitor, newest first.
      *
+     * @param string $monitorID ID of the monitor
      * @param string $cursor opaque pagination cursor from a previous response
      * @param int $limit Maximum number of items to return per page (1-100). Defaults to 25.
      * @param \DateTimeInterface $since only include items at or after this ISO 8601 timestamp
@@ -403,8 +409,9 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * List monitor runs
+     * List a monitor’s runs, newest first.
      *
+     * @param string $monitorID ID of the monitor
      * @param string $cursor opaque pagination cursor from a previous response
      * @param int $limit Maximum number of items to return per page (1-100). Defaults to 25.
      * @param \ContextDev\Monitors\MonitorListRunsParams\Status|value-of<\ContextDev\Monitors\MonitorListRunsParams\Status> $status filter runs by lifecycle status
@@ -432,8 +439,9 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Get a change
+     * Retrieve a detected change, including its diff and available evidence.
      *
+     * @param string $changeID ID of the detected change
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -451,8 +459,10 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Fetches one run for a monitor, including lifecycle status, timing, credits charged, and any detected change.
+     * Retrieve the status, timing, and results of one monitor run.
      *
+     * @param string $runID ID of the monitor run
+     * @param string $monitorID ID of the monitor
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -473,8 +483,9 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Generates a new signing secret for the monitor's webhook and returns the updated monitor (including the new `webhook.secret`). The previous secret stops signing deliveries immediately, so update your endpoint before rotating.
+     * Generate and return a new signing secret. It takes effect immediately for all subsequent delivery attempts.
      *
+     * @param string $monitorID ID of the monitor
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -492,8 +503,9 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Triggers an immediate run of the monitor outside its normal schedule. The run is queued and processed asynchronously.
+     * Queue a run without changing the regular schedule. Paused monitors return 409.
      *
+     * @param string $monitorID ID of the monitor
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

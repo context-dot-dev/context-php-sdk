@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Web\WebScrapeParams\MarkdownParams;
 
 /**
- * Base64 images use placeholders by default. Requires includeImages: true.
+ * How base64 images appear: `placeholder` (default) or `preserve`. Requires `includeImages`.
  */
 enum InlineImages: string
 {

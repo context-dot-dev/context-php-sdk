@@ -68,7 +68,7 @@ final class Data implements BaseModel
     public string $id;
 
     /**
-     * Discriminated union describing how changes are detected.
+     * How changes are judged. Defaults to `semantic` for extract targets and page targets with `instructions`, otherwise `exact`.
      *
      * @var ChangeDetectionVariants $changeDetection
      */
@@ -79,7 +79,7 @@ final class Data implements BaseModel
     public \DateTimeInterface $createdAt;
 
     /**
-     * Top-level monitor category. Always `web` today; the concrete behavior is described by `target` and `change_detection`.
+     * Always `web`. Optional.
      *
      * @var value-of<Mode> $mode
      */
@@ -96,7 +96,7 @@ final class Data implements BaseModel
     public Schedule $schedule;
 
     /**
-     * Monitor lifecycle status. `failed` means the most recent run failed (see the monitor's `last_error`); failed monitors keep running on schedule and flip back to `active` on the next successful run. Monitors are auto-`paused` after repeated consecutive failures or insufficient-credit skips; resume by PATCHing status to `active`.
+     * Current state. Failed monitors keep running; paused monitors must be resumed with `status: "active"`.
      *
      * @var value-of<Status> $status
      */
@@ -104,7 +104,7 @@ final class Data implements BaseModel
     public string $status;
 
     /**
-     * Discriminated union describing what the monitor watches.
+     * What to watch: a page, a sitemap, or data extracted from a site.
      *
      * @var TargetVariants $target
      */
@@ -115,7 +115,7 @@ final class Data implements BaseModel
     public \DateTimeInterface $updatedAt;
 
     /**
-     * Current baseline: the last observed value the monitor compares new snapshots against. Its shape follows `target.type` (page/sitemap/extract). Only populated on GET /monitors/{monitor_id}; null until the first baseline run completes (and after a target or change_detection update, which resets the baseline).
+     * Comparison baseline, included on Retrieve. Null until capture completes or after target changes.
      *
      * @var BaselineVariants|null $baseline
      */
@@ -135,19 +135,22 @@ final class Data implements BaseModel
     public ?\DateTimeInterface $lastRunAt;
 
     /**
-     * When the next scheduled run is due.
+     * When the next scheduled run is due; null while paused.
      */
     #[Optional('next_run_at', nullable: true)]
     public ?\DateTimeInterface $nextRunAt;
 
     /**
-     * User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
+     * Labels for filtering monitors, their changes, and their usage.
      *
      * @var list<string>|null $tags
      */
     #[Optional(list: 'string')]
     public ?array $tags;
 
+    /**
+     * Webhook destination and delivery settings. Null means no webhook is configured.
+     */
     #[Optional(nullable: true)]
     public ?Webhook $webhook;
 
@@ -263,7 +266,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Discriminated union describing how changes are detected.
+     * How changes are judged. Defaults to `semantic` for extract targets and page targets with `instructions`, otherwise `exact`.
      *
      * @param ChangeDetectionShape $changeDetection
      */
@@ -285,7 +288,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Top-level monitor category. Always `web` today; the concrete behavior is described by `target` and `change_detection`.
+     * Always `web`. Optional.
      *
      * @param Mode|value-of<Mode> $mode
      */
@@ -319,7 +322,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Monitor lifecycle status. `failed` means the most recent run failed (see the monitor's `last_error`); failed monitors keep running on schedule and flip back to `active` on the next successful run. Monitors are auto-`paused` after repeated consecutive failures or insufficient-credit skips; resume by PATCHing status to `active`.
+     * Current state. Failed monitors keep running; paused monitors must be resumed with `status: "active"`.
      *
      * @param Status|value-of<Status> $status
      */
@@ -332,7 +335,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Discriminated union describing what the monitor watches.
+     * What to watch: a page, a sitemap, or data extracted from a site.
      *
      * @param TargetShape $target
      */
@@ -354,7 +357,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Current baseline: the last observed value the monitor compares new snapshots against. Its shape follows `target.type` (page/sitemap/extract). Only populated on GET /monitors/{monitor_id}; null until the first baseline run completes (and after a target or change_detection update, which resets the baseline).
+     * Comparison baseline, included on Retrieve. Null until capture completes or after target changes.
      *
      * @param BaselineShape|null $baseline
      */
@@ -397,7 +400,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * When the next scheduled run is due.
+     * When the next scheduled run is due; null while paused.
      */
     public function withNextRunAt(?\DateTimeInterface $nextRunAt): self
     {
@@ -408,7 +411,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
+     * Labels for filtering monitors, their changes, and their usage.
      *
      * @param list<string> $tags
      */
@@ -421,6 +424,8 @@ final class Data implements BaseModel
     }
 
     /**
+     * Webhook destination and delivery settings. Null means no webhook is configured.
+     *
      * @param Webhook|WebhookShape|null $webhook
      */
     public function withWebhook(Webhook|array|null $webhook): self

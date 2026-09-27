@@ -12,7 +12,7 @@ use ContextDev\Web\WebScrapeParams\ScreenshotParams\Area\Page;
 use ContextDev\Web\WebScrapeParams\ScreenshotParams\Area\Rectangle;
 
 /**
- * Viewport, full page, one visible element, or a rectangle. Maximum 40 megapixels.
+ * What to capture: `viewport`, `fullPage`, one element, or a rectangle. Max 40 megapixels.
  *
  * @phpstan-import-type ElementShape from \ContextDev\Web\WebScrapeParams\ScreenshotParams\Area\Element
  * @phpstan-import-type RectangleShape from \ContextDev\Web\WebScrapeParams\ScreenshotParams\Area\Rectangle

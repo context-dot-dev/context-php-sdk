@@ -37,7 +37,8 @@ final class NewsTest extends TestCase
 
         $result = $this->client->news->search(
             searchBy: [
-                'entity' => ['name' => 'xx', 'type' => 'name'], 'type' => 'entity',
+                'entity' => ['domain' => 'stripe.com', 'type' => 'domain'],
+                'type' => 'entity',
             ],
         );
 
@@ -54,7 +55,8 @@ final class NewsTest extends TestCase
 
         $result = $this->client->news->search(
             searchBy: [
-                'entity' => ['name' => 'xx', 'type' => 'name'], 'type' => 'entity',
+                'entity' => ['domain' => 'stripe.com', 'type' => 'domain'],
+                'type' => 'entity',
             ],
             cursor: 'cursor',
             filterBy: [

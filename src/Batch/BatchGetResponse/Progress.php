@@ -25,7 +25,7 @@ final class Progress implements BaseModel
     public int $failed;
 
     /**
-     * Reserved pages not yet attempted. A cancelled batch keeps reporting the URLs it never reached; a crawl whose `input.reserved_is_ceiling` is true reports 0 once final, because its unspent budget was never real pages.
+     * Accepted pages not yet attempted. Unused crawl capacity is excluded after completion.
      */
     #[Required]
     public int $pending;
@@ -83,7 +83,7 @@ final class Progress implements BaseModel
     }
 
     /**
-     * Reserved pages not yet attempted. A cancelled batch keeps reporting the URLs it never reached; a crawl whose `input.reserved_is_ceiling` is true reports 0 once final, because its unspent budget was never real pages.
+     * Accepted pages not yet attempted. Unused crawl capacity is excluded after completion.
      */
     public function withPending(int $pending): self
     {

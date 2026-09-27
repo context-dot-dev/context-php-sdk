@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * List delivery attempts, newest first.
+ * List a delivery’s attempts, newest first.
  *
  * @see ContextDev\Services\Webhooks\DeliveriesService::listAttempts()
  *
@@ -37,7 +37,7 @@ final class DeliveryListAttemptsParams implements BaseModel
     public ?int $limit;
 
     /**
-     * Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      *
      * @var list<string>|null $tags
      */
@@ -93,7 +93,7 @@ final class DeliveryListAttemptsParams implements BaseModel
     }
 
     /**
-     * Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      *
      * @param list<string> $tags
      */

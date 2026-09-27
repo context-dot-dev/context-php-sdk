@@ -99,7 +99,7 @@ final class Delivery implements BaseModel
     public RetryConfig $retry;
 
     /**
-     * Manual retry deadline, seven days after event creation.
+     * Last time you can retry manually (7 days after the event).
      */
     #[Required('retry_expires_at')]
     public \DateTimeInterface $retryExpiresAt;
@@ -113,7 +113,7 @@ final class Delivery implements BaseModel
     public Batch|Monitor $source;
 
     /**
-     * Current delivery status.
+     * `pending`, `delivering`, `retrying`, `delivered`, `failed`, or `cancelled` (source or its webhook was removed).
      *
      * @var value-of<Status> $status
      */
@@ -326,7 +326,7 @@ final class Delivery implements BaseModel
     }
 
     /**
-     * Manual retry deadline, seven days after event creation.
+     * Last time you can retry manually (7 days after the event).
      */
     public function withRetryExpiresAt(\DateTimeInterface $retryExpiresAt): self
     {
@@ -350,7 +350,7 @@ final class Delivery implements BaseModel
     }
 
     /**
-     * Current delivery status.
+     * `pending`, `delivering`, `retrying`, `delivered`, `failed`, or `cancelled` (source or its webhook was removed).
      *
      * @param Status|value-of<Status> $status
      */

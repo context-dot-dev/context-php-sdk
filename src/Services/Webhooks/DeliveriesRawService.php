@@ -22,7 +22,7 @@ use ContextDev\Webhooks\Deliveries\DeliveryRetryParams;
 use ContextDev\Webhooks\Deliveries\DeliveryRetryResponse;
 
 /**
- * Inspect and retry webhook deliveries. These endpoints cost no credits.
+ * Inspect and retry batch and monitor webhook deliveries.
  *
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
@@ -37,7 +37,7 @@ final class DeliveriesRawService implements DeliveriesRawContract
     /**
      * @api
      *
-     * Get a webhook delivery, including its status and latest attempt.
+     * Retrieve a webhook delivery’s status and original payload.
      *
      * @param string $deliveryID delivery ID
      * @param array{tags?: list<string>}|DeliveryRetrieveParams $params
@@ -70,7 +70,7 @@ final class DeliveriesRawService implements DeliveriesRawContract
     /**
      * @api
      *
-     * List your batch or monitor webhook deliveries, newest first.
+     * List batch and monitor webhook deliveries from the last 30 days.
      *
      * @param array{
      *   type: Type|value-of<Type>,
@@ -111,7 +111,7 @@ final class DeliveriesRawService implements DeliveriesRawContract
     /**
      * @api
      *
-     * List delivery attempts, newest first.
+     * List a delivery’s attempts, newest first.
      *
      * @param string $deliveryID delivery ID
      * @param array{
@@ -146,7 +146,7 @@ final class DeliveriesRawService implements DeliveriesRawContract
     /**
      * @api
      *
-     * Retry a webhook delivery within seven days of creation.
+     * Resend the original payload using the source’s current URL and secret. Available for 7 days after the event.
      *
      * @param string $deliveryID path param: Delivery ID
      * @param array{

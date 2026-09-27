@@ -59,19 +59,19 @@ final class WebScrapeResponse implements BaseModel
     use SdkModel;
 
     /**
-     * Original HTTP response body. Waiting, actions, and content filters never change it.
+     * The original HTTP response body, unchanged by waits, actions, and filters.
      */
     #[Required]
     public Bytes $bytes;
 
     /**
-     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     * Whether this response came from cache.
      */
     #[Required('cache_metadata')]
     public CacheMetadata $cacheMetadata;
 
     /**
-     * Relevant Markdown excerpts for your question or topic, in page order. Headings in square brackets supply necessary context; ellipses mark omitted portions. Empty when the page has no text.
+     * Relevant Markdown excerpts in page order. `[Heading]` adds context; `…` marks omitted text.
      */
     #[Required]
     public Highlights $highlights;
@@ -83,13 +83,13 @@ final class WebScrapeResponse implements BaseModel
     public HTML $html;
 
     /**
-     * Images after content filters. Empty when none are found.
+     * Images after content filters. `[]` when none are found.
      */
     #[Required]
     public Images $images;
 
     /**
-     * Page data extracted using your schema.
+     * Object matching `jsonParams.schema`.
      */
     #[Required]
     public Json $json;
@@ -101,13 +101,13 @@ final class WebScrapeResponse implements BaseModel
     public Markdown $markdown;
 
     /**
-     * Page details, when available.
+     * Page metadata. Fields are omitted when not found.
      */
     #[Required]
     public Metadata $metadata;
 
     /**
-     * Fields produced by parseParams.rules, after shared content filters.
+     * Fields from `parseParams.rules`, after content filters. Unmatched fields are `null` (`[]` for lists).
      */
     #[Required]
     public Parsed $parsed;
@@ -119,13 +119,13 @@ final class WebScrapeResponse implements BaseModel
     public Product $product;
 
     /**
-     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
      */
     #[Required('request_id')]
     public string $requestID;
 
     /**
-     * An image data URL. Use directly as an image src.
+     * Screenshot as a base64 image data URL.
      */
     #[Required]
     public Screenshot $screenshot;
@@ -137,13 +137,13 @@ final class WebScrapeResponse implements BaseModel
     public string $url;
 
     /**
-     * Present when at least one requested output succeeds while another fails, or when successful outputs come from a page that is still loading or images returned before processing finished. Absent when every requested output fails. Check each output's success field for its result. Valid captured pieces may be cached independently; failed retrievals and incomplete captures are not cached.
+     * True when at least one requested output succeeds but the response has failed or incomplete outputs. Absent when all requested outputs fail.
      */
     #[Optional]
     public ?bool $isPartial;
 
     /**
-     * Credit usage, included whenever a valid API key is provided.
+     * Credits this request used and your remaining balance.
      */
     #[Optional('key_metadata')]
     public ?KeyMetadata $keyMetadata;
@@ -252,7 +252,7 @@ final class WebScrapeResponse implements BaseModel
     }
 
     /**
-     * Original HTTP response body. Waiting, actions, and content filters never change it.
+     * The original HTTP response body, unchanged by waits, actions, and filters.
      *
      * @param Bytes|BytesShape $bytes
      */
@@ -265,7 +265,7 @@ final class WebScrapeResponse implements BaseModel
     }
 
     /**
-     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     * Whether this response came from cache.
      *
      * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      */
@@ -278,7 +278,7 @@ final class WebScrapeResponse implements BaseModel
     }
 
     /**
-     * Relevant Markdown excerpts for your question or topic, in page order. Headings in square brackets supply necessary context; ellipses mark omitted portions. Empty when the page has no text.
+     * Relevant Markdown excerpts in page order. `[Heading]` adds context; `…` marks omitted text.
      *
      * @param Highlights|HighlightsShape $highlights
      */
@@ -304,7 +304,7 @@ final class WebScrapeResponse implements BaseModel
     }
 
     /**
-     * Images after content filters. Empty when none are found.
+     * Images after content filters. `[]` when none are found.
      *
      * @param Images|ImagesShape $images
      */
@@ -317,7 +317,7 @@ final class WebScrapeResponse implements BaseModel
     }
 
     /**
-     * Page data extracted using your schema.
+     * Object matching `jsonParams.schema`.
      *
      * @param Json|JsonShape $json
      */
@@ -343,7 +343,7 @@ final class WebScrapeResponse implements BaseModel
     }
 
     /**
-     * Page details, when available.
+     * Page metadata. Fields are omitted when not found.
      *
      * @param Metadata|MetadataShape $metadata
      */
@@ -356,7 +356,7 @@ final class WebScrapeResponse implements BaseModel
     }
 
     /**
-     * Fields produced by parseParams.rules, after shared content filters.
+     * Fields from `parseParams.rules`, after content filters. Unmatched fields are `null` (`[]` for lists).
      *
      * @param Parsed|ParsedShape $parsed
      */
@@ -382,7 +382,7 @@ final class WebScrapeResponse implements BaseModel
     }
 
     /**
-     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
      */
     public function withRequestID(string $requestID): self
     {
@@ -393,7 +393,7 @@ final class WebScrapeResponse implements BaseModel
     }
 
     /**
-     * An image data URL. Use directly as an image src.
+     * Screenshot as a base64 image data URL.
      *
      * @param Screenshot|ScreenshotShape $screenshot
      */
@@ -417,7 +417,7 @@ final class WebScrapeResponse implements BaseModel
     }
 
     /**
-     * Present when at least one requested output succeeds while another fails, or when successful outputs come from a page that is still loading or images returned before processing finished. Absent when every requested output fails. Check each output's success field for its result. Valid captured pieces may be cached independently; failed retrievals and incomplete captures are not cached.
+     * True when at least one requested output succeeds but the response has failed or incomplete outputs. Absent when all requested outputs fail.
      */
     public function withIsPartial(bool $isPartial): self
     {
@@ -428,7 +428,7 @@ final class WebScrapeResponse implements BaseModel
     }
 
     /**
-     * Credit usage, included whenever a valid API key is provided.
+     * Credits this request used and your remaining balance.
      *
      * @param KeyMetadata|KeyMetadataShape $keyMetadata
      */

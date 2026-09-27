@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * PDF parsing controls. Use start/end to limit text extraction and embedded-image detection/OCR to an inclusive 1-based page range.
+ * PDF handling. `start`/`end` limit parsing to an inclusive, 1-based page range.
  *
  * @phpstan-type PdfShape = array{
  *   end?: int|null, ocr?: bool|null, shouldParse?: bool|null, start?: int|null
@@ -27,7 +27,7 @@ final class Pdf implements BaseModel
     public ?int $end;
 
     /**
-     * When true, OCR the selected PDF pages that have no usable text layer (scans), replacing each recovered page's text with the OCR result while pages with a real text layer keep it. Billed at 1 credit per page OCR actually recovered, on top of the base request cost.
+     * Read scanned PDF pages with OCR; preserve pages that already contain text.
      */
     #[Optional]
     public ?bool $ocr;
@@ -82,7 +82,7 @@ final class Pdf implements BaseModel
     }
 
     /**
-     * When true, OCR the selected PDF pages that have no usable text layer (scans), replacing each recovered page's text with the OCR result while pages with a real text layer keep it. Billed at 1 credit per page OCR actually recovered, on top of the base request cost.
+     * Read scanned PDF pages with OCR; preserve pages that already contain text.
      */
     public function withOcr(bool $ocr): self
     {

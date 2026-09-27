@@ -53,7 +53,7 @@ final class BatchCancelResponse implements BaseModel
     public string $id;
 
     /**
-     * The crawl controls as submitted, so the limits requested can be compared against what the crawl reached.
+     * Crawl settings as submitted.
      */
     #[Required]
     public ?CrawlControls $crawl;
@@ -73,7 +73,7 @@ final class BatchCancelResponse implements BaseModel
     public string $format;
 
     /**
-     * What submission took in, and what it charged for.
+     * What the submission accepted.
      */
     #[Required]
     public Intake $input;
@@ -101,7 +101,7 @@ final class BatchCancelResponse implements BaseModel
     public Progress $progress;
 
     /**
-     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
      */
     #[Required('request_id')]
     public string $requestID;
@@ -123,7 +123,7 @@ final class BatchCancelResponse implements BaseModel
     public array $tags;
 
     /**
-     * There is no finish time yet — the batch is still winding down.
+     * Batch timestamps.
      */
     #[Required]
     public Timing $timing;
@@ -242,7 +242,7 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
-     * The crawl controls as submitted, so the limits requested can be compared against what the crawl reached.
+     * Crawl settings as submitted.
      *
      * @param CrawlControls|CrawlControlsShape|null $crawl
      */
@@ -281,7 +281,7 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
-     * What submission took in, and what it charged for.
+     * What the submission accepted.
      *
      * @param Intake|IntakeShape $input
      */
@@ -333,7 +333,7 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
-     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
      */
     public function withRequestID(string $requestID): self
     {
@@ -370,7 +370,7 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
-     * There is no finish time yet — the batch is still winding down.
+     * Batch timestamps.
      *
      * @param Timing|TimingShape $timing
      */

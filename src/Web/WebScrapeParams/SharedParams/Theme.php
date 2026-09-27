@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Web\WebScrapeParams\SharedParams;
 
 /**
- * Override the browser color scheme.
+ * Emulate a light or dark color scheme.
  */
 enum Theme: string
 {

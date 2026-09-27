@@ -32,7 +32,7 @@ final class Options implements BaseModel
     use SdkModel;
 
     /**
-     * Fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2).
+     * Fetch from this country (ISO 3166-1 alpha-2).
      *
      * @var value-of<Country>|null $country
      */
@@ -48,7 +48,7 @@ final class Options implements BaseModel
     public ?array $excludeSelectors;
 
     /**
-     * Keep only the subtrees matching these CSS selectors. Filtered pages are always fetched fresh, ignoring `maxAgeMs`.
+     * Keep only elements matching these CSS selectors. Filtered pages ignore `maxAgeMs`.
      *
      * @var list<string>|null $includeSelectors
      */
@@ -56,7 +56,7 @@ final class Options implements BaseModel
     public ?array $includeSelectors;
 
     /**
-     * Return a cached result if a prior scrape for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always scrape fresh.
+     * Maximum cache age in milliseconds. Defaults to 1 day. `0` fetches fresh.
      */
     #[Optional(nullable: true)]
     public ?int $maxAgeMs;
@@ -68,7 +68,7 @@ final class Options implements BaseModel
     public ?Pdf $pdf;
 
     /**
-     * Wait briefly for CSS and transition animations to settle before extraction, on pages that render in a browser.
+     * Wait for CSS animations to finish before extracting, on browser-rendered pages.
      */
     #[Optional]
     public ?bool $settleAnimations;
@@ -125,7 +125,7 @@ final class Options implements BaseModel
     }
 
     /**
-     * Fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2).
+     * Fetch from this country (ISO 3166-1 alpha-2).
      *
      * @param Country|value-of<Country> $country
      */
@@ -151,7 +151,7 @@ final class Options implements BaseModel
     }
 
     /**
-     * Keep only the subtrees matching these CSS selectors. Filtered pages are always fetched fresh, ignoring `maxAgeMs`.
+     * Keep only elements matching these CSS selectors. Filtered pages ignore `maxAgeMs`.
      *
      * @param list<string>|null $includeSelectors
      */
@@ -164,7 +164,7 @@ final class Options implements BaseModel
     }
 
     /**
-     * Return a cached result if a prior scrape for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always scrape fresh.
+     * Maximum cache age in milliseconds. Defaults to 1 day. `0` fetches fresh.
      */
     public function withMaxAgeMs(?int $maxAgeMs): self
     {
@@ -188,7 +188,7 @@ final class Options implements BaseModel
     }
 
     /**
-     * Wait briefly for CSS and transition animations to settle before extraction, on pages that render in a browser.
+     * Wait for CSS animations to finish before extracting, on browser-rendered pages.
      */
     public function withSettleAnimations(bool $settleAnimations): self
     {

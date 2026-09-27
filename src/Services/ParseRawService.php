@@ -31,7 +31,7 @@ final class ParseRawService implements ParseRawContract
     /**
      * @api
      *
-     * Converts raw text, source code, web/data, PDF, Microsoft Office, and image bytes into LLM-usable Markdown.
+     * Convert uploaded file bytes into Markdown and optional HTML.
      *
      * @param string|FileParam $body Body param
      * @param array{

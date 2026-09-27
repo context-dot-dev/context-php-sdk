@@ -13,7 +13,7 @@ use ContextDev\Web\WebMapURLsParams\TimeoutOpts;
 use ContextDev\Web\WebMapURLsParams\Zdr;
 
 /**
- * Discovers URLs using the same sitemap crawl, filters, and limits as /web/scrape/sitemap. Each URL includes its available title, description, keywords, and language. URLs without stored enrichment are returned immediately with only the URL and queued for background HTML scraping, so later requests can include their metadata. Responses are never cached as a whole; every request reads the current per-URL enrichment. Zero data retention and credential-bearing discovery requests return URLs without reading or storing shared enrichment or queuing background scrapes. Costs 1 credit, or 2 credits with search.
+ * Discover a site's URLs, with page titles, descriptions, keywords, and language when available. Metadata can be missing on newly discovered URLs.
  *
  * @see ContextDev\Services\WebService::mapUrls()
  *
@@ -39,13 +39,13 @@ final class WebMapURLsParams implements BaseModel
     use SdkParams;
 
     /**
-     * Domain to build a sitemap for.
+     * Domain to map, e.g. `stripe.com`.
      */
     #[Required]
     public string $domain;
 
     /**
-     * Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
+     * HTTP headers for the target origin. Non-empty headers bypass caching.
      *
      * @var array<string,string>|null $headers
      */
@@ -53,31 +53,31 @@ final class WebMapURLsParams implements BaseModel
     public ?array $headers;
 
     /**
-     * When true, discover and include public pages and sitemaps on subdomains of the requested domain. Defaults to false.
+     * Include URLs on subdomains.
      */
     #[Optional]
     public ?bool $includeSubdomains;
 
     /**
-     * Maximum number of links to return from the sitemap crawl. Defaults to 10,000. Minimum is 1, maximum is 100,000.
+     * Maximum number of URLs to return.
      */
     #[Optional]
     public ?int $maxLinks;
 
     /**
-     * Optional search phrase. When provided, the crawled sitemap is filtered to the pages whose URLs are about that phrase, most relevant first, and the request costs 2 credits instead of 1.
+     * Filter URLs by a topic or phrase, most relevant first.
      */
     #[Optional]
     public ?string $search;
 
     /**
-     * Optional explicit sitemap URL. When provided, exactly this sitemap is crawled instead of discovering the domain's sitemaps.
+     * Fetch this sitemap instead of discovering sitemaps. Must belong to the domain or a subdomain.
      */
     #[Optional]
     public ?string $sitemapURL;
 
     /**
-     * Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      *
      * @var list<string>|null $tags
      */
@@ -85,7 +85,7 @@ final class WebMapURLsParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * Request deadline and what to return when it passes.
      */
     #[Optional]
     public ?TimeoutOpts $timeoutOpts;
@@ -97,7 +97,7 @@ final class WebMapURLsParams implements BaseModel
     public ?string $urlRegex;
 
     /**
-     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @var value-of<Zdr>|null $zdr
      */
@@ -163,7 +163,7 @@ final class WebMapURLsParams implements BaseModel
     }
 
     /**
-     * Domain to build a sitemap for.
+     * Domain to map, e.g. `stripe.com`.
      */
     public function withDomain(string $domain): self
     {
@@ -174,7 +174,7 @@ final class WebMapURLsParams implements BaseModel
     }
 
     /**
-     * Optional outbound HTTP headers forwarded only to the target URL, sent as deep-object query params such as headers[X-Custom]=value. When provided, caching is bypassed: the result is neither read from nor written to cache.
+     * HTTP headers for the target origin. Non-empty headers bypass caching.
      *
      * @param array<string,string> $headers
      */
@@ -187,7 +187,7 @@ final class WebMapURLsParams implements BaseModel
     }
 
     /**
-     * When true, discover and include public pages and sitemaps on subdomains of the requested domain. Defaults to false.
+     * Include URLs on subdomains.
      */
     public function withIncludeSubdomains(bool $includeSubdomains): self
     {
@@ -198,7 +198,7 @@ final class WebMapURLsParams implements BaseModel
     }
 
     /**
-     * Maximum number of links to return from the sitemap crawl. Defaults to 10,000. Minimum is 1, maximum is 100,000.
+     * Maximum number of URLs to return.
      */
     public function withMaxLinks(int $maxLinks): self
     {
@@ -209,7 +209,7 @@ final class WebMapURLsParams implements BaseModel
     }
 
     /**
-     * Optional search phrase. When provided, the crawled sitemap is filtered to the pages whose URLs are about that phrase, most relevant first, and the request costs 2 credits instead of 1.
+     * Filter URLs by a topic or phrase, most relevant first.
      */
     public function withSearch(string $search): self
     {
@@ -220,7 +220,7 @@ final class WebMapURLsParams implements BaseModel
     }
 
     /**
-     * Optional explicit sitemap URL. When provided, exactly this sitemap is crawled instead of discovering the domain's sitemaps.
+     * Fetch this sitemap instead of discovering sitemaps. Must belong to the domain or a subdomain.
      */
     public function withSitemapURL(string $sitemapURL): self
     {
@@ -231,7 +231,7 @@ final class WebMapURLsParams implements BaseModel
     }
 
     /**
-     * Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      *
      * @param list<string> $tags
      */
@@ -244,7 +244,7 @@ final class WebMapURLsParams implements BaseModel
     }
 
     /**
-     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * Request deadline and what to return when it passes.
      *
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
@@ -268,7 +268,7 @@ final class WebMapURLsParams implements BaseModel
     }
 
     /**
-     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @param Zdr|value-of<Zdr> $zdr
      */

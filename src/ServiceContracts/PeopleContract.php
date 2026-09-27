@@ -27,14 +27,15 @@ interface PeopleContract
     /**
      * @api
      *
-     * @param Company|CompanyShape $company
-     * @param list<Education|EducationShape> $education
-     * @param Location|LocationShape $location
-     * @param Name|NameShape $name
-     * @param list<string> $socialURLs
-     * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
-     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
-     * @param Zdr|value-of<Zdr> $zdr Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * @param Company|CompanyShape $company Company context to help identify the person. Provide a name or domain.
+     * @param list<Education|EducationShape> $education education history to help distinguish people with similar names
+     * @param string $email email address of the person to find
+     * @param Location|LocationShape $location Location context to help identify the person. Provide a city, region, or country.
+     * @param Name|NameShape $name Person name. Without an email or person-profile URL, provide both first and last name plus company, education, or location.
+     * @param list<string> $socialURLs Public profile URLs for the person. A person-profile URL can identify the person without a name.
+     * @param list<string> $tags labels for filtering usage in the dashboard
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts request deadline and what to return when it passes
+     * @param Zdr|value-of<Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

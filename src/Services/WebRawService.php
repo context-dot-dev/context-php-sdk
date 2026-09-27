@@ -81,7 +81,7 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Researches the live web and returns a sourced answer in your requested JSON shape. Select fast for a smaller research budget at 10 credits or ultra for deeper reasoning at 100 credits. Defaults to ultra. Fast research is limited to 30 seconds and ultra to 50 seconds; timeoutOpts.milliseconds can shorten either deadline.
+     * Research the web and return a sourced answer in your JSON shape. Choose `fast` for a short task or `ultra` for deeper research.
      *
      * @param array{
      *   task: string,
@@ -156,7 +156,7 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Extract a comprehensive design system from a website including colors, typography, spacing, shadows, and UI components.
+     * Extract colors, typography, spacing, and component styles from a website.
      *
      * @param array{
      *   colorScheme?: ColorScheme|value-of<ColorScheme>,
@@ -195,7 +195,7 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Discovers URLs using the same sitemap crawl, filters, and limits as /web/scrape/sitemap. Each URL includes its available title, description, keywords, and language. URLs without stored enrichment are returned immediately with only the URL and queued for background HTML scraping, so later requests can include their metadata. Responses are never cached as a whole; every request reads the current per-URL enrichment. Zero data retention and credential-bearing discovery requests return URLs without reading or storing shared enrichment or queuing background scrapes. Costs 1 credit, or 2 credits with search.
+     * Discover a site's URLs, with page titles, descriptions, keywords, and language when available. Metadata can be missing on newly discovered URLs.
      *
      * @param array{
      *   domain: string,
@@ -240,7 +240,7 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Reuse cached outputs independently and capture missing formats in one page visit. Each cache key includes only the settings that affect that output. HTML is shared with Markdown, parsed fields, product data, highlights, and JSON extraction. Cached outputs can come from different visits within maxAgeMs; use 0 for a fresh capture. HTML-only requests use the existing fast acquisition path. Highlights return Markdown excerpts most relevant to highlightsParams.query. Requests with at least one successful output cost one base credit, including cache hits, or two with browser actions. All-failed responses are unbilled except missing pages, which retain the base price and the one-credit product charge when product was requested. Highlights add 3 credits when passages are returned. JSON extraction runs an LLM over nonempty page Markdown and adds four credits only when its result is returned successfully. PDF OCR adds one credit per recovered page on fresh extraction. Product adds one credit when its successful result is returned, plus six if that result used the specialized model. Original response bytes and screenshots are limited to 20 MiB each, screenshots to 40 megapixels, and the combined response to 60 MiB. An oversized output has success: false and data: null. If the combined response exceeds its limit, the largest outputs are marked failed until the remaining outputs fit. Valid captured pieces may still be cached when omitted to meet the response size limit.
+     * Returns the outputs you enable in `formats` from one visit to a URL. Each output reports its own `success`, so a failed output does not fail the request.
      *
      * @param array{
      *   formats: Formats|FormatsShape,
@@ -334,7 +334,7 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Search the web and optionally scrape each result to Markdown in one round-trip.
+     * Search the web and optionally return page content with each result.
      *
      * @param array{
      *   query: string,
@@ -377,7 +377,7 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Performs a crawl starting from a given URL, extracts page content as Markdown, and returns results for all crawled pages.
+     * Crawl a website and return page content as Markdown. Use a batch for crawls beyond 500 pages.
      *
      * @param array{
      *   url: string,

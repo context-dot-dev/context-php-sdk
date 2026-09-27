@@ -11,7 +11,7 @@ use ContextDev\Monitors\MonitorGetResponse\ChangeDetection\MonitorsExactChangeDe
 use ContextDev\Monitors\MonitorGetResponse\ChangeDetection\MonitorsSemanticChangeDetection;
 
 /**
- * Discriminated union describing how changes are detected.
+ * How changes are judged. Defaults to `semantic` for extract targets and page targets with `instructions`, otherwise `exact`.
  *
  * @phpstan-import-type MonitorsExactChangeDetectionShape from \ContextDev\Monitors\MonitorGetResponse\ChangeDetection\MonitorsExactChangeDetection
  * @phpstan-import-type MonitorsSemanticChangeDetectionShape from \ContextDev\Monitors\MonitorGetResponse\ChangeDetection\MonitorsSemanticChangeDetection

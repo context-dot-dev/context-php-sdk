@@ -135,7 +135,7 @@ final class Brand implements BaseModel
     public ?string $phone;
 
     /**
-     * Language to force for the retrieved brand data.
+     * Language, e.g. `english`.
      *
      * @var value-of<PrimaryLanguage>|null $primaryLanguage
      */
@@ -378,7 +378,7 @@ final class Brand implements BaseModel
     }
 
     /**
-     * Language to force for the retrieved brand data.
+     * Language, e.g. `english`.
      *
      * @param PrimaryLanguage|value-of<PrimaryLanguage>|null $primaryLanguage
      */

@@ -10,7 +10,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebScrapeResponse\Images\Data;
 
 /**
- * Images after content filters. Empty when none are found.
+ * Images after content filters. `[]` when none are found.
  *
  * @phpstan-import-type DataShape from \ContextDev\Web\WebScrapeResponse\Images\Data
  *
@@ -31,7 +31,7 @@ final class Images implements BaseModel
     public bool $requested;
 
     /**
-     * True when retrieved, false when retrieval failed, and null when not requested.
+     * `true` if returned, `false` if it failed, `null` if not requested.
      */
     #[Required]
     public ?bool $success;
@@ -96,7 +96,7 @@ final class Images implements BaseModel
     }
 
     /**
-     * True when retrieved, false when retrieval failed, and null when not requested.
+     * `true` if returned, `false` if it failed, `null` if not requested.
      */
     public function withSuccess(?bool $success): self
     {

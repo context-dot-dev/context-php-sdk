@@ -29,14 +29,18 @@ final class ScreenshotParams implements BaseModel
     use SdkModel;
 
     /**
-     * Viewport, full page, one visible element, or a rectangle. Maximum 40 megapixels.
+     * What to capture: `viewport`, `fullPage`, one element, or a rectangle. Max 40 megapixels.
      *
      * @var AreaVariants|null $area
      */
     #[Optional(union: Area::class)]
     public Element|Rectangle|string|null $area;
 
-    /** @var value-of<Format>|null $format */
+    /**
+     * Image format for the screenshot.
+     *
+     * @var value-of<Format>|null $format
+     */
     #[Optional(enum: Format::class)]
     public ?string $format;
 
@@ -66,7 +70,7 @@ final class ScreenshotParams implements BaseModel
     }
 
     /**
-     * Viewport, full page, one visible element, or a rectangle. Maximum 40 megapixels.
+     * What to capture: `viewport`, `fullPage`, one element, or a rectangle. Max 40 megapixels.
      *
      * @param AreaShape $area
      */
@@ -79,6 +83,8 @@ final class ScreenshotParams implements BaseModel
     }
 
     /**
+     * Image format for the screenshot.
+     *
      * @param Format|value-of<Format> $format
      */
     public function withFormat(Format|string $format): self

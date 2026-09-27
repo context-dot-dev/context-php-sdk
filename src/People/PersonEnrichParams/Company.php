@@ -9,6 +9,8 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
+ * Company context to help identify the person. Provide a name or domain.
+ *
  * @phpstan-type CompanyShape = array{domain?: string|null, name?: string|null}
  */
 final class Company implements BaseModel
@@ -16,9 +18,15 @@ final class Company implements BaseModel
     /** @use SdkModel<CompanyShape> */
     use SdkModel;
 
+    /**
+     * Website domain of a company associated with the person.
+     */
     #[Optional]
     public ?string $domain;
 
+    /**
+     * Name of a company associated with the person.
+     */
     #[Optional]
     public ?string $name;
 
@@ -44,6 +52,9 @@ final class Company implements BaseModel
         return $self;
     }
 
+    /**
+     * Website domain of a company associated with the person.
+     */
     public function withDomain(string $domain): self
     {
         $self = clone $this;
@@ -52,6 +63,9 @@ final class Company implements BaseModel
         return $self;
     }
 
+    /**
+     * Name of a company associated with the person.
+     */
     public function withName(string $name): self
     {
         $self = clone $this;

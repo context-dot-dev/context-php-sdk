@@ -15,7 +15,7 @@ use ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts;
 use ContextDev\Web\WebWebCrawlMdParams\Zdr;
 
 /**
- * Performs a crawl starting from a given URL, extracts page content as Markdown, and returns results for all crawled pages.
+ * Crawl a website and return page content as Markdown. Use a batch for crawls beyond 500 pages.
  *
  * @see ContextDev\Services\WebService::webCrawlMd()
  *
@@ -53,13 +53,13 @@ final class WebWebCrawlMdParams implements BaseModel
     use SdkParams;
 
     /**
-     * The starting URL for the crawl (must include http:// or https:// protocol).
+     * Start URL, including `http://` or `https://`.
      */
     #[Required]
     public string $url;
 
     /**
-     * Fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2).
+     * Fetch from this country (ISO 3166-1 alpha-2).
      *
      * @var value-of<Country>|null $country
      */
@@ -67,7 +67,7 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?string $country;
 
     /**
-     * CSS selectors to remove before each crawled page is converted to Markdown. Applied after includeSelectors. Exclusion takes precedence: an element matching both is removed. Examples: "nav", "footer", ".ad-banner", "[aria-hidden=true]".
+     * Remove matching elements after inclusions. Exclusions take precedence.
      *
      * @var list<string>|null $excludeSelectors
      */
@@ -99,7 +99,7 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?bool $includeLinks;
 
     /**
-     * CSS selectors. When provided, only matching HTML subtrees (and their descendants) are kept before each crawled page is converted to Markdown. When omitted, the entire document is kept. Examples: "article.main", "#content", "[role=main]".
+     * Keep matching HTML subtrees before converting each page to Markdown.
      *
      * @var list<string>|null $includeSelectors
      */
@@ -107,7 +107,7 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?array $includeSelectors;
 
     /**
-     * Return a cached result if a prior scrape for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always scrape fresh.
+     * Maximum cache age in milliseconds. Defaults to 1 day; `0` fetches fresh.
      */
     #[Optional]
     public ?int $maxAgeMs;
@@ -119,19 +119,19 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?int $maxDepth;
 
     /**
-     * Maximum number of pages to crawl. Hard cap: 500.
+     * Maximum pages to crawl.
      */
     #[Optional]
     public ?int $maxPages;
 
     /**
-     * PDF parsing controls. Use start/end to limit text extraction and embedded-image detection/OCR to an inclusive 1-based page range.
+     * PDF handling. `start`/`end` limit parsing to an inclusive, 1-based page range.
      */
     #[Optional]
     public ?Pdf $pdf;
 
     /**
-     * When true, waits briefly for CSS and transition animations to settle before extracting each crawled page. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
+     * Wait briefly for CSS animations and transitions to settle before reading each page.
      */
     #[Optional]
     public ?bool $settleAnimations;
@@ -143,13 +143,13 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?bool $shortenBase64Images;
 
     /**
-     * Soft time budget for the crawl in milliseconds. After each scrape, the crawler checks the elapsed time and, if exceeded, returns the pages collected so far instead of continuing. Min: 10000 (10s). Max: 110000 (110s). Default: 80000 (80s).
+     * Soft crawl deadline in milliseconds. Returns pages collected before the next deadline check.
      */
     #[Optional]
     public ?int $stopAfterMs;
 
     /**
-     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * Labels for filtering usage in the dashboard.
      *
      * @var list<string>|null $tags
      */
@@ -157,7 +157,7 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * Request deadline and what to return when it passes.
      */
     #[Optional]
     public ?TimeoutOpts $timeoutOpts;
@@ -181,7 +181,7 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?int $waitForMs;
 
     /**
-     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @var value-of<Zdr>|null $zdr
      */
@@ -272,7 +272,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * The starting URL for the crawl (must include http:// or https:// protocol).
+     * Start URL, including `http://` or `https://`.
      */
     public function withURL(string $url): self
     {
@@ -283,7 +283,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Fetch the target page through a residential proxy in this country (ISO 3166-1 alpha-2).
+     * Fetch from this country (ISO 3166-1 alpha-2).
      *
      * @param Country|value-of<Country> $country
      */
@@ -296,7 +296,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * CSS selectors to remove before each crawled page is converted to Markdown. Applied after includeSelectors. Exclusion takes precedence: an element matching both is removed. Examples: "nav", "footer", ".ad-banner", "[aria-hidden=true]".
+     * Remove matching elements after inclusions. Exclusions take precedence.
      *
      * @param list<string> $excludeSelectors
      */
@@ -353,7 +353,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * CSS selectors. When provided, only matching HTML subtrees (and their descendants) are kept before each crawled page is converted to Markdown. When omitted, the entire document is kept. Examples: "article.main", "#content", "[role=main]".
+     * Keep matching HTML subtrees before converting each page to Markdown.
      *
      * @param list<string> $includeSelectors
      */
@@ -366,7 +366,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Return a cached result if a prior scrape for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always scrape fresh.
+     * Maximum cache age in milliseconds. Defaults to 1 day; `0` fetches fresh.
      */
     public function withMaxAgeMs(int $maxAgeMs): self
     {
@@ -388,7 +388,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Maximum number of pages to crawl. Hard cap: 500.
+     * Maximum pages to crawl.
      */
     public function withMaxPages(int $maxPages): self
     {
@@ -399,7 +399,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * PDF parsing controls. Use start/end to limit text extraction and embedded-image detection/OCR to an inclusive 1-based page range.
+     * PDF handling. `start`/`end` limit parsing to an inclusive, 1-based page range.
      *
      * @param Pdf|PdfShape $pdf
      */
@@ -412,7 +412,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * When true, waits briefly for CSS and transition animations to settle before extracting each crawled page. Defaults to false. This adds a bit of latency in exchange for more stable output on animated pages.
+     * Wait briefly for CSS animations and transitions to settle before reading each page.
      */
     public function withSettleAnimations(bool $settleAnimations): self
     {
@@ -434,7 +434,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Soft time budget for the crawl in milliseconds. After each scrape, the crawler checks the elapsed time and, if exceeded, returns the pages collected so far instead of continuing. Min: 10000 (10s). Max: 110000 (110s). Default: 80000 (80s).
+     * Soft crawl deadline in milliseconds. Returns pages collected before the next deadline check.
      */
     public function withStopAfterMs(int $stopAfterMs): self
     {
@@ -445,7 +445,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * Labels for filtering usage in the dashboard.
      *
      * @param list<string> $tags
      */
@@ -458,7 +458,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * Request deadline and what to return when it passes.
      *
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
@@ -504,7 +504,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @param Zdr|value-of<Zdr> $zdr
      */

@@ -22,7 +22,7 @@ interface DeliveriesContract
      * @api
      *
      * @param string $deliveryID delivery ID
-     * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * @param list<string> $tags Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -42,7 +42,7 @@ interface DeliveriesContract
      * @param string $cursor the next_cursor from the previous response
      * @param int $limit number of deliveries to return
      * @param Status|value-of<Status> $status filter by delivery status
-     * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * @param list<string> $tags labels for filtering usage in the dashboard
      * @param string $monitorID filter by monitor ID
      * @param string $runID filter by monitor run ID
      * @param RequestOpts|null $requestOptions
@@ -68,7 +68,7 @@ interface DeliveriesContract
      * @param string $deliveryID delivery ID
      * @param string $cursor the next_cursor from the previous response
      * @param int $limit number of attempts to return
-     * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * @param list<string> $tags Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -85,8 +85,8 @@ interface DeliveriesContract
      * @api
      *
      * @param string $deliveryID path param: Delivery ID
-     * @param bool $force body param: Resend a delivery that already succeeded
-     * @param list<string> $tags Body param: Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * @param bool $force Body param: Resend even if the delivery already succeeded. Defaults to false.
+     * @param list<string> $tags body param: Labels for filtering usage in the dashboard
      * @param string $idempotencyKey header param: Unique key to prevent duplicate retry requests
      * @param RequestOpts|null $requestOptions
      *

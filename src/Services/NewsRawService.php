@@ -16,7 +16,7 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\NewsRawContract;
 
 /**
- * Search live first-party RSS and free historical news data by company identity.
+ * Search live and historical news about a company.
  *
  * @phpstan-import-type SearchByShape from \ContextDev\News\NewsSearchParams\SearchBy
  * @phpstan-import-type FilterByShape from \ContextDev\News\NewsSearchParams\FilterBy
@@ -34,7 +34,7 @@ final class NewsRawService implements NewsRawContract
     /**
      * @api
      *
-     * Searches live and historical company news for one company, identified in searchBy by name, domain, ticker (optionally disambiguated by exchange), or ISIN. Results can be filtered by one of publisher domain, publisher country, article language, or article type, optionally combined with a published-at date range, and include stable story IDs, source metadata, verified entity relevance, and cursor pagination.
+     * Find company news by name, domain, ticker, or ISIN. Filter articles and continue through results with a cursor.
      *
      * @param array{
      *   searchBy: SearchBy|SearchByShape,

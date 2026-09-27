@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * List changes for a monitor.
+ * List full change records for a monitor, newest first.
  *
  * @see ContextDev\Services\MonitorsService::listChanges()
  *

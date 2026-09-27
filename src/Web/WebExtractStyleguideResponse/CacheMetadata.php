@@ -10,7 +10,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebExtractStyleguideResponse\CacheMetadata\Status;
 
 /**
- * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+ * Whether this response came from cache.
  *
  * @phpstan-type CacheMetadataShape = array{
  *   ageMs: int, status: Status|value-of<Status>

@@ -13,7 +13,7 @@ use ContextDev\Parse\ParseHandleParams\Pdf;
 use ContextDev\Parse\ParseHandleParams\Zdr;
 
 /**
- * Converts raw text, source code, web/data, PDF, Microsoft Office, and image bytes into LLM-usable Markdown.
+ * Convert uploaded file bytes into Markdown and optional HTML.
  *
  * @see ContextDev\Services\ParseService::handle()
  *
@@ -65,7 +65,7 @@ final class ParseHandleParams implements BaseModel
     public ?bool $includeLinks;
 
     /**
-     * When true for PDF inputs, OCR the selected pages that have no usable text layer (scans), replacing each recovered page's text with the OCR result while pages with a real text layer keep it. pdf.start/pdf.end limit the inclusive page range. Billed at 1 credit per page OCR actually recovered, on top of the base request cost. When false, no OCR runs.
+     * Read text from images and scanned PDF pages. PDF page ranges still apply.
      */
     #[Optional]
     public ?bool $ocr;
@@ -83,7 +83,7 @@ final class ParseHandleParams implements BaseModel
     public ?bool $shortenBase64Images;
 
     /**
-     * Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      *
      * @var list<string>|null $tags
      */
@@ -97,7 +97,7 @@ final class ParseHandleParams implements BaseModel
     public ?bool $useMainContentOnly;
 
     /**
-     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @var value-of<Zdr>|null $zdr
      */
@@ -194,7 +194,7 @@ final class ParseHandleParams implements BaseModel
     }
 
     /**
-     * When true for PDF inputs, OCR the selected pages that have no usable text layer (scans), replacing each recovered page's text with the OCR result while pages with a real text layer keep it. pdf.start/pdf.end limit the inclusive page range. Billed at 1 credit per page OCR actually recovered, on top of the base request cost. When false, no OCR runs.
+     * Read text from images and scanned PDF pages. PDF page ranges still apply.
      */
     public function withOcr(bool $ocr): self
     {
@@ -229,7 +229,7 @@ final class ParseHandleParams implements BaseModel
     }
 
     /**
-     * Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      *
      * @param list<string> $tags
      */
@@ -253,7 +253,7 @@ final class ParseHandleParams implements BaseModel
     }
 
     /**
-     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @param Zdr|value-of<Zdr> $zdr
      */

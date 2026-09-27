@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.21.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.20.0...v2.21.0) (2026-09-27)
+
+
+### Features
+
+* **feedback:** add agent feedback endpoint ([#1322](https://github.com/context-dot-dev/context-php-sdk/issues/1322)) ([8bb51de](https://github.com/context-dot-dev/context-php-sdk/commit/8bb51de6f9456d075f6e03062c25843331bf5552))
+* **highlights:** preserve Markdown structure in scrape excerpts ([#1236](https://github.com/context-dot-dev/context-php-sdk/issues/1236)) ([7457b0c](https://github.com/context-dot-dev/context-php-sdk/commit/7457b0cad906fb8ce71390c83ea7ae2134787e85))
+* **scrape:** enable highlights with zero data retention ([#1246](https://github.com/context-dot-dev/context-php-sdk/issues/1246)) ([f6d33eb](https://github.com/context-dot-dev/context-php-sdk/commit/f6d33eb0bd87669ad4f473b45e034272756aa734))
+
+
+### Bug Fixes
+
+* **openapi:** document exclusive news filters ([#1265](https://github.com/context-dot-dev/context-php-sdk/issues/1265)) ([241eb97](https://github.com/context-dot-dev/context-php-sdk/commit/241eb97cbf38427274921825c3c8155e144a269f))
+* **scrape:** only flag partial success when a requested format succeeds ([#1325](https://github.com/context-dot-dev/context-php-sdk/issues/1325)) ([11abd66](https://github.com/context-dot-dev/context-php-sdk/commit/11abd66d9e1ed2a73bc37fe888b2102c6970b8bd))
+* **scrape:** preserve successful formats when other outputs fail ([#1263](https://github.com/context-dot-dev/context-php-sdk/issues/1263)) ([d98ef55](https://github.com/context-dot-dev/context-php-sdk/commit/d98ef55227a0fa6bb383588bfdfd1453538be5dd))
+* **scrape:** retain highlight headings only when needed ([#1245](https://github.com/context-dot-dev/context-php-sdk/issues/1245)) ([c6b0b8c](https://github.com/context-dot-dev/context-php-sdk/commit/c6b0b8c00d780d5204c650f8a21a6de9f3057472))
+
 ## [2.20.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.19.0...v2.20.0) (2026-09-23)
 
 

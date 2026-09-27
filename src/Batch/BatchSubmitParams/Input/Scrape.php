@@ -12,7 +12,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Scrape up to 25K URLs in one batch.
+ * Scrape a list of up to 25,000 URLs.
  *
  * @phpstan-import-type DataVariants from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data
  * @phpstan-import-type DataShape from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data

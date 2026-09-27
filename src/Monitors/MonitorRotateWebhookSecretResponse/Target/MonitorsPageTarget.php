@@ -26,15 +26,22 @@ final class MonitorsPageTarget implements BaseModel
     /** @use SdkModel<MonitorsPageTargetShape> */
     use SdkModel;
 
-    /** @var 'page' $type */
+    /**
+     * Use `page` to watch one web page.
+     *
+     * @var 'page' $type
+     */
     #[Required]
     public string $type = 'page';
 
+    /**
+     * Public HTTP(S) page URL to monitor.
+     */
     #[Required]
     public string $url;
 
     /**
-     * CSS selectors for HTML regions to remove before text extraction. Applied after include_selectors; exclusion takes precedence when an element matches both. Omit or pass an empty array to apply no explicit exclusions. Changing these selectors creates a new baseline.
+     * Remove matching regions after inclusions. Changes create a new baseline.
      *
      * @var list<string>|null $excludeSelectors
      */
@@ -42,7 +49,7 @@ final class MonitorsPageTarget implements BaseModel
     public ?array $excludeSelectors;
 
     /**
-     * CSS selectors defining the HTML regions to monitor. Matching subtrees are combined in document order before text extraction, instead of automatic main-content selection. Omit or pass an empty array to use automatic main-content extraction. If the filtered page has no usable text, the run fails without replacing the baseline. Changing these selectors creates a new baseline.
+     * Monitor these CSS-selected regions. Empty or omitted uses main content. Changes create a new baseline.
      *
      * @var list<string>|null $includeSelectors
      */
@@ -108,6 +115,8 @@ final class MonitorsPageTarget implements BaseModel
     }
 
     /**
+     * Use `page` to watch one web page.
+     *
      * @param 'page' $type
      */
     public function withType(string $type): self
@@ -118,6 +127,9 @@ final class MonitorsPageTarget implements BaseModel
         return $self;
     }
 
+    /**
+     * Public HTTP(S) page URL to monitor.
+     */
     public function withURL(string $url): self
     {
         $self = clone $this;
@@ -127,7 +139,7 @@ final class MonitorsPageTarget implements BaseModel
     }
 
     /**
-     * CSS selectors for HTML regions to remove before text extraction. Applied after include_selectors; exclusion takes precedence when an element matches both. Omit or pass an empty array to apply no explicit exclusions. Changing these selectors creates a new baseline.
+     * Remove matching regions after inclusions. Changes create a new baseline.
      *
      * @param list<string> $excludeSelectors
      */
@@ -140,7 +152,7 @@ final class MonitorsPageTarget implements BaseModel
     }
 
     /**
-     * CSS selectors defining the HTML regions to monitor. Matching subtrees are combined in document order before text extraction, instead of automatic main-content selection. Omit or pass an empty array to use automatic main-content extraction. If the filtered page has no usable text, the run fails without replacing the baseline. Changing these selectors creates a new baseline.
+     * Monitor these CSS-selected regions. Empty or omitted uses main content. Changes create a new baseline.
      *
      * @param list<string> $includeSelectors
      */

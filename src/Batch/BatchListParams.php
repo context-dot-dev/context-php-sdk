@@ -12,7 +12,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * List your batches from newest to oldest. Filter by status or continue with a cursor.
+ * List your batches, newest first, with optional filters.
  *
  * @see ContextDev\Services\BatchService::list()
  *

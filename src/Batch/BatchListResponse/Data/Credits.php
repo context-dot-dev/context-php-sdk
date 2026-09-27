@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * What this batch has done to your credit balance.
+ * Batch credit usage and settlement.
  *
  * @phpstan-type CreditsShape = array{
  *   net: int, ocrCharged: int, refunded: int, reserved: int
@@ -21,25 +21,25 @@ final class Credits implements BaseModel
     use SdkModel;
 
     /**
-     * `reserved` minus `refunded` plus `ocr_charged` — what the batch has cost so far. Equal to `reserved` until the batch settles.
+     * `reserved` minus `refunded` plus `ocr_charged`.
      */
     #[Required]
     public int $net;
 
     /**
-     * Credits charged for PDF pages recovered by OCR (pdf.ocr=true), 1 per recovered page, on top of `reserved`. Stays 0 until the batch settles.
+     * OCR usage charged when the batch settles.
      */
     #[Required('ocr_charged')]
     public int $ocrCharged;
 
     /**
-     * Credits returned for pages that did not succeed. Stays 0 until the batch reaches a final status, then settles in one movement.
+     * Credits returned for unsuccessful pages when the batch settles.
      */
     #[Required]
     public int $refunded;
 
     /**
-     * Credits debited from your balance the moment the batch was accepted. This is a charge, not a forecast — the whole amount leaves the balance up front.
+     * Credits held when the batch was accepted.
      */
     #[Required]
     public int $reserved;
@@ -89,7 +89,7 @@ final class Credits implements BaseModel
     }
 
     /**
-     * `reserved` minus `refunded` plus `ocr_charged` — what the batch has cost so far. Equal to `reserved` until the batch settles.
+     * `reserved` minus `refunded` plus `ocr_charged`.
      */
     public function withNet(int $net): self
     {
@@ -100,7 +100,7 @@ final class Credits implements BaseModel
     }
 
     /**
-     * Credits charged for PDF pages recovered by OCR (pdf.ocr=true), 1 per recovered page, on top of `reserved`. Stays 0 until the batch settles.
+     * OCR usage charged when the batch settles.
      */
     public function withOcrCharged(int $ocrCharged): self
     {
@@ -111,7 +111,7 @@ final class Credits implements BaseModel
     }
 
     /**
-     * Credits returned for pages that did not succeed. Stays 0 until the batch reaches a final status, then settles in one movement.
+     * Credits returned for unsuccessful pages when the batch settles.
      */
     public function withRefunded(int $refunded): self
     {
@@ -122,7 +122,7 @@ final class Credits implements BaseModel
     }
 
     /**
-     * Credits debited from your balance the moment the batch was accepted. This is a charge, not a forecast — the whole amount leaves the balance up front.
+     * Credits held when the batch was accepted.
      */
     public function withReserved(int $reserved): self
     {

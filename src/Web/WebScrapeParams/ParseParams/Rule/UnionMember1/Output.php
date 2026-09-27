@@ -10,6 +10,8 @@ use ContextDev\Core\Conversion\Contracts\ConverterSource;
 use ContextDev\Web\WebScrapeParams\ParseParams\Rule\UnionMember1\Output\UnionMember0;
 
 /**
+ * Return text, HTML, an attribute such as `@href`, or nested field rules. Defaults to text.
+ *
  * @phpstan-type OutputVariants = mixed|string|value-of<UnionMember0>
  * @phpstan-type OutputShape = OutputVariants
  */

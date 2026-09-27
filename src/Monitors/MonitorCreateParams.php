@@ -21,7 +21,7 @@ use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsSitemapTarget;
 use ContextDev\Monitors\MonitorCreateParams\Webhook;
 
 /**
- * Creates a monitor. The request body is a union of the supported target/change detection combinations. The monitor runs immediately after creation to create its initial baseline.
+ * Watch a page, URL inventory, or extracted website data on a schedule. A run starts immediately to capture the baseline.
  *
  * @see ContextDev\Services\MonitorsService::create()
  *
@@ -48,11 +48,14 @@ final class MonitorCreateParams implements BaseModel
     use SdkModel;
     use SdkParams;
 
+    /**
+     * Display name for the monitor.
+     */
     #[Required]
     public string $name;
 
     /**
-     * Discriminated union describing what the monitor watches.
+     * What to watch: a page, a sitemap, or data extracted from a site.
      *
      * @var TargetVariants $target
      */
@@ -60,7 +63,7 @@ final class MonitorCreateParams implements BaseModel
     public MonitorsPageTarget|MonitorsSitemapTarget|MonitorsExtractTarget $target;
 
     /**
-     * Discriminated union describing how changes are detected.
+     * How changes are judged. Defaults to `semantic` for extract targets and page targets with `instructions`, otherwise `exact`.
      *
      * @var ChangeDetectionVariants|null $changeDetection
      */
@@ -68,7 +71,7 @@ final class MonitorCreateParams implements BaseModel
     public MonitorsExactChangeDetection|MonitorsSemanticChangeDetection|null $changeDetection;
 
     /**
-     * Top-level monitor category. Always `web` today; the concrete behavior is described by `target` and `change_detection`.
+     * Always `web`. Optional.
      *
      * @var value-of<Mode>|null $mode
      */
@@ -82,13 +85,16 @@ final class MonitorCreateParams implements BaseModel
     public ?Schedule $schedule;
 
     /**
-     * User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
+     * Labels for filtering monitors, their changes, and their usage.
      *
      * @var list<string>|null $tags
      */
     #[Optional(list: 'string')]
     public ?array $tags;
 
+    /**
+     * Webhook destination and delivery settings. Null means no webhook is configured.
+     */
     #[Optional(nullable: true)]
     public ?Webhook $webhook;
 
@@ -146,6 +152,9 @@ final class MonitorCreateParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Display name for the monitor.
+     */
     public function withName(string $name): self
     {
         $self = clone $this;
@@ -155,7 +164,7 @@ final class MonitorCreateParams implements BaseModel
     }
 
     /**
-     * Discriminated union describing what the monitor watches.
+     * What to watch: a page, a sitemap, or data extracted from a site.
      *
      * @param TargetShape $target
      */
@@ -169,7 +178,7 @@ final class MonitorCreateParams implements BaseModel
     }
 
     /**
-     * Discriminated union describing how changes are detected.
+     * How changes are judged. Defaults to `semantic` for extract targets and page targets with `instructions`, otherwise `exact`.
      *
      * @param ChangeDetectionShape $changeDetection
      */
@@ -183,7 +192,7 @@ final class MonitorCreateParams implements BaseModel
     }
 
     /**
-     * Top-level monitor category. Always `web` today; the concrete behavior is described by `target` and `change_detection`.
+     * Always `web`. Optional.
      *
      * @param Mode|value-of<Mode> $mode
      */
@@ -209,7 +218,7 @@ final class MonitorCreateParams implements BaseModel
     }
 
     /**
-     * User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
+     * Labels for filtering monitors, their changes, and their usage.
      *
      * @param list<string> $tags
      */
@@ -222,6 +231,8 @@ final class MonitorCreateParams implements BaseModel
     }
 
     /**
+     * Webhook destination and delivery settings. Null means no webhook is configured.
+     *
      * @param Webhook|WebhookShape|null $webhook
      */
     public function withWebhook(Webhook|array|null $webhook): self

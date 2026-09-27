@@ -9,11 +9,9 @@ use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Logs\LogGetResponse\Data\Input;
-use ContextDev\Logs\LogGetResponse\Data\KeyMetadata;
 
 /**
  * @phpstan-import-type InputShape from \ContextDev\Logs\LogGetResponse\Data\Input
- * @phpstan-import-type KeyMetadataShape from \ContextDev\Logs\LogGetResponse\Data\KeyMetadata
  *
  * @phpstan-type DataShape = array{
  *   creditsUsed: int,
@@ -29,7 +27,6 @@ use ContextDev\Logs\LogGetResponse\Data\KeyMetadata;
  *   timestamp: \DateTimeInterface,
  *   userAgent: string|null,
  *   zdr: bool,
- *   keyMetadata?: null|\ContextDev\Logs\LogGetResponse\Data\KeyMetadata|KeyMetadataShape,
  *   response?: mixed,
  * }
  */
@@ -69,7 +66,7 @@ final class Data implements BaseModel
     public float $latencyMs;
 
     /**
-     * HTTP method.
+     * HTTP method, or `MONITOR` / `BATCH` for monitor-run and batch-settlement entries.
      */
     #[Required]
     public string $method;
@@ -117,12 +114,6 @@ final class Data implements BaseModel
      */
     #[Required]
     public bool $zdr;
-
-    /**
-     * Credit usage, included whenever a valid API key is provided.
-     */
-    #[Optional('key_metadata')]
-    public ?KeyMetadata $keyMetadata;
 
     /**
      * The retained JSON response with credentials redacted, or null when unavailable.
@@ -183,7 +174,6 @@ final class Data implements BaseModel
      *
      * @param Input|InputShape $input
      * @param list<string> $tags
-     * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
     public static function with(
         int $creditsUsed,
@@ -199,7 +189,6 @@ final class Data implements BaseModel
         \DateTimeInterface $timestamp,
         ?string $userAgent,
         bool $zdr,
-        KeyMetadata|array|null $keyMetadata = null,
         mixed $response = null,
     ): self {
         $self = new self;
@@ -218,7 +207,6 @@ final class Data implements BaseModel
         $self['userAgent'] = $userAgent;
         $self['zdr'] = $zdr;
 
-        null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
         null !== $response && $self['response'] = $response;
 
         return $self;
@@ -282,7 +270,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * HTTP method.
+     * HTTP method, or `MONITOR` / `BATCH` for monitor-run and batch-settlement entries.
      */
     public function withMethod(string $method): self
     {
@@ -367,20 +355,6 @@ final class Data implements BaseModel
     {
         $self = clone $this;
         $self['zdr'] = $zdr;
-
-        return $self;
-    }
-
-    /**
-     * Credit usage, included whenever a valid API key is provided.
-     *
-     * @param KeyMetadata|KeyMetadataShape $keyMetadata
-     */
-    public function withKeyMetadata(
-        KeyMetadata|array $keyMetadata
-    ): self {
-        $self = clone $this;
-        $self['keyMetadata'] = $keyMetadata;
 
         return $self;
     }

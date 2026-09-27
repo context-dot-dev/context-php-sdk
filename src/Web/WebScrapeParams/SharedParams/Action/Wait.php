@@ -16,10 +16,17 @@ final class Wait implements BaseModel
     /** @use SdkModel<WaitShape> */
     use SdkModel;
 
-    /** @var 'wait' $type */
+    /**
+     * Use `wait` to pause for a fixed duration.
+     *
+     * @var 'wait' $type
+     */
     #[Required]
     public string $type = 'wait';
 
+    /**
+     * Time to pause in milliseconds before the next action.
+     */
     #[Required]
     public int $milliseconds;
 
@@ -56,6 +63,9 @@ final class Wait implements BaseModel
         return $self;
     }
 
+    /**
+     * Time to pause in milliseconds before the next action.
+     */
     public function withMilliseconds(int $milliseconds): self
     {
         $self = clone $this;
@@ -65,6 +75,8 @@ final class Wait implements BaseModel
     }
 
     /**
+     * Use `wait` to pause for a fixed duration.
+     *
      * @param 'wait' $type
      */
     public function withType(string $type): self

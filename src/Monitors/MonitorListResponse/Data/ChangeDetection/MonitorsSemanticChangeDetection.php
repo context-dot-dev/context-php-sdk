@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Detect meaning-level changes to page content, ignoring cosmetic or instruction-irrelevant differences. Which changes are meaningful is judged against the page or extract target's `instructions` (and an extract target's `schema`, when provided).
+ * Detect meaningful content changes using the target’s instructions and optional schema.
  *
  * @phpstan-type MonitorsSemanticChangeDetectionShape = array{
  *   type: 'semantic', confidenceThreshold?: float|null
@@ -21,10 +21,17 @@ final class MonitorsSemanticChangeDetection implements BaseModel
     /** @use SdkModel<MonitorsSemanticChangeDetectionShape> */
     use SdkModel;
 
-    /** @var 'semantic' $type */
+    /**
+     * Use `semantic` to judge changes against the target instructions.
+     *
+     * @var 'semantic' $type
+     */
     #[Required]
     public string $type = 'semantic';
 
+    /**
+     * Minimum confidence required to report a meaningful change, from 0 to 1.
+     */
     #[Optional('confidence_threshold')]
     public ?float $confidenceThreshold;
 
@@ -48,6 +55,8 @@ final class MonitorsSemanticChangeDetection implements BaseModel
     }
 
     /**
+     * Use `semantic` to judge changes against the target instructions.
+     *
      * @param 'semantic' $type
      */
     public function withType(string $type): self
@@ -58,6 +67,9 @@ final class MonitorsSemanticChangeDetection implements BaseModel
         return $self;
     }
 
+    /**
+     * Minimum confidence required to report a meaningful change, from 0 to 1.
+     */
     public function withConfidenceThreshold(float $confidenceThreshold): self
     {
         $self = clone $this;

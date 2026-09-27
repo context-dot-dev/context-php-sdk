@@ -57,7 +57,7 @@ final class WebhookDelivery implements BaseModel
     public ?int $httpStatus;
 
     /**
-     * Delivery outcome. delivered means any 2xx response; rejected means a non-2xx response; failed means no HTTP response was received; skipped_unsafe_url means the URL failed the public-endpoint safety check.
+     * Outcome of the delivery attempt. Any 2xx response counts as delivered.
      *
      * @var value-of<Status> $status
      */
@@ -189,7 +189,7 @@ final class WebhookDelivery implements BaseModel
     }
 
     /**
-     * Delivery outcome. delivered means any 2xx response; rejected means a non-2xx response; failed means no HTTP response was received; skipped_unsafe_url means the URL failed the public-endpoint safety check.
+     * Outcome of the delivery attempt. Any 2xx response counts as delivered.
      *
      * @param Status|value-of<Status> $status
      */

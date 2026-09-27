@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Monitors\MonitorListRunsResponse\Data;
 
 /**
- * The first run after monitor creation is a baseline run.
+ * A baseline run follows creation or a target or detection change.
  */
 enum RunType: string
 {

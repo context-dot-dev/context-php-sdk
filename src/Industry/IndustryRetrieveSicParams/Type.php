@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Industry\IndustryRetrieveSicParams;
 
 /**
- * Which SIC dataset to classify against. `original_sic` uses the 1987 Standard Industrial Classification system; `latest_sec` uses the current SIC list as published by the SEC. Defaults to `original_sic`.
+ * SIC dataset: `original_sic` (1987) or `latest_sec` (current SEC list).
  */
 enum Type: string
 {

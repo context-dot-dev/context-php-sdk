@@ -24,14 +24,25 @@ final class UnionMember1 implements BaseModel
     /** @use SdkModel<UnionMember1Shape> */
     use SdkModel;
 
+    /**
+     * CSS selector to match within the current page or parent rule.
+     */
     #[Required]
     public string $selector;
 
-    /** @var OutputVariants|null $output */
+    /**
+     * Return text, HTML, an attribute such as `@href`, or nested field rules. Defaults to text.
+     *
+     * @var OutputVariants|null $output
+     */
     #[Optional(union: Output::class)]
     public mixed $output;
 
-    /** @var value-of<Type>|null $type */
+    /**
+     * Return the first match with `item` or all matches with `list`.
+     *
+     * @var value-of<Type>|null $type
+     */
     #[Optional(enum: Type::class)]
     public ?string $type;
 
@@ -77,6 +88,9 @@ final class UnionMember1 implements BaseModel
         return $self;
     }
 
+    /**
+     * CSS selector to match within the current page or parent rule.
+     */
     public function withSelector(string $selector): self
     {
         $self = clone $this;
@@ -86,6 +100,8 @@ final class UnionMember1 implements BaseModel
     }
 
     /**
+     * Return text, HTML, an attribute such as `@href`, or nested field rules. Defaults to text.
+     *
      * @param OutputShape $output
      */
     public function withOutput(mixed $output): self
@@ -97,6 +113,8 @@ final class UnionMember1 implements BaseModel
     }
 
     /**
+     * Return the first match with `item` or all matches with `list`.
+     *
      * @param Type|value-of<Type> $type
      */
     public function withType(Type|string $type): self

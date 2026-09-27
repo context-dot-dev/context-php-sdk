@@ -33,7 +33,7 @@ final class IndustryRawService implements IndustryRawContract
     /**
      * @api
      *
-     * Classify any brand into 2022 NAICS industry codes from its domain or name.
+     * Classify a company into NAICS industry codes.
      *
      * @param array{
      *   input: string,
@@ -71,7 +71,7 @@ final class IndustryRawService implements IndustryRawContract
     /**
      * @api
      *
-     * Classify any brand into Standard Industrial Classification (SIC) codes from its domain or name. Choose between the original SIC system (`original_sic`) or the latest SIC list maintained by the SEC (`latest_sec`).
+     * Classify a company into SIC industry codes.
      *
      * @param array{
      *   input: string,

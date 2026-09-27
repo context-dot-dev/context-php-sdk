@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Monitors\MonitorGetLimitsResponse;
 
 /**
- * The plan tier the limit was resolved from.
+ * `starter` means Developer; `pro` means Pro or Growth; `scale` means Scale or Enterprise.
  */
 enum Plan: string
 {

@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Download links, available once the batch reaches a final status and null before then. GET /batch/{batch_id}/results serves the same records as paginated JSON.
+ * Result download links; null until the batch finishes. Files are deleted 7 days after the batch finishes.
  *
  * @phpstan-import-type FileShape from \ContextDev\Batch\BatchListResponse\Data\Results\File
  *
@@ -24,7 +24,7 @@ final class Results implements BaseModel
     use SdkModel;
 
     /**
-     * When the download URLs expire.
+     * When these links expire (24 hours after this response).
      */
     #[Required('expires_at')]
     public string $expiresAt;
@@ -74,7 +74,7 @@ final class Results implements BaseModel
     }
 
     /**
-     * When the download URLs expire.
+     * When these links expire (24 hours after this response).
      */
     public function withExpiresAt(string $expiresAt): self
     {

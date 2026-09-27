@@ -28,7 +28,7 @@ interface BatchContract
     /**
      * @api
      *
-     * @param string $batchID ID of the batch to retrieve or cancel
+     * @param string $batchID batch ID
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -64,7 +64,7 @@ interface BatchContract
     /**
      * @api
      *
-     * @param string $batchID ID of the batch to retrieve or cancel
+     * @param string $batchID batch ID
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -77,7 +77,7 @@ interface BatchContract
     /**
      * @api
      *
-     * @param string $batchID ID of the batch to retrieve or cancel
+     * @param string $batchID batch ID
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -90,7 +90,7 @@ interface BatchContract
     /**
      * @api
      *
-     * @param string $batchID ID of the batch to retrieve or cancel
+     * @param string $batchID batch ID
      * @param string $cursor next_cursor from the previous page
      * @param int $limit Records per page. Defaults to 25. A page can close early so its payload stays under ~8 MB; rely on next_cursor rather than counting records.
      * @param RequestOpts|null $requestOptions
@@ -109,9 +109,9 @@ interface BatchContract
      *
      * @param InputShape $input body param: Choose a URL list or a site crawl
      * @param list<string> $tags Body param: Tags stored on the batch. Filter the batch list by them later.
-     * @param Webhook|WebhookShape $webhook Body param: Completion webhook settings. Cannot be combined with webhookUrl. Omitting retry preserves legacy delivery; retry: {} opts into durable retries.
+     * @param Webhook|WebhookShape $webhook Body param: Where to send the batch's final-status event. Omit `retry` for one attempt; `{}` uses the default retry schedule.
      * @param string $webhookURL Body param: Legacy URL notified when the batch finishes. Preserves one best-effort attempt. Cannot be combined with webhook.
-     * @param string $idempotencyKey Header param: Any string unique to this submission. Retries with the same key return the original batch.
+     * @param string $idempotencyKey Header param: Unique key per submission. Retrying with the same key and body returns the original batch; a different body returns `409`.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

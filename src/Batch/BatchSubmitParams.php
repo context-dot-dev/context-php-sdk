@@ -15,7 +15,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Scrape 25K URLs or crawl large websites asynchronously.
+ * Scrape up to 25,000 URLs, or crawl a site, asynchronously. Poll the batch ID or receive a webhook when it finishes.
  *
  * @see ContextDev\Services\BatchService::submit()
  *
@@ -54,7 +54,7 @@ final class BatchSubmitParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Completion webhook settings. Cannot be combined with webhookUrl. Omitting retry preserves legacy delivery; retry: {} opts into durable retries.
+     * Where to send the batch's final-status event. Omit `retry` for one attempt; `{}` uses the default retry schedule.
      */
     #[Optional]
     public ?Webhook $webhook;
@@ -66,7 +66,7 @@ final class BatchSubmitParams implements BaseModel
     public ?string $webhookURL;
 
     /**
-     * Any string unique to this submission. Retries with the same key return the original batch.
+     * Unique key per submission. Retrying with the same key and body returns the original batch; a different body returns `409`.
      */
     #[Optional]
     public ?string $idempotencyKey;
@@ -145,7 +145,7 @@ final class BatchSubmitParams implements BaseModel
     }
 
     /**
-     * Completion webhook settings. Cannot be combined with webhookUrl. Omitting retry preserves legacy delivery; retry: {} opts into durable retries.
+     * Where to send the batch's final-status event. Omit `retry` for one attempt; `{}` uses the default retry schedule.
      *
      * @param Webhook|WebhookShape $webhook
      */
@@ -169,7 +169,7 @@ final class BatchSubmitParams implements BaseModel
     }
 
     /**
-     * Any string unique to this submission. Retries with the same key return the original batch.
+     * Unique key per submission. Retrying with the same key and body returns the original batch; a different body returns `409`.
      */
     public function withIdempotencyKey(string $idempotencyKey): self
     {

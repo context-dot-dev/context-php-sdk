@@ -16,10 +16,17 @@ final class Instruction implements BaseModel
     /** @use SdkModel<InstructionShape> */
     use SdkModel;
 
-    /** @var 'perform' $type */
+    /**
+     * Use `perform` for a plain-language browser instruction.
+     *
+     * @var 'perform' $type
+     */
     #[Required]
     public string $type = 'perform';
 
+    /**
+     * One browser instruction, such as clicking a button or entering text.
+     */
     #[Required]
     public string $action;
 
@@ -56,6 +63,9 @@ final class Instruction implements BaseModel
         return $self;
     }
 
+    /**
+     * One browser instruction, such as clicking a button or entering text.
+     */
     public function withAction(string $action): self
     {
         $self = clone $this;
@@ -65,6 +75,8 @@ final class Instruction implements BaseModel
     }
 
     /**
+     * Use `perform` for a plain-language browser instruction.
+     *
      * @param 'perform' $type
      */
     public function withType(string $type): self

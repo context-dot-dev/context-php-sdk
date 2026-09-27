@@ -11,7 +11,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Monitors\MonitorListAccountRunsParams\Status;
 
 /**
- * Returns an account-wide feed of monitor runs across all monitors.
+ * List runs across your monitors, newest first.
  *
  * @see ContextDev\Services\MonitorsService::listAccountRuns()
  *

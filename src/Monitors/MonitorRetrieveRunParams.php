@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Fetches one run for a monitor, including lifecycle status, timing, credits charged, and any detected change.
+ * Retrieve the status, timing, and results of one monitor run.
  *
  * @see ContextDev\Services\MonitorsService::retrieveRun()
  *
@@ -22,6 +22,9 @@ final class MonitorRetrieveRunParams implements BaseModel
     use SdkModel;
     use SdkParams;
 
+    /**
+     * ID of the monitor.
+     */
     #[Required]
     public string $monitorID;
 
@@ -58,6 +61,9 @@ final class MonitorRetrieveRunParams implements BaseModel
         return $self;
     }
 
+    /**
+     * ID of the monitor.
+     */
     public function withMonitorID(string $monitorID): self
     {
         $self = clone $this;

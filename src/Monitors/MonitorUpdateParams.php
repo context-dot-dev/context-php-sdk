@@ -20,7 +20,7 @@ use ContextDev\Monitors\MonitorUpdateParams\Target\MonitorsSitemapTarget;
 use ContextDev\Monitors\MonitorUpdateParams\Webhook;
 
 /**
- * Updates a monitor. If `target` or `change_detection` changes, the monitor creates a new baseline. Unsupported target/change detection combinations are rejected.
+ * Update a monitor. Changing its target or change detection replaces the baseline and queues a new baseline run.
  *
  * @see ContextDev\Services\MonitorsService::update()
  *
@@ -48,13 +48,16 @@ final class MonitorUpdateParams implements BaseModel
     use SdkParams;
 
     /**
-     * Discriminated union describing how changes are detected.
+     * How changes are judged. Defaults to `semantic` for extract targets and page targets with `instructions`, otherwise `exact`.
      *
      * @var ChangeDetectionVariants|null $changeDetection
      */
     #[Optional('change_detection', union: ChangeDetection::class)]
     public MonitorsExactChangeDetection|MonitorsSemanticChangeDetection|null $changeDetection;
 
+    /**
+     * Display name for the monitor.
+     */
     #[Optional]
     public ?string $name;
 
@@ -64,12 +67,16 @@ final class MonitorUpdateParams implements BaseModel
     #[Optional]
     public ?Schedule $schedule;
 
-    /** @var value-of<Status>|null $status */
+    /**
+     * Set `paused` to stop scheduled runs or `active` to resume them.
+     *
+     * @var value-of<Status>|null $status
+     */
     #[Optional(enum: Status::class)]
     public ?string $status;
 
     /**
-     * User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
+     * Labels for filtering monitors, their changes, and their usage.
      *
      * @var list<string>|null $tags
      */
@@ -77,7 +84,7 @@ final class MonitorUpdateParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Discriminated union describing what the monitor watches.
+     * What to watch: a page, a sitemap, or data extracted from a site.
      *
      * @var TargetVariants|null $target
      */
@@ -85,7 +92,7 @@ final class MonitorUpdateParams implements BaseModel
     public MonitorsPageTarget|MonitorsSitemapTarget|MonitorsExtractTarget|null $target;
 
     /**
-     * Set to null to remove the webhook.
+     * Set to null to remove the webhook. Changing `url` issues a new secret.
      */
     #[Optional(nullable: true)]
     public ?Webhook $webhook;
@@ -130,7 +137,7 @@ final class MonitorUpdateParams implements BaseModel
     }
 
     /**
-     * Discriminated union describing how changes are detected.
+     * How changes are judged. Defaults to `semantic` for extract targets and page targets with `instructions`, otherwise `exact`.
      *
      * @param ChangeDetectionShape $changeDetection
      */
@@ -143,6 +150,9 @@ final class MonitorUpdateParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Display name for the monitor.
+     */
     public function withName(string $name): self
     {
         $self = clone $this;
@@ -165,6 +175,8 @@ final class MonitorUpdateParams implements BaseModel
     }
 
     /**
+     * Set `paused` to stop scheduled runs or `active` to resume them.
+     *
      * @param Status|value-of<Status> $status
      */
     public function withStatus(Status|string $status): self
@@ -176,7 +188,7 @@ final class MonitorUpdateParams implements BaseModel
     }
 
     /**
-     * User-defined tags for grouping and filtering monitors and their changes. Duplicates are removed.
+     * Labels for filtering monitors, their changes, and their usage.
      *
      * @param list<string> $tags
      */
@@ -189,7 +201,7 @@ final class MonitorUpdateParams implements BaseModel
     }
 
     /**
-     * Discriminated union describing what the monitor watches.
+     * What to watch: a page, a sitemap, or data extracted from a site.
      *
      * @param TargetShape $target
      */
@@ -203,7 +215,7 @@ final class MonitorUpdateParams implements BaseModel
     }
 
     /**
-     * Set to null to remove the webhook.
+     * Set to null to remove the webhook. Changing `url` issues a new secret.
      *
      * @param Webhook|WebhookShape|null $webhook
      */

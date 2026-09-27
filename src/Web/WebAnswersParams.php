@@ -14,7 +14,7 @@ use ContextDev\Web\WebAnswersParams\TimeoutOpts;
 use ContextDev\Web\WebAnswersParams\Zdr;
 
 /**
- * Researches the live web and returns a sourced answer in your requested JSON shape. Select fast for a smaller research budget at 10 credits or ultra for deeper reasoning at 100 credits. Defaults to ultra. Fast research is limited to 30 seconds and ultra to 50 seconds; timeoutOpts.milliseconds can shorten either deadline.
+ * Research the web and return a sourced answer in your JSON shape. Choose `fast` for a short task or `ultra` for deeper research.
  *
  * @see ContextDev\Services\WebService::answers()
  *
@@ -36,13 +36,13 @@ final class WebAnswersParams implements BaseModel
     use SdkParams;
 
     /**
-     * What to research and answer, in plain language. Naming a domain in the task (for example "pricing on context.dev") makes the agent read that site before it searches.
+     * Research task. Name a domain to have it read before searching.
      */
     #[Required]
     public string $task;
 
     /**
-     * An example object with placeholder values (for example {"pricing_page_url": "", "plans": [{"name": "", "price": 0}]}). Object keys and value types are preserved; unknown values may be null. Empty arrays accept any JSON items. Defaults to {"result": ""}. Maximum 8 levels, 500 values, and 16000 characters.
+     * Example answer object, not JSON Schema. Up to 8 levels, 500 values, and 16000 characters; unknowns may be null.
      *
      * @var array<string,mixed>|null $jsonFormat
      */
@@ -50,7 +50,7 @@ final class WebAnswersParams implements BaseModel
     public ?array $jsonFormat;
 
     /**
-     * Research level: fast uses a smaller model and research budget for 10 credits; ultra uses deeper reasoning and research for 100 credits. Defaults to ultra. Only successful requests consume credits.
+     * `fast` for short tasks; `ultra` for deeper research (default).
      *
      * @var value-of<Mode>|null $mode
      */
@@ -58,7 +58,7 @@ final class WebAnswersParams implements BaseModel
     public ?string $mode;
 
     /**
-     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * Labels for filtering usage in the dashboard.
      *
      * @var list<string>|null $tags
      */
@@ -66,13 +66,13 @@ final class WebAnswersParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * Request deadline and what to return when it passes.
      */
     #[Optional]
     public ?TimeoutOpts $timeoutOpts;
 
     /**
-     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @var value-of<Zdr>|null $zdr
      */
@@ -131,7 +131,7 @@ final class WebAnswersParams implements BaseModel
     }
 
     /**
-     * What to research and answer, in plain language. Naming a domain in the task (for example "pricing on context.dev") makes the agent read that site before it searches.
+     * Research task. Name a domain to have it read before searching.
      */
     public function withTask(string $task): self
     {
@@ -142,7 +142,7 @@ final class WebAnswersParams implements BaseModel
     }
 
     /**
-     * An example object with placeholder values (for example {"pricing_page_url": "", "plans": [{"name": "", "price": 0}]}). Object keys and value types are preserved; unknown values may be null. Empty arrays accept any JSON items. Defaults to {"result": ""}. Maximum 8 levels, 500 values, and 16000 characters.
+     * Example answer object, not JSON Schema. Up to 8 levels, 500 values, and 16000 characters; unknowns may be null.
      *
      * @param array<string,mixed> $jsonFormat
      */
@@ -155,7 +155,7 @@ final class WebAnswersParams implements BaseModel
     }
 
     /**
-     * Research level: fast uses a smaller model and research budget for 10 credits; ultra uses deeper reasoning and research for 100 credits. Defaults to ultra. Only successful requests consume credits.
+     * `fast` for short tasks; `ultra` for deeper research (default).
      *
      * @param Mode|value-of<Mode> $mode
      */
@@ -168,7 +168,7 @@ final class WebAnswersParams implements BaseModel
     }
 
     /**
-     * Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * Labels for filtering usage in the dashboard.
      *
      * @param list<string> $tags
      */
@@ -181,7 +181,7 @@ final class WebAnswersParams implements BaseModel
     }
 
     /**
-     * Optional request deadline and behavior on timeout. For GET requests, use timeoutOpts[milliseconds]=30000&timeoutOpts[behavior]=fail or a JSON-encoded timeoutOpts object.
+     * Request deadline and what to return when it passes.
      *
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
@@ -194,7 +194,7 @@ final class WebAnswersParams implements BaseModel
     }
 
     /**
-     * Set to enabled to bypass shared caches and omit request and response content from retained usage logs. Asset uploads are skipped, so hosted image URLs are omitted. Requires zero data retention to be enabled for your organization (contact support@context.dev), otherwise the request fails with ZDR_NOT_ENABLED. Successful ZDR responses include X-Context-ZDR: true.
+     * `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @param Zdr|value-of<Zdr> $zdr
      */

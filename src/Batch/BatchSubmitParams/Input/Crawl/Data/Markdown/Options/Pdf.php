@@ -27,13 +27,13 @@ final class Pdf implements BaseModel
     public ?int $end;
 
     /**
-     * When true, OCR the selected PDF pages that have no usable text layer (scans), replacing each recovered page's text with the OCR result while pages with a real text layer keep it. Billed at 1 credit per page OCR actually recovered, on top of the base request cost. When false, no OCR runs.
+     * Read scanned PDF pages with OCR; preserve pages that already have text.
      */
     #[Optional]
     public ?bool $ocr;
 
     /**
-     * When true, PDF URLs are fetched and parsed. When false, PDF URLs are skipped and a 400 PDF_SKIPPED is returned.
+     * Parse PDF URLs. When false, PDFs fail with `PDF_SKIPPED`.
      */
     #[Optional]
     public ?bool $shouldParse;
@@ -82,7 +82,7 @@ final class Pdf implements BaseModel
     }
 
     /**
-     * When true, OCR the selected PDF pages that have no usable text layer (scans), replacing each recovered page's text with the OCR result while pages with a real text layer keep it. Billed at 1 credit per page OCR actually recovered, on top of the base request cost. When false, no OCR runs.
+     * Read scanned PDF pages with OCR; preserve pages that already have text.
      */
     public function withOcr(bool $ocr): self
     {
@@ -93,7 +93,7 @@ final class Pdf implements BaseModel
     }
 
     /**
-     * When true, PDF URLs are fetched and parsed. When false, PDF URLs are skipped and a 400 PDF_SKIPPED is returned.
+     * Parse PDF URLs. When false, PDFs fail with `PDF_SKIPPED`.
      */
     public function withShouldParse(bool $shouldParse): self
     {

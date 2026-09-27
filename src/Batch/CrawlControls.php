@@ -11,7 +11,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * The crawl controls as submitted, so the limits requested can be compared against what the crawl reached.
+ * Crawl settings as submitted.
  *
  * @phpstan-import-type SourceVariants from \ContextDev\Batch\CrawlControls\Source
  * @phpstan-import-type SourceShape from \ContextDev\Batch\CrawlControls\Source

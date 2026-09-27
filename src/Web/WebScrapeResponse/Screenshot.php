@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * An image data URL. Use directly as an image src.
+ * Screenshot as a base64 image data URL.
  *
  * @phpstan-type ScreenshotShape = array{
  *   data: string|null, requested: bool, success: bool|null
@@ -27,7 +27,7 @@ final class Screenshot implements BaseModel
     public bool $requested;
 
     /**
-     * True when retrieved, false when retrieval failed, and null when not requested.
+     * `true` if returned, `false` if it failed, `null` if not requested.
      */
     #[Required]
     public ?bool $success;
@@ -87,7 +87,7 @@ final class Screenshot implements BaseModel
     }
 
     /**
-     * True when retrieved, false when retrieval failed, and null when not requested.
+     * `true` if returned, `false` if it failed, `null` if not requested.
      */
     public function withSuccess(?bool $success): self
     {

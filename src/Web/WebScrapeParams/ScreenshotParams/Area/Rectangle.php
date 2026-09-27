@@ -18,15 +18,27 @@ final class Rectangle implements BaseModel
     /** @use SdkModel<RectangleShape> */
     use SdkModel;
 
+    /**
+     * Height of the capture in pixels.
+     */
     #[Required]
     public int $height;
 
+    /**
+     * Width of the capture in pixels.
+     */
     #[Required]
     public int $width;
 
+    /**
+     * Left edge of the capture, in pixels from the document origin.
+     */
     #[Required]
     public int $x;
 
+    /**
+     * Top edge of the capture, in pixels from the document origin.
+     */
     #[Required]
     public int $y;
 
@@ -66,6 +78,9 @@ final class Rectangle implements BaseModel
         return $self;
     }
 
+    /**
+     * Height of the capture in pixels.
+     */
     public function withHeight(int $height): self
     {
         $self = clone $this;
@@ -74,6 +89,9 @@ final class Rectangle implements BaseModel
         return $self;
     }
 
+    /**
+     * Width of the capture in pixels.
+     */
     public function withWidth(int $width): self
     {
         $self = clone $this;
@@ -82,6 +100,9 @@ final class Rectangle implements BaseModel
         return $self;
     }
 
+    /**
+     * Left edge of the capture, in pixels from the document origin.
+     */
     public function withX(int $x): self
     {
         $self = clone $this;
@@ -90,6 +111,9 @@ final class Rectangle implements BaseModel
         return $self;
     }
 
+    /**
+     * Top edge of the capture, in pixels from the document origin.
+     */
     public function withY(int $y): self
     {
         $self = clone $this;

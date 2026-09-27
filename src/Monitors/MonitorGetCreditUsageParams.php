@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Returns credits charged per monitor over an optional [since, until] window, newest spenders first.
+ * Return usage per monitor, highest first, for up to the 10,000 most recent runs in the requested window.
  *
  * @see ContextDev\Services\MonitorsService::getCreditUsage()
  *

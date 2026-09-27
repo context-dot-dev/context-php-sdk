@@ -11,7 +11,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebScrapeParams\TimeoutOpts\Behavior;
 
 /**
- * Total deadline, including navigation, actions, waiting, and all outputs. Defaults to 60000 milliseconds with behavior fail. Individual outputs have internal deadlines that reserve time to return completed outputs; timed-out outputs have success: false and data: null under either behavior. The overall request deadline remains enforced: fail returns an error if that deadline is reached. Use return-partial to allow the current page state and available outputs when the page is still loading. Partial responses set isPartial. Failed retrievals and incomplete captures are not cached; valid captured pieces may be cached independently. Fixed waits must fit before a response reserve of up to 5000 milliseconds (at most one quarter of the timeout) when using return-partial.
+ * Deadline for the whole request. Defaults to 60000 ms with `fail`. Fixed waits must end before it.
  *
  * @phpstan-type TimeoutOptsShape = array{
  *   milliseconds: int, behavior?: null|Behavior|value-of<Behavior>
@@ -23,13 +23,13 @@ final class TimeoutOpts implements BaseModel
     use SdkModel;
 
     /**
-     * Request deadline in milliseconds. Maximum: 300000 (5 minutes).
+     * Deadline in milliseconds.
      */
     #[Required]
     public int $milliseconds;
 
     /**
-     * What to do at the deadline. "fail" returns 408 REQUEST_TIMEOUT without charging credits. "return-partial" returns usable results collected so far; if none are available, the request still fails without charging credits. Partial results are not cached as complete results. "return-partial" requires milliseconds of at least 5000.
+     * "fail" returns 408 at the deadline. "return-partial" returns available results; inspect the response’s partial flag. "return-partial" requires at least 5000 ms.
      *
      * @var value-of<Behavior>|null $behavior
      */
@@ -76,7 +76,7 @@ final class TimeoutOpts implements BaseModel
     }
 
     /**
-     * Request deadline in milliseconds. Maximum: 300000 (5 minutes).
+     * Deadline in milliseconds.
      */
     public function withMilliseconds(int $milliseconds): self
     {
@@ -87,7 +87,7 @@ final class TimeoutOpts implements BaseModel
     }
 
     /**
-     * What to do at the deadline. "fail" returns 408 REQUEST_TIMEOUT without charging credits. "return-partial" returns usable results collected so far; if none are available, the request still fails without charging credits. Partial results are not cached as complete results. "return-partial" requires milliseconds of at least 5000.
+     * "fail" returns 408 at the deadline. "return-partial" returns available results; inspect the response’s partial flag. "return-partial" requires at least 5000 ms.
      *
      * @param Behavior|value-of<Behavior> $behavior
      */

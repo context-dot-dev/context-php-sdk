@@ -53,13 +53,13 @@ final class BatchSubmitResponse implements BaseModel
     public string $id;
 
     /**
-     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     * Whether this response came from cache.
      */
     #[Required('cache_metadata')]
     public CacheMetadata $cacheMetadata;
 
     /**
-     * The crawl controls as submitted, so the limits requested can be compared against what the crawl reached.
+     * Crawl settings as submitted.
      */
     #[Required]
     public ?CrawlControls $crawl;
@@ -85,13 +85,13 @@ final class BatchSubmitResponse implements BaseModel
     public string $format;
 
     /**
-     * What submission took in, and what it charged for.
+     * What the submission accepted.
      */
     #[Required]
     public Intake $input;
 
     /**
-     * Rejected URLs, up to 100. These are not charged.
+     * Rejected URLs (first 100).
      *
      * @var list<InvalidURL> $invalidURLs
      */
@@ -107,7 +107,7 @@ final class BatchSubmitResponse implements BaseModel
     public string $mode;
 
     /**
-     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
      */
     #[Required('request_id')]
     public string $requestID;
@@ -135,7 +135,7 @@ final class BatchSubmitResponse implements BaseModel
     public ?KeyMetadata $keyMetadata;
 
     /**
-     * Signing secret for the completion webhook, returned only here and never again. Store it now; it is not repeated by GET /batch/{batch_id}.
+     * Secret for verifying `X-Context-Signature`. Only submit returns it, so store it.
      */
     #[Optional('webhook_secret')]
     public ?string $webhookSecret;
@@ -249,7 +249,7 @@ final class BatchSubmitResponse implements BaseModel
     }
 
     /**
-     * Cache outcome for this response. Composite responses are hits only when every cache-controlled fetch contributing to the output was a hit; age_ms is the oldest contributing hit.
+     * Whether this response came from cache.
      *
      * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      */
@@ -262,7 +262,7 @@ final class BatchSubmitResponse implements BaseModel
     }
 
     /**
-     * The crawl controls as submitted, so the limits requested can be compared against what the crawl reached.
+     * Crawl settings as submitted.
      *
      * @param CrawlControls|CrawlControlsShape|null $crawl
      */
@@ -312,7 +312,7 @@ final class BatchSubmitResponse implements BaseModel
     }
 
     /**
-     * What submission took in, and what it charged for.
+     * What the submission accepted.
      *
      * @param Intake|IntakeShape $input
      */
@@ -325,7 +325,7 @@ final class BatchSubmitResponse implements BaseModel
     }
 
     /**
-     * Rejected URLs, up to 100. These are not charged.
+     * Rejected URLs (first 100).
      *
      * @param list<InvalidURL|InvalidURLShape> $invalidURLs
      */
@@ -351,7 +351,7 @@ final class BatchSubmitResponse implements BaseModel
     }
 
     /**
-     * Unique id of this API call, also sent in the X-Request-Id response header. Quote it when contacting support about a failed request.
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
      */
     public function withRequestID(string $requestID): self
     {
@@ -401,7 +401,7 @@ final class BatchSubmitResponse implements BaseModel
     }
 
     /**
-     * Signing secret for the completion webhook, returned only here and never again. Store it now; it is not repeated by GET /batch/{batch_id}.
+     * Secret for verifying `X-Context-Signature`. Only submit returns it, so store it.
      */
     public function withWebhookSecret(string $webhookSecret): self
     {

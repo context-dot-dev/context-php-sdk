@@ -17,7 +17,7 @@ use ContextDev\Webhooks\Deliveries\DeliveryListResponse;
 use ContextDev\Webhooks\Deliveries\DeliveryRetryResponse;
 
 /**
- * Inspect and retry webhook deliveries. These endpoints cost no credits.
+ * Inspect and retry batch and monitor webhook deliveries.
  *
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
@@ -39,10 +39,10 @@ final class DeliveriesService implements DeliveriesContract
     /**
      * @api
      *
-     * Get a webhook delivery, including its status and latest attempt.
+     * Retrieve a webhook delivery’s status and original payload.
      *
      * @param string $deliveryID delivery ID
-     * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * @param list<string> $tags Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -63,7 +63,7 @@ final class DeliveriesService implements DeliveriesContract
     /**
      * @api
      *
-     * List your batch or monitor webhook deliveries, newest first.
+     * List batch and monitor webhook deliveries from the last 30 days.
      *
      * @param Type|value-of<Type> $type delivery source
      * @param string $batchID filter by batch ID
@@ -71,7 +71,7 @@ final class DeliveriesService implements DeliveriesContract
      * @param string $cursor the next_cursor from the previous response
      * @param int $limit number of deliveries to return
      * @param Status|value-of<Status> $status filter by delivery status
-     * @param list<string> $tags Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * @param list<string> $tags labels for filtering usage in the dashboard
      * @param string $monitorID filter by monitor ID
      * @param string $runID filter by monitor run ID
      * @param RequestOpts|null $requestOptions
@@ -113,12 +113,12 @@ final class DeliveriesService implements DeliveriesContract
     /**
      * @api
      *
-     * List delivery attempts, newest first.
+     * List a delivery’s attempts, newest first.
      *
      * @param string $deliveryID delivery ID
      * @param string $cursor the next_cursor from the previous response
      * @param int $limit number of attempts to return
-     * @param list<string> $tags Comma-separated tags for tracking request usage. Up to 20 tags, each 1-50 characters.
+     * @param list<string> $tags Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -143,11 +143,11 @@ final class DeliveriesService implements DeliveriesContract
     /**
      * @api
      *
-     * Retry a webhook delivery within seven days of creation.
+     * Resend the original payload using the source’s current URL and secret. Available for 7 days after the event.
      *
      * @param string $deliveryID path param: Delivery ID
-     * @param bool $force body param: Resend a delivery that already succeeded
-     * @param list<string> $tags Body param: Optional tags for tracking usage. Up to 20 tags, each 1 to 50 characters.
+     * @param bool $force Body param: Resend even if the delivery already succeeded. Defaults to false.
+     * @param list<string> $tags body param: Labels for filtering usage in the dashboard
      * @param string $idempotencyKey header param: Unique key to prevent duplicate retry requests
      * @param RequestOpts|null $requestOptions
      *

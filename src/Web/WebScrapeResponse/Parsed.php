@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Fields produced by parseParams.rules, after shared content filters.
+ * Fields from `parseParams.rules`, after content filters. Unmatched fields are `null` (`[]` for lists).
  *
  * @phpstan-type ParsedShape = array{
  *   data: array<string,mixed>|null, requested: bool, success: bool|null
@@ -28,7 +28,7 @@ final class Parsed implements BaseModel
     public bool $requested;
 
     /**
-     * True when retrieved, false when retrieval failed, and null when not requested.
+     * `true` if returned, `false` if it failed, `null` if not requested.
      */
     #[Required]
     public ?bool $success;
@@ -93,7 +93,7 @@ final class Parsed implements BaseModel
     }
 
     /**
-     * True when retrieved, false when retrieval failed, and null when not requested.
+     * `true` if returned, `false` if it failed, `null` if not requested.
      */
     public function withSuccess(?bool $success): self
     {

@@ -12,7 +12,7 @@ use ContextDev\Monitors\MonitorRotateWebhookSecretResponse\Target\MonitorsPageTa
 use ContextDev\Monitors\MonitorRotateWebhookSecretResponse\Target\MonitorsSitemapTarget;
 
 /**
- * Discriminated union describing what the monitor watches.
+ * What to watch: a page, a sitemap, or data extracted from a site.
  *
  * @phpstan-import-type MonitorsPageTargetShape from \ContextDev\Monitors\MonitorRotateWebhookSecretResponse\Target\MonitorsPageTarget
  * @phpstan-import-type MonitorsSitemapTargetShape from \ContextDev\Monitors\MonitorRotateWebhookSecretResponse\Target\MonitorsSitemapTarget

@@ -12,7 +12,7 @@ use ContextDev\Monitors\MonitorListAccountChangesParams\ChangeDetectionType;
 use ContextDev\Monitors\MonitorListAccountChangesParams\TargetType;
 
 /**
- * Returns an account-wide feed of detected changes across monitors.
+ * List full change records across your monitors, newest first.
  *
  * @see ContextDev\Services\MonitorsService::listAccountChanges()
  *
