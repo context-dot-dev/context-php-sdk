@@ -34,7 +34,7 @@ final class WebAnswersResponse implements BaseModel
     public array $jsonContent;
 
     /**
-     * URLs that supplied search results or readable page content, in first-seen order. Unreadable pages are excluded.
+     * Public evidence URLs from searches, pages, or company/profile records, in first-seen order. A listed URL may identify a record without its page being read.
      *
      * @var list<string> $sources
      */
@@ -112,7 +112,7 @@ final class WebAnswersResponse implements BaseModel
     }
 
     /**
-     * URLs that supplied search results or readable page content, in first-seen order. Unreadable pages are excluded.
+     * Public evidence URLs from searches, pages, or company/profile records, in first-seen order. A listed URL may identify a record without its page being read.
      *
      * @param list<string> $sources
      */
