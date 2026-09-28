@@ -70,6 +70,7 @@ final class MonitorsTest extends TestCase
             target: [
                 'type' => 'page',
                 'url' => 'https://acme.com/pricing',
+                'actions' => [['do' => 'wait', 'timeMs' => 0]],
                 'excludeSelectors' => ['.carousel', '[id^="TA_"]'],
                 'includeSelectors' => ['#attraction-details'],
                 'instructions' => 'Report pricing or plan availability changes. Ignore counters, timestamps, testimonials, and navigation.',
