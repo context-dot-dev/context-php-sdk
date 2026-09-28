@@ -41,6 +41,7 @@ use ContextDev\Web\WebScreenshotParams\Viewport;
 use ContextDev\Web\WebScreenshotResponse;
 use ContextDev\Web\WebSearchParams;
 use ContextDev\Web\WebSearchParams\Freshness;
+use ContextDev\Web\WebSearchParams\HighlightsOptions;
 use ContextDev\Web\WebSearchParams\MarkdownOptions;
 use ContextDev\Web\WebSearchResponse;
 use ContextDev\Web\WebWebCrawlMdParams;
@@ -64,6 +65,7 @@ use ContextDev\Web\WebWebCrawlMdResponse;
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebScrapeParams\TimeoutOpts as TimeoutOptsShape4
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebScreenshotParams\TimeoutOpts as TimeoutOptsShape5
  * @phpstan-import-type ViewportShape from \ContextDev\Web\WebScreenshotParams\Viewport
+ * @phpstan-import-type HighlightsOptionsShape from \ContextDev\Web\WebSearchParams\HighlightsOptions
  * @phpstan-import-type MarkdownOptionsShape from \ContextDev\Web\WebSearchParams\MarkdownOptions
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebSearchParams\TimeoutOpts as TimeoutOptsShape6
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebCrawlMdParams\Pdf
@@ -334,13 +336,14 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Search the web and optionally return page content with each result.
+     * Search the web and optionally return page content or relevant passages with each result.
      *
      * @param array{
      *   query: string,
      *   country?: value-of<WebSearchParams\Country>,
      *   excludeDomains?: list<string>,
      *   freshness?: Freshness|value-of<Freshness>,
+     *   highlightsOptions?: HighlightsOptions|HighlightsOptionsShape,
      *   includeDomains?: list<string>,
      *   markdownOptions?: MarkdownOptions|MarkdownOptionsShape,
      *   numResults?: int,

@@ -30,6 +30,7 @@ use ContextDev\Web\WebScreenshotParams\Page;
 use ContextDev\Web\WebScreenshotParams\Viewport;
 use ContextDev\Web\WebScreenshotResponse;
 use ContextDev\Web\WebSearchParams\Freshness;
+use ContextDev\Web\WebSearchParams\HighlightsOptions;
 use ContextDev\Web\WebSearchParams\MarkdownOptions;
 use ContextDev\Web\WebSearchResponse;
 use ContextDev\Web\WebWebCrawlMdParams\Pdf;
@@ -52,6 +53,7 @@ use ContextDev\Web\WebWebCrawlMdResponse;
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebScrapeParams\TimeoutOpts as TimeoutOptsShape4
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebScreenshotParams\TimeoutOpts as TimeoutOptsShape5
  * @phpstan-import-type ViewportShape from \ContextDev\Web\WebScreenshotParams\Viewport
+ * @phpstan-import-type HighlightsOptionsShape from \ContextDev\Web\WebSearchParams\HighlightsOptions
  * @phpstan-import-type MarkdownOptionsShape from \ContextDev\Web\WebSearchParams\MarkdownOptions
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebSearchParams\TimeoutOpts as TimeoutOptsShape6
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebCrawlMdParams\Pdf
@@ -251,6 +253,7 @@ interface WebContract
      * @param \ContextDev\Web\WebSearchParams\Country|value-of<\ContextDev\Web\WebSearchParams\Country> $country Two-letter ISO 3166-1 alpha-2 country code to localize results to a specific country (maps to Google's `gl` parameter). Example: "us", "gb", "de".
      * @param list<string> $excludeDomains Blocklist — drop results from these domains. Example: ["pinterest.com", "reddit.com"].
      * @param Freshness|value-of<Freshness> $freshness restrict results to content published within this window
+     * @param HighlightsOptions|HighlightsOptionsShape $highlightsOptions Passages from each result page that are relevant to the query. Pages are read with the `markdownOptions` settings.
      * @param list<string> $includeDomains Allowlist — only return results from these domains. Example: ["arxiv.org", "github.com"].
      * @param MarkdownOptions|MarkdownOptionsShape $markdownOptions Inline Markdown scraping for each result. Set `enabled: true` to activate.
      * @param int $numResults Number of results to request and return (10–100). Defaults to 10.
@@ -267,6 +270,7 @@ interface WebContract
         \ContextDev\Web\WebSearchParams\Country|string|null $country = null,
         ?array $excludeDomains = null,
         Freshness|string|null $freshness = null,
+        HighlightsOptions|array|null $highlightsOptions = null,
         ?array $includeDomains = null,
         MarkdownOptions|array|null $markdownOptions = null,
         int $numResults = 10,

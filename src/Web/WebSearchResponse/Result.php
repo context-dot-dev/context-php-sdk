@@ -7,14 +7,17 @@ namespace ContextDev\Web\WebSearchResponse;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebSearchResponse\Result\Highlights;
 use ContextDev\Web\WebSearchResponse\Result\Markdown;
 use ContextDev\Web\WebSearchResponse\Result\Relevance;
 
 /**
+ * @phpstan-import-type HighlightsShape from \ContextDev\Web\WebSearchResponse\Result\Highlights
  * @phpstan-import-type MarkdownShape from \ContextDev\Web\WebSearchResponse\Result\Markdown
  *
  * @phpstan-type ResultShape = array{
  *   description: string,
+ *   highlights: Highlights|HighlightsShape,
  *   markdown: Markdown|MarkdownShape,
  *   relevance: Relevance|value-of<Relevance>,
  *   title: string,
@@ -31,6 +34,12 @@ final class Result implements BaseModel
      */
     #[Required]
     public string $description;
+
+    /**
+     * Highlights status and passages for this result.
+     */
+    #[Required]
+    public Highlights $highlights;
 
     /**
      * Markdown scrape status and content for this result.
@@ -64,7 +73,12 @@ final class Result implements BaseModel
      * To enforce required parameters use
      * ```
      * Result::with(
-     *   description: ..., markdown: ..., relevance: ..., title: ..., url: ...
+     *   description: ...,
+     *   highlights: ...,
+     *   markdown: ...,
+     *   relevance: ...,
+     *   title: ...,
+     *   url: ...,
      * )
      * ```
      *
@@ -73,6 +87,7 @@ final class Result implements BaseModel
      * ```
      * (new Result)
      *   ->withDescription(...)
+     *   ->withHighlights(...)
      *   ->withMarkdown(...)
      *   ->withRelevance(...)
      *   ->withTitle(...)
@@ -89,11 +104,13 @@ final class Result implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param Highlights|HighlightsShape $highlights
      * @param Markdown|MarkdownShape $markdown
      * @param Relevance|value-of<Relevance> $relevance
      */
     public static function with(
         string $description,
+        Highlights|array $highlights,
         Markdown|array $markdown,
         Relevance|string $relevance,
         string $title,
@@ -102,6 +119,7 @@ final class Result implements BaseModel
         $self = new self;
 
         $self['description'] = $description;
+        $self['highlights'] = $highlights;
         $self['markdown'] = $markdown;
         $self['relevance'] = $relevance;
         $self['title'] = $title;
@@ -117,6 +135,19 @@ final class Result implements BaseModel
     {
         $self = clone $this;
         $self['description'] = $description;
+
+        return $self;
+    }
+
+    /**
+     * Highlights status and passages for this result.
+     *
+     * @param Highlights|HighlightsShape $highlights
+     */
+    public function withHighlights(Highlights|array $highlights): self
+    {
+        $self = clone $this;
+        $self['highlights'] = $highlights;
 
         return $self;
     }

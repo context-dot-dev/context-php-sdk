@@ -11,15 +11,17 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebSearchParams\Country;
 use ContextDev\Web\WebSearchParams\Freshness;
+use ContextDev\Web\WebSearchParams\HighlightsOptions;
 use ContextDev\Web\WebSearchParams\MarkdownOptions;
 use ContextDev\Web\WebSearchParams\TimeoutOpts;
 use ContextDev\Web\WebSearchParams\Zdr;
 
 /**
- * Search the web and optionally return page content with each result.
+ * Search the web and optionally return page content or relevant passages with each result.
  *
  * @see ContextDev\Services\WebService::search()
  *
+ * @phpstan-import-type HighlightsOptionsShape from \ContextDev\Web\WebSearchParams\HighlightsOptions
  * @phpstan-import-type MarkdownOptionsShape from \ContextDev\Web\WebSearchParams\MarkdownOptions
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebSearchParams\TimeoutOpts
  *
@@ -28,6 +30,7 @@ use ContextDev\Web\WebSearchParams\Zdr;
  *   country?: null|Country|value-of<Country>,
  *   excludeDomains?: list<string>|null,
  *   freshness?: null|Freshness|value-of<Freshness>,
+ *   highlightsOptions?: null|HighlightsOptions|HighlightsOptionsShape,
  *   includeDomains?: list<string>|null,
  *   markdownOptions?: null|MarkdownOptions|MarkdownOptionsShape,
  *   numResults?: int|null,
@@ -72,6 +75,12 @@ final class WebSearchParams implements BaseModel
      */
     #[Optional(enum: Freshness::class)]
     public ?string $freshness;
+
+    /**
+     * Passages from each result page that are relevant to the query. Pages are read with the `markdownOptions` settings.
+     */
+    #[Optional]
+    public ?HighlightsOptions $highlightsOptions;
 
     /**
      * Allowlist — only return results from these domains. Example: ["arxiv.org", "github.com"].
@@ -148,6 +157,7 @@ final class WebSearchParams implements BaseModel
      * @param Country|value-of<Country>|null $country
      * @param list<string>|null $excludeDomains
      * @param Freshness|value-of<Freshness>|null $freshness
+     * @param HighlightsOptions|HighlightsOptionsShape|null $highlightsOptions
      * @param list<string>|null $includeDomains
      * @param MarkdownOptions|MarkdownOptionsShape|null $markdownOptions
      * @param list<string>|null $tags
@@ -159,6 +169,7 @@ final class WebSearchParams implements BaseModel
         Country|string|null $country = null,
         ?array $excludeDomains = null,
         Freshness|string|null $freshness = null,
+        HighlightsOptions|array|null $highlightsOptions = null,
         ?array $includeDomains = null,
         MarkdownOptions|array|null $markdownOptions = null,
         ?int $numResults = null,
@@ -174,6 +185,7 @@ final class WebSearchParams implements BaseModel
         null !== $country && $self['country'] = $country;
         null !== $excludeDomains && $self['excludeDomains'] = $excludeDomains;
         null !== $freshness && $self['freshness'] = $freshness;
+        null !== $highlightsOptions && $self['highlightsOptions'] = $highlightsOptions;
         null !== $includeDomains && $self['includeDomains'] = $includeDomains;
         null !== $markdownOptions && $self['markdownOptions'] = $markdownOptions;
         null !== $numResults && $self['numResults'] = $numResults;
@@ -231,6 +243,20 @@ final class WebSearchParams implements BaseModel
     {
         $self = clone $this;
         $self['freshness'] = $freshness;
+
+        return $self;
+    }
+
+    /**
+     * Passages from each result page that are relevant to the query. Pages are read with the `markdownOptions` settings.
+     *
+     * @param HighlightsOptions|HighlightsOptionsShape $highlightsOptions
+     */
+    public function withHighlightsOptions(
+        HighlightsOptions|array $highlightsOptions
+    ): self {
+        $self = clone $this;
+        $self['highlightsOptions'] = $highlightsOptions;
 
         return $self;
     }
