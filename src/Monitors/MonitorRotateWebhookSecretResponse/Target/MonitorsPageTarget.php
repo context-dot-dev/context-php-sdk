@@ -8,13 +8,18 @@ use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Monitors\MonitorRotateWebhookSecretResponse\Target\MonitorsPageTarget\Action;
 
 /**
  * Watch a single web page. Exact detection reports visible-text diffs; semantic detection judges confirmed stable diffs against `instructions`.
  *
+ * @phpstan-import-type ActionVariants from \ContextDev\Monitors\MonitorRotateWebhookSecretResponse\Target\MonitorsPageTarget\Action
+ * @phpstan-import-type ActionShape from \ContextDev\Monitors\MonitorRotateWebhookSecretResponse\Target\MonitorsPageTarget\Action
+ *
  * @phpstan-type MonitorsPageTargetShape = array{
  *   type: 'page',
  *   url: string,
+ *   actions?: list<ActionShape>|null,
  *   excludeSelectors?: list<string>|null,
  *   includeSelectors?: list<string>|null,
  *   instructions?: string|null,
@@ -39,6 +44,14 @@ final class MonitorsPageTarget implements BaseModel
      */
     #[Required]
     public string $url;
+
+    /**
+     * Optional browser actions executed in array order after the page loads, before content is captured, on every run. Requires a paid plan. Maximum: 5 actions. Changes create a new baseline.
+     *
+     * @var list<ActionVariants>|null $actions
+     */
+    #[Optional(list: Action::class, nullable: true)]
+    public ?array $actions;
 
     /**
      * Remove matching regions after inclusions. Changes create a new baseline.
@@ -92,11 +105,13 @@ final class MonitorsPageTarget implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param list<ActionShape>|null $actions
      * @param list<string>|null $excludeSelectors
      * @param list<string>|null $includeSelectors
      */
     public static function with(
         string $url,
+        ?array $actions = null,
         ?array $excludeSelectors = null,
         ?array $includeSelectors = null,
         ?string $instructions = null,
@@ -106,6 +121,7 @@ final class MonitorsPageTarget implements BaseModel
 
         $self['url'] = $url;
 
+        null !== $actions && $self['actions'] = $actions;
         null !== $excludeSelectors && $self['excludeSelectors'] = $excludeSelectors;
         null !== $includeSelectors && $self['includeSelectors'] = $includeSelectors;
         null !== $instructions && $self['instructions'] = $instructions;
@@ -134,6 +150,19 @@ final class MonitorsPageTarget implements BaseModel
     {
         $self = clone $this;
         $self['url'] = $url;
+
+        return $self;
+    }
+
+    /**
+     * Optional browser actions executed in array order after the page loads, before content is captured, on every run. Requires a paid plan. Maximum: 5 actions. Changes create a new baseline.
+     *
+     * @param list<ActionShape>|null $actions
+     */
+    public function withActions(?array $actions): self
+    {
+        $self = clone $this;
+        $self['actions'] = $actions;
 
         return $self;
     }
