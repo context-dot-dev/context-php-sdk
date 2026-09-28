@@ -35,7 +35,7 @@ final class MarkdownOptions implements BaseModel
     use SdkModel;
 
     /**
-     * Scrape each result to Markdown. Off by default to keep search cheap and fast.
+     * Scrape each result to Markdown. Adds 1 credit per 10 results.
      */
     #[Optional]
     public ?bool $enabled;
@@ -59,7 +59,7 @@ final class MarkdownOptions implements BaseModel
     public ?bool $includeLinks;
 
     /**
-     * Cache TTL in ms for scraped Markdown keyed by URL + options. Default 1 day, max 30 days. Set to 0 to force a fresh scrape.
+     * Cache TTL in ms for scraped Markdown keyed by URL + options. Default 15 days, max 30 days. Set to 0 to force a fresh scrape.
      */
     #[Optional]
     public ?int $maxAgeMs;
@@ -136,7 +136,7 @@ final class MarkdownOptions implements BaseModel
     }
 
     /**
-     * Scrape each result to Markdown. Off by default to keep search cheap and fast.
+     * Scrape each result to Markdown. Adds 1 credit per 10 results.
      */
     public function withEnabled(bool $enabled): self
     {
@@ -180,7 +180,7 @@ final class MarkdownOptions implements BaseModel
     }
 
     /**
-     * Cache TTL in ms for scraped Markdown keyed by URL + options. Default 1 day, max 30 days. Set to 0 to force a fresh scrape.
+     * Cache TTL in ms for scraped Markdown keyed by URL + options. Default 15 days, max 30 days. Set to 0 to force a fresh scrape.
      */
     public function withMaxAgeMs(int $maxAgeMs): self
     {
