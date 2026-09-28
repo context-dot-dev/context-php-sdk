@@ -39,13 +39,13 @@ final class Json implements BaseModel
     public ?bool $success;
 
     /**
-     * Cause of a failed JSON extraction, when available.
+     * Why the output failed. Present only when `success` is `false`.
      */
     #[Optional('error_code')]
     public ?string $errorCode;
 
     /**
-     * Explanation of the JSON extraction failure and possible next steps.
+     * Explanation of the failure and possible next steps.
      */
     #[Optional]
     public ?string $message;
@@ -126,7 +126,7 @@ final class Json implements BaseModel
     }
 
     /**
-     * Cause of a failed JSON extraction, when available.
+     * Why the output failed. Present only when `success` is `false`.
      */
     public function withErrorCode(string $errorCode): self
     {
@@ -137,7 +137,7 @@ final class Json implements BaseModel
     }
 
     /**
-     * Explanation of the JSON extraction failure and possible next steps.
+     * Explanation of the failure and possible next steps.
      */
     public function withMessage(string $message): self
     {
