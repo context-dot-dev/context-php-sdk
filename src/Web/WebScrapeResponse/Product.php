@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ContextDev\Web\WebScrapeResponse;
 
+use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
@@ -15,7 +16,11 @@ use ContextDev\Web\WebScrapeResponse\Product\Data;
  * @phpstan-import-type DataShape from \ContextDev\Web\WebScrapeResponse\Product\Data
  *
  * @phpstan-type ProductShape = array{
- *   data: null|Data|DataShape, requested: bool, success: bool|null
+ *   data: null|Data|DataShape,
+ *   requested: bool,
+ *   success: bool|null,
+ *   errorCode?: string|null,
+ *   message?: string|null,
  * }
  */
 final class Product implements BaseModel
@@ -34,6 +39,18 @@ final class Product implements BaseModel
      */
     #[Required]
     public ?bool $success;
+
+    /**
+     * Why the output failed. Present only when `success` is `false`.
+     */
+    #[Optional('error_code')]
+    public ?string $errorCode;
+
+    /**
+     * Explanation of the failure and possible next steps.
+     */
+    #[Optional]
+    public ?string $message;
 
     /**
      * `new Product()` is missing required properties by the API.
@@ -64,13 +81,18 @@ final class Product implements BaseModel
     public static function with(
         Data|array|null $data,
         bool $requested,
-        ?bool $success
+        ?bool $success,
+        ?string $errorCode = null,
+        ?string $message = null,
     ): self {
         $self = new self;
 
         $self['data'] = $data;
         $self['requested'] = $requested;
         $self['success'] = $success;
+
+        null !== $errorCode && $self['errorCode'] = $errorCode;
+        null !== $message && $self['message'] = $message;
 
         return $self;
     }
@@ -101,6 +123,28 @@ final class Product implements BaseModel
     {
         $self = clone $this;
         $self['success'] = $success;
+
+        return $self;
+    }
+
+    /**
+     * Why the output failed. Present only when `success` is `false`.
+     */
+    public function withErrorCode(string $errorCode): self
+    {
+        $self = clone $this;
+        $self['errorCode'] = $errorCode;
+
+        return $self;
+    }
+
+    /**
+     * Explanation of the failure and possible next steps.
+     */
+    public function withMessage(string $message): self
+    {
+        $self = clone $this;
+        $self['message'] = $message;
 
         return $self;
     }
