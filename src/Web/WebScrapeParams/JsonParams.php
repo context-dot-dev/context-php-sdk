@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Required when formats.json is true.
+ * Requires `formats.json: true`; required when it is set.
  *
  * @phpstan-type JsonParamsShape = array{
  *   schema: array<string,mixed>, instructions?: string|null
@@ -22,7 +22,7 @@ final class JsonParams implements BaseModel
     use SdkModel;
 
     /**
-     * JSON Schema for a top-level object, up to 50 KB. Use optional or nullable fields for missing facts.
+     * JSON Schema (not an example object) for a top-level object, up to 50 KB. Use optional or nullable fields for missing facts.
      *
      * @var array<string,mixed> $schema
      */
@@ -75,7 +75,7 @@ final class JsonParams implements BaseModel
     }
 
     /**
-     * JSON Schema for a top-level object, up to 50 KB. Use optional or nullable fields for missing facts.
+     * JSON Schema (not an example object) for a top-level object, up to 50 KB. Use optional or nullable fields for missing facts.
      *
      * @param array<string,mixed> $schema
      */
