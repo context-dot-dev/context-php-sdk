@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Required when `formats.highlights` is `true`.
+ * Requires `formats.highlights: true`; required when it is set.
  *
  * @phpstan-type HighlightsParamsShape = array{
  *   query: string, maxCharacters?: int|null

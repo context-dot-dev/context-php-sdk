@@ -61,7 +61,7 @@ final class WebSearchParams implements BaseModel
     public ?string $country;
 
     /**
-     * Blocklist — drop results from these domains. Example: ["pinterest.com", "reddit.com"].
+     * Blocklist — drop results from these domains. Up to 100 domains. Example: ["pinterest.com", "reddit.com"].
      *
      * @var list<string>|null $excludeDomains
      */
@@ -83,7 +83,7 @@ final class WebSearchParams implements BaseModel
     public ?HighlightsOptions $highlightsOptions;
 
     /**
-     * Allowlist — only return results from these domains. Example: ["arxiv.org", "github.com"].
+     * Allowlist — only return results from these domains. Up to 100 domains. Example: ["arxiv.org", "github.com"].
      *
      * @var list<string>|null $includeDomains
      */
@@ -222,7 +222,7 @@ final class WebSearchParams implements BaseModel
     }
 
     /**
-     * Blocklist — drop results from these domains. Example: ["pinterest.com", "reddit.com"].
+     * Blocklist — drop results from these domains. Up to 100 domains. Example: ["pinterest.com", "reddit.com"].
      *
      * @param list<string> $excludeDomains
      */
@@ -262,7 +262,7 @@ final class WebSearchParams implements BaseModel
     }
 
     /**
-     * Allowlist — only return results from these domains. Example: ["arxiv.org", "github.com"].
+     * Allowlist — only return results from these domains. Up to 100 domains. Example: ["arxiv.org", "github.com"].
      *
      * @param list<string> $includeDomains
      */

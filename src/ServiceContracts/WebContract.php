@@ -167,12 +167,12 @@ interface WebContract
      *
      * @param Formats|FormatsShape $formats Outputs to return. Set at least one to `true`.
      * @param string $url public HTTP or HTTPS URL to scrape
-     * @param HighlightsParams|HighlightsParamsShape $highlightsParams Required when `formats.highlights` is `true`.
+     * @param HighlightsParams|HighlightsParamsShape $highlightsParams Requires `formats.highlights: true`; required when it is set.
      * @param ImageParams|ImageParamsShape $imageParams Image options. Requires formats.images: true.
-     * @param JsonParams|JsonParamsShape $jsonParams Required when formats.json is true.
+     * @param JsonParams|JsonParamsShape $jsonParams Requires `formats.json: true`; required when it is set.
      * @param MarkdownParams|MarkdownParamsShape $markdownParams Markdown options. Requires `formats.markdown`.
      * @param int $maxAgeMs Maximum age of a cached output, in milliseconds. `0` fetches fresh. Defaults to 3 days (259200000 ms). Maximum: 1 year (31536000000 ms).
-     * @param ParseParams|ParseParamsShape $parseParams Required when formats.parse is true.
+     * @param ParseParams|ParseParamsShape $parseParams Requires `formats.parse: true`; required when it is set.
      * @param ProductParams|ProductParamsShape $productParams Product options. Requires formats.product: true.
      * @param ScreenshotParams|ScreenshotParamsShape $screenshotParams Screenshot options. Requires formats.screenshot: true.
      * @param SharedParams|SharedParamsShape $sharedParams browser and content settings shared by all outputs
@@ -251,10 +251,10 @@ interface WebContract
      *
      * @param string $query Search query. Accepts natural language as well as Google-style search operators such as `site:`, `-site:`, `inurl:`, `intitle:`, quoted phrases, and `OR`.
      * @param \ContextDev\Web\WebSearchParams\Country|value-of<\ContextDev\Web\WebSearchParams\Country> $country Two-letter ISO 3166-1 alpha-2 country code to localize results to a specific country (maps to Google's `gl` parameter). Example: "us", "gb", "de".
-     * @param list<string> $excludeDomains Blocklist — drop results from these domains. Example: ["pinterest.com", "reddit.com"].
+     * @param list<string> $excludeDomains Blocklist — drop results from these domains. Up to 100 domains. Example: ["pinterest.com", "reddit.com"].
      * @param Freshness|value-of<Freshness> $freshness restrict results to content published within this window
      * @param HighlightsOptions|HighlightsOptionsShape $highlightsOptions Passages from each result page that are relevant to the query. Pages are read with the `markdownOptions` settings.
-     * @param list<string> $includeDomains Allowlist — only return results from these domains. Example: ["arxiv.org", "github.com"].
+     * @param list<string> $includeDomains Allowlist — only return results from these domains. Up to 100 domains. Example: ["arxiv.org", "github.com"].
      * @param MarkdownOptions|MarkdownOptionsShape $markdownOptions Inline Markdown scraping for each result. Set `enabled: true` to activate.
      * @param int $numResults Number of results to request and return (10–100). Defaults to 10.
      * @param bool $queryFanout currently has no effect

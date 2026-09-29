@@ -73,7 +73,7 @@ final class WebScrapeParams implements BaseModel
     public string $url;
 
     /**
-     * Required when `formats.highlights` is `true`.
+     * Requires `formats.highlights: true`; required when it is set.
      */
     #[Optional]
     public ?HighlightsParams $highlightsParams;
@@ -85,7 +85,7 @@ final class WebScrapeParams implements BaseModel
     public ?ImageParams $imageParams;
 
     /**
-     * Required when formats.json is true.
+     * Requires `formats.json: true`; required when it is set.
      */
     #[Optional]
     public ?JsonParams $jsonParams;
@@ -103,7 +103,7 @@ final class WebScrapeParams implements BaseModel
     public ?int $maxAgeMs;
 
     /**
-     * Required when formats.parse is true.
+     * Requires `formats.parse: true`; required when it is set.
      */
     #[Optional]
     public ?ParseParams $parseParams;
@@ -247,7 +247,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Required when `formats.highlights` is `true`.
+     * Requires `formats.highlights: true`; required when it is set.
      *
      * @param HighlightsParams|HighlightsParamsShape $highlightsParams
      */
@@ -274,7 +274,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Required when formats.json is true.
+     * Requires `formats.json: true`; required when it is set.
      *
      * @param JsonParams|JsonParamsShape $jsonParams
      */
@@ -312,7 +312,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Required when formats.parse is true.
+     * Requires `formats.parse: true`; required when it is set.
      *
      * @param ParseParams|ParseParamsShape $parseParams
      */

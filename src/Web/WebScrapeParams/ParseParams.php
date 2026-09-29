@@ -10,7 +10,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebScrapeParams\ParseParams\Rule;
 
 /**
- * Required when formats.parse is true.
+ * Requires `formats.parse: true`; required when it is set.
  *
  * @phpstan-import-type RuleVariants from \ContextDev\Web\WebScrapeParams\ParseParams\Rule
  * @phpstan-import-type RuleShape from \ContextDev\Web\WebScrapeParams\ParseParams\Rule
