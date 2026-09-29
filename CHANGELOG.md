@@ -1,5 +1,29 @@
 # Changelog
 
+## [2.22.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.21.0...v2.22.0) (2026-09-29)
+
+
+### Features
+
+* **answers:** route people and company research with faster answers ([#1336](https://github.com/context-dot-dev/context-php-sdk/issues/1336)) ([866978e](https://github.com/context-dot-dev/context-php-sdk/commit/866978e892740f9ca0745fc5917b56434eac9c31))
+* **api:** explain failed scrape outputs and fix agent-reported bugs ([#1360](https://github.com/context-dot-dev/context-php-sdk/issues/1360)) ([8fba002](https://github.com/context-dot-dev/context-php-sdk/commit/8fba002126972e9a3fc90d72c75f74c86c164b72))
+* **monitors:** support browser actions on page monitors ([#1365](https://github.com/context-dot-dev/context-php-sdk/issues/1365)) ([32384cc](https://github.com/context-dot-dev/context-php-sdk/commit/32384cc00b8cb09fb1c58e3f92c9111ad51f21f2))
+* **scrape:** default cache age to three days and allow one year ([#1339](https://github.com/context-dot-dev/context-php-sdk/issues/1339)) ([134cfc3](https://github.com/context-dot-dev/context-php-sdk/commit/134cfc320ecda323052695e7143a1aaa7d68e02f))
+* **search:** add highlights to web search and bill page reads per 10 results ([#1387](https://github.com/context-dot-dev/context-php-sdk/issues/1387)) ([88cf8ce](https://github.com/context-dot-dev/context-php-sdk/commit/88cf8ce6703a899fe85fa1ad3c5bdfee647f2d46))
+* **web-search:** extend page cache defaults ([#1408](https://github.com/context-dot-dev/context-php-sdk/issues/1408)) ([d945187](https://github.com/context-dot-dev/context-php-sdk/commit/d945187741c1f3e3d56ca622444689181d4e04d5))
+
+
+### Bug Fixes
+
+* **api:** document search domain limits and clarify scrape parameter errors ([#1388](https://github.com/context-dot-dev/context-php-sdk/issues/1388)) ([902c4b8](https://github.com/context-dot-dev/context-php-sdk/commit/902c4b8fedf7ca4b5325729db86f10c0392c82ac))
+* **scrape:** resolve extracted URLs from source references ([#1333](https://github.com/context-dot-dev/context-php-sdk/issues/1333)) ([1851497](https://github.com/context-dot-dev/context-php-sdk/commit/18514975a28f662852ae1e2d3f8b8974fec7b382))
+
+
+### Documentation
+
+* **openapi:** complete concise API reference metadata ([#1329](https://github.com/context-dot-dev/context-php-sdk/issues/1329)) ([8369026](https://github.com/context-dot-dev/context-php-sdk/commit/8369026451b92d42ea23d034f4d8b8b12fd9cfcb))
+* **scrape:** rename endpoint to Scrape Anything ([#1341](https://github.com/context-dot-dev/context-php-sdk/issues/1341)) ([cfcbe9a](https://github.com/context-dot-dev/context-php-sdk/commit/cfcbe9a6cea2d498b18fb02b51f079f2917f2eab))
+
 ## [2.21.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.20.0...v2.21.0) (2026-09-27)
 
 
