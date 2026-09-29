@@ -59,7 +59,7 @@ final class MarkdownOptions implements BaseModel
     public ?bool $includeLinks;
 
     /**
-     * Cache TTL in ms for scraped Markdown keyed by URL + options. Default 15 days, max 30 days. Set to 0 to force a fresh scrape.
+     * Maximum cache age in milliseconds for result page content. Defaults to 180 days (15552000000 ms) when Markdown is requested, or 365 days (31536000000 ms) when only highlights are requested. Explicit values override either default. Maximum: 365 days. Set to 0 to force a fresh scrape.
      */
     #[Optional]
     public ?int $maxAgeMs;
@@ -180,7 +180,7 @@ final class MarkdownOptions implements BaseModel
     }
 
     /**
-     * Cache TTL in ms for scraped Markdown keyed by URL + options. Default 15 days, max 30 days. Set to 0 to force a fresh scrape.
+     * Maximum cache age in milliseconds for result page content. Defaults to 180 days (15552000000 ms) when Markdown is requested, or 365 days (31536000000 ms) when only highlights are requested. Explicit values override either default. Maximum: 365 days. Set to 0 to force a fresh scrape.
      */
     public function withMaxAgeMs(int $maxAgeMs): self
     {
