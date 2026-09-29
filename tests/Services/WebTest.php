@@ -211,7 +211,7 @@ final class WebTest extends TestCase
                     'links' => ['selector' => 'a', 'output' => '@href', 'type' => 'list'],
                 ],
             ],
-            productParams: ['useAIFallback' => true],
+            productParams: ['dedupeImages' => true],
             screenshotParams: ['area' => 'viewport', 'format' => 'png'],
             sharedParams: [
                 'actions' => [
