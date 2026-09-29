@@ -135,7 +135,7 @@ final class WebScrapeParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Deadline for the whole request. Defaults to 60000 ms with `fail`. Fixed waits must end before it.
+     * Deadline for the whole request. Defaults to 90000 ms with `fail`. Fixed waits must end before it.
      */
     #[Optional]
     public ?TimeoutOpts $timeoutOpts;
@@ -378,7 +378,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Deadline for the whole request. Defaults to 60000 ms with `fail`. Fixed waits must end before it.
+     * Deadline for the whole request. Defaults to 90000 ms with `fail`. Fixed waits must end before it.
      *
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */

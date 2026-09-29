@@ -177,7 +177,7 @@ interface WebContract
      * @param ScreenshotParams|ScreenshotParamsShape $screenshotParams Screenshot options. Requires formats.screenshot: true.
      * @param SharedParams|SharedParamsShape $sharedParams browser and content settings shared by all outputs
      * @param list<string> $tags Labels for tracking request usage. Not retained when zdr is enabled.
-     * @param \ContextDev\Web\WebScrapeParams\TimeoutOpts|TimeoutOptsShape4 $timeoutOpts Deadline for the whole request. Defaults to 60000 ms with `fail`. Fixed waits must end before it.
+     * @param \ContextDev\Web\WebScrapeParams\TimeoutOpts|TimeoutOptsShape4 $timeoutOpts Deadline for the whole request. Defaults to 90000 ms with `fail`. Fixed waits must end before it.
      * @param \ContextDev\Web\WebScrapeParams\Zdr|value-of<\ContextDev\Web\WebScrapeParams\Zdr> $zdr `enabled` turns on zero data retention. Your organization must have ZDR enabled.
      * @param RequestOpts|null $requestOptions
      *
@@ -197,7 +197,7 @@ interface WebContract
         SharedParams|array|null $sharedParams = null,
         ?array $tags = null,
         \ContextDev\Web\WebScrapeParams\TimeoutOpts|array $timeoutOpts = [
-            'milliseconds' => 60000, 'behavior' => 'fail',
+            'milliseconds' => 90000, 'behavior' => 'fail',
         ],
         \ContextDev\Web\WebScrapeParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
