@@ -17,7 +17,7 @@ final class Data implements BaseModel
     use SdkModel;
 
     /**
-     * Body as base64, after HTTP decompression. Up to 20 MiB decoded.
+     * Body as base64, after HTTP decompression. Up to 50 MiB decoded.
      */
     #[Required]
     public string $base64;
@@ -60,7 +60,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Body as base64, after HTTP decompression. Up to 20 MiB decoded.
+     * Body as base64, after HTTP decompression. Up to 50 MiB decoded.
      */
     public function withBase64(string $base64): self
     {
