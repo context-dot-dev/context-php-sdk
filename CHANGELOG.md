@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.23.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.22.0...v2.23.0) (2026-09-30)
+
+
+### Features
+
+* **logs:** serve request logs at /org/logs ([#1442](https://github.com/context-dot-dev/context-php-sdk/issues/1442)) ([05a31c0](https://github.com/context-dot-dev/context-php-sdk/commit/05a31c05ede4f893574363d63c53ceef6158ff42))
+* **scrape:** accept documents up to 50 MB ([#1436](https://github.com/context-dot-dev/context-php-sdk/issues/1436)) ([03bdf33](https://github.com/context-dot-dev/context-php-sdk/commit/03bdf33ebdb935dd91970b830df8afefe8515afd))
+* **scrape:** add productParams.dedupeImages, always run product AI fallback ([#1423](https://github.com/context-dot-dev/context-php-sdk/issues/1423)) ([9230c1f](https://github.com/context-dot-dev/context-php-sdk/commit/9230c1f04bf72130184d957b5cb193bda1f196fe))
+* **scrape:** default POST /web/scrape deadline to 90s ([#1428](https://github.com/context-dot-dev/context-php-sdk/issues/1428)) ([794c2b8](https://github.com/context-dot-dev/context-php-sdk/commit/794c2b8513610713eaa3e41da6dbe853911a0fca))
+
+
+### Bug Fixes
+
+* **api:** derive OpenAPI request docs from runtime Zod schemas ([#1421](https://github.com/context-dot-dev/context-php-sdk/issues/1421)) ([5f5c90c](https://github.com/context-dot-dev/context-php-sdk/commit/5f5c90c6fd9a9c697389a4bd81fb49c47f796a1c))
+
 ## [2.22.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.21.0...v2.22.0) (2026-09-29)
 
 
