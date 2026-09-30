@@ -26,6 +26,7 @@ use ContextDev\ServiceContracts\BatchRawContract;
 /**
  * Scrape many pages or crawl a site asynchronously.
  *
+ * @phpstan-import-type TagsShape from \ContextDev\Batch\BatchListParams\Tags
  * @phpstan-import-type InputShape from \ContextDev\Batch\BatchSubmitParams\Input
  * @phpstan-import-type WebhookShape from \ContextDev\Batch\BatchSubmitParams\Webhook
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
@@ -74,7 +75,7 @@ final class BatchRawService implements BatchRawContract
      *   q?: string,
      *   searchType?: SearchType|value-of<SearchType>,
      *   status?: Status|value-of<Status>,
-     *   tags?: string,
+     *   tags?: TagsShape,
      * }|BatchListParams $params
      * @param RequestOpts|null $requestOptions
      *

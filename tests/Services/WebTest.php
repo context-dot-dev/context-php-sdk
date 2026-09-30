@@ -278,10 +278,10 @@ final class WebTest extends TestCase
         $result = $this->client->web->search(
             query: 'Stripe API authentication',
             country: 'af',
-            excludeDomains: ['string'],
+            excludeDomains: ['xxx'],
             freshness: 'last_24_hours',
             highlightsOptions: ['enabled' => true, 'maxCharacters' => 100],
-            includeDomains: ['string'],
+            includeDomains: ['xxx'],
             markdownOptions: [
                 'enabled' => true,
                 'includeFrames' => true,
@@ -328,12 +328,12 @@ final class WebTest extends TestCase
         $result = $this->client->web->webCrawlMd(
             url: 'https://example.com',
             country: 'de',
-            excludeSelectors: ['string'],
+            excludeSelectors: ['x'],
             followSubdomains: true,
             includeFrames: true,
             includeImages: true,
             includeLinks: true,
-            includeSelectors: ['string'],
+            includeSelectors: ['x'],
             maxAgeMs: 0,
             maxDepth: 0,
             maxPages: 10,

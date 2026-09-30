@@ -6,6 +6,7 @@ namespace ContextDev\Batch;
 
 use ContextDev\Batch\BatchListParams\SearchType;
 use ContextDev\Batch\BatchListParams\Status;
+use ContextDev\Batch\BatchListParams\Tags;
 use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
@@ -16,13 +17,16 @@ use ContextDev\Core\Contracts\BaseModel;
  *
  * @see ContextDev\Services\BatchService::list()
  *
+ * @phpstan-import-type TagsVariants from \ContextDev\Batch\BatchListParams\Tags
+ * @phpstan-import-type TagsShape from \ContextDev\Batch\BatchListParams\Tags
+ *
  * @phpstan-type BatchListParamsShape = array{
  *   cursor?: string|null,
  *   limit?: int|null,
  *   q?: string|null,
  *   searchType?: null|SearchType|value-of<SearchType>,
  *   status?: null|Status|value-of<Status>,
- *   tags?: string|null,
+ *   tags?: TagsShape|null,
  * }
  */
 final class BatchListParams implements BaseModel
@@ -66,10 +70,12 @@ final class BatchListParams implements BaseModel
     public ?string $status;
 
     /**
-     * Comma-separated list of tags to filter by (matches batches having any of them).
+     * Tags to filter by (matches batches having any of them). Pass repeated `tags` params or one comma-separated list, e.g. `tags=docs,competitor`.
+     *
+     * @var TagsVariants|null $tags
      */
-    #[Optional]
-    public ?string $tags;
+    #[Optional(union: Tags::class)]
+    public string|array|null $tags;
 
     public function __construct()
     {
@@ -83,6 +89,7 @@ final class BatchListParams implements BaseModel
      *
      * @param SearchType|value-of<SearchType>|null $searchType
      * @param Status|value-of<Status>|null $status
+     * @param TagsShape|null $tags
      */
     public static function with(
         ?string $cursor = null,
@@ -90,7 +97,7 @@ final class BatchListParams implements BaseModel
         ?string $q = null,
         SearchType|string|null $searchType = null,
         Status|string|null $status = null,
-        ?string $tags = null,
+        string|array|null $tags = null,
     ): self {
         $self = new self;
 
@@ -164,9 +171,11 @@ final class BatchListParams implements BaseModel
     }
 
     /**
-     * Comma-separated list of tags to filter by (matches batches having any of them).
+     * Tags to filter by (matches batches having any of them). Pass repeated `tags` params or one comma-separated list, e.g. `tags=docs,competitor`.
+     *
+     * @param TagsShape $tags
      */
-    public function withTags(string $tags): self
+    public function withTags(string|array $tags): self
     {
         $self = clone $this;
         $self['tags'] = $tags;

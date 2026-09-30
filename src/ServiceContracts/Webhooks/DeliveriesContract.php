@@ -94,7 +94,7 @@ interface DeliveriesContract
      */
     public function retry(
         string $deliveryID,
-        ?bool $force = null,
+        bool $force = false,
         ?array $tags = null,
         ?string $idempotencyKey = null,
         RequestOptions|array|null $requestOptions = null,

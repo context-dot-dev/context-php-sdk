@@ -79,7 +79,7 @@ final class WebSearchParams implements BaseModel
     /**
      * Passages from each result page that are relevant to the query. Pages are read with the `markdownOptions` settings.
      */
-    #[Optional]
+    #[Optional(nullable: true)]
     public ?HighlightsOptions $highlightsOptions;
 
     /**
@@ -93,7 +93,7 @@ final class WebSearchParams implements BaseModel
     /**
      * Inline Markdown scraping for each result. Set `enabled: true` to activate.
      */
-    #[Optional]
+    #[Optional(nullable: true)]
     public ?MarkdownOptions $markdownOptions;
 
     /**
@@ -250,10 +250,10 @@ final class WebSearchParams implements BaseModel
     /**
      * Passages from each result page that are relevant to the query. Pages are read with the `markdownOptions` settings.
      *
-     * @param HighlightsOptions|HighlightsOptionsShape $highlightsOptions
+     * @param HighlightsOptions|HighlightsOptionsShape|null $highlightsOptions
      */
     public function withHighlightsOptions(
-        HighlightsOptions|array $highlightsOptions
+        HighlightsOptions|array|null $highlightsOptions
     ): self {
         $self = clone $this;
         $self['highlightsOptions'] = $highlightsOptions;
@@ -277,10 +277,10 @@ final class WebSearchParams implements BaseModel
     /**
      * Inline Markdown scraping for each result. Set `enabled: true` to activate.
      *
-     * @param MarkdownOptions|MarkdownOptionsShape $markdownOptions
+     * @param MarkdownOptions|MarkdownOptionsShape|null $markdownOptions
      */
     public function withMarkdownOptions(
-        MarkdownOptions|array $markdownOptions
+        MarkdownOptions|array|null $markdownOptions
     ): self {
         $self = clone $this;
         $self['markdownOptions'] = $markdownOptions;

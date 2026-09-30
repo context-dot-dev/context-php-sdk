@@ -169,7 +169,7 @@ final class BatchTest extends TestCase
                 'url' => 'https://example.com',
                 'retry' => ['delaysSeconds' => [10, 60, 300, 1800, 7200, 21600, 57600]],
             ],
-            webhookURL: 'webhookUrl',
+            webhookURL: 'https://example.com',
             idempotencyKey: 'Idempotency-Key',
         );
 

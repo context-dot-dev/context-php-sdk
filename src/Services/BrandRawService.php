@@ -6,7 +6,9 @@ namespace ContextDev\Services;
 
 use ContextDev\Brand\BrandGetResponse;
 use ContextDev\Brand\BrandRetrieveParams;
+use ContextDev\Brand\BrandRetrieveParams\CountryGl;
 use ContextDev\Brand\BrandRetrieveParams\ForceLanguage;
+use ContextDev\Brand\BrandRetrieveParams\TickerExchange;
 use ContextDev\Brand\BrandRetrieveParams\TimeoutOpts;
 use ContextDev\Brand\BrandRetrieveParams\Type;
 use ContextDev\Brand\BrandSearchParams;
@@ -46,10 +48,10 @@ final class BrandRawService implements BrandRawContract
      *   tags?: list<string>,
      *   timeoutOpts?: TimeoutOpts|TimeoutOptsShape,
      *   name: string,
-     *   countryGl?: string,
+     *   countryGl?: value-of<CountryGl>,
      *   email: string,
      *   ticker: string,
-     *   tickerExchange?: string,
+     *   tickerExchange?: value-of<TickerExchange>,
      *   directURL: string,
      *   transactionInfo: string,
      *   city?: string,
