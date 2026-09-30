@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace ContextDev\Brand;
 
+use ContextDev\Brand\BrandRetrieveParams\CountryGl;
 use ContextDev\Brand\BrandRetrieveParams\ForceLanguage;
+use ContextDev\Brand\BrandRetrieveParams\TickerExchange;
 use ContextDev\Brand\BrandRetrieveParams\TimeoutOpts;
 use ContextDev\Brand\BrandRetrieveParams\Type;
 use ContextDev\Core\Attributes\Optional;
@@ -33,10 +35,10 @@ use ContextDev\Core\Contracts\BaseModel;
  *   tags?: list<string>|null,
  *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  *   name: string,
- *   countryGl?: string|null,
+ *   countryGl?: null|CountryGl|value-of<CountryGl>,
  *   email: string,
  *   ticker: string,
- *   tickerExchange?: string|null,
+ *   tickerExchange?: null|TickerExchange|value-of<TickerExchange>,
  *   directURL: string,
  *   transactionInfo: string,
  *   city?: string|null,
@@ -102,9 +104,11 @@ final class BrandRetrieveParams implements BaseModel
     public string $name;
 
     /**
-     * Optional country code hint (GL parameter) to specify the country when identifying a transaction.
+     * Two-letter ISO 3166-1 alpha-2 country code (GL parameter) used to localize search.
+     *
+     * @var value-of<CountryGl>|null $countryGl
      */
-    #[Optional('country_gl')]
+    #[Optional('country_gl', enum: CountryGl::class)]
     public ?string $countryGl;
 
     /**
@@ -120,9 +124,11 @@ final class BrandRetrieveParams implements BaseModel
     public string $ticker;
 
     /**
-     * Optional stock exchange for the ticker. Defaults to NASDAQ if not specified.
+     * Stock exchange code.
+     *
+     * @var value-of<TickerExchange>|null $tickerExchange
      */
-    #[Optional('ticker_exchange')]
+    #[Optional('ticker_exchange', enum: TickerExchange::class)]
     public ?string $tickerExchange;
 
     /**
@@ -208,6 +214,8 @@ final class BrandRetrieveParams implements BaseModel
      * @param ForceLanguage|value-of<ForceLanguage>|null $forceLanguage
      * @param list<string>|null $tags
      * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
+     * @param CountryGl|value-of<CountryGl>|null $countryGl
+     * @param TickerExchange|value-of<TickerExchange>|null $tickerExchange
      * @param MccShape|null $mcc
      * @param PhoneShape|null $phone
      */
@@ -224,8 +232,8 @@ final class BrandRetrieveParams implements BaseModel
         ?bool $maxSpeed = null,
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
-        ?string $countryGl = null,
-        ?string $tickerExchange = null,
+        CountryGl|string|null $countryGl = null,
+        TickerExchange|string|null $tickerExchange = null,
         ?string $city = null,
         ?bool $highConfidenceOnly = null,
         string|float|null $mcc = null,
@@ -352,9 +360,11 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * Optional country code hint (GL parameter) to specify the country when identifying a transaction.
+     * Two-letter ISO 3166-1 alpha-2 country code (GL parameter) used to localize search.
+     *
+     * @param CountryGl|value-of<CountryGl> $countryGl
      */
-    public function withCountryGl(string $countryGl): self
+    public function withCountryGl(CountryGl|string $countryGl): self
     {
         $self = clone $this;
         $self['countryGl'] = $countryGl;
@@ -385,10 +395,13 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * Optional stock exchange for the ticker. Defaults to NASDAQ if not specified.
+     * Stock exchange code.
+     *
+     * @param TickerExchange|value-of<TickerExchange> $tickerExchange
      */
-    public function withTickerExchange(string $tickerExchange): self
-    {
+    public function withTickerExchange(
+        TickerExchange|string $tickerExchange
+    ): self {
         $self = clone $this;
         $self['tickerExchange'] = $tickerExchange;
 

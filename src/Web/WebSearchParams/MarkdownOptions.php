@@ -61,11 +61,11 @@ final class MarkdownOptions implements BaseModel
     /**
      * Maximum cache age in milliseconds for result page content. Defaults to 180 days (15552000000 ms) when Markdown is requested, or 365 days (31536000000 ms) when only highlights are requested. Explicit values override either default. Maximum: 365 days. Set to 0 to force a fresh scrape.
      */
-    #[Optional]
+    #[Optional(nullable: true)]
     public ?int $maxAgeMs;
 
     /**
-     * PDF handling. Use start/end to bound text extraction and OCR to a page range.
+     * PDF handling. `start`/`end` limit parsing to an inclusive, 1-based page range.
      */
     #[Optional]
     public ?Pdf $pdf;
@@ -91,7 +91,7 @@ final class MarkdownOptions implements BaseModel
     /**
      * Extra wait after page load before rendering, in ms (0–30000). Useful for JS-heavy pages.
      */
-    #[Optional]
+    #[Optional(nullable: true)]
     public ?int $waitForMs;
 
     public function __construct()
@@ -182,7 +182,7 @@ final class MarkdownOptions implements BaseModel
     /**
      * Maximum cache age in milliseconds for result page content. Defaults to 180 days (15552000000 ms) when Markdown is requested, or 365 days (31536000000 ms) when only highlights are requested. Explicit values override either default. Maximum: 365 days. Set to 0 to force a fresh scrape.
      */
-    public function withMaxAgeMs(int $maxAgeMs): self
+    public function withMaxAgeMs(?int $maxAgeMs): self
     {
         $self = clone $this;
         $self['maxAgeMs'] = $maxAgeMs;
@@ -191,7 +191,7 @@ final class MarkdownOptions implements BaseModel
     }
 
     /**
-     * PDF handling. Use start/end to bound text extraction and OCR to a page range.
+     * PDF handling. `start`/`end` limit parsing to an inclusive, 1-based page range.
      *
      * @param Pdf|PdfShape $pdf
      */
@@ -242,7 +242,7 @@ final class MarkdownOptions implements BaseModel
     /**
      * Extra wait after page load before rendering, in ms (0–30000). Useful for JS-heavy pages.
      */
-    public function withWaitForMs(int $waitForMs): self
+    public function withWaitForMs(?int $waitForMs): self
     {
         $self = clone $this;
         $self['waitForMs'] = $waitForMs;

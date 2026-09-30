@@ -71,7 +71,7 @@ final class WebWebCrawlMdParams implements BaseModel
      *
      * @var list<string>|null $excludeSelectors
      */
-    #[Optional(list: 'string')]
+    #[Optional(list: 'string', nullable: true)]
     public ?array $excludeSelectors;
 
     /**
@@ -103,13 +103,13 @@ final class WebWebCrawlMdParams implements BaseModel
      *
      * @var list<string>|null $includeSelectors
      */
-    #[Optional(list: 'string')]
+    #[Optional(list: 'string', nullable: true)]
     public ?array $includeSelectors;
 
     /**
      * Maximum cache age in milliseconds. Defaults to 1 day; `0` fetches fresh.
      */
-    #[Optional]
+    #[Optional(nullable: true)]
     public ?int $maxAgeMs;
 
     /**
@@ -177,7 +177,7 @@ final class WebWebCrawlMdParams implements BaseModel
     /**
      * Browser wait time in milliseconds after initial page load for each crawled page. Defaults to 3500 (3.5 seconds). Min: 0. Max: 30000 (30 seconds).
      */
-    #[Optional]
+    #[Optional(nullable: true)]
     public ?int $waitForMs;
 
     /**
@@ -298,9 +298,9 @@ final class WebWebCrawlMdParams implements BaseModel
     /**
      * Remove matching elements after inclusions. Exclusions take precedence.
      *
-     * @param list<string> $excludeSelectors
+     * @param list<string>|null $excludeSelectors
      */
-    public function withExcludeSelectors(array $excludeSelectors): self
+    public function withExcludeSelectors(?array $excludeSelectors): self
     {
         $self = clone $this;
         $self['excludeSelectors'] = $excludeSelectors;
@@ -355,9 +355,9 @@ final class WebWebCrawlMdParams implements BaseModel
     /**
      * Keep matching HTML subtrees before converting each page to Markdown.
      *
-     * @param list<string> $includeSelectors
+     * @param list<string>|null $includeSelectors
      */
-    public function withIncludeSelectors(array $includeSelectors): self
+    public function withIncludeSelectors(?array $includeSelectors): self
     {
         $self = clone $this;
         $self['includeSelectors'] = $includeSelectors;
@@ -368,7 +368,7 @@ final class WebWebCrawlMdParams implements BaseModel
     /**
      * Maximum cache age in milliseconds. Defaults to 1 day; `0` fetches fresh.
      */
-    public function withMaxAgeMs(int $maxAgeMs): self
+    public function withMaxAgeMs(?int $maxAgeMs): self
     {
         $self = clone $this;
         $self['maxAgeMs'] = $maxAgeMs;
@@ -495,7 +495,7 @@ final class WebWebCrawlMdParams implements BaseModel
     /**
      * Browser wait time in milliseconds after initial page load for each crawled page. Defaults to 3500 (3.5 seconds). Min: 0. Max: 30000 (30 seconds).
      */
-    public function withWaitForMs(int $waitForMs): self
+    public function withWaitForMs(?int $waitForMs): self
     {
         $self = clone $this;
         $self['waitForMs'] = $waitForMs;

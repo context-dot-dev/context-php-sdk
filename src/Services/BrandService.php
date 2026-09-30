@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace ContextDev\Services;
 
 use ContextDev\Brand\BrandGetResponse;
+use ContextDev\Brand\BrandRetrieveParams\CountryGl;
 use ContextDev\Brand\BrandRetrieveParams\ForceLanguage;
+use ContextDev\Brand\BrandRetrieveParams\TickerExchange;
 use ContextDev\Brand\BrandRetrieveParams\TimeoutOpts;
 use ContextDev\Brand\BrandRetrieveParams\Type;
 use ContextDev\Brand\BrandSearchParams\QueryBy;
@@ -54,8 +56,8 @@ final class BrandService implements BrandContract
      * @param bool $maxSpeed Optional parameter to optimize the API call for maximum speed. When set to true, the API will skip time-consuming operations for faster response at the cost of less comprehensive data.
      * @param list<string> $tags labels for filtering usage in the dashboard
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts request deadline and what to return when it passes
-     * @param string $countryGl optional country code hint (GL parameter) to specify the country when identifying a transaction
-     * @param string $tickerExchange Optional stock exchange for the ticker. Defaults to NASDAQ if not specified.
+     * @param CountryGl|value-of<CountryGl> $countryGl two-letter ISO 3166-1 alpha-2 country code (GL parameter) used to localize search
+     * @param TickerExchange|value-of<TickerExchange> $tickerExchange stock exchange code
      * @param string $city optional city name to prioritize when searching for the brand
      * @param bool $highConfidenceOnly when set to true, the API performs additional verification to ensure the identified brand matches the transaction with high confidence
      * @param MccShape $mcc optional Merchant Category Code (MCC) to help identify the business category or industry
@@ -77,8 +79,8 @@ final class BrandService implements BrandContract
         ?bool $maxSpeed = null,
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
-        ?string $countryGl = null,
-        ?string $tickerExchange = null,
+        CountryGl|string|null $countryGl = null,
+        TickerExchange|string|null $tickerExchange = null,
         ?string $city = null,
         ?bool $highConfidenceOnly = null,
         string|float|null $mcc = null,

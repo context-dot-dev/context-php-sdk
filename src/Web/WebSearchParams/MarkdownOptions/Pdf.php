@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * PDF handling. Use start/end to bound text extraction and OCR to a page range.
+ * PDF handling. `start`/`end` limit parsing to an inclusive, 1-based page range.
  *
  * @phpstan-type PdfShape = array{
  *   end?: int|null, shouldParse?: bool|null, start?: int|null
@@ -33,7 +33,7 @@ final class Pdf implements BaseModel
     public ?bool $shouldParse;
 
     /**
-     * First PDF page to parse (1-based, inclusive). Defaults to page 1.
+     * First 1-based PDF page to parse.
      */
     #[Optional]
     public ?int $start;
@@ -85,7 +85,7 @@ final class Pdf implements BaseModel
     }
 
     /**
-     * First PDF page to parse (1-based, inclusive). Defaults to page 1.
+     * First 1-based PDF page to parse.
      */
     public function withStart(int $start): self
     {

@@ -253,9 +253,9 @@ interface WebContract
      * @param \ContextDev\Web\WebSearchParams\Country|value-of<\ContextDev\Web\WebSearchParams\Country> $country Two-letter ISO 3166-1 alpha-2 country code to localize results to a specific country (maps to Google's `gl` parameter). Example: "us", "gb", "de".
      * @param list<string> $excludeDomains Blocklist — drop results from these domains. Up to 100 domains. Example: ["pinterest.com", "reddit.com"].
      * @param Freshness|value-of<Freshness> $freshness restrict results to content published within this window
-     * @param HighlightsOptions|HighlightsOptionsShape $highlightsOptions Passages from each result page that are relevant to the query. Pages are read with the `markdownOptions` settings.
+     * @param HighlightsOptions|HighlightsOptionsShape|null $highlightsOptions Passages from each result page that are relevant to the query. Pages are read with the `markdownOptions` settings.
      * @param list<string> $includeDomains Allowlist — only return results from these domains. Up to 100 domains. Example: ["arxiv.org", "github.com"].
-     * @param MarkdownOptions|MarkdownOptionsShape $markdownOptions Inline Markdown scraping for each result. Set `enabled: true` to activate.
+     * @param MarkdownOptions|MarkdownOptionsShape|null $markdownOptions Inline Markdown scraping for each result. Set `enabled: true` to activate.
      * @param int $numResults Number of results to request and return (10–100). Defaults to 10.
      * @param bool $queryFanout currently has no effect
      * @param list<string> $tags labels for filtering usage in the dashboard
@@ -286,13 +286,13 @@ interface WebContract
      *
      * @param string $url start URL, including `http://` or `https://`
      * @param \ContextDev\Web\WebWebCrawlMdParams\Country|value-of<\ContextDev\Web\WebWebCrawlMdParams\Country> $country fetch from this country (ISO 3166-1 alpha-2)
-     * @param list<string> $excludeSelectors Remove matching elements after inclusions. Exclusions take precedence.
+     * @param list<string>|null $excludeSelectors Remove matching elements after inclusions. Exclusions take precedence.
      * @param bool $followSubdomains When true, follow links on subdomains of the starting URL's domain (e.g. docs.example.com when starting from example.com). www and apex are always treated as equivalent.
      * @param bool $includeFrames when true, the contents of iframes are rendered to Markdown for each crawled page
      * @param bool $includeImages Include image references in the Markdown output
      * @param bool $includeLinks Preserve hyperlinks in the Markdown output
-     * @param list<string> $includeSelectors keep matching HTML subtrees before converting each page to Markdown
-     * @param int $maxAgeMs Maximum cache age in milliseconds. Defaults to 1 day; `0` fetches fresh.
+     * @param list<string>|null $includeSelectors keep matching HTML subtrees before converting each page to Markdown
+     * @param int|null $maxAgeMs Maximum cache age in milliseconds. Defaults to 1 day; `0` fetches fresh.
      * @param int $maxDepth Maximum link depth from the starting URL (0 = only the starting page)
      * @param int $maxPages maximum pages to crawl
      * @param Pdf|PdfShape $pdf PDF handling. `start`/`end` limit parsing to an inclusive, 1-based page range.
@@ -303,7 +303,7 @@ interface WebContract
      * @param \ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts|TimeoutOptsShape7 $timeoutOpts request deadline and what to return when it passes
      * @param string $urlRegex Regex pattern. Only URLs matching this pattern will be followed and scraped. An automatic prefix scope in the form ^<starting URL> follows a redirect of the starting page.
      * @param bool $useMainContentOnly Extract only the main content, stripping headers, footers, sidebars, and navigation
-     * @param int $waitForMs Browser wait time in milliseconds after initial page load for each crawled page. Defaults to 3500 (3.5 seconds). Min: 0. Max: 30000 (30 seconds).
+     * @param int|null $waitForMs Browser wait time in milliseconds after initial page load for each crawled page. Defaults to 3500 (3.5 seconds). Min: 0. Max: 30000 (30 seconds).
      * @param \ContextDev\Web\WebWebCrawlMdParams\Zdr|value-of<\ContextDev\Web\WebWebCrawlMdParams\Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
      *
@@ -318,7 +318,7 @@ interface WebContract
         bool $includeImages = false,
         bool $includeLinks = true,
         ?array $includeSelectors = null,
-        int $maxAgeMs = 86400000,
+        ?int $maxAgeMs = 86400000,
         ?int $maxDepth = null,
         int $maxPages = 100,
         Pdf|array $pdf = ['shouldParse' => true, 'ocr' => false],
@@ -329,7 +329,7 @@ interface WebContract
         \ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts|array|null $timeoutOpts = null,
         ?string $urlRegex = null,
         bool $useMainContentOnly = false,
-        int $waitForMs = 3500,
+        ?int $waitForMs = 3500,
         \ContextDev\Web\WebWebCrawlMdParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): WebWebCrawlMdResponse;

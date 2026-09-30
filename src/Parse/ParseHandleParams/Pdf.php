@@ -19,13 +19,13 @@ final class Pdf implements BaseModel
     use SdkModel;
 
     /**
-     * Last 1-based PDF page to parse. When omitted, parsing ends at the last page. Must be greater than or equal to start when both are provided.
+     * Last PDF page to parse (1-based, inclusive). Defaults to the final page. Must be >= start.
      */
     #[Optional]
     public ?int $end;
 
     /**
-     * First 1-based PDF page to parse. When omitted, parsing starts at the first page.
+     * First 1-based PDF page to parse.
      */
     #[Optional]
     public ?int $start;
@@ -51,7 +51,7 @@ final class Pdf implements BaseModel
     }
 
     /**
-     * Last 1-based PDF page to parse. When omitted, parsing ends at the last page. Must be greater than or equal to start when both are provided.
+     * Last PDF page to parse (1-based, inclusive). Defaults to the final page. Must be >= start.
      */
     public function withEnd(int $end): self
     {
@@ -62,7 +62,7 @@ final class Pdf implements BaseModel
     }
 
     /**
-     * First 1-based PDF page to parse. When omitted, parsing starts at the first page.
+     * First 1-based PDF page to parse.
      */
     public function withStart(int $start): self
     {

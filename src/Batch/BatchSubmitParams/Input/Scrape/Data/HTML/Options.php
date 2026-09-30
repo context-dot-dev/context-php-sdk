@@ -62,7 +62,7 @@ final class Options implements BaseModel
     public ?int $maxAgeMs;
 
     /**
-     * PDF parsing controls. Use start/end to limit text extraction and embedded-image detection/OCR to an inclusive 1-based page range.
+     * PDF handling. `start`/`end` limit parsing to an inclusive, 1-based page range.
      */
     #[Optional]
     public ?Pdf $pdf;
@@ -175,7 +175,7 @@ final class Options implements BaseModel
     }
 
     /**
-     * PDF parsing controls. Use start/end to limit text extraction and embedded-image detection/OCR to an inclusive 1-based page range.
+     * PDF handling. `start`/`end` limit parsing to an inclusive, 1-based page range.
      *
      * @param Pdf|PdfShape $pdf
      */
