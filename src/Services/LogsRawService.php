@@ -46,7 +46,7 @@ final class LogsRawService implements LogsRawContract
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'get',
-            path: ['logs/%1$s', $requestID],
+            path: ['org/logs/%1$s', $requestID],
             options: $requestOptions,
             convert: LogGetResponse::class,
         );
@@ -88,7 +88,7 @@ final class LogsRawService implements LogsRawContract
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'get',
-            path: 'logs',
+            path: 'org/logs',
             query: Util::array_transform_keys(
                 $parsed,
                 [
