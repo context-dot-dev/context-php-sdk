@@ -17,6 +17,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   requested: bool,
  *   success: bool|null,
  *   errorCode?: string|null,
+ *   isTruncated?: bool|null,
  *   message?: string|null,
  * }
  */
@@ -43,6 +44,12 @@ final class Json implements BaseModel
      */
     #[Optional('error_code')]
     public ?string $errorCode;
+
+    /**
+     * True when the page was too long to read in full, so values found only in the unread parts may be missing.
+     */
+    #[Optional]
+    public ?bool $isTruncated;
 
     /**
      * Explanation of the failure and possible next steps.
@@ -81,6 +88,7 @@ final class Json implements BaseModel
         bool $requested,
         ?bool $success,
         ?string $errorCode = null,
+        ?bool $isTruncated = null,
         ?string $message = null,
     ): self {
         $self = new self;
@@ -90,6 +98,7 @@ final class Json implements BaseModel
         $self['success'] = $success;
 
         null !== $errorCode && $self['errorCode'] = $errorCode;
+        null !== $isTruncated && $self['isTruncated'] = $isTruncated;
         null !== $message && $self['message'] = $message;
 
         return $self;
@@ -132,6 +141,17 @@ final class Json implements BaseModel
     {
         $self = clone $this;
         $self['errorCode'] = $errorCode;
+
+        return $self;
+    }
+
+    /**
+     * True when the page was too long to read in full, so values found only in the unread parts may be missing.
+     */
+    public function withIsTruncated(bool $isTruncated): self
+    {
+        $self = clone $this;
+        $self['isTruncated'] = $isTruncated;
 
         return $self;
     }
