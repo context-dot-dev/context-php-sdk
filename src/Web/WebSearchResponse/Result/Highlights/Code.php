@@ -19,5 +19,7 @@ enum Code: string
 
     case WEBSITE_ACCESS_ERROR = 'WEBSITE_ACCESS_ERROR';
 
+    case WEBSITE_BLOCKED = 'WEBSITE_BLOCKED';
+
     case ERROR = 'ERROR';
 }
