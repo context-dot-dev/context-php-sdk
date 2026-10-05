@@ -399,6 +399,7 @@ final class WebService implements WebContract
      *
      * @param string $query Search query. Accepts natural language as well as Google-style search operators such as `site:`, `-site:`, `inurl:`, `intitle:`, quoted phrases, and `OR`.
      * @param \ContextDev\Web\WebSearchParams\Country|value-of<\ContextDev\Web\WebSearchParams\Country> $country Two-letter ISO 3166-1 alpha-2 country code to localize results to a specific country (maps to Google's `gl` parameter). Example: "us", "gb", "de".
+     * @param int|null $descriptionMaxCharacters maximum length of each result's `description`, in characters
      * @param list<string> $excludeDomains Blocklist — drop results from these domains. Up to 100 domains. Example: ["pinterest.com", "reddit.com"].
      * @param Freshness|value-of<Freshness> $freshness restrict results to content published within this window
      * @param HighlightsOptions|HighlightsOptionsShape|null $highlightsOptions Passages from each result page that are relevant to the query. Pages are read with the `markdownOptions` settings.
@@ -416,6 +417,7 @@ final class WebService implements WebContract
     public function search(
         string $query,
         \ContextDev\Web\WebSearchParams\Country|string|null $country = null,
+        ?int $descriptionMaxCharacters = null,
         ?array $excludeDomains = null,
         Freshness|string|null $freshness = null,
         HighlightsOptions|array|null $highlightsOptions = null,
@@ -432,6 +434,7 @@ final class WebService implements WebContract
             [
                 'query' => $query,
                 'country' => $country,
+                'descriptionMaxCharacters' => $descriptionMaxCharacters,
                 'excludeDomains' => $excludeDomains,
                 'freshness' => $freshness,
                 'highlightsOptions' => $highlightsOptions,

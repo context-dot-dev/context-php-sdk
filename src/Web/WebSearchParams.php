@@ -28,6 +28,7 @@ use ContextDev\Web\WebSearchParams\Zdr;
  * @phpstan-type WebSearchParamsShape = array{
  *   query: string,
  *   country?: null|Country|value-of<Country>,
+ *   descriptionMaxCharacters?: int|null,
  *   excludeDomains?: list<string>|null,
  *   freshness?: null|Freshness|value-of<Freshness>,
  *   highlightsOptions?: null|HighlightsOptions|HighlightsOptionsShape,
@@ -59,6 +60,12 @@ final class WebSearchParams implements BaseModel
      */
     #[Optional(enum: Country::class)]
     public ?string $country;
+
+    /**
+     * Maximum length of each result's `description`, in characters.
+     */
+    #[Optional(nullable: true)]
+    public ?int $descriptionMaxCharacters;
 
     /**
      * Blocklist — drop results from these domains. Up to 100 domains. Example: ["pinterest.com", "reddit.com"].
@@ -167,6 +174,7 @@ final class WebSearchParams implements BaseModel
     public static function with(
         string $query,
         Country|string|null $country = null,
+        ?int $descriptionMaxCharacters = null,
         ?array $excludeDomains = null,
         Freshness|string|null $freshness = null,
         HighlightsOptions|array|null $highlightsOptions = null,
@@ -183,6 +191,7 @@ final class WebSearchParams implements BaseModel
         $self['query'] = $query;
 
         null !== $country && $self['country'] = $country;
+        null !== $descriptionMaxCharacters && $self['descriptionMaxCharacters'] = $descriptionMaxCharacters;
         null !== $excludeDomains && $self['excludeDomains'] = $excludeDomains;
         null !== $freshness && $self['freshness'] = $freshness;
         null !== $highlightsOptions && $self['highlightsOptions'] = $highlightsOptions;
@@ -217,6 +226,18 @@ final class WebSearchParams implements BaseModel
     {
         $self = clone $this;
         $self['country'] = $country;
+
+        return $self;
+    }
+
+    /**
+     * Maximum length of each result's `description`, in characters.
+     */
+    public function withDescriptionMaxCharacters(
+        ?int $descriptionMaxCharacters
+    ): self {
+        $self = clone $this;
+        $self['descriptionMaxCharacters'] = $descriptionMaxCharacters;
 
         return $self;
     }
