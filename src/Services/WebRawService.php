@@ -341,6 +341,7 @@ final class WebRawService implements WebRawContract
      * @param array{
      *   query: string,
      *   country?: value-of<WebSearchParams\Country>,
+     *   descriptionMaxCharacters?: int|null,
      *   excludeDomains?: list<string>,
      *   freshness?: Freshness|value-of<Freshness>,
      *   highlightsOptions?: HighlightsOptions|HighlightsOptionsShape|null,
