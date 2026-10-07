@@ -130,7 +130,7 @@ final class BatchGetResponse implements BaseModel
     public string $requestID;
 
     /**
-     * Result download links; null until the batch finishes. Files are deleted 7 days after the batch finishes.
+     * Result download links; null until the batch finishes. Files are deleted 180 days after the batch finishes.
      */
     #[Required]
     public ?Results $results;
@@ -419,7 +419,7 @@ final class BatchGetResponse implements BaseModel
     }
 
     /**
-     * Result download links; null until the batch finishes. Files are deleted 7 days after the batch finishes.
+     * Result download links; null until the batch finishes. Files are deleted 180 days after the batch finishes.
      *
      * @param Results|ResultsShape|null $results
      */

@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Page through a finished batch’s results as JSON. Results remain available for 7 days.
+ * Page through a finished batch’s results as JSON. Results remain available for 180 days.
  *
  * @see ContextDev\Services\BatchService::getResults()
  *

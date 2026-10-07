@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Result download links; null until the batch finishes. Files are deleted 7 days after the batch finishes.
+ * Result download links; null until the batch finishes. Files are deleted 180 days after the batch finishes.
  *
  * @phpstan-import-type FileShape from \ContextDev\Batch\BatchGetResponse\Results\File
  *
