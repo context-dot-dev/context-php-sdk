@@ -42,7 +42,7 @@ final class BatchRawService implements BatchRawContract
     /**
      * @api
      *
-     * Get batch progress and result download links. Result files are deleted 7 days after the batch finishes.
+     * Get batch progress and result download links. Result files are deleted 180 days after the batch finishes.
      *
      * @param string $batchID batch ID
      * @param RequestOpts|null $requestOptions
@@ -158,7 +158,7 @@ final class BatchRawService implements BatchRawContract
     /**
      * @api
      *
-     * Page through a finished batch’s results as JSON. Results remain available for 7 days.
+     * Page through a finished batch’s results as JSON. Results remain available for 180 days.
      *
      * @param string $batchID batch ID
      * @param array{cursor?: string, limit?: int}|BatchGetResultsParams $params
