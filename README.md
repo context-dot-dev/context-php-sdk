@@ -1,6 +1,6 @@
-# Context Dev PHP API library
+# Context.dev PHP SDK API library
 
-The Context Dev PHP library provides convenient access to the Context Dev REST API from any PHP 8.1.0+ application.
+The Context.dev PHP SDK library provides convenient access to the Context Dev REST API from any PHP 8.1.0+ application.
 
 It is generated with [Stainless](https://www.stainless.com/).
 
@@ -30,9 +30,11 @@ use ContextDev\Client;
 
 $client = new Client(apiKey: getenv('CONTEXT_DEV_API_KEY') ?: 'My API Key');
 
-$brand = $client->brand->retrieve(domain: 'REPLACE_ME', type: 'by_domain');
+$response = $client->web->scrape(
+  formats: ['markdown' => true, 'html' => true], url: 'https://example.com'
+);
 
-var_dump($brand->request_id);
+var_dump($response->request_id);
 ```
 
 ### Value Objects
@@ -54,7 +56,9 @@ use ContextDev\Core\Exceptions\RateLimitException;
 use ContextDev\Core\Exceptions\APIStatusException;
 
 try {
-  $brand = $client->brand->retrieve(domain: 'REPLACE_ME', type: 'by_domain');
+  $response = $client->web->scrape(
+    formats: ['markdown' => true], url: 'https://example.com'
+  );
 } catch (APIConnectionException $e) {
   echo "The server could not be reached", PHP_EOL;
   var_dump($e->getPrevious());
@@ -99,8 +103,10 @@ use ContextDev\Client;
 $client = new Client(requestOptions: ['maxRetries' => 0]);
 
 // Or, configure per-request:
-$result = $client->brand->retrieve(
-  domain: 'REPLACE_ME', type: 'by_domain', requestOptions: ['maxRetries' => 5]
+$result = $client->web->scrape(
+  formats: ['markdown' => true],
+  url: 'https://example.com',
+  requestOptions: ['maxRetries' => 5],
 );
 ```
 
@@ -117,9 +123,9 @@ Note: the `extra*` parameters of the same name overrides the documented paramete
 ```php
 <?php
 
-$brand = $client->brand->retrieve(
-  domain: 'REPLACE_ME',
-  type: 'by_domain',
+$response = $client->web->scrape(
+  formats: ['markdown' => true],
+  url: 'https://example.com',
   requestOptions: [
     'extraQueryParams' => ['my_query_parameter' => 'value'],
     'extraBodyParams' => ['my_body_parameter' => 'value'],
