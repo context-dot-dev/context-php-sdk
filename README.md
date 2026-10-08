@@ -2,8 +2,6 @@
 
 Context.dev is a web scraping API for AI agents and LLMs. This SDK turns any URL into clean, LLM-ready markdown, crawls whole sites, searches the web, takes screenshots and extracts structured JSON against a schema you define, all with one API key. Proxies, JavaScript rendering and anti-bot handling run on Context.dev's side, so there is no headless browser to host.
 
-It is generated with [Stainless](https://www.stainless.com/).
-
 ## Documentation
 
 The REST API documentation can be found on [docs.context.dev](https://docs.context.dev/).
