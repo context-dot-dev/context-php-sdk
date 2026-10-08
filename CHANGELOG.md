@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.24.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.23.0...v2.24.0) (2026-10-07)
+
+
+### Features
+
+* **batches:** keep batch result files for 180 days ([#1638](https://github.com/context-dot-dev/context-php-sdk/issues/1638)) ([e405389](https://github.com/context-dot-dev/context-php-sdk/commit/e405389254ff8d8e1dcaba84bf8cc87ded0e8b47))
+* **news:** add Google News sitemap feeds for 52 sites from the NEEDLE 4-star gaps ([#1612](https://github.com/context-dot-dev/context-php-sdk/issues/1612)) ([60a4cda](https://github.com/context-dot-dev/context-php-sdk/commit/60a4cdad3b34d083109fd5f3d12f4c9f768a2860))
+* **search:** /web/search - for news results extend description with matching passages from article. ([96a96bc](https://github.com/context-dot-dev/context-php-sdk/commit/96a96bca0483734029eb7944eb5fa86806125517))
+
+
+### Bug Fixes
+
+* **answers:** keep page links for the agent and only cite URLs it actually saw ([#1571](https://github.com/context-dot-dev/context-php-sdk/issues/1571)) ([7bb0fb6](https://github.com/context-dot-dev/context-php-sdk/commit/7bb0fb6d1fe74ee3167bebe25e080adc4dccbeb9))
+* **scrape:** keep the relevant sections of long pages for JSON extraction ([#1582](https://github.com/context-dot-dev/context-php-sdk/issues/1582)) ([94d4e26](https://github.com/context-dot-dev/context-php-sdk/commit/94d4e2614b2aa90d383f4d433314cc42c28ae47c))
+* **search:** shorter default page-read budget and blocked-page codes for search results ([#1573](https://github.com/context-dot-dev/context-php-sdk/issues/1573)) ([f273525](https://github.com/context-dot-dev/context-php-sdk/commit/f273525a031a4ee125a1735407156c1d669518ec))
+
 ## [2.23.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.22.0...v2.23.0) (2026-09-30)
 
 
