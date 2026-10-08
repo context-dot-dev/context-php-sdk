@@ -18,6 +18,10 @@ composer require "context-dev/context-dev-php 2.24.0"
 
 ## Usage
 
+Set `CONTEXT_DEV_API_KEY` to your API key; the client reads it automatically.
+
+### Scrape markdown and HTML
+
 This library uses named parameters to specify optional arguments.
 Parameters with a default value must be set by name.
 
@@ -26,11 +30,15 @@ Parameters with a default value must be set by name.
 
 use ContextDev\Client;
 
-$client = new Client(apiKey: getenv('CONTEXT_DEV_API_KEY') ?: 'My API Key');
+$client = new Client();
 
-$brand = $client->brand->retrieve(domain: 'REPLACE_ME', type: 'by_domain');
+$page = $client->web->scrape(
+    url: 'https://example.com',
+    formats: ['markdown' => true, 'html' => true],
+);
 
-var_dump($brand->request_id);
+echo $page->markdown->data, PHP_EOL;
+echo $page->html->data, PHP_EOL;
 ```
 
 ### Extract structured JSON
@@ -61,11 +69,50 @@ $page = $client->web->scrape(
 var_dump($page->json->data);
 ```
 
+### Extract relevant highlights
+
+Return the passages that answer a question about the page.
+
+```php
+<?php
+
+use ContextDev\Client;
+
+$client = new Client();
+
+$page = $client->web->scrape(
+    url: 'https://example.com',
+    formats: ['highlights' => true],
+    highlightsParams: ['query' => 'What is this domain used for?'],
+);
+
+var_dump($page->highlights->data);
+```
+
+### Take a screenshot
+
+The screenshot is returned as a base64 image data URL.
+
+```php
+<?php
+
+use ContextDev\Client;
+
+$client = new Client();
+
+$page = $client->web->scrape(
+    url: 'https://example.com',
+    formats: ['screenshot' => true],
+);
+
+var_dump($page->screenshot->data);
+```
+
 ## What you can do
 
 | Task | Method |
 | --- | --- |
-| Scrape a URL to markdown, HTML, JSON or a screenshot | `$client->web->scrape` |
+| Scrape a URL to markdown, HTML, JSON, highlights or a screenshot | `$client->web->scrape` |
 | Crawl a site and get every page as markdown | `$client->web->webCrawlMd` |
 | Map every URL on a domain | `$client->web->mapUrls` |
 | Search the web | `$client->web->search` |
@@ -98,7 +145,7 @@ use ContextDev\Core\Exceptions\RateLimitException;
 use ContextDev\Core\Exceptions\APIStatusException;
 
 try {
-  $brand = $client->brand->retrieve(domain: 'REPLACE_ME', type: 'by_domain');
+  $page = $client->web->scrape(url: 'https://example.com', formats: ['markdown' => true]);
 } catch (APIConnectionException $e) {
   echo "The server could not be reached", PHP_EOL;
   var_dump($e->getPrevious());
@@ -143,8 +190,8 @@ use ContextDev\Client;
 $client = new Client(requestOptions: ['maxRetries' => 0]);
 
 // Or, configure per-request:
-$result = $client->brand->retrieve(
-  domain: 'REPLACE_ME', type: 'by_domain', requestOptions: ['maxRetries' => 5]
+$result = $client->web->scrape(
+  url: 'https://example.com', formats: ['markdown' => true], requestOptions: ['maxRetries' => 5]
 );
 ```
 
@@ -161,9 +208,9 @@ Note: the `extra*` parameters of the same name overrides the documented paramete
 ```php
 <?php
 
-$brand = $client->brand->retrieve(
-  domain: 'REPLACE_ME',
-  type: 'by_domain',
+$page = $client->web->scrape(
+  url: 'https://example.com',
+  formats: ['markdown' => true],
   requestOptions: [
     'extraQueryParams' => ['my_query_parameter' => 'value'],
     'extraBodyParams' => ['my_body_parameter' => 'value'],
