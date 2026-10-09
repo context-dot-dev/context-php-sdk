@@ -35,7 +35,7 @@ final class MarkdownOptions implements BaseModel
     use SdkModel;
 
     /**
-     * Scrape each result to Markdown. Adds 1 credit per 10 results.
+     * Scrape each result to Markdown. Adds 1 credit per result with Markdown.
      */
     #[Optional]
     public ?bool $enabled;
@@ -136,7 +136,7 @@ final class MarkdownOptions implements BaseModel
     }
 
     /**
-     * Scrape each result to Markdown. Adds 1 credit per 10 results.
+     * Scrape each result to Markdown. Adds 1 credit per result with Markdown.
      */
     public function withEnabled(bool $enabled): self
     {
