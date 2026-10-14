@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.25.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.24.0...v2.25.0) (2026-10-14)
+
+
+### Features
+
+* **scrape:** add login profiles for authenticated scraping ([#1617](https://github.com/context-dot-dev/context-php-sdk/issues/1617)) ([7d15272](https://github.com/context-dot-dev/context-php-sdk/commit/7d1527244bfd65910ff1b5218a90f1a3fe10e7e9))
+* **scrape:** add prebuilt Google Maps parsing ([#1824](https://github.com/context-dot-dev/context-php-sdk/issues/1824)) ([676935b](https://github.com/context-dot-dev/context-php-sdk/commit/676935bcfa53c6757e5f4a173eb564c5260cd91c))
+* **web-search:** charge markdown per delivered page ([#1729](https://github.com/context-dot-dev/context-php-sdk/issues/1729)) ([7b5d377](https://github.com/context-dot-dev/context-php-sdk/commit/7b5d377f319e48f3f90bc25c5d241e8134a41e84))
+
+
+### Documentation
+
+* demonstrate scraping formats throughout README ([d9a2e77](https://github.com/context-dot-dev/context-php-sdk/commit/d9a2e77f6365f971cca2a2a4698d7a7b8d8e2df5))
+* lead README with Context.dev capabilities ([9e2a320](https://github.com/context-dot-dev/context-php-sdk/commit/9e2a32094d3ec51fea384516f1bb3593bb50eaa4))
+* reconcile custom scraping README with generated examples ([1eab959](https://github.com/context-dot-dev/context-php-sdk/commit/1eab9594826bb7af902afe6991d141c1057406f1))
+* remove Stainless README attribution ([d8aad0e](https://github.com/context-dot-dev/context-php-sdk/commit/d8aad0e6868885592d5fa8f6a06d499420c9046e))
+
 ## [2.24.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.23.0...v2.24.0) (2026-10-07)
 
 
