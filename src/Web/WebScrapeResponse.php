@@ -110,7 +110,7 @@ final class WebScrapeResponse implements BaseModel
     public Metadata $metadata;
 
     /**
-     * Custom rules return fields after content filters; unmatched fields are null ([] for lists). The google-maps parser returns business records in data.results and reads Maps data directly, independently of DOM filters and other outputs.
+     * Custom rules return fields after content filters; unmatched fields are null ([] for lists). The google-maps parser returns business records in data.results, and the google-play parser returns one app record as data, google-play-reviews returns data.reviews, app-store and app-store-reviews do the same for the App Store, emails, phone-numbers, and links return data.emails, data.phone_numbers, and data.links from the rendered page; the store and Maps parsers read their data directly, independently of DOM filters and other outputs.
      */
     #[Required]
     public Parsed $parsed;
@@ -370,7 +370,7 @@ final class WebScrapeResponse implements BaseModel
     }
 
     /**
-     * Custom rules return fields after content filters; unmatched fields are null ([] for lists). The google-maps parser returns business records in data.results and reads Maps data directly, independently of DOM filters and other outputs.
+     * Custom rules return fields after content filters; unmatched fields are null ([] for lists). The google-maps parser returns business records in data.results, and the google-play parser returns one app record as data, google-play-reviews returns data.reviews, app-store and app-store-reviews do the same for the App Store, emails, phone-numbers, and links return data.emails, data.phone_numbers, and data.links from the rendered page; the store and Maps parsers read their data directly, independently of DOM filters and other outputs.
      *
      * @param Parsed|ParsedShape $parsed
      */
