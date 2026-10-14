@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace ContextDev\Web\WebScrapeParams\ParseParams\Rule;
+namespace ContextDev\Web\WebScrapeParams\ParseParams\CustomParser\Rule;
 
 use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
-use ContextDev\Web\WebScrapeParams\ParseParams\Rule\UnionMember1\Output;
-use ContextDev\Web\WebScrapeParams\ParseParams\Rule\UnionMember1\Type;
+use ContextDev\Web\WebScrapeParams\ParseParams\CustomParser\Rule\UnionMember1\Output;
+use ContextDev\Web\WebScrapeParams\ParseParams\CustomParser\Rule\UnionMember1\Type;
 
 /**
- * @phpstan-import-type OutputVariants from \ContextDev\Web\WebScrapeParams\ParseParams\Rule\UnionMember1\Output
- * @phpstan-import-type OutputShape from \ContextDev\Web\WebScrapeParams\ParseParams\Rule\UnionMember1\Output
+ * @phpstan-import-type OutputVariants from \ContextDev\Web\WebScrapeParams\ParseParams\CustomParser\Rule\UnionMember1\Output
+ * @phpstan-import-type OutputShape from \ContextDev\Web\WebScrapeParams\ParseParams\CustomParser\Rule\UnionMember1\Output
  *
  * @phpstan-type UnionMember1Shape = array{
  *   selector: string, output?: OutputShape|null, type?: null|Type|value-of<Type>

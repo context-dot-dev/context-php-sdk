@@ -19,7 +19,8 @@ use ContextDev\Web\WebScrapeParams\HighlightsParams;
 use ContextDev\Web\WebScrapeParams\ImageParams;
 use ContextDev\Web\WebScrapeParams\JsonParams;
 use ContextDev\Web\WebScrapeParams\MarkdownParams;
-use ContextDev\Web\WebScrapeParams\ParseParams;
+use ContextDev\Web\WebScrapeParams\ParseParams\CustomParser;
+use ContextDev\Web\WebScrapeParams\ParseParams\PrebuiltParser;
 use ContextDev\Web\WebScrapeParams\ProductParams;
 use ContextDev\Web\WebScrapeParams\ScreenshotParams;
 use ContextDev\Web\WebScrapeParams\SharedParams;
@@ -172,7 +173,7 @@ interface WebContract
      * @param JsonParams|JsonParamsShape $jsonParams Requires `formats.json: true`; required when it is set.
      * @param MarkdownParams|MarkdownParamsShape $markdownParams Markdown options. Requires `formats.markdown`.
      * @param int $maxAgeMs Maximum age of a cached output, in milliseconds. `0` fetches fresh. Defaults to 3 days (259200000 ms). Maximum: 1 year (31536000000 ms).
-     * @param ParseParams|ParseParamsShape $parseParams Requires `formats.parse: true`; required when it is set.
+     * @param ParseParamsShape $parseParams Requires `formats.parse: true`; required when it is set.
      * @param ProductParams|ProductParamsShape $productParams Product options. Requires formats.product: true.
      * @param ScreenshotParams|ScreenshotParamsShape $screenshotParams Screenshot options. Requires formats.screenshot: true.
      * @param SharedParams|SharedParamsShape $sharedParams browser and content settings shared by all outputs
@@ -191,7 +192,7 @@ interface WebContract
         JsonParams|array|null $jsonParams = null,
         MarkdownParams|array|null $markdownParams = null,
         int $maxAgeMs = 259200000,
-        ParseParams|array|null $parseParams = null,
+        CustomParser|array|PrebuiltParser|null $parseParams = null,
         ProductParams|array|null $productParams = null,
         ScreenshotParams|array|null $screenshotParams = null,
         SharedParams|array|null $sharedParams = null,

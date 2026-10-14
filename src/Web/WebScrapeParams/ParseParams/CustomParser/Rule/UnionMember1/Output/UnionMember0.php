@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ContextDev\Web\WebScrapeParams\ParseParams\Rule\UnionMember1\Output;
+namespace ContextDev\Web\WebScrapeParams\ParseParams\CustomParser\Rule\UnionMember1\Output;
 
 enum UnionMember0: string
 {

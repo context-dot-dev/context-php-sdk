@@ -210,6 +210,7 @@ final class WebTest extends TestCase
                     'title' => 'h1',
                     'links' => ['selector' => 'a', 'output' => '@href', 'type' => 'list'],
                 ],
+                'type' => 'custom',
             ],
             productParams: ['dedupeImages' => true],
             screenshotParams: ['area' => 'viewport', 'format' => 'png'],

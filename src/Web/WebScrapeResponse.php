@@ -110,7 +110,7 @@ final class WebScrapeResponse implements BaseModel
     public Metadata $metadata;
 
     /**
-     * Fields from `parseParams.rules`, after content filters. Unmatched fields are `null` (`[]` for lists).
+     * Custom rules return fields after content filters; unmatched fields are null ([] for lists). The google-maps parser returns business records in data.results and reads Maps data directly, independently of DOM filters and other outputs.
      */
     #[Required]
     public Parsed $parsed;
@@ -370,7 +370,7 @@ final class WebScrapeResponse implements BaseModel
     }
 
     /**
-     * Fields from `parseParams.rules`, after content filters. Unmatched fields are `null` (`[]` for lists).
+     * Custom rules return fields after content filters; unmatched fields are null ([] for lists). The google-maps parser returns business records in data.results and reads Maps data directly, independently of DOM filters and other outputs.
      *
      * @param Parsed|ParsedShape $parsed
      */

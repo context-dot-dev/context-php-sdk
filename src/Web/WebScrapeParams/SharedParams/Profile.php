@@ -11,7 +11,7 @@ use ContextDev\Web\WebScrapeParams\SharedParams\Profile\ExistingProfile;
 use ContextDev\Web\WebScrapeParams\SharedParams\Profile\NewProfile;
 
 /**
- * Create or reuse an authenticated browser profile. Requires a paid plan and an HTTPS target. Profiles persist session state, bypass shared caches, and cannot be combined with ZDR, custom headers, or raw bytes.
+ * Create or reuse an authenticated browser profile. Requires a paid plan and an HTTPS target. Profiles persist session state, bypass shared caches, and cannot be combined with ZDR, custom headers, raw bytes, or prebuilt parsers.
  *
  * @phpstan-import-type ExistingProfileShape from \ContextDev\Web\WebScrapeParams\SharedParams\Profile\ExistingProfile
  * @phpstan-import-type NewProfileShape from \ContextDev\Web\WebScrapeParams\SharedParams\Profile\NewProfile

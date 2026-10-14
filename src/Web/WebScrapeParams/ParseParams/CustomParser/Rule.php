@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace ContextDev\Web\WebScrapeParams\ParseParams;
+namespace ContextDev\Web\WebScrapeParams\ParseParams\CustomParser;
 
 use ContextDev\Core\Concerns\SdkUnion;
 use ContextDev\Core\Conversion\Contracts\Converter;
 use ContextDev\Core\Conversion\Contracts\ConverterSource;
-use ContextDev\Web\WebScrapeParams\ParseParams\Rule\UnionMember1;
+use ContextDev\Web\WebScrapeParams\ParseParams\CustomParser\Rule\UnionMember1;
 
 /**
- * @phpstan-import-type UnionMember1Shape from \ContextDev\Web\WebScrapeParams\ParseParams\Rule\UnionMember1
+ * @phpstan-import-type UnionMember1Shape from \ContextDev\Web\WebScrapeParams\ParseParams\CustomParser\Rule\UnionMember1
  *
  * @phpstan-type RuleVariants = string|UnionMember1
  * @phpstan-type RuleShape = RuleVariants|UnionMember1Shape

@@ -65,7 +65,7 @@ final class Formats implements BaseModel
     public ?bool $markdown;
 
     /**
-     * Fields extracted with `parseParams.rules`, returned as `parsed`.
+     * Fields extracted with custom rules or a prebuilt parser, returned as `parsed`.
      */
     #[Optional]
     public ?bool $parse;
@@ -185,7 +185,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * Fields extracted with `parseParams.rules`, returned as `parsed`.
+     * Fields extracted with custom rules or a prebuilt parser, returned as `parsed`.
      */
     public function withParse(bool $parse): self
     {

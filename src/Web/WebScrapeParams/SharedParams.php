@@ -119,7 +119,7 @@ final class SharedParams implements BaseModel
     public ?Parsers $parsers;
 
     /**
-     * Create or reuse an authenticated browser profile. Requires a paid plan and an HTTPS target. Profiles persist session state, bypass shared caches, and cannot be combined with ZDR, custom headers, or raw bytes.
+     * Create or reuse an authenticated browser profile. Requires a paid plan and an HTTPS target. Profiles persist session state, bypass shared caches, and cannot be combined with ZDR, custom headers, raw bytes, or prebuilt parsers.
      *
      * @var ProfileVariants|null $profile
      */
@@ -333,7 +333,7 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * Create or reuse an authenticated browser profile. Requires a paid plan and an HTTPS target. Profiles persist session state, bypass shared caches, and cannot be combined with ZDR, custom headers, or raw bytes.
+     * Create or reuse an authenticated browser profile. Requires a paid plan and an HTTPS target. Profiles persist session state, bypass shared caches, and cannot be combined with ZDR, custom headers, raw bytes, or prebuilt parsers.
      *
      * @param ProfileShape $profile
      */

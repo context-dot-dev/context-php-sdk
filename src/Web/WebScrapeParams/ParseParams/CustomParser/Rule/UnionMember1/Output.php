@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace ContextDev\Web\WebScrapeParams\ParseParams\Rule\UnionMember1;
+namespace ContextDev\Web\WebScrapeParams\ParseParams\CustomParser\Rule\UnionMember1;
 
 use ContextDev\Core\Concerns\SdkUnion;
 use ContextDev\Core\Conversion\Contracts\Converter;
 use ContextDev\Core\Conversion\Contracts\ConverterSource;
-use ContextDev\Web\WebScrapeParams\ParseParams\Rule\UnionMember1\Output\UnionMember0;
+use ContextDev\Web\WebScrapeParams\ParseParams\CustomParser\Rule\UnionMember1\Output\UnionMember0;
 
 /**
  * Return text, HTML, an attribute such as `@href`, or nested field rules. Defaults to text.

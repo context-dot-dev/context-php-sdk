@@ -4,77 +4,30 @@ declare(strict_types=1);
 
 namespace ContextDev\Web\WebScrapeParams;
 
-use ContextDev\Core\Attributes\Required;
-use ContextDev\Core\Concerns\SdkModel;
-use ContextDev\Core\Contracts\BaseModel;
-use ContextDev\Web\WebScrapeParams\ParseParams\Rule;
+use ContextDev\Core\Concerns\SdkUnion;
+use ContextDev\Core\Conversion\Contracts\Converter;
+use ContextDev\Core\Conversion\Contracts\ConverterSource;
+use ContextDev\Web\WebScrapeParams\ParseParams\CustomParser;
+use ContextDev\Web\WebScrapeParams\ParseParams\PrebuiltParser;
 
 /**
  * Requires `formats.parse: true`; required when it is set.
  *
- * @phpstan-import-type RuleVariants from \ContextDev\Web\WebScrapeParams\ParseParams\Rule
- * @phpstan-import-type RuleShape from \ContextDev\Web\WebScrapeParams\ParseParams\Rule
+ * @phpstan-import-type CustomParserShape from \ContextDev\Web\WebScrapeParams\ParseParams\CustomParser
+ * @phpstan-import-type PrebuiltParserShape from \ContextDev\Web\WebScrapeParams\ParseParams\PrebuiltParser
  *
- * @phpstan-type ParseParamsShape = array{rules: array<string,RuleShape>}
+ * @phpstan-type ParseParamsVariants = CustomParser|PrebuiltParser
+ * @phpstan-type ParseParamsShape = ParseParamsVariants|CustomParserShape|PrebuiltParserShape
  */
-final class ParseParams implements BaseModel
+final class ParseParams implements ConverterSource
 {
-    /** @use SdkModel<ParseParamsShape> */
-    use SdkModel;
+    use SdkUnion;
 
     /**
-     * Field names mapped to CSS selectors (`h1`, `a@href`) or rule objects. Max 100 fields, 5 levels.
-     *
-     * @var array<string,RuleVariants> $rules
+     * @return list<string|Converter|ConverterSource>|array<string,string|Converter|ConverterSource>
      */
-    #[Required(map: Rule::class)]
-    public array $rules;
-
-    /**
-     * `new ParseParams()` is missing required properties by the API.
-     *
-     * To enforce required parameters use
-     * ```
-     * ParseParams::with(rules: ...)
-     * ```
-     *
-     * Otherwise ensure the following setters are called
-     *
-     * ```
-     * (new ParseParams)->withRules(...)
-     * ```
-     */
-    public function __construct()
+    public static function variants(): array
     {
-        $this->initialize();
-    }
-
-    /**
-     * Construct an instance from the required parameters.
-     *
-     * You must use named parameters to construct any parameters with a default value.
-     *
-     * @param array<string,RuleShape> $rules
-     */
-    public static function with(array $rules): self
-    {
-        $self = new self;
-
-        $self['rules'] = $rules;
-
-        return $self;
-    }
-
-    /**
-     * Field names mapped to CSS selectors (`h1`, `a@href`) or rule objects. Max 100 fields, 5 levels.
-     *
-     * @param array<string,RuleShape> $rules
-     */
-    public function withRules(array $rules): self
-    {
-        $self = clone $this;
-        $self['rules'] = $rules;
-
-        return $self;
+        return [CustomParser::class, PrebuiltParser::class];
     }
 }

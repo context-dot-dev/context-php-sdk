@@ -14,7 +14,8 @@ use ContextDev\Web\WebScrapeParams\HighlightsParams;
 use ContextDev\Web\WebScrapeParams\ImageParams;
 use ContextDev\Web\WebScrapeParams\JsonParams;
 use ContextDev\Web\WebScrapeParams\MarkdownParams;
-use ContextDev\Web\WebScrapeParams\ParseParams;
+use ContextDev\Web\WebScrapeParams\ParseParams\CustomParser;
+use ContextDev\Web\WebScrapeParams\ParseParams\PrebuiltParser;
 use ContextDev\Web\WebScrapeParams\ProductParams;
 use ContextDev\Web\WebScrapeParams\ScreenshotParams;
 use ContextDev\Web\WebScrapeParams\SharedParams;
@@ -26,6 +27,7 @@ use ContextDev\Web\WebScrapeParams\Zdr;
  *
  * @see ContextDev\Services\WebService::scrape()
  *
+ * @phpstan-import-type ParseParamsVariants from \ContextDev\Web\WebScrapeParams\ParseParams
  * @phpstan-import-type FormatsShape from \ContextDev\Web\WebScrapeParams\Formats
  * @phpstan-import-type HighlightsParamsShape from \ContextDev\Web\WebScrapeParams\HighlightsParams
  * @phpstan-import-type ImageParamsShape from \ContextDev\Web\WebScrapeParams\ImageParams
@@ -45,7 +47,7 @@ use ContextDev\Web\WebScrapeParams\Zdr;
  *   jsonParams?: null|JsonParams|JsonParamsShape,
  *   markdownParams?: null|MarkdownParams|MarkdownParamsShape,
  *   maxAgeMs?: int|null,
- *   parseParams?: null|ParseParams|ParseParamsShape,
+ *   parseParams?: ParseParamsShape|null,
  *   productParams?: null|ProductParams|ProductParamsShape,
  *   screenshotParams?: null|ScreenshotParams|ScreenshotParamsShape,
  *   sharedParams?: null|SharedParams|SharedParamsShape,
@@ -104,9 +106,11 @@ final class WebScrapeParams implements BaseModel
 
     /**
      * Requires `formats.parse: true`; required when it is set.
+     *
+     * @var ParseParamsVariants|null $parseParams
      */
     #[Optional]
-    public ?ParseParams $parseParams;
+    public CustomParser|PrebuiltParser|null $parseParams;
 
     /**
      * Product options. Requires formats.product: true.
@@ -177,7 +181,7 @@ final class WebScrapeParams implements BaseModel
      * @param ImageParams|ImageParamsShape|null $imageParams
      * @param JsonParams|JsonParamsShape|null $jsonParams
      * @param MarkdownParams|MarkdownParamsShape|null $markdownParams
-     * @param ParseParams|ParseParamsShape|null $parseParams
+     * @param ParseParamsShape|null $parseParams
      * @param ProductParams|ProductParamsShape|null $productParams
      * @param ScreenshotParams|ScreenshotParamsShape|null $screenshotParams
      * @param SharedParams|SharedParamsShape|null $sharedParams
@@ -193,7 +197,7 @@ final class WebScrapeParams implements BaseModel
         JsonParams|array|null $jsonParams = null,
         MarkdownParams|array|null $markdownParams = null,
         ?int $maxAgeMs = null,
-        ParseParams|array|null $parseParams = null,
+        CustomParser|array|PrebuiltParser|null $parseParams = null,
         ProductParams|array|null $productParams = null,
         ScreenshotParams|array|null $screenshotParams = null,
         SharedParams|array|null $sharedParams = null,
@@ -314,10 +318,11 @@ final class WebScrapeParams implements BaseModel
     /**
      * Requires `formats.parse: true`; required when it is set.
      *
-     * @param ParseParams|ParseParamsShape $parseParams
+     * @param ParseParamsShape $parseParams
      */
-    public function withParseParams(ParseParams|array $parseParams): self
-    {
+    public function withParseParams(
+        CustomParser|array|PrebuiltParser $parseParams
+    ): self {
         $self = clone $this;
         $self['parseParams'] = $parseParams;
 

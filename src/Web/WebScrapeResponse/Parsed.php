@@ -8,14 +8,16 @@ use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebScrapeResponse\Parsed\Type;
 
 /**
- * Fields from `parseParams.rules`, after content filters. Unmatched fields are `null` (`[]` for lists).
+ * Custom rules return fields after content filters; unmatched fields are null ([] for lists). The google-maps parser returns business records in data.results and reads Maps data directly, independently of DOM filters and other outputs.
  *
  * @phpstan-type ParsedShape = array{
  *   data: array<string,mixed>|null,
  *   requested: bool,
  *   success: bool|null,
+ *   type: Type|value-of<Type>,
  *   errorCode?: string|null,
  *   message?: string|null,
  * }
@@ -39,6 +41,14 @@ final class Parsed implements BaseModel
     public ?bool $success;
 
     /**
+     * The selected prebuilt parser name, or custom when type is omitted, custom rules are used, or parsing is not requested.
+     *
+     * @var value-of<Type> $type
+     */
+    #[Required(enum: Type::class)]
+    public string $type;
+
+    /**
      * Why the output failed. Present only when `success` is `false`.
      */
     #[Optional('error_code')]
@@ -55,13 +65,13 @@ final class Parsed implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * Parsed::with(data: ..., requested: ..., success: ...)
+     * Parsed::with(data: ..., requested: ..., success: ..., type: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new Parsed)->withData(...)->withRequested(...)->withSuccess(...)
+     * (new Parsed)->withData(...)->withRequested(...)->withSuccess(...)->withType(...)
      * ```
      */
     public function __construct()
@@ -75,11 +85,13 @@ final class Parsed implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param array<string,mixed>|null $data
+     * @param Type|value-of<Type> $type
      */
     public static function with(
         ?array $data,
         bool $requested,
         ?bool $success,
+        Type|string $type,
         ?string $errorCode = null,
         ?string $message = null,
     ): self {
@@ -88,6 +100,7 @@ final class Parsed implements BaseModel
         $self['data'] = $data;
         $self['requested'] = $requested;
         $self['success'] = $success;
+        $self['type'] = $type;
 
         null !== $errorCode && $self['errorCode'] = $errorCode;
         null !== $message && $self['message'] = $message;
@@ -121,6 +134,19 @@ final class Parsed implements BaseModel
     {
         $self = clone $this;
         $self['success'] = $success;
+
+        return $self;
+    }
+
+    /**
+     * The selected prebuilt parser name, or custom when type is omitted, custom rules are used, or parsing is not requested.
+     *
+     * @param Type|value-of<Type> $type
+     */
+    public function withType(Type|string $type): self
+    {
+        $self = clone $this;
+        $self['type'] = $type;
 
         return $self;
     }

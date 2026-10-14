@@ -28,7 +28,6 @@ use ContextDev\Web\WebScrapeParams\HighlightsParams;
 use ContextDev\Web\WebScrapeParams\ImageParams;
 use ContextDev\Web\WebScrapeParams\JsonParams;
 use ContextDev\Web\WebScrapeParams\MarkdownParams;
-use ContextDev\Web\WebScrapeParams\ParseParams;
 use ContextDev\Web\WebScrapeParams\ProductParams;
 use ContextDev\Web\WebScrapeParams\ScreenshotParams;
 use ContextDev\Web\WebScrapeParams\SharedParams;
@@ -252,7 +251,7 @@ final class WebRawService implements WebRawContract
      *   jsonParams?: JsonParams|JsonParamsShape,
      *   markdownParams?: MarkdownParams|MarkdownParamsShape,
      *   maxAgeMs?: int,
-     *   parseParams?: ParseParams|ParseParamsShape,
+     *   parseParams?: ParseParamsShape,
      *   productParams?: ProductParams|ProductParamsShape,
      *   screenshotParams?: ScreenshotParams|ScreenshotParamsShape,
      *   sharedParams?: SharedParams|SharedParamsShape,
