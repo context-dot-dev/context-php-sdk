@@ -19,6 +19,7 @@ use ContextDev\Web\WebScrapeResponse\Markdown;
 use ContextDev\Web\WebScrapeResponse\Metadata;
 use ContextDev\Web\WebScrapeResponse\Parsed;
 use ContextDev\Web\WebScrapeResponse\Product;
+use ContextDev\Web\WebScrapeResponse\Profile;
 use ContextDev\Web\WebScrapeResponse\Screenshot;
 
 /**
@@ -32,6 +33,7 @@ use ContextDev\Web\WebScrapeResponse\Screenshot;
  * @phpstan-import-type MetadataShape from \ContextDev\Web\WebScrapeResponse\Metadata
  * @phpstan-import-type ParsedShape from \ContextDev\Web\WebScrapeResponse\Parsed
  * @phpstan-import-type ProductShape from \ContextDev\Web\WebScrapeResponse\Product
+ * @phpstan-import-type ProfileShape from \ContextDev\Web\WebScrapeResponse\Profile
  * @phpstan-import-type ScreenshotShape from \ContextDev\Web\WebScrapeResponse\Screenshot
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Web\WebScrapeResponse\KeyMetadata
  *
@@ -46,6 +48,7 @@ use ContextDev\Web\WebScrapeResponse\Screenshot;
  *   metadata: Metadata|MetadataShape,
  *   parsed: Parsed|ParsedShape,
  *   product: Product|ProductShape,
+ *   profile: null|Profile|ProfileShape,
  *   requestID: string,
  *   screenshot: Screenshot|ScreenshotShape,
  *   url: string,
@@ -119,6 +122,12 @@ final class WebScrapeResponse implements BaseModel
     public Product $product;
 
     /**
+     * Authenticated browser profile used for this scrape, or null when no profile was requested. New and existing profile requests both return the profile ID.
+     */
+    #[Required]
+    public ?Profile $profile;
+
+    /**
      * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
      */
     #[Required('request_id')]
@@ -164,6 +173,7 @@ final class WebScrapeResponse implements BaseModel
      *   metadata: ...,
      *   parsed: ...,
      *   product: ...,
+     *   profile: ...,
      *   requestID: ...,
      *   screenshot: ...,
      *   url: ...,
@@ -184,6 +194,7 @@ final class WebScrapeResponse implements BaseModel
      *   ->withMetadata(...)
      *   ->withParsed(...)
      *   ->withProduct(...)
+     *   ->withProfile(...)
      *   ->withRequestID(...)
      *   ->withScreenshot(...)
      *   ->withURL(...)
@@ -209,6 +220,7 @@ final class WebScrapeResponse implements BaseModel
      * @param Metadata|MetadataShape $metadata
      * @param Parsed|ParsedShape $parsed
      * @param Product|ProductShape $product
+     * @param Profile|ProfileShape|null $profile
      * @param Screenshot|ScreenshotShape $screenshot
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      */
@@ -223,6 +235,7 @@ final class WebScrapeResponse implements BaseModel
         Metadata|array $metadata,
         Parsed|array $parsed,
         Product|array $product,
+        Profile|array|null $profile,
         string $requestID,
         Screenshot|array $screenshot,
         string $url,
@@ -241,6 +254,7 @@ final class WebScrapeResponse implements BaseModel
         $self['metadata'] = $metadata;
         $self['parsed'] = $parsed;
         $self['product'] = $product;
+        $self['profile'] = $profile;
         $self['requestID'] = $requestID;
         $self['screenshot'] = $screenshot;
         $self['url'] = $url;
@@ -377,6 +391,19 @@ final class WebScrapeResponse implements BaseModel
     {
         $self = clone $this;
         $self['product'] = $product;
+
+        return $self;
+    }
+
+    /**
+     * Authenticated browser profile used for this scrape, or null when no profile was requested. New and existing profile requests both return the profile ID.
+     *
+     * @param Profile|ProfileShape|null $profile
+     */
+    public function withProfile(Profile|array|null $profile): self
+    {
+        $self = clone $this;
+        $self['profile'] = $profile;
 
         return $self;
     }

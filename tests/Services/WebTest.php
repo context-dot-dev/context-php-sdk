@@ -228,6 +228,10 @@ final class WebTest extends TestCase
                 'parsers' => [
                     'pdf' => ['endPage' => 1, 'ocr' => 'off', 'startPage' => 1],
                 ],
+                'profile' => [
+                    'profileID' => 'prof_210b9798eb53baa4e69d31c1071cf03d',
+                    'type' => 'existing',
+                ],
                 'settleAnimations' => true,
                 'theme' => 'light',
                 'viewport' => ['height' => 240, 'width' => 240],

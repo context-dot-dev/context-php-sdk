@@ -9,6 +9,9 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebScrapeParams\SharedParams\Action;
 use ContextDev\Web\WebScrapeParams\SharedParams\Parsers;
+use ContextDev\Web\WebScrapeParams\SharedParams\Profile;
+use ContextDev\Web\WebScrapeParams\SharedParams\Profile\ExistingProfile;
+use ContextDev\Web\WebScrapeParams\SharedParams\Profile\NewProfile;
 use ContextDev\Web\WebScrapeParams\SharedParams\Theme;
 use ContextDev\Web\WebScrapeParams\SharedParams\Viewport;
 
@@ -16,9 +19,11 @@ use ContextDev\Web\WebScrapeParams\SharedParams\Viewport;
  * Browser and content settings shared by all outputs.
  *
  * @phpstan-import-type ActionVariants from \ContextDev\Web\WebScrapeParams\SharedParams\Action
+ * @phpstan-import-type ProfileVariants from \ContextDev\Web\WebScrapeParams\SharedParams\Profile
  * @phpstan-import-type WaitForVariants from \ContextDev\Web\WebScrapeParams\SharedParams\WaitFor
  * @phpstan-import-type ActionShape from \ContextDev\Web\WebScrapeParams\SharedParams\Action
  * @phpstan-import-type ParsersShape from \ContextDev\Web\WebScrapeParams\SharedParams\Parsers
+ * @phpstan-import-type ProfileShape from \ContextDev\Web\WebScrapeParams\SharedParams\Profile
  * @phpstan-import-type ViewportShape from \ContextDev\Web\WebScrapeParams\SharedParams\Viewport
  * @phpstan-import-type WaitForShape from \ContextDev\Web\WebScrapeParams\SharedParams\WaitFor
  *
@@ -33,6 +38,7 @@ use ContextDev\Web\WebScrapeParams\SharedParams\Viewport;
  *   includeSelectors?: list<string>|null,
  *   mainContentOnly?: bool|null,
  *   parsers?: null|Parsers|ParsersShape,
+ *   profile?: ProfileShape|null,
  *   settleAnimations?: bool|null,
  *   theme?: null|Theme|value-of<Theme>,
  *   viewport?: null|Viewport|ViewportShape,
@@ -113,6 +119,14 @@ final class SharedParams implements BaseModel
     public ?Parsers $parsers;
 
     /**
+     * Create or reuse an authenticated browser profile. Requires a paid plan and an HTTPS target. Profiles persist session state, bypass shared caches, and cannot be combined with ZDR, custom headers, or raw bytes.
+     *
+     * @var ProfileVariants|null $profile
+     */
+    #[Optional(union: Profile::class)]
+    public ExistingProfile|NewProfile|null $profile;
+
+    /**
      * Wait for CSS animations to finish before capture. Defaults to `true` when `screenshot` is requested.
      */
     #[Optional]
@@ -155,6 +169,7 @@ final class SharedParams implements BaseModel
      * @param array<string,string>|null $headers
      * @param list<string>|null $includeSelectors
      * @param Parsers|ParsersShape|null $parsers
+     * @param ProfileShape|null $profile
      * @param Theme|value-of<Theme>|null $theme
      * @param Viewport|ViewportShape|null $viewport
      * @param WaitForShape|null $waitFor
@@ -170,6 +185,7 @@ final class SharedParams implements BaseModel
         ?array $includeSelectors = null,
         ?bool $mainContentOnly = null,
         Parsers|array|null $parsers = null,
+        ExistingProfile|array|NewProfile|null $profile = null,
         ?bool $settleAnimations = null,
         Theme|string|null $theme = null,
         Viewport|array|null $viewport = null,
@@ -187,6 +203,7 @@ final class SharedParams implements BaseModel
         null !== $includeSelectors && $self['includeSelectors'] = $includeSelectors;
         null !== $mainContentOnly && $self['mainContentOnly'] = $mainContentOnly;
         null !== $parsers && $self['parsers'] = $parsers;
+        null !== $profile && $self['profile'] = $profile;
         null !== $settleAnimations && $self['settleAnimations'] = $settleAnimations;
         null !== $theme && $self['theme'] = $theme;
         null !== $viewport && $self['viewport'] = $viewport;
@@ -311,6 +328,19 @@ final class SharedParams implements BaseModel
     {
         $self = clone $this;
         $self['parsers'] = $parsers;
+
+        return $self;
+    }
+
+    /**
+     * Create or reuse an authenticated browser profile. Requires a paid plan and an HTTPS target. Profiles persist session state, bypass shared caches, and cannot be combined with ZDR, custom headers, or raw bytes.
+     *
+     * @param ProfileShape $profile
+     */
+    public function withProfile(ExistingProfile|array|NewProfile $profile): self
+    {
+        $self = clone $this;
+        $self['profile'] = $profile;
 
         return $self;
     }
