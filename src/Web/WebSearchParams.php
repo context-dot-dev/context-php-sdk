@@ -104,7 +104,7 @@ final class WebSearchParams implements BaseModel
     public ?MarkdownOptions $markdownOptions;
 
     /**
-     * Number of results to request and return (10–100). Defaults to 10.
+     * Number of results to request and return (1–100). Defaults to 10.
      */
     #[Optional]
     public ?int $numResults;
@@ -310,7 +310,7 @@ final class WebSearchParams implements BaseModel
     }
 
     /**
-     * Number of results to request and return (10–100). Defaults to 10.
+     * Number of results to request and return (1–100). Defaults to 10.
      */
     public function withNumResults(int $numResults): self
     {

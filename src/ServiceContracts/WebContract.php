@@ -258,7 +258,7 @@ interface WebContract
      * @param HighlightsOptions|HighlightsOptionsShape|null $highlightsOptions Passages from each result page that are relevant to the query. Pages are read with the `markdownOptions` settings.
      * @param list<string> $includeDomains Allowlist — only return results from these domains. Up to 100 domains. Example: ["arxiv.org", "github.com"].
      * @param MarkdownOptions|MarkdownOptionsShape|null $markdownOptions Inline Markdown scraping for each result. Set `enabled: true` to activate.
-     * @param int $numResults Number of results to request and return (10–100). Defaults to 10.
+     * @param int $numResults Number of results to request and return (1–100). Defaults to 10.
      * @param bool $queryFanout currently has no effect
      * @param list<string> $tags labels for filtering usage in the dashboard
      * @param \ContextDev\Web\WebSearchParams\TimeoutOpts|TimeoutOptsShape6 $timeoutOpts request deadline and what to return when it passes
