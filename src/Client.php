@@ -9,6 +9,7 @@ use ContextDev\Core\Implementation\StreamingHttpClient;
 use ContextDev\Core\Util;
 use ContextDev\Services\BatchService;
 use ContextDev\Services\BrandService;
+use ContextDev\Services\BrowserService;
 use ContextDev\Services\FeedbackService;
 use ContextDev\Services\IndustryService;
 use ContextDev\Services\LogsService;
@@ -88,6 +89,11 @@ class Client extends BaseClient
     /**
      * @api
      */
+    public BrowserService $browser;
+
+    /**
+     * @api
+     */
     public FeedbackService $feedback;
 
     /**
@@ -159,6 +165,7 @@ class Client extends BaseClient
         $this->people = new PeopleService($this);
         $this->news = new NewsService($this);
         $this->logs = new LogsService($this);
+        $this->browser = new BrowserService($this);
         $this->feedback = new FeedbackService($this);
     }
 

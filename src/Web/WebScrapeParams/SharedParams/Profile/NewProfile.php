@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace ContextDev\Web\WebScrapeParams\SharedParams\Profile;
 
+use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
  * @phpstan-type NewProfileShape = array{
- *   identifier: string, password: string, type: 'new'
+ *   identifier: string, password: string, type: 'new', description?: string|null
  * }
  */
 final class NewProfile implements BaseModel
@@ -39,6 +40,12 @@ final class NewProfile implements BaseModel
     public string $password;
 
     /**
+     * Optional label shown when listing profiles with `GET /org/browser/profiles`.
+     */
+    #[Optional]
+    public ?string $description;
+
+    /**
      * `new NewProfile()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -62,12 +69,17 @@ final class NewProfile implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(string $identifier, string $password): self
-    {
+    public static function with(
+        string $identifier,
+        string $password,
+        ?string $description = null
+    ): self {
         $self = new self;
 
         $self['identifier'] = $identifier;
         $self['password'] = $password;
+
+        null !== $description && $self['description'] = $description;
 
         return $self;
     }
@@ -103,6 +115,17 @@ final class NewProfile implements BaseModel
     {
         $self = clone $this;
         $self['type'] = $type;
+
+        return $self;
+    }
+
+    /**
+     * Optional label shown when listing profiles with `GET /org/browser/profiles`.
+     */
+    public function withDescription(string $description): self
+    {
+        $self = clone $this;
+        $self['description'] = $description;
 
         return $self;
     }
