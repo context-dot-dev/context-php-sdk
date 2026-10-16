@@ -32,6 +32,7 @@ use ContextDev\Web\WebScreenshotParams\Viewport;
 use ContextDev\Web\WebScreenshotResponse;
 use ContextDev\Web\WebSearchParams\Freshness;
 use ContextDev\Web\WebSearchParams\HighlightsOptions;
+use ContextDev\Web\WebSearchParams\Languages\UnionMember0;
 use ContextDev\Web\WebSearchParams\MarkdownOptions;
 use ContextDev\Web\WebSearchResponse;
 use ContextDev\Web\WebWebCrawlMdParams\Pdf;
@@ -55,6 +56,7 @@ use ContextDev\Web\WebWebCrawlMdResponse;
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebScreenshotParams\TimeoutOpts as TimeoutOptsShape5
  * @phpstan-import-type ViewportShape from \ContextDev\Web\WebScreenshotParams\Viewport
  * @phpstan-import-type HighlightsOptionsShape from \ContextDev\Web\WebSearchParams\HighlightsOptions
+ * @phpstan-import-type LanguagesShape from \ContextDev\Web\WebSearchParams\Languages
  * @phpstan-import-type MarkdownOptionsShape from \ContextDev\Web\WebSearchParams\MarkdownOptions
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebSearchParams\TimeoutOpts as TimeoutOptsShape6
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebCrawlMdParams\Pdf
@@ -257,6 +259,7 @@ interface WebContract
      * @param Freshness|value-of<Freshness> $freshness restrict results to content published within this window
      * @param HighlightsOptions|HighlightsOptionsShape|null $highlightsOptions Passages from each result page that are relevant to the query. Pages are read with the `markdownOptions` settings.
      * @param list<string> $includeDomains Allowlist — only return results from these domains. Up to 100 domains. Example: ["arxiv.org", "github.com"].
+     * @param LanguagesShape $languages Languages to return results in, as BCP 47 language codes such as `en` or `de`, or "all" for any language. Defaults to "all". Example: ["en", "de"].
      * @param MarkdownOptions|MarkdownOptionsShape|null $markdownOptions Inline Markdown scraping for each result. Set `enabled: true` to activate.
      * @param int $numResults Number of results to request and return (1–100). Defaults to 10.
      * @param bool $queryFanout currently has no effect
@@ -275,6 +278,7 @@ interface WebContract
         Freshness|string|null $freshness = null,
         HighlightsOptions|array|null $highlightsOptions = null,
         ?array $includeDomains = null,
+        UnionMember0|array|string $languages = 'all',
         MarkdownOptions|array|null $markdownOptions = null,
         int $numResults = 10,
         ?bool $queryFanout = null,

@@ -288,6 +288,7 @@ final class WebTest extends TestCase
             freshness: 'last_24_hours',
             highlightsOptions: ['enabled' => true, 'maxCharacters' => 100],
             includeDomains: ['xxx'],
+            languages: 'all',
             markdownOptions: [
                 'enabled' => true,
                 'includeFrames' => true,

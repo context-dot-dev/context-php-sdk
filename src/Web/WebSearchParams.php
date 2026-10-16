@@ -12,6 +12,8 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebSearchParams\Country;
 use ContextDev\Web\WebSearchParams\Freshness;
 use ContextDev\Web\WebSearchParams\HighlightsOptions;
+use ContextDev\Web\WebSearchParams\Languages;
+use ContextDev\Web\WebSearchParams\Languages\UnionMember0;
 use ContextDev\Web\WebSearchParams\MarkdownOptions;
 use ContextDev\Web\WebSearchParams\TimeoutOpts;
 use ContextDev\Web\WebSearchParams\Zdr;
@@ -21,7 +23,9 @@ use ContextDev\Web\WebSearchParams\Zdr;
  *
  * @see ContextDev\Services\WebService::search()
  *
+ * @phpstan-import-type LanguagesVariants from \ContextDev\Web\WebSearchParams\Languages
  * @phpstan-import-type HighlightsOptionsShape from \ContextDev\Web\WebSearchParams\HighlightsOptions
+ * @phpstan-import-type LanguagesShape from \ContextDev\Web\WebSearchParams\Languages
  * @phpstan-import-type MarkdownOptionsShape from \ContextDev\Web\WebSearchParams\MarkdownOptions
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebSearchParams\TimeoutOpts
  *
@@ -33,6 +37,7 @@ use ContextDev\Web\WebSearchParams\Zdr;
  *   freshness?: null|Freshness|value-of<Freshness>,
  *   highlightsOptions?: null|HighlightsOptions|HighlightsOptionsShape,
  *   includeDomains?: list<string>|null,
+ *   languages?: LanguagesShape|null,
  *   markdownOptions?: null|MarkdownOptions|MarkdownOptionsShape,
  *   numResults?: int|null,
  *   queryFanout?: bool|null,
@@ -96,6 +101,14 @@ final class WebSearchParams implements BaseModel
      */
     #[Optional(list: 'string')]
     public ?array $includeDomains;
+
+    /**
+     * Languages to return results in, as BCP 47 language codes such as `en` or `de`, or "all" for any language. Defaults to "all". Example: ["en", "de"].
+     *
+     * @var LanguagesVariants|null $languages
+     */
+    #[Optional(union: Languages::class)]
+    public array|string|null $languages;
 
     /**
      * Inline Markdown scraping for each result. Set `enabled: true` to activate.
@@ -166,6 +179,7 @@ final class WebSearchParams implements BaseModel
      * @param Freshness|value-of<Freshness>|null $freshness
      * @param HighlightsOptions|HighlightsOptionsShape|null $highlightsOptions
      * @param list<string>|null $includeDomains
+     * @param LanguagesShape|null $languages
      * @param MarkdownOptions|MarkdownOptionsShape|null $markdownOptions
      * @param list<string>|null $tags
      * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
@@ -179,6 +193,7 @@ final class WebSearchParams implements BaseModel
         Freshness|string|null $freshness = null,
         HighlightsOptions|array|null $highlightsOptions = null,
         ?array $includeDomains = null,
+        UnionMember0|array|string|null $languages = null,
         MarkdownOptions|array|null $markdownOptions = null,
         ?int $numResults = null,
         ?bool $queryFanout = null,
@@ -196,6 +211,7 @@ final class WebSearchParams implements BaseModel
         null !== $freshness && $self['freshness'] = $freshness;
         null !== $highlightsOptions && $self['highlightsOptions'] = $highlightsOptions;
         null !== $includeDomains && $self['includeDomains'] = $includeDomains;
+        null !== $languages && $self['languages'] = $languages;
         null !== $markdownOptions && $self['markdownOptions'] = $markdownOptions;
         null !== $numResults && $self['numResults'] = $numResults;
         null !== $queryFanout && $self['queryFanout'] = $queryFanout;
@@ -291,6 +307,19 @@ final class WebSearchParams implements BaseModel
     {
         $self = clone $this;
         $self['includeDomains'] = $includeDomains;
+
+        return $self;
+    }
+
+    /**
+     * Languages to return results in, as BCP 47 language codes such as `en` or `de`, or "all" for any language. Defaults to "all". Example: ["en", "de"].
+     *
+     * @param LanguagesShape $languages
+     */
+    public function withLanguages(UnionMember0|array|string $languages): self
+    {
+        $self = clone $this;
+        $self['languages'] = $languages;
 
         return $self;
     }
