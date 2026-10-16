@@ -73,6 +73,7 @@ final class BatchService implements BatchContract
      * @param int $limit Batches per page. Defaults to 25.
      * @param string $q free-text search term, matched against the batch id, crawl source (start URL or sitemap domain), and tags
      * @param SearchType|value-of<SearchType> $searchType `prefix` for as-you-type prefix matching (default), `exact` for full-token matching
+     * @param bool $shouldIncludeUnified Include batches submitted with Scrape Anything formats. Defaults to false.
      * @param Status|value-of<Status> $status filter by status
      * @param TagsShape $tags Tags to filter by (matches batches having any of them). Pass repeated `tags` params or one comma-separated list, e.g. `tags=docs,competitor`.
      * @param RequestOpts|null $requestOptions
@@ -84,6 +85,7 @@ final class BatchService implements BatchContract
         int $limit = 25,
         ?string $q = null,
         SearchType|string|null $searchType = null,
+        bool $shouldIncludeUnified = false,
         Status|string|null $status = null,
         string|array|null $tags = null,
         RequestOptions|array|null $requestOptions = null,
@@ -94,6 +96,7 @@ final class BatchService implements BatchContract
                 'limit' => $limit,
                 'q' => $q,
                 'searchType' => $searchType,
+                'shouldIncludeUnified' => $shouldIncludeUnified,
                 'status' => $status,
                 'tags' => $tags,
             ],
@@ -148,7 +151,7 @@ final class BatchService implements BatchContract
     /**
      * @api
      *
-     * Page through a finished batch’s results as JSON. Results remain available for 180 days.
+     * Page through a finished batch’s results as JSON. Each record contains result with the same outputs and per-format errors as POST /web/scrape. Results remain available for 180 days.
      *
      * @param string $batchID batch ID
      * @param string $cursor next_cursor from the previous page
@@ -174,7 +177,7 @@ final class BatchService implements BatchContract
     /**
      * @api
      *
-     * Scrape up to 25,000 URLs, or crawl a site, asynchronously. Poll the batch ID or receive a webhook when it finishes.
+     * Scrape up to 100,000 URLs, or crawl a site, asynchronously using the same formats and scrape parameters as POST /web/scrape. Choose Markdown, HTML, screenshots, images, bytes, parsed fields, products, highlights, and JSON. Poll the batch ID or receive a webhook when it finishes.
      *
      * @param InputShape $input body param: Choose a URL list or a site crawl
      * @param list<string> $tags Body param: Tags stored on the batch. Filter the batch list by them later.

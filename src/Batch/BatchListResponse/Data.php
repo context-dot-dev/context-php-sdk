@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Batch\BatchListResponse;
 
 use ContextDev\Batch\BatchListResponse\Data\Credits;
-use ContextDev\Batch\BatchListResponse\Data\Format;
+use ContextDev\Batch\BatchListResponse\Data\Formats;
 use ContextDev\Batch\BatchListResponse\Data\Mode;
 use ContextDev\Batch\BatchListResponse\Data\Progress;
 use ContextDev\Batch\BatchListResponse\Data\Results;
@@ -25,6 +25,7 @@ use ContextDev\Core\Contracts\BaseModel;
  * @phpstan-import-type CrawlControlsShape from \ContextDev\Batch\CrawlControls
  * @phpstan-import-type CreditsShape from \ContextDev\Batch\BatchListResponse\Data\Credits
  * @phpstan-import-type FailureShape from \ContextDev\Batch\Failure
+ * @phpstan-import-type FormatsShape from \ContextDev\Batch\BatchListResponse\Data\Formats
  * @phpstan-import-type IntakeShape from \ContextDev\Batch\Intake
  * @phpstan-import-type PageErrorCountShape from \ContextDev\Batch\PageErrorCount
  * @phpstan-import-type ProgressShape from \ContextDev\Batch\BatchListResponse\Data\Progress
@@ -36,7 +37,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   crawl: null|CrawlControls|CrawlControlsShape,
  *   credits: Credits|CreditsShape,
  *   failure: null|Failure|FailureShape,
- *   format: Format|value-of<Format>,
+ *   formats: Formats|FormatsShape,
  *   input: Intake|IntakeShape,
  *   mode: Mode|value-of<Mode>,
  *   pageErrors: list<PageErrorCount|PageErrorCountShape>,
@@ -77,12 +78,10 @@ final class Data implements BaseModel
     public ?Failure $failure;
 
     /**
-     * What each page is returned as. Matches `input.data.format` on the submit request.
-     *
-     * @var value-of<Format> $format
+     * Outputs requested for each page. Matches input.data.formats on submission.
      */
-    #[Required(enum: Format::class)]
-    public string $format;
+    #[Required]
+    public Formats $formats;
 
     /**
      * What the submission accepted.
@@ -147,7 +146,7 @@ final class Data implements BaseModel
      *   crawl: ...,
      *   credits: ...,
      *   failure: ...,
-     *   format: ...,
+     *   formats: ...,
      *   input: ...,
      *   mode: ...,
      *   pageErrors: ...,
@@ -167,7 +166,7 @@ final class Data implements BaseModel
      *   ->withCrawl(...)
      *   ->withCredits(...)
      *   ->withFailure(...)
-     *   ->withFormat(...)
+     *   ->withFormats(...)
      *   ->withInput(...)
      *   ->withMode(...)
      *   ->withPageErrors(...)
@@ -191,7 +190,7 @@ final class Data implements BaseModel
      * @param CrawlControls|CrawlControlsShape|null $crawl
      * @param Credits|CreditsShape $credits
      * @param Failure|FailureShape|null $failure
-     * @param Format|value-of<Format> $format
+     * @param Formats|FormatsShape $formats
      * @param Intake|IntakeShape $input
      * @param Mode|value-of<Mode> $mode
      * @param list<PageErrorCount|PageErrorCountShape> $pageErrors
@@ -206,7 +205,7 @@ final class Data implements BaseModel
         CrawlControls|array|null $crawl,
         Credits|array $credits,
         Failure|array|null $failure,
-        Format|string $format,
+        Formats|array $formats,
         Intake|array $input,
         Mode|string $mode,
         array $pageErrors,
@@ -222,7 +221,7 @@ final class Data implements BaseModel
         $self['crawl'] = $crawl;
         $self['credits'] = $credits;
         $self['failure'] = $failure;
-        $self['format'] = $format;
+        $self['formats'] = $formats;
         $self['input'] = $input;
         $self['mode'] = $mode;
         $self['pageErrors'] = $pageErrors;
@@ -286,14 +285,14 @@ final class Data implements BaseModel
     }
 
     /**
-     * What each page is returned as. Matches `input.data.format` on the submit request.
+     * Outputs requested for each page. Matches input.data.formats on submission.
      *
-     * @param Format|value-of<Format> $format
+     * @param Formats|FormatsShape $formats
      */
-    public function withFormat(Format|string $format): self
+    public function withFormats(Formats|array $formats): self
     {
         $self = clone $this;
-        $self['format'] = $format;
+        $self['formats'] = $formats;
 
         return $self;
     }

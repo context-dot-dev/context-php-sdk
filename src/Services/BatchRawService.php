@@ -74,6 +74,7 @@ final class BatchRawService implements BatchRawContract
      *   limit?: int,
      *   q?: string,
      *   searchType?: SearchType|value-of<SearchType>,
+     *   shouldIncludeUnified?: bool,
      *   status?: Status|value-of<Status>,
      *   tags?: TagsShape,
      * }|BatchListParams $params
@@ -158,7 +159,7 @@ final class BatchRawService implements BatchRawContract
     /**
      * @api
      *
-     * Page through a finished batch’s results as JSON. Results remain available for 180 days.
+     * Page through a finished batch’s results as JSON. Each record contains result with the same outputs and per-format errors as POST /web/scrape. Results remain available for 180 days.
      *
      * @param string $batchID batch ID
      * @param array{cursor?: string, limit?: int}|BatchGetResultsParams $params
@@ -191,7 +192,7 @@ final class BatchRawService implements BatchRawContract
     /**
      * @api
      *
-     * Scrape up to 25,000 URLs, or crawl a site, asynchronously. Poll the batch ID or receive a webhook when it finishes.
+     * Scrape up to 100,000 URLs, or crawl a site, asynchronously using the same formats and scrape parameters as POST /web/scrape. Choose Markdown, HTML, screenshots, images, bytes, parsed fields, products, highlights, and JSON. Poll the batch ID or receive a webhook when it finishes.
      *
      * @param array{
      *   input: InputShape,

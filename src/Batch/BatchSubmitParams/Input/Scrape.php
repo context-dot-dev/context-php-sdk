@@ -5,19 +5,16 @@ declare(strict_types=1);
 namespace ContextDev\Batch\BatchSubmitParams\Input;
 
 use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data;
-use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\HTML;
-use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\Markdown;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Scrape a list of up to 25,000 URLs.
+ * Scrape a list of up to 100,000 URLs.
  *
- * @phpstan-import-type DataVariants from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data
  * @phpstan-import-type DataShape from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data
  *
- * @phpstan-type ScrapeShape = array{data: DataShape, mode: 'scrape'}
+ * @phpstan-type ScrapeShape = array{data: Data|DataShape, mode: 'scrape'}
  */
 final class Scrape implements BaseModel
 {
@@ -33,12 +30,10 @@ final class Scrape implements BaseModel
     public string $mode = 'scrape';
 
     /**
-     * Pages to scrape and their output format.
-     *
-     * @var DataVariants $data
+     * Use the same formats and parameters as POST /web/scrape, replacing url with urls. Options apply to every page.
      */
-    #[Required(union: Data::class)]
-    public Markdown|HTML $data;
+    #[Required]
+    public Data $data;
 
     /**
      * `new Scrape()` is missing required properties by the API.
@@ -64,9 +59,9 @@ final class Scrape implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param DataShape $data
+     * @param Data|DataShape $data
      */
-    public static function with(Markdown|array|HTML $data): self
+    public static function with(Data|array $data): self
     {
         $self = new self;
 
@@ -76,11 +71,11 @@ final class Scrape implements BaseModel
     }
 
     /**
-     * Pages to scrape and their output format.
+     * Use the same formats and parameters as POST /web/scrape, replacing url with urls. Options apply to every page.
      *
-     * @param DataShape $data
+     * @param Data|DataShape $data
      */
-    public function withData(Markdown|array|HTML $data): self
+    public function withData(Data|array $data): self
     {
         $self = clone $this;
         $self['data'] = $data;

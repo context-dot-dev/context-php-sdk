@@ -11,7 +11,7 @@ use ContextDev\Core\Conversion\Contracts\Converter;
 use ContextDev\Core\Conversion\Contracts\ConverterSource;
 
 /**
- * One page outcome from a finished batch.
+ * One scrape outcome. result uses the single Scrape Anything response schema; itemId and meta identify your input.
  *
  * @phpstan-import-type ScrapedPageShape from \ContextDev\Batch\BatchGetResultsResponse\Data\ScrapedPage
  * @phpstan-import-type FailedPageShape from \ContextDev\Batch\BatchGetResultsResponse\Data\FailedPage

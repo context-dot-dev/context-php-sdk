@@ -4,29 +4,23 @@ declare(strict_types=1);
 
 namespace ContextDev\Batch\BatchGetResultsResponse\Data;
 
-use ContextDev\Batch\BatchGetResultsResponse\Data\ScrapedPage\CacheMetadata;
-use ContextDev\Batch\BatchGetResultsResponse\Data\ScrapedPage\Metadata;
+use ContextDev\Batch\BatchGetResultsResponse\Data\ScrapedPage\Result;
 use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * A page the batch fetched successfully.
+ * At least one requested output succeeded. Check result.isPartial and each output success for incomplete results.
  *
- * @phpstan-import-type CacheMetadataShape from \ContextDev\Batch\BatchGetResultsResponse\Data\ScrapedPage\CacheMetadata
- * @phpstan-import-type MetadataShape from \ContextDev\Batch\BatchGetResultsResponse\Data\ScrapedPage\Metadata
+ * @phpstan-import-type ResultShape from \ContextDev\Batch\BatchGetResultsResponse\Data\ScrapedPage\Result
  *
  * @phpstan-type ScrapedPageShape = array{
- *   cacheMetadata: CacheMetadata|CacheMetadataShape,
- *   finalURL: string,
- *   httpStatus: int|null,
- *   metadata: Metadata|MetadataShape,
+ *   creditsUsed: int,
+ *   result: Result|ResultShape,
  *   status: 'ok',
  *   url: string,
- *   html?: string|null,
  *   itemID?: string|null,
- *   markdown?: string|null,
  *   meta?: array<string,mixed>|null,
  *   ocrPages?: int|null,
  * }
@@ -36,37 +30,21 @@ final class ScrapedPage implements BaseModel
     /** @use SdkModel<ScrapedPageShape> */
     use SdkModel;
 
-    /**
-     * The page was scraped.
-     *
-     * @var 'ok' $status
-     */
+    /** @var 'ok' $status */
     #[Required]
     public string $status = 'ok';
 
     /**
-     * Whether this response came from cache.
+     * Credits charged for this page, including OCR. Cached outputs use the same pricing as POST /web/scrape.
      */
-    #[Required('cache_metadata')]
-    public CacheMetadata $cacheMetadata;
+    #[Required('credits_used')]
+    public int $creditsUsed;
 
     /**
-     * URL the content was read from, after redirects.
-     */
-    #[Required('final_url')]
-    public string $finalURL;
-
-    /**
-     * HTTP status of the final response, when known.
-     */
-    #[Required('http_status')]
-    public ?int $httpStatus;
-
-    /**
-     * Metadata extracted from the scraped page HTML.
+     * The same response as POST /web/scrape, including per-format success, failure, and partial results.
      */
     #[Required]
-    public Metadata $metadata;
+    public Result $result;
 
     /**
      * URL as submitted, or as discovered by the crawl.
@@ -75,22 +53,10 @@ final class ScrapedPage implements BaseModel
     public string $url;
 
     /**
-     * Page HTML. Present on html batches, and on markdown batches submitted with `options.includeHTML`.
-     */
-    #[Optional]
-    public ?string $html;
-
-    /**
      * Your `itemId` from submission.
      */
     #[Optional('itemId')]
     public ?string $itemID;
-
-    /**
-     * Page content as Markdown. Present on markdown batches.
-     */
-    #[Optional]
-    public ?string $markdown;
 
     /**
      * Caller-supplied metadata echoed from submission.
@@ -101,7 +67,7 @@ final class ScrapedPage implements BaseModel
     public ?array $meta;
 
     /**
-     * Number of PDF pages recovered by OCR. Omitted when OCR did not run.
+     * PDF pages recovered by OCR. Omitted when OCR did not run.
      */
     #[Optional('ocr_pages')]
     public ?int $ocrPages;
@@ -111,20 +77,13 @@ final class ScrapedPage implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * ScrapedPage::with(
-     *   cacheMetadata: ..., finalURL: ..., httpStatus: ..., metadata: ..., url: ...
-     * )
+     * ScrapedPage::with(creditsUsed: ..., result: ..., url: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new ScrapedPage)
-     *   ->withCacheMetadata(...)
-     *   ->withFinalURL(...)
-     *   ->withHTTPStatus(...)
-     *   ->withMetadata(...)
-     *   ->withURL(...)
+     * (new ScrapedPage)->withCreditsUsed(...)->withResult(...)->withURL(...)
      * ```
      */
     public function __construct()
@@ -137,33 +96,24 @@ final class ScrapedPage implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
-     * @param Metadata|MetadataShape $metadata
+     * @param Result|ResultShape $result
      * @param array<string,mixed>|null $meta
      */
     public static function with(
-        CacheMetadata|array $cacheMetadata,
-        string $finalURL,
-        ?int $httpStatus,
-        Metadata|array $metadata,
+        int $creditsUsed,
+        Result|array $result,
         string $url,
-        ?string $html = null,
         ?string $itemID = null,
-        ?string $markdown = null,
         ?array $meta = null,
         ?int $ocrPages = null,
     ): self {
         $self = new self;
 
-        $self['cacheMetadata'] = $cacheMetadata;
-        $self['finalURL'] = $finalURL;
-        $self['httpStatus'] = $httpStatus;
-        $self['metadata'] = $metadata;
+        $self['creditsUsed'] = $creditsUsed;
+        $self['result'] = $result;
         $self['url'] = $url;
 
-        null !== $html && $self['html'] = $html;
         null !== $itemID && $self['itemID'] = $itemID;
-        null !== $markdown && $self['markdown'] = $markdown;
         null !== $meta && $self['meta'] = $meta;
         null !== $ocrPages && $self['ocrPages'] = $ocrPages;
 
@@ -171,56 +121,30 @@ final class ScrapedPage implements BaseModel
     }
 
     /**
-     * Whether this response came from cache.
+     * Credits charged for this page, including OCR. Cached outputs use the same pricing as POST /web/scrape.
+     */
+    public function withCreditsUsed(int $creditsUsed): self
+    {
+        $self = clone $this;
+        $self['creditsUsed'] = $creditsUsed;
+
+        return $self;
+    }
+
+    /**
+     * The same response as POST /web/scrape, including per-format success, failure, and partial results.
      *
-     * @param CacheMetadata|CacheMetadataShape $cacheMetadata
+     * @param Result|ResultShape $result
      */
-    public function withCacheMetadata(CacheMetadata|array $cacheMetadata): self
+    public function withResult(Result|array $result): self
     {
         $self = clone $this;
-        $self['cacheMetadata'] = $cacheMetadata;
+        $self['result'] = $result;
 
         return $self;
     }
 
     /**
-     * URL the content was read from, after redirects.
-     */
-    public function withFinalURL(string $finalURL): self
-    {
-        $self = clone $this;
-        $self['finalURL'] = $finalURL;
-
-        return $self;
-    }
-
-    /**
-     * HTTP status of the final response, when known.
-     */
-    public function withHTTPStatus(?int $httpStatus): self
-    {
-        $self = clone $this;
-        $self['httpStatus'] = $httpStatus;
-
-        return $self;
-    }
-
-    /**
-     * Metadata extracted from the scraped page HTML.
-     *
-     * @param Metadata|MetadataShape $metadata
-     */
-    public function withMetadata(Metadata|array $metadata): self
-    {
-        $self = clone $this;
-        $self['metadata'] = $metadata;
-
-        return $self;
-    }
-
-    /**
-     * The page was scraped.
-     *
      * @param 'ok' $status
      */
     public function withStatus(string $status): self
@@ -243,34 +167,12 @@ final class ScrapedPage implements BaseModel
     }
 
     /**
-     * Page HTML. Present on html batches, and on markdown batches submitted with `options.includeHTML`.
-     */
-    public function withHTML(string $html): self
-    {
-        $self = clone $this;
-        $self['html'] = $html;
-
-        return $self;
-    }
-
-    /**
      * Your `itemId` from submission.
      */
     public function withItemID(string $itemID): self
     {
         $self = clone $this;
         $self['itemID'] = $itemID;
-
-        return $self;
-    }
-
-    /**
-     * Page content as Markdown. Present on markdown batches.
-     */
-    public function withMarkdown(string $markdown): self
-    {
-        $self = clone $this;
-        $self['markdown'] = $markdown;
 
         return $self;
     }
@@ -289,7 +191,7 @@ final class ScrapedPage implements BaseModel
     }
 
     /**
-     * Number of PDF pages recovered by OCR. Omitted when OCR did not run.
+     * PDF pages recovered by OCR. Omitted when OCR did not run.
      */
     public function withOcrPages(int $ocrPages): self
     {

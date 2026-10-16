@@ -1,0 +1,63 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams;
+
+use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Parsers\Pdf;
+use ContextDev\Core\Attributes\Optional;
+use ContextDev\Core\Concerns\SdkModel;
+use ContextDev\Core\Contracts\BaseModel;
+
+/**
+ * Document parsing options.
+ *
+ * @phpstan-import-type PdfShape from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Parsers\Pdf
+ *
+ * @phpstan-type ParsersShape = array{pdf?: null|Pdf|PdfShape}
+ */
+final class Parsers implements BaseModel
+{
+    /** @use SdkModel<ParsersShape> */
+    use SdkModel;
+
+    /**
+     * PDF page range and OCR.
+     */
+    #[Optional]
+    public ?Pdf $pdf;
+
+    public function __construct()
+    {
+        $this->initialize();
+    }
+
+    /**
+     * Construct an instance from the required parameters.
+     *
+     * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param Pdf|PdfShape|null $pdf
+     */
+    public static function with(Pdf|array|null $pdf = null): self
+    {
+        $self = new self;
+
+        null !== $pdf && $self['pdf'] = $pdf;
+
+        return $self;
+    }
+
+    /**
+     * PDF page range and OCR.
+     *
+     * @param Pdf|PdfShape $pdf
+     */
+    public function withPdf(Pdf|array $pdf): self
+    {
+        $self = clone $this;
+        $self['pdf'] = $pdf;
+
+        return $self;
+    }
+}

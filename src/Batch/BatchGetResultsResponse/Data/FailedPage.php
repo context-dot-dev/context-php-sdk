@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ContextDev\Batch\BatchGetResultsResponse\Data;
 
+use ContextDev\Batch\BatchGetResultsResponse\Data\FailedPage\Result;
 use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
@@ -12,13 +13,18 @@ use ContextDev\Core\Contracts\BaseModel;
 /**
  * A page the batch could not fetch.
  *
+ * @phpstan-import-type ResultShape from \ContextDev\Batch\BatchGetResultsResponse\Data\FailedPage\Result
+ *
  * @phpstan-type FailedPageShape = array{
  *   errorCode: string,
  *   message: string,
  *   status: 'error',
  *   url: string,
+ *   creditsUsed?: int|null,
  *   itemID?: string|null,
  *   meta?: array<string,mixed>|null,
+ *   ocrPages?: int|null,
+ *   result?: null|Result|ResultShape,
  * }
  */
 final class FailedPage implements BaseModel
@@ -53,6 +59,12 @@ final class FailedPage implements BaseModel
     public string $url;
 
     /**
+     * Credits charged for this page, including OCR. Cached outputs use the same pricing as POST /web/scrape.
+     */
+    #[Optional('credits_used')]
+    public ?int $creditsUsed;
+
+    /**
      * Your `itemId` from submission.
      */
     #[Optional('itemId')]
@@ -65,6 +77,18 @@ final class FailedPage implements BaseModel
      */
     #[Optional(map: 'mixed')]
     public ?array $meta;
+
+    /**
+     * PDF pages recovered by OCR. Omitted when OCR did not run.
+     */
+    #[Optional('ocr_pages')]
+    public ?int $ocrPages;
+
+    /**
+     * Per-format failures when scraping returned a structured response. Omitted for errors that prevent scraping.
+     */
+    #[Optional]
+    public ?Result $result;
 
     /**
      * `new FailedPage()` is missing required properties by the API.
@@ -91,13 +115,17 @@ final class FailedPage implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param array<string,mixed>|null $meta
+     * @param Result|ResultShape|null $result
      */
     public static function with(
         string $errorCode,
         string $message,
         string $url,
+        ?int $creditsUsed = null,
         ?string $itemID = null,
         ?array $meta = null,
+        ?int $ocrPages = null,
+        Result|array|null $result = null,
     ): self {
         $self = new self;
 
@@ -105,8 +133,11 @@ final class FailedPage implements BaseModel
         $self['message'] = $message;
         $self['url'] = $url;
 
+        null !== $creditsUsed && $self['creditsUsed'] = $creditsUsed;
         null !== $itemID && $self['itemID'] = $itemID;
         null !== $meta && $self['meta'] = $meta;
+        null !== $ocrPages && $self['ocrPages'] = $ocrPages;
+        null !== $result && $self['result'] = $result;
 
         return $self;
     }
@@ -158,6 +189,17 @@ final class FailedPage implements BaseModel
     }
 
     /**
+     * Credits charged for this page, including OCR. Cached outputs use the same pricing as POST /web/scrape.
+     */
+    public function withCreditsUsed(int $creditsUsed): self
+    {
+        $self = clone $this;
+        $self['creditsUsed'] = $creditsUsed;
+
+        return $self;
+    }
+
+    /**
      * Your `itemId` from submission.
      */
     public function withItemID(string $itemID): self
@@ -177,6 +219,30 @@ final class FailedPage implements BaseModel
     {
         $self = clone $this;
         $self['meta'] = $meta;
+
+        return $self;
+    }
+
+    /**
+     * PDF pages recovered by OCR. Omitted when OCR did not run.
+     */
+    public function withOcrPages(int $ocrPages): self
+    {
+        $self = clone $this;
+        $self['ocrPages'] = $ocrPages;
+
+        return $self;
+    }
+
+    /**
+     * Per-format failures when scraping returned a structured response. Omitted for errors that prevent scraping.
+     *
+     * @param Result|ResultShape $result
+     */
+    public function withResult(Result|array $result): self
+    {
+        $self = clone $this;
+        $self['result'] = $result;
 
         return $self;
     }

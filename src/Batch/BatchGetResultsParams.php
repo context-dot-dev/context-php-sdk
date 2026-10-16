@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Page through a finished batch’s results as JSON. Results remain available for 180 days.
+ * Page through a finished batch’s results as JSON. Each record contains result with the same outputs and per-format errors as POST /web/scrape. Results remain available for 180 days.
  *
  * @see ContextDev\Services\BatchService::getResults()
  *

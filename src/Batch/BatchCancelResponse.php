@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Batch;
 
 use ContextDev\Batch\BatchCancelResponse\Credits;
-use ContextDev\Batch\BatchCancelResponse\Format;
+use ContextDev\Batch\BatchCancelResponse\Formats;
 use ContextDev\Batch\BatchCancelResponse\KeyMetadata;
 use ContextDev\Batch\BatchCancelResponse\Mode;
 use ContextDev\Batch\BatchCancelResponse\Progress;
@@ -19,6 +19,7 @@ use ContextDev\Core\Contracts\BaseModel;
 /**
  * @phpstan-import-type CrawlControlsShape from \ContextDev\Batch\CrawlControls
  * @phpstan-import-type CreditsShape from \ContextDev\Batch\BatchCancelResponse\Credits
+ * @phpstan-import-type FormatsShape from \ContextDev\Batch\BatchCancelResponse\Formats
  * @phpstan-import-type IntakeShape from \ContextDev\Batch\Intake
  * @phpstan-import-type PageErrorCountShape from \ContextDev\Batch\PageErrorCount
  * @phpstan-import-type ProgressShape from \ContextDev\Batch\BatchCancelResponse\Progress
@@ -29,7 +30,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   id: string,
  *   crawl: null|CrawlControls|CrawlControlsShape,
  *   credits: Credits|CreditsShape,
- *   format: Format|value-of<Format>,
+ *   formats: Formats|FormatsShape,
  *   input: Intake|IntakeShape,
  *   mode: Mode|value-of<Mode>,
  *   pageErrors: list<PageErrorCount|PageErrorCountShape>,
@@ -65,12 +66,10 @@ final class BatchCancelResponse implements BaseModel
     public Credits $credits;
 
     /**
-     * What each page is returned as.
-     *
-     * @var value-of<Format> $format
+     * Outputs requested for each page. Matches input.data.formats on submission.
      */
-    #[Required(enum: Format::class)]
-    public string $format;
+    #[Required]
+    public Formats $formats;
 
     /**
      * What the submission accepted.
@@ -143,7 +142,7 @@ final class BatchCancelResponse implements BaseModel
      *   id: ...,
      *   crawl: ...,
      *   credits: ...,
-     *   format: ...,
+     *   formats: ...,
      *   input: ...,
      *   mode: ...,
      *   pageErrors: ...,
@@ -162,7 +161,7 @@ final class BatchCancelResponse implements BaseModel
      *   ->withID(...)
      *   ->withCrawl(...)
      *   ->withCredits(...)
-     *   ->withFormat(...)
+     *   ->withFormats(...)
      *   ->withInput(...)
      *   ->withMode(...)
      *   ->withPageErrors(...)
@@ -185,7 +184,7 @@ final class BatchCancelResponse implements BaseModel
      *
      * @param CrawlControls|CrawlControlsShape|null $crawl
      * @param Credits|CreditsShape $credits
-     * @param Format|value-of<Format> $format
+     * @param Formats|FormatsShape $formats
      * @param Intake|IntakeShape $input
      * @param Mode|value-of<Mode> $mode
      * @param list<PageErrorCount|PageErrorCountShape> $pageErrors
@@ -199,7 +198,7 @@ final class BatchCancelResponse implements BaseModel
         string $id,
         CrawlControls|array|null $crawl,
         Credits|array $credits,
-        Format|string $format,
+        Formats|array $formats,
         Intake|array $input,
         Mode|string $mode,
         array $pageErrors,
@@ -215,7 +214,7 @@ final class BatchCancelResponse implements BaseModel
         $self['id'] = $id;
         $self['crawl'] = $crawl;
         $self['credits'] = $credits;
-        $self['format'] = $format;
+        $self['formats'] = $formats;
         $self['input'] = $input;
         $self['mode'] = $mode;
         $self['pageErrors'] = $pageErrors;
@@ -268,14 +267,14 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
-     * What each page is returned as.
+     * Outputs requested for each page. Matches input.data.formats on submission.
      *
-     * @param Format|value-of<Format> $format
+     * @param Formats|FormatsShape $formats
      */
-    public function withFormat(Format|string $format): self
+    public function withFormats(Formats|array $formats): self
     {
         $self = clone $this;
-        $self['format'] = $format;
+        $self['formats'] = $formats;
 
         return $self;
     }

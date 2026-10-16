@@ -6,7 +6,7 @@ namespace ContextDev\Batch;
 
 use ContextDev\Batch\BatchSubmitResponse\CacheMetadata;
 use ContextDev\Batch\BatchSubmitResponse\Credits;
-use ContextDev\Batch\BatchSubmitResponse\Format;
+use ContextDev\Batch\BatchSubmitResponse\Formats;
 use ContextDev\Batch\BatchSubmitResponse\InvalidURL;
 use ContextDev\Batch\BatchSubmitResponse\KeyMetadata;
 use ContextDev\Batch\BatchSubmitResponse\Mode;
@@ -20,6 +20,7 @@ use ContextDev\Core\Contracts\BaseModel;
  * @phpstan-import-type CacheMetadataShape from \ContextDev\Batch\BatchSubmitResponse\CacheMetadata
  * @phpstan-import-type CrawlControlsShape from \ContextDev\Batch\CrawlControls
  * @phpstan-import-type CreditsShape from \ContextDev\Batch\BatchSubmitResponse\Credits
+ * @phpstan-import-type FormatsShape from \ContextDev\Batch\BatchSubmitResponse\Formats
  * @phpstan-import-type IntakeShape from \ContextDev\Batch\Intake
  * @phpstan-import-type InvalidURLShape from \ContextDev\Batch\BatchSubmitResponse\InvalidURL
  * @phpstan-import-type KeyMetadataShape from \ContextDev\Batch\BatchSubmitResponse\KeyMetadata
@@ -30,7 +31,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   crawl: null|CrawlControls|CrawlControlsShape,
  *   createdAt: string,
  *   credits: Credits|CreditsShape,
- *   format: Format|value-of<Format>,
+ *   formats: Formats|FormatsShape,
  *   input: Intake|IntakeShape,
  *   invalidURLs: list<InvalidURL|InvalidURLShape>,
  *   mode: Mode|value-of<Mode>,
@@ -77,12 +78,10 @@ final class BatchSubmitResponse implements BaseModel
     public Credits $credits;
 
     /**
-     * What each page will be returned as.
-     *
-     * @var value-of<Format> $format
+     * Outputs requested for each page. Matches input.data.formats on submission.
      */
-    #[Required(enum: Format::class)]
-    public string $format;
+    #[Required]
+    public Formats $formats;
 
     /**
      * What the submission accepted.
@@ -151,7 +150,7 @@ final class BatchSubmitResponse implements BaseModel
      *   crawl: ...,
      *   createdAt: ...,
      *   credits: ...,
-     *   format: ...,
+     *   formats: ...,
      *   input: ...,
      *   invalidURLs: ...,
      *   mode: ...,
@@ -170,7 +169,7 @@ final class BatchSubmitResponse implements BaseModel
      *   ->withCrawl(...)
      *   ->withCreatedAt(...)
      *   ->withCredits(...)
-     *   ->withFormat(...)
+     *   ->withFormats(...)
      *   ->withInput(...)
      *   ->withInvalidURLs(...)
      *   ->withMode(...)
@@ -192,7 +191,7 @@ final class BatchSubmitResponse implements BaseModel
      * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      * @param CrawlControls|CrawlControlsShape|null $crawl
      * @param Credits|CreditsShape $credits
-     * @param Format|value-of<Format> $format
+     * @param Formats|FormatsShape $formats
      * @param Intake|IntakeShape $input
      * @param list<InvalidURL|InvalidURLShape> $invalidURLs
      * @param Mode|value-of<Mode> $mode
@@ -206,7 +205,7 @@ final class BatchSubmitResponse implements BaseModel
         CrawlControls|array|null $crawl,
         string $createdAt,
         Credits|array $credits,
-        Format|string $format,
+        Formats|array $formats,
         Intake|array $input,
         array $invalidURLs,
         Mode|string $mode,
@@ -223,7 +222,7 @@ final class BatchSubmitResponse implements BaseModel
         $self['crawl'] = $crawl;
         $self['createdAt'] = $createdAt;
         $self['credits'] = $credits;
-        $self['format'] = $format;
+        $self['formats'] = $formats;
         $self['input'] = $input;
         $self['invalidURLs'] = $invalidURLs;
         $self['mode'] = $mode;
@@ -299,14 +298,14 @@ final class BatchSubmitResponse implements BaseModel
     }
 
     /**
-     * What each page will be returned as.
+     * Outputs requested for each page. Matches input.data.formats on submission.
      *
-     * @param Format|value-of<Format> $format
+     * @param Formats|FormatsShape $formats
      */
-    public function withFormat(Format|string $format): self
+    public function withFormats(Formats|array $formats): self
     {
         $self = clone $this;
-        $self['format'] = $format;
+        $self['formats'] = $formats;
 
         return $self;
     }

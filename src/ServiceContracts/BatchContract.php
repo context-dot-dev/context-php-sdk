@@ -46,6 +46,7 @@ interface BatchContract
      * @param int $limit Batches per page. Defaults to 25.
      * @param string $q free-text search term, matched against the batch id, crawl source (start URL or sitemap domain), and tags
      * @param SearchType|value-of<SearchType> $searchType `prefix` for as-you-type prefix matching (default), `exact` for full-token matching
+     * @param bool $shouldIncludeUnified Include batches submitted with Scrape Anything formats. Defaults to false.
      * @param Status|value-of<Status> $status filter by status
      * @param TagsShape $tags Tags to filter by (matches batches having any of them). Pass repeated `tags` params or one comma-separated list, e.g. `tags=docs,competitor`.
      * @param RequestOpts|null $requestOptions
@@ -57,6 +58,7 @@ interface BatchContract
         int $limit = 25,
         ?string $q = null,
         SearchType|string|null $searchType = null,
+        bool $shouldIncludeUnified = false,
         Status|string|null $status = null,
         string|array|null $tags = null,
         RequestOptions|array|null $requestOptions = null,
