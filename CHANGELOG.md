@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.26.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.25.0...v2.26.0) (2026-10-16)
+
+
+### Features
+
+* **batch:** support Scrape Anything batches up to 100k URLs ([#1883](https://github.com/context-dot-dev/context-php-sdk/issues/1883)) ([bbcc4ce](https://github.com/context-dot-dev/context-php-sdk/commit/bbcc4ce7e4b76ee088e483c4f460a59f4abb030f))
+* **scrape:** add App Store app and reviews prebuilt parsers ([#1859](https://github.com/context-dot-dev/context-php-sdk/issues/1859)) ([67f5f3f](https://github.com/context-dot-dev/context-php-sdk/commit/67f5f3fdc752160faeeaa9806e8d9ab82e2d8558))
+* **scrape:** add emails prebuilt parser ([#1862](https://github.com/context-dot-dev/context-php-sdk/issues/1862)) ([67f5f3f](https://github.com/context-dot-dev/context-php-sdk/commit/67f5f3fdc752160faeeaa9806e8d9ab82e2d8558))
+* **scrape:** add Google Play app and reviews prebuilt parsers ([#1857](https://github.com/context-dot-dev/context-php-sdk/issues/1857)) ([67f5f3f](https://github.com/context-dot-dev/context-php-sdk/commit/67f5f3fdc752160faeeaa9806e8d9ab82e2d8558))
+* **scrape:** add links prebuilt parser ([#1865](https://github.com/context-dot-dev/context-php-sdk/issues/1865)) ([67f5f3f](https://github.com/context-dot-dev/context-php-sdk/commit/67f5f3fdc752160faeeaa9806e8d9ab82e2d8558))
+* **scrape:** add phone-numbers prebuilt parser ([#1863](https://github.com/context-dot-dev/context-php-sdk/issues/1863)) ([67f5f3f](https://github.com/context-dot-dev/context-php-sdk/commit/67f5f3fdc752160faeeaa9806e8d9ab82e2d8558))
+* **scrape:** list browser profiles and label them with descriptions ([#1914](https://github.com/context-dot-dev/context-php-sdk/issues/1914)) ([ebe345e](https://github.com/context-dot-dev/context-php-sdk/commit/ebe345e8bdf1e8dfee6cedf82266a0b63e5167b3))
+* **search:** allow requesting a single result ([#1880](https://github.com/context-dot-dev/context-php-sdk/issues/1880)) ([ab8b5ad](https://github.com/context-dot-dev/context-php-sdk/commit/ab8b5ad1f7444e955682a684d3cfcad2bf56e890))
+
 ## [2.25.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.24.0...v2.25.0) (2026-10-14)
 
 
