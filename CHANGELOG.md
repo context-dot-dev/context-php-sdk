@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.27.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.26.0...v2.27.0) (2026-10-17)
+
+
+### Features
+
+* **brand:** add search metadata and country and language filters ([#1945](https://github.com/context-dot-dev/context-php-sdk/issues/1945)) ([76bbd8b](https://github.com/context-dot-dev/context-php-sdk/commit/76bbd8ba8b5ba759aaea91eabc56ff44b774ce59))
+* **scrape:** add g2-reviews prebuilt parser ([#1933](https://github.com/context-dot-dev/context-php-sdk/issues/1933)) ([f89d1a6](https://github.com/context-dot-dev/context-php-sdk/commit/f89d1a69c980d13cc70fc9146ac35e7e77a79bfe))
+* **scrape:** add google-maps-reviews prebuilt parser with oldest-first sort ([#1928](https://github.com/context-dot-dev/context-php-sdk/issues/1928)) ([5e12eee](https://github.com/context-dot-dev/context-php-sdk/commit/5e12eee2e3564ddca09cf67001442b0ac4d4dd2b))
+* **scrape:** add Instagram profile, post, and feed prebuilt parsers ([#1905](https://github.com/context-dot-dev/context-php-sdk/issues/1905)) ([77f0f0c](https://github.com/context-dot-dev/context-php-sdk/commit/77f0f0c7134c933af728e00cf95251c15e9efa48))
+* **search:** add languages filter to web search ([#1833](https://github.com/context-dot-dev/context-php-sdk/issues/1833)) ([9872164](https://github.com/context-dot-dev/context-php-sdk/commit/9872164db968b3ca28fd35b351b838dc5fd7c59d))
+
 ## [2.26.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.25.0...v2.26.0) (2026-10-16)
 
 
