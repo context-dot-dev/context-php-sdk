@@ -13,6 +13,8 @@ enum Type: string
 
     case GOOGLE_MAPS = 'google-maps';
 
+    case GOOGLE_MAPS_REVIEWS = 'google-maps-reviews';
+
     case GOOGLE_PLAY = 'google-play';
 
     case GOOGLE_PLAY_REVIEWS = 'google-play-reviews';
