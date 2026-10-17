@@ -10,6 +10,8 @@ use ContextDev\Brand\BrandRetrieveParams\ForceLanguage;
 use ContextDev\Brand\BrandRetrieveParams\TickerExchange;
 use ContextDev\Brand\BrandRetrieveParams\TimeoutOpts;
 use ContextDev\Brand\BrandRetrieveParams\Type;
+use ContextDev\Brand\BrandSearchParams\Country;
+use ContextDev\Brand\BrandSearchParams\Language;
 use ContextDev\Brand\BrandSearchParams\QueryBy;
 use ContextDev\Brand\BrandSearchResponse;
 use ContextDev\Client;
@@ -119,10 +121,12 @@ final class BrandService implements BrandContract
     /**
      * @api
      *
-     * Find up to 10 brands by name or domain, ordered by popularity. Use the returned domain to retrieve a full brand profile.
+     * Find up to 10 brands by name or domain, ordered by popularity. Optionally filter by country and primary language; both filters must match when provided together. Results include description, country, and language when available. Use the returned domain to retrieve a full brand profile.
      *
      * @param string $query Search term, matched against the fields selected by queryBy (e.g. 'nike', 'nike.com', 'nik').
      * @param bool $autocomplete Whether the search term matches by prefix, so partial words match as they are typed (e.g. 'nik' matches Nike). Set to false to match whole words only.
+     * @param Country|value-of<Country> $country only return brands in this country, as an uppercase ISO 3166-1 alpha-2 code such as US or GB
+     * @param Language|value-of<Language> $language only return brands with this primary language, such as english or french
      * @param list<QueryBy|value-of<QueryBy>> $queryBy Fields to match the search term against, as a comma-separated list or repeated parameter: 'name', 'domain', or both. Defaults to both.
      * @param list<string> $tags Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      * @param int $typoTolerance Maximum number of typos tolerated when matching, from 0 to 2. Defaults to 0 (no typo tolerance).
@@ -133,6 +137,8 @@ final class BrandService implements BrandContract
     public function search(
         string $query,
         bool $autocomplete = true,
+        Country|string|null $country = null,
+        Language|string|null $language = null,
         array $queryBy = ['name', 'domain'],
         ?array $tags = null,
         int $typoTolerance = 0,
@@ -142,6 +148,8 @@ final class BrandService implements BrandContract
             [
                 'query' => $query,
                 'autocomplete' => $autocomplete,
+                'country' => $country,
+                'language' => $language,
                 'queryBy' => $queryBy,
                 'tags' => $tags,
                 'typoTolerance' => $typoTolerance,

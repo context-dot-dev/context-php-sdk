@@ -12,6 +12,8 @@ use ContextDev\Brand\BrandRetrieveParams\TickerExchange;
 use ContextDev\Brand\BrandRetrieveParams\TimeoutOpts;
 use ContextDev\Brand\BrandRetrieveParams\Type;
 use ContextDev\Brand\BrandSearchParams;
+use ContextDev\Brand\BrandSearchParams\Country;
+use ContextDev\Brand\BrandSearchParams\Language;
 use ContextDev\Brand\BrandSearchParams\QueryBy;
 use ContextDev\Brand\BrandSearchResponse;
 use ContextDev\Client;
@@ -87,11 +89,13 @@ final class BrandRawService implements BrandRawContract
     /**
      * @api
      *
-     * Find up to 10 brands by name or domain, ordered by popularity. Use the returned domain to retrieve a full brand profile.
+     * Find up to 10 brands by name or domain, ordered by popularity. Optionally filter by country and primary language; both filters must match when provided together. Results include description, country, and language when available. Use the returned domain to retrieve a full brand profile.
      *
      * @param array{
      *   query: string,
      *   autocomplete?: bool,
+     *   country?: value-of<Country>,
+     *   language?: value-of<Language>,
      *   queryBy?: list<QueryBy|value-of<QueryBy>>,
      *   tags?: list<string>,
      *   typoTolerance?: int,

@@ -105,6 +105,8 @@ final class BrandTest extends TestCase
         $result = $this->client->brand->search(
             query: 'x',
             autocomplete: true,
+            country: 'US',
+            language: 'afrikaans',
             queryBy: ['name'],
             tags: ['production', 'team-alpha'],
             typoTolerance: 0,
