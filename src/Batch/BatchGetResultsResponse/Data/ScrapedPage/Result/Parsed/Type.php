@@ -25,6 +25,12 @@ enum Type: string
 
     case G2_REVIEWS = 'g2-reviews';
 
+    case INSTAGRAM_PROFILE = 'instagram-profile';
+
+    case INSTAGRAM_POST = 'instagram-post';
+
+    case INSTAGRAM_FEED = 'instagram-feed';
+
     case EMAILS = 'emails';
 
     case PHONE_NUMBERS = 'phone-numbers';
