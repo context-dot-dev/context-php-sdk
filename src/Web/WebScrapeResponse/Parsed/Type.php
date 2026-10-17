@@ -23,6 +23,8 @@ enum Type: string
 
     case APP_STORE_REVIEWS = 'app-store-reviews';
 
+    case G2_REVIEWS = 'g2-reviews';
+
     case EMAILS = 'emails';
 
     case PHONE_NUMBERS = 'phone-numbers';
