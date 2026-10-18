@@ -31,6 +31,20 @@ enum Type: string
 
     case INSTAGRAM_FEED = 'instagram-feed';
 
+    case TIKTOK_PROFILE = 'tiktok-profile';
+
+    case TIKTOK_VIDEO = 'tiktok-video';
+
+    case TIKTOK_FEED = 'tiktok-feed';
+
+    case TIKTOK_COMMENTS = 'tiktok-comments';
+
+    case TIKTOK_FOLLOWERS = 'tiktok-followers';
+
+    case TIKTOK_FOLLOWING = 'tiktok-following';
+
+    case TIKTOK_USER_SEARCH = 'tiktok-user-search';
+
     case EMAILS = 'emails';
 
     case PHONE_NUMBERS = 'phone-numbers';
