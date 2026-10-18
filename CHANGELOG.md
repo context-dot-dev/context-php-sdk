@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.28.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.27.0...v2.28.0) (2026-10-18)
+
+
+### Features
+
+* **people:** allow enrichment on free plans ([#1961](https://github.com/context-dot-dev/context-php-sdk/issues/1961)) ([936a219](https://github.com/context-dot-dev/context-php-sdk/commit/936a21990116b6a8310ec7bf2546b245c6e654ad))
+
 ## [2.27.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.26.0...v2.27.0) (2026-10-17)
 
 
