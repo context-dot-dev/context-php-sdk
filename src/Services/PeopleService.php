@@ -43,7 +43,7 @@ final class PeopleService implements PeopleContract
     /**
      * @api
      *
-     * Find a person from identity clues and return their profile with a match score. Requires a paid plan; free or disposable email addresses return 422.
+     * Find a person from identity clues and return their profile with a match score. Available on all plans; free or disposable email addresses return 422.
      *
      * @param Company|CompanyShape $company Company context to help identify the person. Provide a name or domain.
      * @param list<Education|EducationShape> $education education history to help distinguish people with similar names
