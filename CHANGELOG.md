@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.29.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.28.0...v2.29.0) (2026-10-18)
+
+
+### Features
+
+* **scrape:** add TikTok profile and video prebuilt parsers ([#1956](https://github.com/context-dot-dev/context-php-sdk/issues/1956)) ([2b42b0c](https://github.com/context-dot-dev/context-php-sdk/commit/2b42b0cf86511211412ff9d9c1de1b151c2aab9f))
+
 ## [2.28.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.27.0...v2.28.0) (2026-10-18)
 
 
