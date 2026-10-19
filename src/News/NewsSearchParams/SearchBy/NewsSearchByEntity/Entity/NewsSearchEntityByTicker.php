@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace ContextDev\News\NewsSearchParams\SearchBy\Entity;
+namespace ContextDev\News\NewsSearchParams\SearchBy\NewsSearchByEntity\Entity;
 
 use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
-use ContextDev\News\NewsSearchParams\SearchBy\Entity\NewsSearchEntityByTicker\Exchange;
+use ContextDev\News\NewsSearchParams\SearchBy\NewsSearchByEntity\Entity\NewsSearchEntityByTicker\Exchange;
 
 /**
  * Identify the company by stock ticker, optionally scoped to an exchange.

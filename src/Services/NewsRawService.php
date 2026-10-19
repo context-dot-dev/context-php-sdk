@@ -9,7 +9,6 @@ use ContextDev\Core\Contracts\BaseResponse;
 use ContextDev\Core\Exceptions\APIException;
 use ContextDev\News\NewsSearchParams;
 use ContextDev\News\NewsSearchParams\FilterBy;
-use ContextDev\News\NewsSearchParams\SearchBy;
 use ContextDev\News\NewsSearchParams\SortBy;
 use ContextDev\News\NewsSearchResponse;
 use ContextDev\RequestOptions;
@@ -34,10 +33,10 @@ final class NewsRawService implements NewsRawContract
     /**
      * @api
      *
-     * Find company news by name, domain, ticker, or ISIN. Filter articles and continue through results with a cursor.
+     * Find news about a company by name, domain, ticker, or ISIN, or search all news with a natural-language query. Filter articles and continue through results with a cursor.
      *
      * @param array{
-     *   searchBy: SearchBy|SearchByShape,
+     *   searchBy: SearchByShape,
      *   cursor?: string|null,
      *   filterBy?: FilterBy|FilterByShape,
      *   limit?: int,

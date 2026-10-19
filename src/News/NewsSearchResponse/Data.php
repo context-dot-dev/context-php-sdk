@@ -21,7 +21,7 @@ use ContextDev\News\NewsSearchResponse\Data\Type;
  *   description: string|null,
  *   imageURL: string|null,
  *   language: string|null,
- *   match: Match_|MatchShape,
+ *   match: null|Match_|MatchShape,
  *   publishedAt: \DateTimeInterface|null,
  *   source: Source|SourceShape,
  *   storyID: string,
@@ -68,10 +68,10 @@ final class Data implements BaseModel
     public ?string $language;
 
     /**
-     * How the article relates to the company you searched for.
+     * How the article relates to the company you searched for. Null for natural-language searches.
      */
     #[Required]
-    public Match_ $match;
+    public ?Match_ $match;
 
     /**
      * When the article was published, as an ISO 8601 timestamp. Null when the publisher does not state a reliable date.
@@ -161,7 +161,7 @@ final class Data implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param list<string> $authors
-     * @param Match_|MatchShape $match
+     * @param Match_|MatchShape|null $match
      * @param Source|SourceShape $source
      * @param Type|value-of<Type> $type
      */
@@ -171,7 +171,7 @@ final class Data implements BaseModel
         ?string $description,
         ?string $imageURL,
         ?string $language,
-        Match_|array $match,
+        Match_|array|null $match,
         ?\DateTimeInterface $publishedAt,
         Source|array $source,
         string $storyID,
@@ -255,11 +255,11 @@ final class Data implements BaseModel
     }
 
     /**
-     * How the article relates to the company you searched for.
+     * How the article relates to the company you searched for. Null for natural-language searches.
      *
-     * @param Match_|MatchShape $match
+     * @param Match_|MatchShape|null $match
      */
-    public function withMatch(Match_|array $match): self
+    public function withMatch(Match_|array|null $match): self
     {
         $self = clone $this;
         $self['match'] = $match;

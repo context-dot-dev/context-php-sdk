@@ -6,7 +6,8 @@ namespace ContextDev\ServiceContracts;
 
 use ContextDev\Core\Exceptions\APIException;
 use ContextDev\News\NewsSearchParams\FilterBy;
-use ContextDev\News\NewsSearchParams\SearchBy;
+use ContextDev\News\NewsSearchParams\SearchBy\NewsSearchByEntity;
+use ContextDev\News\NewsSearchParams\SearchBy\NewsSearchByNaturalLanguage;
 use ContextDev\News\NewsSearchParams\SortBy;
 use ContextDev\News\NewsSearchResponse;
 use ContextDev\RequestOptions;
@@ -22,22 +23,22 @@ interface NewsContract
     /**
      * @api
      *
-     * @param SearchBy|SearchByShape $searchBy what to search for
+     * @param SearchByShape $searchBy what to search for: a specific company, or a natural-language query across all news
      * @param string|null $cursor opaque next_cursor from the previous response, or null for the first page
      * @param FilterBy|FilterByShape $filterBy Optional result filters. Use at most one of sourceDomain, sourceCountry, articleLanguage, or articleType. A date range may accompany that category; date.from must not exceed date.to.
      * @param int $limit Maximum results to return. Defaults to 10.
-     * @param SortBy|SortByShape $sortBy Result ordering. Defaults to newest.
+     * @param SortBy|SortByShape $sortBy Result ordering. Defaults to newest for entity searches. Natural-language searches are always ordered by relevance.
      * @param list<string> $tags labels for filtering usage in the dashboard
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function search(
-        SearchBy|array $searchBy,
+        NewsSearchByNaturalLanguage|array|NewsSearchByEntity $searchBy,
         ?string $cursor = null,
         FilterBy|array|null $filterBy = null,
         int $limit = 10,
-        SortBy|array $sortBy = ['type' => 'newest'],
+        SortBy|array|null $sortBy = null,
         ?array $tags = null,
         RequestOptions|array|null $requestOptions = null,
     ): NewsSearchResponse;

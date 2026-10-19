@@ -11,19 +11,22 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\News\NewsSearchParams\FilterBy;
 use ContextDev\News\NewsSearchParams\SearchBy;
+use ContextDev\News\NewsSearchParams\SearchBy\NewsSearchByEntity;
+use ContextDev\News\NewsSearchParams\SearchBy\NewsSearchByNaturalLanguage;
 use ContextDev\News\NewsSearchParams\SortBy;
 
 /**
- * Find company news by name, domain, ticker, or ISIN. Filter articles and continue through results with a cursor.
+ * Find news about a company by name, domain, ticker, or ISIN, or search all news with a natural-language query. Filter articles and continue through results with a cursor.
  *
  * @see ContextDev\Services\NewsService::search()
  *
+ * @phpstan-import-type SearchByVariants from \ContextDev\News\NewsSearchParams\SearchBy
  * @phpstan-import-type SearchByShape from \ContextDev\News\NewsSearchParams\SearchBy
  * @phpstan-import-type FilterByShape from \ContextDev\News\NewsSearchParams\FilterBy
  * @phpstan-import-type SortByShape from \ContextDev\News\NewsSearchParams\SortBy
  *
  * @phpstan-type NewsSearchParamsShape = array{
- *   searchBy: SearchBy|SearchByShape,
+ *   searchBy: SearchByShape,
  *   cursor?: string|null,
  *   filterBy?: null|FilterBy|FilterByShape,
  *   limit?: int|null,
@@ -38,10 +41,12 @@ final class NewsSearchParams implements BaseModel
     use SdkParams;
 
     /**
-     * What to search for.
+     * What to search for: a specific company, or a natural-language query across all news.
+     *
+     * @var SearchByVariants $searchBy
      */
-    #[Required]
-    public SearchBy $searchBy;
+    #[Required(union: SearchBy::class)]
+    public NewsSearchByNaturalLanguage|NewsSearchByEntity $searchBy;
 
     /**
      * Opaque next_cursor from the previous response, or null for the first page.
@@ -62,7 +67,7 @@ final class NewsSearchParams implements BaseModel
     public ?int $limit;
 
     /**
-     * Result ordering. Defaults to newest.
+     * Result ordering. Defaults to newest for entity searches. Natural-language searches are always ordered by relevance.
      */
     #[Optional]
     public ?SortBy $sortBy;
@@ -99,13 +104,13 @@ final class NewsSearchParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param SearchBy|SearchByShape $searchBy
+     * @param SearchByShape $searchBy
      * @param FilterBy|FilterByShape|null $filterBy
      * @param SortBy|SortByShape|null $sortBy
      * @param list<string>|null $tags
      */
     public static function with(
-        SearchBy|array $searchBy,
+        NewsSearchByNaturalLanguage|array|NewsSearchByEntity $searchBy,
         ?string $cursor = null,
         FilterBy|array|null $filterBy = null,
         ?int $limit = null,
@@ -126,12 +131,13 @@ final class NewsSearchParams implements BaseModel
     }
 
     /**
-     * What to search for.
+     * What to search for: a specific company, or a natural-language query across all news.
      *
-     * @param SearchBy|SearchByShape $searchBy
+     * @param SearchByShape $searchBy
      */
-    public function withSearchBy(SearchBy|array $searchBy): self
-    {
+    public function withSearchBy(
+        NewsSearchByNaturalLanguage|array|NewsSearchByEntity $searchBy
+    ): self {
         $self = clone $this;
         $self['searchBy'] = $searchBy;
 
@@ -174,7 +180,7 @@ final class NewsSearchParams implements BaseModel
     }
 
     /**
-     * Result ordering. Defaults to newest.
+     * Result ordering. Defaults to newest for entity searches. Natural-language searches are always ordered by relevance.
      *
      * @param SortBy|SortByShape $sortBy
      */

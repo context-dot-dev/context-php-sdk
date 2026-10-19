@@ -4,110 +4,38 @@ declare(strict_types=1);
 
 namespace ContextDev\News\NewsSearchParams;
 
-use ContextDev\Core\Attributes\Required;
-use ContextDev\Core\Concerns\SdkModel;
-use ContextDev\Core\Contracts\BaseModel;
-use ContextDev\News\NewsSearchParams\SearchBy\Entity;
-use ContextDev\News\NewsSearchParams\SearchBy\Entity\NewsSearchEntityByDomain;
-use ContextDev\News\NewsSearchParams\SearchBy\Entity\NewsSearchEntityByIsin;
-use ContextDev\News\NewsSearchParams\SearchBy\Entity\NewsSearchEntityByName;
-use ContextDev\News\NewsSearchParams\SearchBy\Entity\NewsSearchEntityByTicker;
-use ContextDev\News\NewsSearchParams\SearchBy\Type;
+use ContextDev\Core\Concerns\SdkUnion;
+use ContextDev\Core\Conversion\Contracts\Converter;
+use ContextDev\Core\Conversion\Contracts\ConverterSource;
+use ContextDev\News\NewsSearchParams\SearchBy\NewsSearchByEntity;
+use ContextDev\News\NewsSearchParams\SearchBy\NewsSearchByNaturalLanguage;
 
 /**
- * What to search for.
+ * What to search for: a specific company, or a natural-language query across all news.
  *
- * @phpstan-import-type EntityVariants from \ContextDev\News\NewsSearchParams\SearchBy\Entity
- * @phpstan-import-type EntityShape from \ContextDev\News\NewsSearchParams\SearchBy\Entity
+ * @phpstan-import-type NewsSearchByNaturalLanguageShape from \ContextDev\News\NewsSearchParams\SearchBy\NewsSearchByNaturalLanguage
+ * @phpstan-import-type NewsSearchByEntityShape from \ContextDev\News\NewsSearchParams\SearchBy\NewsSearchByEntity
  *
- * @phpstan-type SearchByShape = array{
- *   entity: EntityShape, type: Type|value-of<Type>
- * }
+ * @phpstan-type SearchByVariants = NewsSearchByNaturalLanguage|NewsSearchByEntity
+ * @phpstan-type SearchByShape = SearchByVariants|NewsSearchByNaturalLanguageShape|NewsSearchByEntityShape
  */
-final class SearchBy implements BaseModel
+final class SearchBy implements ConverterSource
 {
-    /** @use SdkModel<SearchByShape> */
-    use SdkModel;
+    use SdkUnion;
 
-    /**
-     * The company to search news for, identified by name, domain, ticker, or ISIN.
-     *
-     * @var EntityVariants $entity
-     */
-    #[Required(union: Entity::class)]
-    public NewsSearchEntityByName|NewsSearchEntityByDomain|NewsSearchEntityByTicker|NewsSearchEntityByIsin $entity;
-
-    /**
-     * How to search. Only entity search is supported.
-     *
-     * @var value-of<Type> $type
-     */
-    #[Required(enum: Type::class)]
-    public string $type;
-
-    /**
-     * `new SearchBy()` is missing required properties by the API.
-     *
-     * To enforce required parameters use
-     * ```
-     * SearchBy::with(entity: ..., type: ...)
-     * ```
-     *
-     * Otherwise ensure the following setters are called
-     *
-     * ```
-     * (new SearchBy)->withEntity(...)->withType(...)
-     * ```
-     */
-    public function __construct()
+    public static function discriminator(): string
     {
-        $this->initialize();
+        return 'type';
     }
 
     /**
-     * Construct an instance from the required parameters.
-     *
-     * You must use named parameters to construct any parameters with a default value.
-     *
-     * @param EntityShape $entity
-     * @param Type|value-of<Type> $type
+     * @return list<string|Converter|ConverterSource>|array<string,string|Converter|ConverterSource>
      */
-    public static function with(
-        NewsSearchEntityByName|array|NewsSearchEntityByDomain|NewsSearchEntityByTicker|NewsSearchEntityByIsin $entity,
-        Type|string $type,
-    ): self {
-        $self = new self;
-
-        $self['entity'] = $entity;
-        $self['type'] = $type;
-
-        return $self;
-    }
-
-    /**
-     * The company to search news for, identified by name, domain, ticker, or ISIN.
-     *
-     * @param EntityShape $entity
-     */
-    public function withEntity(
-        NewsSearchEntityByName|array|NewsSearchEntityByDomain|NewsSearchEntityByTicker|NewsSearchEntityByIsin $entity,
-    ): self {
-        $self = clone $this;
-        $self['entity'] = $entity;
-
-        return $self;
-    }
-
-    /**
-     * How to search. Only entity search is supported.
-     *
-     * @param Type|value-of<Type> $type
-     */
-    public function withType(Type|string $type): self
+    public static function variants(): array
     {
-        $self = clone $this;
-        $self['type'] = $type;
-
-        return $self;
+        return [
+            'natural_language' => NewsSearchByNaturalLanguage::class,
+            'entity' => NewsSearchByEntity::class,
+        ];
     }
 }

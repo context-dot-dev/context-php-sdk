@@ -10,7 +10,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\News\NewsSearchParams\SortBy\Type;
 
 /**
- * Result ordering. Defaults to newest.
+ * Result ordering. Defaults to newest for entity searches. Natural-language searches are always ordered by relevance.
  *
  * @phpstan-type SortByShape = array{type: Type|value-of<Type>}
  */

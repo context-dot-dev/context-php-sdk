@@ -10,7 +10,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\News\NewsSearchResponse\Data\Match_\Level;
 
 /**
- * How the article relates to the company you searched for.
+ * How the article relates to the company you searched for. Null for natural-language searches.
  *
  * @phpstan-type MatchShape = array{
  *   confidence: float|null, level: Level|value-of<Level>

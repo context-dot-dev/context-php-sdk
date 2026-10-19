@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ContextDev\News\NewsSearchParams\SearchBy\Entity\NewsSearchEntityByTicker;
+namespace ContextDev\News\NewsSearchParams\SearchBy\NewsSearchByEntity\Entity\NewsSearchEntityByTicker;
 
 /**
  * Stock exchange the ticker trades on, used to disambiguate tickers listed on multiple exchanges.

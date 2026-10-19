@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ContextDev\News\NewsSearchParams\SearchBy\Entity;
+namespace ContextDev\News\NewsSearchParams\SearchBy\NewsSearchByEntity\Entity;
 
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
