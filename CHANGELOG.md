@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.30.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.29.0...v2.30.0) (2026-10-19)
+
+
+### Features
+
+* **news:** add natural-language search to POST /news/search ([#1975](https://github.com/context-dot-dev/context-php-sdk/issues/1975)) ([e8cd0cf](https://github.com/context-dot-dev/context-php-sdk/commit/e8cd0cf7491fbca4fde4d0606ece8de68b920508))
+
 ## [2.29.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.28.0...v2.29.0) (2026-10-18)
 
 
