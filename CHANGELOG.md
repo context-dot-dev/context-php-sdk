@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.31.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.30.0...v2.31.0) (2026-10-19)
+
+
+### Features
+
+* **crawl:** add exclude URL regex to crawl and sitemap endpoints ([#1982](https://github.com/context-dot-dev/context-php-sdk/issues/1982)) ([6a9afb4](https://github.com/context-dot-dev/context-php-sdk/commit/6a9afb44d3e833667b27b636bcce8624745e911d))
+
 ## [2.30.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.29.0...v2.30.0) (2026-10-19)
 
 
