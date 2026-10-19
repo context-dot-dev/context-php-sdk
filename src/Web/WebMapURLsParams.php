@@ -21,6 +21,7 @@ use ContextDev\Web\WebMapURLsParams\Zdr;
  *
  * @phpstan-type WebMapURLsParamsShape = array{
  *   domain: string,
+ *   excludeURLRegex?: string|null,
  *   headers?: array<string,string>|null,
  *   includeSubdomains?: bool|null,
  *   maxLinks?: int|null,
@@ -43,6 +44,12 @@ final class WebMapURLsParams implements BaseModel
      */
     #[Required]
     public string $domain;
+
+    /**
+     * Optional RE2-compatible regex pattern. URLs matching this pattern are not returned, even when they match urlRegex.
+     */
+    #[Optional]
+    public ?string $excludeURLRegex;
 
     /**
      * HTTP headers for the target origin. Non-empty headers bypass caching.
@@ -135,6 +142,7 @@ final class WebMapURLsParams implements BaseModel
      */
     public static function with(
         string $domain,
+        ?string $excludeURLRegex = null,
         ?array $headers = null,
         ?bool $includeSubdomains = null,
         ?int $maxLinks = null,
@@ -149,6 +157,7 @@ final class WebMapURLsParams implements BaseModel
 
         $self['domain'] = $domain;
 
+        null !== $excludeURLRegex && $self['excludeURLRegex'] = $excludeURLRegex;
         null !== $headers && $self['headers'] = $headers;
         null !== $includeSubdomains && $self['includeSubdomains'] = $includeSubdomains;
         null !== $maxLinks && $self['maxLinks'] = $maxLinks;
@@ -169,6 +178,17 @@ final class WebMapURLsParams implements BaseModel
     {
         $self = clone $this;
         $self['domain'] = $domain;
+
+        return $self;
+    }
+
+    /**
+     * Optional RE2-compatible regex pattern. URLs matching this pattern are not returned, even when they match urlRegex.
+     */
+    public function withExcludeURLRegex(string $excludeURLRegex): self
+    {
+        $self = clone $this;
+        $self['excludeURLRegex'] = $excludeURLRegex;
 
         return $self;
     }

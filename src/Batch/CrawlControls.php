@@ -17,6 +17,7 @@ use ContextDev\Core\Contracts\BaseModel;
  * @phpstan-import-type SourceShape from \ContextDev\Batch\CrawlControls\Source
  *
  * @phpstan-type CrawlControlsShape = array{
+ *   excludeURLPattern: string|null,
  *   followSubdomains: bool,
  *   maxDepth: int|null,
  *   maxPages: int,
@@ -28,6 +29,12 @@ final class CrawlControls implements BaseModel
 {
     /** @use SdkModel<CrawlControlsShape> */
     use SdkModel;
+
+    /**
+     * RE2 pattern URLs must not match to be crawled. Null when the crawl set none.
+     */
+    #[Required('exclude_url_pattern')]
+    public ?string $excludeURLPattern;
 
     /**
      * Whether links to subdomains were followed. Always false for a sitemap crawl.
@@ -67,6 +74,7 @@ final class CrawlControls implements BaseModel
      * To enforce required parameters use
      * ```
      * CrawlControls::with(
+     *   excludeURLPattern: ...,
      *   followSubdomains: ...,
      *   maxDepth: ...,
      *   maxPages: ...,
@@ -79,6 +87,7 @@ final class CrawlControls implements BaseModel
      *
      * ```
      * (new CrawlControls)
+     *   ->withExcludeURLPattern(...)
      *   ->withFollowSubdomains(...)
      *   ->withMaxDepth(...)
      *   ->withMaxPages(...)
@@ -99,6 +108,7 @@ final class CrawlControls implements BaseModel
      * @param SourceShape $source
      */
     public static function with(
+        ?string $excludeURLPattern,
         bool $followSubdomains,
         ?int $maxDepth,
         int $maxPages,
@@ -107,11 +117,23 @@ final class CrawlControls implements BaseModel
     ): self {
         $self = new self;
 
+        $self['excludeURLPattern'] = $excludeURLPattern;
         $self['followSubdomains'] = $followSubdomains;
         $self['maxDepth'] = $maxDepth;
         $self['maxPages'] = $maxPages;
         $self['source'] = $source;
         $self['urlPattern'] = $urlPattern;
+
+        return $self;
+    }
+
+    /**
+     * RE2 pattern URLs must not match to be crawled. Null when the crawl set none.
+     */
+    public function withExcludeURLPattern(?string $excludeURLPattern): self
+    {
+        $self = clone $this;
+        $self['excludeURLPattern'] = $excludeURLPattern;
 
         return $self;
     }

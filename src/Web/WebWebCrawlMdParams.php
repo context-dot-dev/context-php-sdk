@@ -26,6 +26,7 @@ use ContextDev\Web\WebWebCrawlMdParams\Zdr;
  *   url: string,
  *   country?: null|Country|value-of<Country>,
  *   excludeSelectors?: list<string>|null,
+ *   excludeURLRegex?: string|null,
  *   followSubdomains?: bool|null,
  *   includeFrames?: bool|null,
  *   includeImages?: bool|null,
@@ -73,6 +74,12 @@ final class WebWebCrawlMdParams implements BaseModel
      */
     #[Optional(list: 'string', nullable: true)]
     public ?array $excludeSelectors;
+
+    /**
+     * RE2 regex pattern. URLs matching this pattern are never followed or scraped, even when they match urlRegex. The starting URL is always scraped.
+     */
+    #[Optional('excludeUrlRegex')]
+    public ?string $excludeURLRegex;
 
     /**
      * When true, follow links on subdomains of the starting URL's domain (e.g. docs.example.com when starting from example.com). www and apex are always treated as equivalent.
@@ -224,6 +231,7 @@ final class WebWebCrawlMdParams implements BaseModel
         string $url,
         Country|string|null $country = null,
         ?array $excludeSelectors = null,
+        ?string $excludeURLRegex = null,
         ?bool $followSubdomains = null,
         ?bool $includeFrames = null,
         ?bool $includeImages = null,
@@ -249,6 +257,7 @@ final class WebWebCrawlMdParams implements BaseModel
 
         null !== $country && $self['country'] = $country;
         null !== $excludeSelectors && $self['excludeSelectors'] = $excludeSelectors;
+        null !== $excludeURLRegex && $self['excludeURLRegex'] = $excludeURLRegex;
         null !== $followSubdomains && $self['followSubdomains'] = $followSubdomains;
         null !== $includeFrames && $self['includeFrames'] = $includeFrames;
         null !== $includeImages && $self['includeImages'] = $includeImages;
@@ -304,6 +313,17 @@ final class WebWebCrawlMdParams implements BaseModel
     {
         $self = clone $this;
         $self['excludeSelectors'] = $excludeSelectors;
+
+        return $self;
+    }
+
+    /**
+     * RE2 regex pattern. URLs matching this pattern are never followed or scraped, even when they match urlRegex. The starting URL is always scraped.
+     */
+    public function withExcludeURLRegex(string $excludeURLRegex): self
+    {
+        $self = clone $this;
+        $self['excludeURLRegex'] = $excludeURLRegex;
 
         return $self;
     }

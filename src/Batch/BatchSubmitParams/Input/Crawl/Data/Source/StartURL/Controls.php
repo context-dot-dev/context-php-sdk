@@ -12,6 +12,7 @@ use ContextDev\Core\Contracts\BaseModel;
  * Limits and filters for page discovery.
  *
  * @phpstan-type ControlsShape = array{
+ *   excludeRegex?: string|null,
  *   followSubdomains?: bool|null,
  *   maxDepth?: int|null,
  *   maxURLs?: int|null,
@@ -22,6 +23,12 @@ final class Controls implements BaseModel
 {
     /** @use SdkModel<ControlsShape> */
     use SdkModel;
+
+    /**
+     * RE2 pattern for URLs to exclude, even when they match `regex`. The `start_url` itself is always included.
+     */
+    #[Optional]
+    public ?string $excludeRegex;
 
     /**
      * Follow links to subdomains.
@@ -58,6 +65,7 @@ final class Controls implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      */
     public static function with(
+        ?string $excludeRegex = null,
         ?bool $followSubdomains = null,
         ?int $maxDepth = null,
         ?int $maxURLs = null,
@@ -65,10 +73,22 @@ final class Controls implements BaseModel
     ): self {
         $self = new self;
 
+        null !== $excludeRegex && $self['excludeRegex'] = $excludeRegex;
         null !== $followSubdomains && $self['followSubdomains'] = $followSubdomains;
         null !== $maxDepth && $self['maxDepth'] = $maxDepth;
         null !== $maxURLs && $self['maxURLs'] = $maxURLs;
         null !== $regex && $self['regex'] = $regex;
+
+        return $self;
+    }
+
+    /**
+     * RE2 pattern for URLs to exclude, even when they match `regex`. The `start_url` itself is always included.
+     */
+    public function withExcludeRegex(string $excludeRegex): self
+    {
+        $self = clone $this;
+        $self['excludeRegex'] = $excludeRegex;
 
         return $self;
     }

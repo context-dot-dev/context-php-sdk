@@ -210,6 +210,7 @@ final class WebService implements WebContract
      * Discover a site's URLs, with page titles, descriptions, keywords, and language when available. Metadata can be missing on newly discovered URLs.
      *
      * @param string $domain Domain to map, e.g. `stripe.com`.
+     * @param string $excludeURLRegex Optional RE2-compatible regex pattern. URLs matching this pattern are not returned, even when they match urlRegex.
      * @param array<string,string> $headers HTTP headers for the target origin. Non-empty headers bypass caching.
      * @param bool $includeSubdomains include URLs on subdomains
      * @param int $maxLinks maximum number of URLs to return
@@ -225,6 +226,7 @@ final class WebService implements WebContract
      */
     public function mapUrls(
         string $domain,
+        ?string $excludeURLRegex = null,
         ?array $headers = null,
         bool $includeSubdomains = false,
         int $maxLinks = 10000,
@@ -239,6 +241,7 @@ final class WebService implements WebContract
         $params = Util::removeNulls(
             [
                 'domain' => $domain,
+                'excludeURLRegex' => $excludeURLRegex,
                 'headers' => $headers,
                 'includeSubdomains' => $includeSubdomains,
                 'maxLinks' => $maxLinks,
@@ -468,6 +471,7 @@ final class WebService implements WebContract
      * @param string $url start URL, including `http://` or `https://`
      * @param \ContextDev\Web\WebWebCrawlMdParams\Country|value-of<\ContextDev\Web\WebWebCrawlMdParams\Country> $country fetch from this country (ISO 3166-1 alpha-2)
      * @param list<string>|null $excludeSelectors Remove matching elements after inclusions. Exclusions take precedence.
+     * @param string $excludeURLRegex RE2 regex pattern. URLs matching this pattern are never followed or scraped, even when they match urlRegex. The starting URL is always scraped.
      * @param bool $followSubdomains When true, follow links on subdomains of the starting URL's domain (e.g. docs.example.com when starting from example.com). www and apex are always treated as equivalent.
      * @param bool $includeFrames when true, the contents of iframes are rendered to Markdown for each crawled page
      * @param bool $includeImages Include image references in the Markdown output
@@ -494,6 +498,7 @@ final class WebService implements WebContract
         string $url,
         \ContextDev\Web\WebWebCrawlMdParams\Country|string|null $country = null,
         ?array $excludeSelectors = null,
+        ?string $excludeURLRegex = null,
         bool $followSubdomains = false,
         bool $includeFrames = false,
         bool $includeImages = false,
@@ -519,6 +524,7 @@ final class WebService implements WebContract
                 'url' => $url,
                 'country' => $country,
                 'excludeSelectors' => $excludeSelectors,
+                'excludeURLRegex' => $excludeURLRegex,
                 'followSubdomains' => $followSubdomains,
                 'includeFrames' => $includeFrames,
                 'includeImages' => $includeImages,

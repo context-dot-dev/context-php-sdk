@@ -137,6 +137,7 @@ final class WebTest extends TestCase
 
         $result = $this->client->web->mapUrls(
             domain: 'stripe.com',
+            excludeURLRegex: '/tag/|/author/',
             headers: ['foo' => 'J!'],
             includeSubdomains: true,
             maxLinks: 1,
@@ -336,6 +337,7 @@ final class WebTest extends TestCase
             url: 'https://example.com',
             country: 'de',
             excludeSelectors: ['x'],
+            excludeURLRegex: '/tag/|/author/',
             followSubdomains: true,
             includeFrames: true,
             includeImages: true,

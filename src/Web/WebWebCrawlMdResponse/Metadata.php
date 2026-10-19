@@ -35,7 +35,7 @@ final class Metadata implements BaseModel
     public int $numFailed;
 
     /**
-     * Number of URLs skipped (PDFs when pdf.shouldParse=false, or URLs not matching urlRegex).
+     * Number of URLs skipped (PDFs when pdf.shouldParse=false, URLs not matching urlRegex, or URLs matching excludeUrlRegex).
      */
     #[Required]
     public int $numSkipped;
@@ -128,7 +128,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Number of URLs skipped (PDFs when pdf.shouldParse=false, or URLs not matching urlRegex).
+     * Number of URLs skipped (PDFs when pdf.shouldParse=false, URLs not matching urlRegex, or URLs matching excludeUrlRegex).
      */
     public function withNumSkipped(int $numSkipped): self
     {

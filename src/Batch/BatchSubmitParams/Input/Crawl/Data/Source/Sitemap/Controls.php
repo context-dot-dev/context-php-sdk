@@ -11,12 +11,20 @@ use ContextDev\Core\Contracts\BaseModel;
 /**
  * Limits and filters for the sitemap URLs. A sitemap batch scrapes exactly those URLs and never follows links off them, so there is no crawl depth here.
  *
- * @phpstan-type ControlsShape = array{maxURLs?: int|null, regex?: string|null}
+ * @phpstan-type ControlsShape = array{
+ *   excludeRegex?: string|null, maxURLs?: int|null, regex?: string|null
+ * }
  */
 final class Controls implements BaseModel
 {
     /** @use SdkModel<ControlsShape> */
     use SdkModel;
+
+    /**
+     * RE2 pattern; sitemap URLs matching it are not scraped, even when they match `regex`.
+     */
+    #[Optional]
+    public ?string $excludeRegex;
 
     /**
      * Maximum pages to fetch. Unused reserved credits are refunded. Maximum 100000.
@@ -40,12 +48,27 @@ final class Controls implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(?int $maxURLs = null, ?string $regex = null): self
-    {
+    public static function with(
+        ?string $excludeRegex = null,
+        ?int $maxURLs = null,
+        ?string $regex = null
+    ): self {
         $self = new self;
 
+        null !== $excludeRegex && $self['excludeRegex'] = $excludeRegex;
         null !== $maxURLs && $self['maxURLs'] = $maxURLs;
         null !== $regex && $self['regex'] = $regex;
+
+        return $self;
+    }
+
+    /**
+     * RE2 pattern; sitemap URLs matching it are not scraped, even when they match `regex`.
+     */
+    public function withExcludeRegex(string $excludeRegex): self
+    {
+        $self = clone $this;
+        $self['excludeRegex'] = $excludeRegex;
 
         return $self;
     }

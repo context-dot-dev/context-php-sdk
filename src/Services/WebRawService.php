@@ -201,6 +201,7 @@ final class WebRawService implements WebRawContract
      *
      * @param array{
      *   domain: string,
+     *   excludeURLRegex?: string,
      *   headers?: array<string,string>,
      *   includeSubdomains?: bool,
      *   maxLinks?: int,
@@ -232,7 +233,7 @@ final class WebRawService implements WebRawContract
             path: 'web/urls',
             query: Util::array_transform_keys(
                 $parsed,
-                ['sitemapURL' => 'sitemapUrl']
+                ['excludeURLRegex' => 'excludeUrlRegex', 'sitemapURL' => 'sitemapUrl'],
             ),
             options: $options,
             convert: WebMapURLsResponse::class,
@@ -388,6 +389,7 @@ final class WebRawService implements WebRawContract
      *   url: string,
      *   country?: value-of<WebWebCrawlMdParams\Country>,
      *   excludeSelectors?: list<string>|null,
+     *   excludeURLRegex?: string,
      *   followSubdomains?: bool,
      *   includeFrames?: bool,
      *   includeImages?: bool,
