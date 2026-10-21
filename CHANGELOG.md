@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.34.2](https://github.com/context-dot-dev/context-php-sdk/compare/v2.34.1...v2.34.2) (2026-10-21)
+
+
+### Bug Fixes
+
+* **openapi:** document request_id and key_metadata on every response in one place ([#2042](https://github.com/context-dot-dev/context-php-sdk/issues/2042)) ([0781058](https://github.com/context-dot-dev/context-php-sdk/commit/07810581615f88121ff39ba96a3bc9c8878afb98))
+
 ## [2.34.1](https://github.com/context-dot-dev/context-php-sdk/compare/v2.34.0...v2.34.1) (2026-10-21)
 
 
