@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.36.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.35.0...v2.36.0) (2026-10-21)
+
+
+### Features
+
+* **scrape:** add sourcePreference to choose between HTML conversion and published Markdown ([#2010](https://github.com/context-dot-dev/context-php-sdk/issues/2010)) ([52b290f](https://github.com/context-dot-dev/context-php-sdk/commit/52b290ff3a9bf6f3322a5b03de6036d9c60ca515))
+
 ## [2.35.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.34.2...v2.35.0) (2026-10-21)
 
 
