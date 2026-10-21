@@ -204,6 +204,7 @@ final class WebTest extends TestCase
                 'includeImages' => true,
                 'includeLinks' => true,
                 'inlineImages' => 'placeholder',
+                'sourcePreference' => ['html-conversion'],
             ],
             maxAgeMs: 0,
             parseParams: [
@@ -349,6 +350,7 @@ final class WebTest extends TestCase
             pdf: ['end' => 1, 'ocr' => true, 'shouldParse' => true, 'start' => 1],
             settleAnimations: true,
             shortenBase64Images: true,
+            sourcePreference: ['html-conversion'],
             stopAfterMs: 10000,
             tags: ['production', 'team-alpha'],
             timeoutOpts: ['milliseconds' => 1000, 'behavior' => 'fail'],

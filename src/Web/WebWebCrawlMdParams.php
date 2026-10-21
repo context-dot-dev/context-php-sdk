@@ -11,6 +11,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebWebCrawlMdParams\Country;
 use ContextDev\Web\WebWebCrawlMdParams\Pdf;
+use ContextDev\Web\WebWebCrawlMdParams\SourcePreference;
 use ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts;
 use ContextDev\Web\WebWebCrawlMdParams\Zdr;
 
@@ -38,6 +39,7 @@ use ContextDev\Web\WebWebCrawlMdParams\Zdr;
  *   pdf?: null|Pdf|PdfShape,
  *   settleAnimations?: bool|null,
  *   shortenBase64Images?: bool|null,
+ *   sourcePreference?: list<SourcePreference|value-of<SourcePreference>>|null,
  *   stopAfterMs?: int|null,
  *   tags?: list<string>|null,
  *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
@@ -94,13 +96,13 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?bool $includeFrames;
 
     /**
-     * Include image references in the Markdown output.
+     * Include image references in the Markdown output Only applies to `html-conversion` extractions.
      */
     #[Optional]
     public ?bool $includeImages;
 
     /**
-     * Preserve hyperlinks in the Markdown output.
+     * Preserve hyperlinks in the Markdown output Only applies to `html-conversion` extractions.
      */
     #[Optional]
     public ?bool $includeLinks;
@@ -144,10 +146,18 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?bool $settleAnimations;
 
     /**
-     * Truncate base64-encoded image data in the Markdown output.
+     * Truncate base64-encoded image data in the Markdown output Only applies to `html-conversion` extractions.
      */
     #[Optional]
     public ?bool $shortenBase64Images;
+
+    /**
+     * Where the Markdown should come from, in order of preference; the first usable source wins. `html-conversion` converts the page HTML, and counts as unusable when the conversion has almost no content (under 200 characters). `markdown-direct` uses the official Markdown version the page publishes through, returned as the site serves it. Defaults to `["html-conversion", "markdown-direct"]`. With only `markdown-direct`, a page that publishes no Markdown fails with `NO_PUBLISHED_MARKDOWN` and is not billed. Requests with include or exclude selectors never use `markdown-direct`, so they must include `html-conversion`.
+     *
+     * @var list<value-of<SourcePreference>>|null $sourcePreference
+     */
+    #[Optional(list: SourcePreference::class)]
+    public ?array $sourcePreference;
 
     /**
      * Soft crawl deadline in milliseconds. Returns pages collected before the next deadline check.
@@ -223,6 +233,7 @@ final class WebWebCrawlMdParams implements BaseModel
      * @param list<string>|null $excludeSelectors
      * @param list<string>|null $includeSelectors
      * @param Pdf|PdfShape|null $pdf
+     * @param list<SourcePreference|value-of<SourcePreference>>|null $sourcePreference
      * @param list<string>|null $tags
      * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      * @param Zdr|value-of<Zdr>|null $zdr
@@ -243,6 +254,7 @@ final class WebWebCrawlMdParams implements BaseModel
         Pdf|array|null $pdf = null,
         ?bool $settleAnimations = null,
         ?bool $shortenBase64Images = null,
+        ?array $sourcePreference = null,
         ?int $stopAfterMs = null,
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
@@ -269,6 +281,7 @@ final class WebWebCrawlMdParams implements BaseModel
         null !== $pdf && $self['pdf'] = $pdf;
         null !== $settleAnimations && $self['settleAnimations'] = $settleAnimations;
         null !== $shortenBase64Images && $self['shortenBase64Images'] = $shortenBase64Images;
+        null !== $sourcePreference && $self['sourcePreference'] = $sourcePreference;
         null !== $stopAfterMs && $self['stopAfterMs'] = $stopAfterMs;
         null !== $tags && $self['tags'] = $tags;
         null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
@@ -351,7 +364,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Include image references in the Markdown output.
+     * Include image references in the Markdown output Only applies to `html-conversion` extractions.
      */
     public function withIncludeImages(bool $includeImages): self
     {
@@ -362,7 +375,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Preserve hyperlinks in the Markdown output.
+     * Preserve hyperlinks in the Markdown output Only applies to `html-conversion` extractions.
      */
     public function withIncludeLinks(bool $includeLinks): self
     {
@@ -443,12 +456,25 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Truncate base64-encoded image data in the Markdown output.
+     * Truncate base64-encoded image data in the Markdown output Only applies to `html-conversion` extractions.
      */
     public function withShortenBase64Images(bool $shortenBase64Images): self
     {
         $self = clone $this;
         $self['shortenBase64Images'] = $shortenBase64Images;
+
+        return $self;
+    }
+
+    /**
+     * Where the Markdown should come from, in order of preference; the first usable source wins. `html-conversion` converts the page HTML, and counts as unusable when the conversion has almost no content (under 200 characters). `markdown-direct` uses the official Markdown version the page publishes through, returned as the site serves it. Defaults to `["html-conversion", "markdown-direct"]`. With only `markdown-direct`, a page that publishes no Markdown fails with `NO_PUBLISHED_MARKDOWN` and is not billed. Requests with include or exclude selectors never use `markdown-direct`, so they must include `html-conversion`.
+     *
+     * @param list<SourcePreference|value-of<SourcePreference>> $sourcePreference
+     */
+    public function withSourcePreference(array $sourcePreference): self
+    {
+        $self = clone $this;
+        $self['sourcePreference'] = $sourcePreference;
 
         return $self;
     }

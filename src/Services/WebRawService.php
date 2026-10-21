@@ -45,6 +45,7 @@ use ContextDev\Web\WebSearchParams\MarkdownOptions;
 use ContextDev\Web\WebSearchResponse;
 use ContextDev\Web\WebWebCrawlMdParams;
 use ContextDev\Web\WebWebCrawlMdParams\Pdf;
+use ContextDev\Web\WebWebCrawlMdParams\SourcePreference;
 use ContextDev\Web\WebWebCrawlMdResponse;
 
 /**
@@ -401,6 +402,7 @@ final class WebRawService implements WebRawContract
      *   pdf?: Pdf|PdfShape,
      *   settleAnimations?: bool,
      *   shortenBase64Images?: bool,
+     *   sourcePreference?: list<SourcePreference|value-of<SourcePreference>>,
      *   stopAfterMs?: int,
      *   tags?: list<string>,
      *   timeoutOpts?: WebWebCrawlMdParams\TimeoutOpts|TimeoutOptsShape7,

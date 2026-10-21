@@ -36,6 +36,7 @@ use ContextDev\Web\WebSearchParams\Languages\UnionMember0;
 use ContextDev\Web\WebSearchParams\MarkdownOptions;
 use ContextDev\Web\WebSearchResponse;
 use ContextDev\Web\WebWebCrawlMdParams\Pdf;
+use ContextDev\Web\WebWebCrawlMdParams\SourcePreference;
 use ContextDev\Web\WebWebCrawlMdResponse;
 
 /**
@@ -299,15 +300,16 @@ interface WebContract
      * @param string $excludeURLRegex RE2 regex pattern. URLs matching this pattern are never followed or scraped, even when they match urlRegex. The starting URL is always scraped.
      * @param bool $followSubdomains When true, follow links on subdomains of the starting URL's domain (e.g. docs.example.com when starting from example.com). www and apex are always treated as equivalent.
      * @param bool $includeFrames when true, the contents of iframes are rendered to Markdown for each crawled page
-     * @param bool $includeImages Include image references in the Markdown output
-     * @param bool $includeLinks Preserve hyperlinks in the Markdown output
+     * @param bool $includeImages include image references in the Markdown output Only applies to `html-conversion` extractions
+     * @param bool $includeLinks preserve hyperlinks in the Markdown output Only applies to `html-conversion` extractions
      * @param list<string>|null $includeSelectors keep matching HTML subtrees before converting each page to Markdown
      * @param int|null $maxAgeMs Maximum cache age in milliseconds. Defaults to 1 day; `0` fetches fresh.
      * @param int $maxDepth Maximum link depth from the starting URL (0 = only the starting page)
      * @param int $maxPages maximum pages to crawl
      * @param Pdf|PdfShape $pdf PDF handling. `start`/`end` limit parsing to an inclusive, 1-based page range.
      * @param bool $settleAnimations wait briefly for CSS animations and transitions to settle before reading each page
-     * @param bool $shortenBase64Images Truncate base64-encoded image data in the Markdown output
+     * @param bool $shortenBase64Images truncate base64-encoded image data in the Markdown output Only applies to `html-conversion` extractions
+     * @param list<SourcePreference|value-of<SourcePreference>> $sourcePreference Where the Markdown should come from, in order of preference; the first usable source wins. `html-conversion` converts the page HTML, and counts as unusable when the conversion has almost no content (under 200 characters). `markdown-direct` uses the official Markdown version the page publishes through, returned as the site serves it. Defaults to `["html-conversion", "markdown-direct"]`. With only `markdown-direct`, a page that publishes no Markdown fails with `NO_PUBLISHED_MARKDOWN` and is not billed. Requests with include or exclude selectors never use `markdown-direct`, so they must include `html-conversion`.
      * @param int $stopAfterMs Soft crawl deadline in milliseconds. Returns pages collected before the next deadline check.
      * @param list<string> $tags labels for filtering usage in the dashboard
      * @param \ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts|TimeoutOptsShape7 $timeoutOpts request deadline and what to return when it passes
@@ -335,6 +337,7 @@ interface WebContract
         Pdf|array $pdf = ['shouldParse' => true, 'ocr' => false],
         bool $settleAnimations = false,
         bool $shortenBase64Images = true,
+        array $sourcePreference = ['html-conversion', 'markdown-direct'],
         int $stopAfterMs = 80000,
         ?array $tags = null,
         \ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts|array|null $timeoutOpts = null,

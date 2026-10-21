@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data;
 
 use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\MarkdownParams\InlineImages;
+use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\MarkdownParams\SourcePreference;
 use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
@@ -16,6 +17,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   includeImages?: bool|null,
  *   includeLinks?: bool|null,
  *   inlineImages?: null|InlineImages|value-of<InlineImages>,
+ *   sourcePreference?: list<SourcePreference|value-of<SourcePreference>>|null,
  * }
  */
 final class MarkdownParams implements BaseModel
@@ -24,24 +26,32 @@ final class MarkdownParams implements BaseModel
     use SdkModel;
 
     /**
-     * Include images in the Markdown using image syntax with URLs and alt text.
+     * Include images in the Markdown using image syntax with URLs and alt text. Only applies to `html-conversion` extractions.
      */
     #[Optional]
     public ?bool $includeImages;
 
     /**
-     * Keep link URLs in the Markdown. Set false to return link text without URLs.
+     * Keep link URLs in the Markdown. Set false to return link text without URLs. Only applies to `html-conversion` extractions.
      */
     #[Optional]
     public ?bool $includeLinks;
 
     /**
-     * How base64 images appear: `placeholder` (default) or `preserve`. Requires `includeImages`.
+     * How base64 images appear: `placeholder` (default) or `preserve`. Requires `includeImages`. Only applies to `html-conversion` extractions.
      *
      * @var value-of<InlineImages>|null $inlineImages
      */
     #[Optional(enum: InlineImages::class)]
     public ?string $inlineImages;
+
+    /**
+     * Where the Markdown should come from, in order of preference; the first usable source wins. `html-conversion` converts the page HTML, and counts as unusable when the conversion has almost no content (under 200 characters). `markdown-direct` uses the official Markdown version the page publishes through, returned as the site serves it. Defaults to `["html-conversion", "markdown-direct"]`. With only `markdown-direct`, a page that publishes no Markdown fails with `NO_PUBLISHED_MARKDOWN` and is not billed. Requests with include or exclude selectors never use `markdown-direct`, so they must include `html-conversion`.
+     *
+     * @var list<value-of<SourcePreference>>|null $sourcePreference
+     */
+    #[Optional(list: SourcePreference::class)]
+    public ?array $sourcePreference;
 
     public function __construct()
     {
@@ -54,23 +64,26 @@ final class MarkdownParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param InlineImages|value-of<InlineImages>|null $inlineImages
+     * @param list<SourcePreference|value-of<SourcePreference>>|null $sourcePreference
      */
     public static function with(
         ?bool $includeImages = null,
         ?bool $includeLinks = null,
         InlineImages|string|null $inlineImages = null,
+        ?array $sourcePreference = null,
     ): self {
         $self = new self;
 
         null !== $includeImages && $self['includeImages'] = $includeImages;
         null !== $includeLinks && $self['includeLinks'] = $includeLinks;
         null !== $inlineImages && $self['inlineImages'] = $inlineImages;
+        null !== $sourcePreference && $self['sourcePreference'] = $sourcePreference;
 
         return $self;
     }
 
     /**
-     * Include images in the Markdown using image syntax with URLs and alt text.
+     * Include images in the Markdown using image syntax with URLs and alt text. Only applies to `html-conversion` extractions.
      */
     public function withIncludeImages(bool $includeImages): self
     {
@@ -81,7 +94,7 @@ final class MarkdownParams implements BaseModel
     }
 
     /**
-     * Keep link URLs in the Markdown. Set false to return link text without URLs.
+     * Keep link URLs in the Markdown. Set false to return link text without URLs. Only applies to `html-conversion` extractions.
      */
     public function withIncludeLinks(bool $includeLinks): self
     {
@@ -92,7 +105,7 @@ final class MarkdownParams implements BaseModel
     }
 
     /**
-     * How base64 images appear: `placeholder` (default) or `preserve`. Requires `includeImages`.
+     * How base64 images appear: `placeholder` (default) or `preserve`. Requires `includeImages`. Only applies to `html-conversion` extractions.
      *
      * @param InlineImages|value-of<InlineImages> $inlineImages
      */
@@ -100,6 +113,19 @@ final class MarkdownParams implements BaseModel
     {
         $self = clone $this;
         $self['inlineImages'] = $inlineImages;
+
+        return $self;
+    }
+
+    /**
+     * Where the Markdown should come from, in order of preference; the first usable source wins. `html-conversion` converts the page HTML, and counts as unusable when the conversion has almost no content (under 200 characters). `markdown-direct` uses the official Markdown version the page publishes through, returned as the site serves it. Defaults to `["html-conversion", "markdown-direct"]`. With only `markdown-direct`, a page that publishes no Markdown fails with `NO_PUBLISHED_MARKDOWN` and is not billed. Requests with include or exclude selectors never use `markdown-direct`, so they must include `html-conversion`.
+     *
+     * @param list<SourcePreference|value-of<SourcePreference>> $sourcePreference
+     */
+    public function withSourcePreference(array $sourcePreference): self
+    {
+        $self = clone $this;
+        $self['sourcePreference'] = $sourcePreference;
 
         return $self;
     }

@@ -170,6 +170,7 @@ final class BatchTest extends TestCase
                         'includeImages' => true,
                         'includeLinks' => true,
                         'inlineImages' => 'placeholder',
+                        'sourcePreference' => ['html-conversion'],
                     ],
                     'maxAgeMs' => 0,
                     'parseParams' => [
