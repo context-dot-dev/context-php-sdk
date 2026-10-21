@@ -78,7 +78,7 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?array $excludeSelectors;
 
     /**
-     * RE2 regex pattern. URLs matching this pattern are never followed or scraped, even when they match urlRegex. The starting URL is always scraped.
+     * Regex pattern. URLs matching this pattern are never followed or scraped, even when they match urlRegex. The starting URL is always scraped.
      */
     #[Optional('excludeUrlRegex')]
     public ?string $excludeURLRegex;
@@ -96,13 +96,13 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?bool $includeFrames;
 
     /**
-     * Include image references in the Markdown output Only applies to `html-conversion` extractions.
+     * Include image references in the Markdown output (`html-conversion` only).
      */
     #[Optional]
     public ?bool $includeImages;
 
     /**
-     * Preserve hyperlinks in the Markdown output Only applies to `html-conversion` extractions.
+     * Preserve hyperlinks in the Markdown output (`html-conversion` only).
      */
     #[Optional]
     public ?bool $includeLinks;
@@ -146,13 +146,13 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?bool $settleAnimations;
 
     /**
-     * Truncate base64-encoded image data in the Markdown output Only applies to `html-conversion` extractions.
+     * Truncate base64-encoded image data in the Markdown output (`html-conversion` only).
      */
     #[Optional]
     public ?bool $shortenBase64Images;
 
     /**
-     * Where the Markdown should come from, in order of preference; the first usable source wins. `html-conversion` converts the page HTML, and counts as unusable when the conversion has almost no content (under 200 characters). `markdown-direct` uses the official Markdown version the page publishes through, returned as the site serves it. Defaults to `["html-conversion", "markdown-direct"]`. With only `markdown-direct`, a page that publishes no Markdown fails with `NO_PUBLISHED_MARKDOWN` and is not billed. Requests with include or exclude selectors never use `markdown-direct`, so they must include `html-conversion`.
+     * Markdown sources in order of preference: `html-conversion` converts the page HTML, `markdown-direct` uses Markdown the site publishes.
      *
      * @var list<value-of<SourcePreference>>|null $sourcePreference
      */
@@ -331,7 +331,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * RE2 regex pattern. URLs matching this pattern are never followed or scraped, even when they match urlRegex. The starting URL is always scraped.
+     * Regex pattern. URLs matching this pattern are never followed or scraped, even when they match urlRegex. The starting URL is always scraped.
      */
     public function withExcludeURLRegex(string $excludeURLRegex): self
     {
@@ -364,7 +364,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Include image references in the Markdown output Only applies to `html-conversion` extractions.
+     * Include image references in the Markdown output (`html-conversion` only).
      */
     public function withIncludeImages(bool $includeImages): self
     {
@@ -375,7 +375,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Preserve hyperlinks in the Markdown output Only applies to `html-conversion` extractions.
+     * Preserve hyperlinks in the Markdown output (`html-conversion` only).
      */
     public function withIncludeLinks(bool $includeLinks): self
     {
@@ -456,7 +456,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Truncate base64-encoded image data in the Markdown output Only applies to `html-conversion` extractions.
+     * Truncate base64-encoded image data in the Markdown output (`html-conversion` only).
      */
     public function withShortenBase64Images(bool $shortenBase64Images): self
     {
@@ -467,7 +467,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Where the Markdown should come from, in order of preference; the first usable source wins. `html-conversion` converts the page HTML, and counts as unusable when the conversion has almost no content (under 200 characters). `markdown-direct` uses the official Markdown version the page publishes through, returned as the site serves it. Defaults to `["html-conversion", "markdown-direct"]`. With only `markdown-direct`, a page that publishes no Markdown fails with `NO_PUBLISHED_MARKDOWN` and is not billed. Requests with include or exclude selectors never use `markdown-direct`, so they must include `html-conversion`.
+     * Markdown sources in order of preference: `html-conversion` converts the page HTML, `markdown-direct` uses Markdown the site publishes.
      *
      * @param list<SourcePreference|value-of<SourcePreference>> $sourcePreference
      */

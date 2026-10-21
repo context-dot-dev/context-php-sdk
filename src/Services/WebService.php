@@ -211,7 +211,7 @@ final class WebService implements WebContract
      * Discover a site's URLs, with page titles, descriptions, keywords, and language when available. Metadata can be missing on newly discovered URLs.
      *
      * @param string $domain Domain to map, e.g. `stripe.com`.
-     * @param string $excludeURLRegex Optional RE2-compatible regex pattern. URLs matching this pattern are not returned, even when they match urlRegex.
+     * @param string $excludeURLRegex Regex pattern. URLs matching this pattern are not returned, even when they match urlRegex.
      * @param array<string,string> $headers HTTP headers for the target origin. Non-empty headers bypass caching.
      * @param bool $includeSubdomains include URLs on subdomains
      * @param int $maxLinks maximum number of URLs to return
@@ -219,7 +219,7 @@ final class WebService implements WebContract
      * @param string $sitemapURL Fetch this sitemap instead of discovering sitemaps. Must belong to the domain or a subdomain.
      * @param list<string> $tags Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      * @param \ContextDev\Web\WebMapURLsParams\TimeoutOpts|TimeoutOptsShape3 $timeoutOpts request deadline and what to return when it passes
-     * @param string $urlRegex Optional RE2-compatible regex pattern. Only URLs matching this pattern are returned and counted against maxLinks.
+     * @param string $urlRegex Regex pattern. Only URLs matching this pattern are returned and counted against maxLinks.
      * @param \ContextDev\Web\WebMapURLsParams\Zdr|value-of<\ContextDev\Web\WebMapURLsParams\Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
      *
@@ -472,19 +472,19 @@ final class WebService implements WebContract
      * @param string $url start URL, including `http://` or `https://`
      * @param \ContextDev\Web\WebWebCrawlMdParams\Country|value-of<\ContextDev\Web\WebWebCrawlMdParams\Country> $country fetch from this country (ISO 3166-1 alpha-2)
      * @param list<string>|null $excludeSelectors Remove matching elements after inclusions. Exclusions take precedence.
-     * @param string $excludeURLRegex RE2 regex pattern. URLs matching this pattern are never followed or scraped, even when they match urlRegex. The starting URL is always scraped.
+     * @param string $excludeURLRegex Regex pattern. URLs matching this pattern are never followed or scraped, even when they match urlRegex. The starting URL is always scraped.
      * @param bool $followSubdomains When true, follow links on subdomains of the starting URL's domain (e.g. docs.example.com when starting from example.com). www and apex are always treated as equivalent.
      * @param bool $includeFrames when true, the contents of iframes are rendered to Markdown for each crawled page
-     * @param bool $includeImages include image references in the Markdown output Only applies to `html-conversion` extractions
-     * @param bool $includeLinks preserve hyperlinks in the Markdown output Only applies to `html-conversion` extractions
+     * @param bool $includeImages include image references in the Markdown output (`html-conversion` only)
+     * @param bool $includeLinks preserve hyperlinks in the Markdown output (`html-conversion` only)
      * @param list<string>|null $includeSelectors keep matching HTML subtrees before converting each page to Markdown
      * @param int|null $maxAgeMs Maximum cache age in milliseconds. Defaults to 1 day; `0` fetches fresh.
      * @param int $maxDepth Maximum link depth from the starting URL (0 = only the starting page)
      * @param int $maxPages maximum pages to crawl
      * @param Pdf|PdfShape $pdf PDF handling. `start`/`end` limit parsing to an inclusive, 1-based page range.
      * @param bool $settleAnimations wait briefly for CSS animations and transitions to settle before reading each page
-     * @param bool $shortenBase64Images truncate base64-encoded image data in the Markdown output Only applies to `html-conversion` extractions
-     * @param list<SourcePreference|value-of<SourcePreference>> $sourcePreference Where the Markdown should come from, in order of preference; the first usable source wins. `html-conversion` converts the page HTML, and counts as unusable when the conversion has almost no content (under 200 characters). `markdown-direct` uses the official Markdown version the page publishes through, returned as the site serves it. Defaults to `["html-conversion", "markdown-direct"]`. With only `markdown-direct`, a page that publishes no Markdown fails with `NO_PUBLISHED_MARKDOWN` and is not billed. Requests with include or exclude selectors never use `markdown-direct`, so they must include `html-conversion`.
+     * @param bool $shortenBase64Images truncate base64-encoded image data in the Markdown output (`html-conversion` only)
+     * @param list<SourcePreference|value-of<SourcePreference>> $sourcePreference markdown sources in order of preference: `html-conversion` converts the page HTML, `markdown-direct` uses Markdown the site publishes
      * @param int $stopAfterMs Soft crawl deadline in milliseconds. Returns pages collected before the next deadline check.
      * @param list<string> $tags labels for filtering usage in the dashboard
      * @param \ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts|TimeoutOptsShape7 $timeoutOpts request deadline and what to return when it passes

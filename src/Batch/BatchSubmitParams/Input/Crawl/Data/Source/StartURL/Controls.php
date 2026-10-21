@@ -31,7 +31,7 @@ final class Controls implements BaseModel
     use SdkModel;
 
     /**
-     * RE2 pattern for URLs to exclude, even when they match `regex`. The `start_url` itself is always included.
+     * Regex pattern for URLs to exclude, even when they match `regex`. The `start_url` itself is always included.
      */
     #[Optional]
     public ?string $excludeRegex;
@@ -43,7 +43,7 @@ final class Controls implements BaseModel
     public ?bool $followSubdomains;
 
     /**
-     * Languages whose pages are followed. `same_as_start_url` follows only the start page's language; a list of language codes such as `["en"]` follows those languages. Links whose language cannot be determined are followed. When omitted all urls are crawled.
+     * Only follow pages in these languages, or `same_as_start_url`; all languages when omitted.
      *
      * @var LanguagesVariants|null $languages
      */
@@ -63,7 +63,7 @@ final class Controls implements BaseModel
     public ?int $maxURLs;
 
     /**
-     * RE2 pattern for URLs to include. The `start_url` itself is always included.
+     * Regex pattern for URLs to include. The `start_url` itself is always included.
      */
     #[Optional]
     public ?string $regex;
@@ -101,7 +101,7 @@ final class Controls implements BaseModel
     }
 
     /**
-     * RE2 pattern for URLs to exclude, even when they match `regex`. The `start_url` itself is always included.
+     * Regex pattern for URLs to exclude, even when they match `regex`. The `start_url` itself is always included.
      */
     public function withExcludeRegex(string $excludeRegex): self
     {
@@ -123,7 +123,7 @@ final class Controls implements BaseModel
     }
 
     /**
-     * Languages whose pages are followed. `same_as_start_url` follows only the start page's language; a list of language codes such as `["en"]` follows those languages. Links whose language cannot be determined are followed. When omitted all urls are crawled.
+     * Only follow pages in these languages, or `same_as_start_url`; all languages when omitted.
      *
      * @param LanguagesShape $languages
      */
@@ -158,7 +158,7 @@ final class Controls implements BaseModel
     }
 
     /**
-     * RE2 pattern for URLs to include. The `start_url` itself is always included.
+     * Regex pattern for URLs to include. The `start_url` itself is always included.
      */
     public function withRegex(string $regex): self
     {

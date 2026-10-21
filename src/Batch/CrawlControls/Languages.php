@@ -12,7 +12,7 @@ use ContextDev\Core\Conversion\Contracts\ConverterSource;
 use ContextDev\Core\Conversion\ListOf;
 
 /**
- * Languages whose pages were followed: `same_as_start_url` or a list of language codes. Null when every language was followed, which is always the case for a sitemap crawl.
+ * Languages whose pages were followed; null when all languages were.
  *
  * @phpstan-type LanguagesVariants = list<value-of<UnionMember1>>|value-of<UnionMember0>
  * @phpstan-type LanguagesShape = LanguagesVariants

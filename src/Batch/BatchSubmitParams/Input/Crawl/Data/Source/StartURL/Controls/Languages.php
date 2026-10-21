@@ -12,7 +12,7 @@ use ContextDev\Core\Conversion\Contracts\ConverterSource;
 use ContextDev\Core\Conversion\ListOf;
 
 /**
- * Languages whose pages are followed. `same_as_start_url` follows only the start page's language; a list of language codes such as `["en"]` follows those languages. Links whose language cannot be determined are followed. When omitted all urls are crawled.
+ * Only follow pages in these languages, or `same_as_start_url`; all languages when omitted.
  *
  * @phpstan-type LanguagesVariants = list<value-of<UnionMember1>>|value-of<UnionMember0>
  * @phpstan-type LanguagesShape = LanguagesVariants

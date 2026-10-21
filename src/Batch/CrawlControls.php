@@ -36,7 +36,7 @@ final class CrawlControls implements BaseModel
     use SdkModel;
 
     /**
-     * RE2 pattern URLs must not match to be crawled. Null when the crawl set none.
+     * Regex pattern URLs must not match to be crawled. Null when the crawl set none.
      */
     #[Required('exclude_url_pattern')]
     public ?string $excludeURLPattern;
@@ -48,7 +48,7 @@ final class CrawlControls implements BaseModel
     public bool $followSubdomains;
 
     /**
-     * Languages whose pages were followed: `same_as_start_url` or a list of language codes. Null when every language was followed, which is always the case for a sitemap crawl.
+     * Languages whose pages were followed; null when all languages were.
      *
      * @var LanguagesVariants|null $languages
      */
@@ -76,7 +76,7 @@ final class CrawlControls implements BaseModel
     public StartURL|Sitemap $source;
 
     /**
-     * RE2 pattern URLs had to match to be crawled. Null when the crawl set none.
+     * Regex pattern URLs had to match to be crawled. Null when the crawl set none.
      */
     #[Required('url_pattern')]
     public ?string $urlPattern;
@@ -146,7 +146,7 @@ final class CrawlControls implements BaseModel
     }
 
     /**
-     * RE2 pattern URLs must not match to be crawled. Null when the crawl set none.
+     * Regex pattern URLs must not match to be crawled. Null when the crawl set none.
      */
     public function withExcludeURLPattern(?string $excludeURLPattern): self
     {
@@ -168,7 +168,7 @@ final class CrawlControls implements BaseModel
     }
 
     /**
-     * Languages whose pages were followed: `same_as_start_url` or a list of language codes. Null when every language was followed, which is always the case for a sitemap crawl.
+     * Languages whose pages were followed; null when all languages were.
      *
      * @param LanguagesShape|null $languages
      */
@@ -217,7 +217,7 @@ final class CrawlControls implements BaseModel
     }
 
     /**
-     * RE2 pattern URLs had to match to be crawled. Null when the crawl set none.
+     * Regex pattern URLs had to match to be crawled. Null when the crawl set none.
      */
     public function withURLPattern(?string $urlPattern): self
     {

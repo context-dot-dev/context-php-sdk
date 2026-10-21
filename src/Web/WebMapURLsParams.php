@@ -46,7 +46,7 @@ final class WebMapURLsParams implements BaseModel
     public string $domain;
 
     /**
-     * Optional RE2-compatible regex pattern. URLs matching this pattern are not returned, even when they match urlRegex.
+     * Regex pattern. URLs matching this pattern are not returned, even when they match urlRegex.
      */
     #[Optional]
     public ?string $excludeURLRegex;
@@ -98,7 +98,7 @@ final class WebMapURLsParams implements BaseModel
     public ?TimeoutOpts $timeoutOpts;
 
     /**
-     * Optional RE2-compatible regex pattern. Only URLs matching this pattern are returned and counted against maxLinks.
+     * Regex pattern. Only URLs matching this pattern are returned and counted against maxLinks.
      */
     #[Optional]
     public ?string $urlRegex;
@@ -183,7 +183,7 @@ final class WebMapURLsParams implements BaseModel
     }
 
     /**
-     * Optional RE2-compatible regex pattern. URLs matching this pattern are not returned, even when they match urlRegex.
+     * Regex pattern. URLs matching this pattern are not returned, even when they match urlRegex.
      */
     public function withExcludeURLRegex(string $excludeURLRegex): self
     {
@@ -277,7 +277,7 @@ final class WebMapURLsParams implements BaseModel
     }
 
     /**
-     * Optional RE2-compatible regex pattern. Only URLs matching this pattern are returned and counted against maxLinks.
+     * Regex pattern. Only URLs matching this pattern are returned and counted against maxLinks.
      */
     public function withURLRegex(string $urlRegex): self
     {

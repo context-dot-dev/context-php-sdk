@@ -26,19 +26,19 @@ final class MarkdownParams implements BaseModel
     use SdkModel;
 
     /**
-     * Include images in the Markdown using image syntax with URLs and alt text. Only applies to `html-conversion` extractions.
+     * Include images in the Markdown (`html-conversion` only).
      */
     #[Optional]
     public ?bool $includeImages;
 
     /**
-     * Keep link URLs in the Markdown. Set false to return link text without URLs. Only applies to `html-conversion` extractions.
+     * Keep link URLs in the Markdown (`html-conversion` only).
      */
     #[Optional]
     public ?bool $includeLinks;
 
     /**
-     * How base64 images appear: `placeholder` (default) or `preserve`. Requires `includeImages`. Only applies to `html-conversion` extractions.
+     * How base64 images appear when `includeImages` is set (`html-conversion` only).
      *
      * @var value-of<InlineImages>|null $inlineImages
      */
@@ -46,7 +46,7 @@ final class MarkdownParams implements BaseModel
     public ?string $inlineImages;
 
     /**
-     * Where the Markdown should come from, in order of preference; the first usable source wins. `html-conversion` converts the page HTML, and counts as unusable when the conversion has almost no content (under 200 characters). `markdown-direct` uses the official Markdown version the page publishes through, returned as the site serves it. Defaults to `["html-conversion", "markdown-direct"]`. With only `markdown-direct`, a page that publishes no Markdown fails with `NO_PUBLISHED_MARKDOWN` and is not billed. Requests with include or exclude selectors never use `markdown-direct`, so they must include `html-conversion`.
+     * Markdown sources in order of preference: `html-conversion` converts the page HTML, `markdown-direct` uses Markdown the site publishes.
      *
      * @var list<value-of<SourcePreference>>|null $sourcePreference
      */
@@ -83,7 +83,7 @@ final class MarkdownParams implements BaseModel
     }
 
     /**
-     * Include images in the Markdown using image syntax with URLs and alt text. Only applies to `html-conversion` extractions.
+     * Include images in the Markdown (`html-conversion` only).
      */
     public function withIncludeImages(bool $includeImages): self
     {
@@ -94,7 +94,7 @@ final class MarkdownParams implements BaseModel
     }
 
     /**
-     * Keep link URLs in the Markdown. Set false to return link text without URLs. Only applies to `html-conversion` extractions.
+     * Keep link URLs in the Markdown (`html-conversion` only).
      */
     public function withIncludeLinks(bool $includeLinks): self
     {
@@ -105,7 +105,7 @@ final class MarkdownParams implements BaseModel
     }
 
     /**
-     * How base64 images appear: `placeholder` (default) or `preserve`. Requires `includeImages`. Only applies to `html-conversion` extractions.
+     * How base64 images appear when `includeImages` is set (`html-conversion` only).
      *
      * @param InlineImages|value-of<InlineImages> $inlineImages
      */
@@ -118,7 +118,7 @@ final class MarkdownParams implements BaseModel
     }
 
     /**
-     * Where the Markdown should come from, in order of preference; the first usable source wins. `html-conversion` converts the page HTML, and counts as unusable when the conversion has almost no content (under 200 characters). `markdown-direct` uses the official Markdown version the page publishes through, returned as the site serves it. Defaults to `["html-conversion", "markdown-direct"]`. With only `markdown-direct`, a page that publishes no Markdown fails with `NO_PUBLISHED_MARKDOWN` and is not billed. Requests with include or exclude selectors never use `markdown-direct`, so they must include `html-conversion`.
+     * Markdown sources in order of preference: `html-conversion` converts the page HTML, `markdown-direct` uses Markdown the site publishes.
      *
      * @param list<SourcePreference|value-of<SourcePreference>> $sourcePreference
      */

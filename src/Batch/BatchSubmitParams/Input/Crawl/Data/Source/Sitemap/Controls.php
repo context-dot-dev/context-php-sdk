@@ -21,7 +21,7 @@ final class Controls implements BaseModel
     use SdkModel;
 
     /**
-     * RE2 pattern; sitemap URLs matching it are not scraped, even when they match `regex`.
+     * Regex pattern; sitemap URLs matching it are not scraped, even when they match `regex`.
      */
     #[Optional]
     public ?string $excludeRegex;
@@ -33,7 +33,7 @@ final class Controls implements BaseModel
     public ?int $maxURLs;
 
     /**
-     * RE2 pattern; only sitemap URLs matching it are scraped.
+     * Regex pattern; only sitemap URLs matching it are scraped.
      */
     #[Optional]
     public ?string $regex;
@@ -63,7 +63,7 @@ final class Controls implements BaseModel
     }
 
     /**
-     * RE2 pattern; sitemap URLs matching it are not scraped, even when they match `regex`.
+     * Regex pattern; sitemap URLs matching it are not scraped, even when they match `regex`.
      */
     public function withExcludeRegex(string $excludeRegex): self
     {
@@ -85,7 +85,7 @@ final class Controls implements BaseModel
     }
 
     /**
-     * RE2 pattern; only sitemap URLs matching it are scraped.
+     * Regex pattern; only sitemap URLs matching it are scraped.
      */
     public function withRegex(string $regex): self
     {
