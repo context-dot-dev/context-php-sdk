@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.35.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.34.2...v2.35.0) (2026-10-21)
+
+
+### Features
+
+* **batch:** follow only chosen languages in start_url crawls ([#2003](https://github.com/context-dot-dev/context-php-sdk/issues/2003)) ([2989876](https://github.com/context-dot-dev/context-php-sdk/commit/2989876367c11e46d4016ce3725f2e42027df3a6))
+
 ## [2.34.2](https://github.com/context-dot-dev/context-php-sdk/compare/v2.34.1...v2.34.2) (2026-10-21)
 
 
