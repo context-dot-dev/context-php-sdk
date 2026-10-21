@@ -11,7 +11,7 @@ The REST API documentation can be found on [docs.context.dev](https://docs.conte
 <!-- x-release-please-start-version -->
 
 ```
-composer require "context-dev/context-dev-php 2.31.1"
+composer require "context-dev/context-dev-php 2.32.0"
 ```
 
 <!-- x-release-please-end -->

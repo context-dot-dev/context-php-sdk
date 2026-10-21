@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.32.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.31.1...v2.32.0) (2026-10-21)
+
+
+### Features
+
+* **company-search:** prepare public response contract ([#2021](https://github.com/context-dot-dev/context-php-sdk/issues/2021)) ([488348f](https://github.com/context-dot-dev/context-php-sdk/commit/488348f9fa4e05e4631e5f40d8c82487a53ffd7e))
+
 ## [2.31.1](https://github.com/context-dot-dev/context-php-sdk/compare/v2.31.0...v2.31.1) (2026-10-21)
 
 
