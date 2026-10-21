@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.36.1](https://github.com/context-dot-dev/context-php-sdk/compare/v2.36.0...v2.36.1) (2026-10-21)
+
+
+### Documentation
+
+* **openapi:** unify regex wording and shorten sourcePreference descriptions ([#2051](https://github.com/context-dot-dev/context-php-sdk/issues/2051)) ([2121f7a](https://github.com/context-dot-dev/context-php-sdk/commit/2121f7ae944cd93a6d4964dc3fb62c14954f9f42))
+
 ## [2.36.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.35.0...v2.36.0) (2026-10-21)
 
 
