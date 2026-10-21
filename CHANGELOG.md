@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.31.1](https://github.com/context-dot-dev/context-php-sdk/compare/v2.31.0...v2.31.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* **news:** return extended descriptions for index search ([#2019](https://github.com/context-dot-dev/context-php-sdk/issues/2019)) ([29d2873](https://github.com/context-dot-dev/context-php-sdk/commit/29d28730a1ceda4a1dbf1c9a94deddfd7ad14ade))
+
 ## [2.31.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.30.0...v2.31.0) (2026-10-19)
 
 
