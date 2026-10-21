@@ -50,7 +50,7 @@ final class Data implements BaseModel
     public array $authors;
 
     /**
-     * Short summary or excerpt of the article, when the publisher provides one.
+     * Article summary or excerpt. Natural-language search descriptions include matching passages and are capped at 2,000 characters.
      */
     #[Required]
     public ?string $description;
@@ -222,7 +222,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Short summary or excerpt of the article, when the publisher provides one.
+     * Article summary or excerpt. Natural-language search descriptions include matching passages and are capped at 2,000 characters.
      */
     public function withDescription(?string $description): self
     {
