@@ -15,6 +15,7 @@ use ContextDev\Web\WebAnswersResponse\KeyMetadata;
  *
  * @phpstan-type WebAnswersResponseShape = array{
  *   jsonContent: array<string,mixed>,
+ *   requestID: string,
  *   sources: list<string>,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
  *   partial?: bool|null,
@@ -32,6 +33,12 @@ final class WebAnswersResponse implements BaseModel
      */
     #[Required('json_content', map: 'mixed')]
     public array $jsonContent;
+
+    /**
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
+     */
+    #[Required('request_id')]
+    public string $requestID;
 
     /**
      * URLs of the pages and company/profile records read for the answer, followed by URLs cited in json_content.
@@ -58,13 +65,16 @@ final class WebAnswersResponse implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * WebAnswersResponse::with(jsonContent: ..., sources: ...)
+     * WebAnswersResponse::with(jsonContent: ..., requestID: ..., sources: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new WebAnswersResponse)->withJsonContent(...)->withSources(...)
+     * (new WebAnswersResponse)
+     *   ->withJsonContent(...)
+     *   ->withRequestID(...)
+     *   ->withSources(...)
      * ```
      */
     public function __construct()
@@ -83,6 +93,7 @@ final class WebAnswersResponse implements BaseModel
      */
     public static function with(
         array $jsonContent,
+        string $requestID,
         array $sources,
         KeyMetadata|array|null $keyMetadata = null,
         ?bool $partial = null,
@@ -90,6 +101,7 @@ final class WebAnswersResponse implements BaseModel
         $self = new self;
 
         $self['jsonContent'] = $jsonContent;
+        $self['requestID'] = $requestID;
         $self['sources'] = $sources;
 
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
@@ -107,6 +119,17 @@ final class WebAnswersResponse implements BaseModel
     {
         $self = clone $this;
         $self['jsonContent'] = $jsonContent;
+
+        return $self;
+    }
+
+    /**
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
 
         return $self;
     }
