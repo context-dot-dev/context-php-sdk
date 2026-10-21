@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.34.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.33.0...v2.34.0) (2026-10-21)
+
+
+### Features
+
+* **web-search:** include Scholar papers for research queries ([#2009](https://github.com/context-dot-dev/context-php-sdk/issues/2009)) ([3153a09](https://github.com/context-dot-dev/context-php-sdk/commit/3153a0918cca6bdfd12cd9079c7f1fb43d32bc7f))
+
 ## [2.33.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.32.0...v2.33.0) (2026-10-21)
 
 
