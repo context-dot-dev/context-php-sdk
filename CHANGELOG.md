@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.34.1](https://github.com/context-dot-dev/context-php-sdk/compare/v2.34.0...v2.34.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* **answers:** document request_id in the /web/answers response ([#2040](https://github.com/context-dot-dev/context-php-sdk/issues/2040)) ([300edb0](https://github.com/context-dot-dev/context-php-sdk/commit/300edb06b893294071d95002b9120771aaccd7cd))
+
 ## [2.34.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.33.0...v2.34.0) (2026-10-21)
 
 
