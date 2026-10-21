@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.33.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.32.0...v2.33.0) (2026-10-21)
+
+
+### Features
+
+* **company-search:** charge two credits per request ([#2024](https://github.com/context-dot-dev/context-php-sdk/issues/2024)) ([538abd3](https://github.com/context-dot-dev/context-php-sdk/commit/538abd3d8730e3ffdb56d03152f4a9b9498a52d1))
+
 ## [2.32.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.31.1...v2.32.0) (2026-10-21)
 
 
