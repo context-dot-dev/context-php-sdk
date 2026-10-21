@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ContextDev\Batch;
 
+use ContextDev\Batch\CrawlControls\Languages;
+use ContextDev\Batch\CrawlControls\Languages\UnionMember0;
 use ContextDev\Batch\CrawlControls\Source\Sitemap;
 use ContextDev\Batch\CrawlControls\Source\StartURL;
 use ContextDev\Core\Attributes\Required;
@@ -13,12 +15,15 @@ use ContextDev\Core\Contracts\BaseModel;
 /**
  * Crawl settings as submitted.
  *
+ * @phpstan-import-type LanguagesVariants from \ContextDev\Batch\CrawlControls\Languages
  * @phpstan-import-type SourceVariants from \ContextDev\Batch\CrawlControls\Source
+ * @phpstan-import-type LanguagesShape from \ContextDev\Batch\CrawlControls\Languages
  * @phpstan-import-type SourceShape from \ContextDev\Batch\CrawlControls\Source
  *
  * @phpstan-type CrawlControlsShape = array{
  *   excludeURLPattern: string|null,
  *   followSubdomains: bool,
+ *   languages: LanguagesShape|null,
  *   maxDepth: int|null,
  *   maxPages: int,
  *   source: SourceShape,
@@ -41,6 +46,14 @@ final class CrawlControls implements BaseModel
      */
     #[Required('follow_subdomains')]
     public bool $followSubdomains;
+
+    /**
+     * Languages whose pages were followed: `same_as_start_url` or a list of language codes. Null when every language was followed, which is always the case for a sitemap crawl.
+     *
+     * @var LanguagesVariants|null $languages
+     */
+    #[Required(union: Languages::class)]
+    public array|string|null $languages;
 
     /**
      * Link depth limit. Always 0 for a sitemap crawl, which never follows links off its URLs; null when a `start_url` crawl set no limit.
@@ -76,6 +89,7 @@ final class CrawlControls implements BaseModel
      * CrawlControls::with(
      *   excludeURLPattern: ...,
      *   followSubdomains: ...,
+     *   languages: ...,
      *   maxDepth: ...,
      *   maxPages: ...,
      *   source: ...,
@@ -89,6 +103,7 @@ final class CrawlControls implements BaseModel
      * (new CrawlControls)
      *   ->withExcludeURLPattern(...)
      *   ->withFollowSubdomains(...)
+     *   ->withLanguages(...)
      *   ->withMaxDepth(...)
      *   ->withMaxPages(...)
      *   ->withSource(...)
@@ -105,11 +120,13 @@ final class CrawlControls implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param LanguagesShape|null $languages
      * @param SourceShape $source
      */
     public static function with(
         ?string $excludeURLPattern,
         bool $followSubdomains,
+        UnionMember0|array|string|null $languages,
         ?int $maxDepth,
         int $maxPages,
         StartURL|array|Sitemap $source,
@@ -119,6 +136,7 @@ final class CrawlControls implements BaseModel
 
         $self['excludeURLPattern'] = $excludeURLPattern;
         $self['followSubdomains'] = $followSubdomains;
+        $self['languages'] = $languages;
         $self['maxDepth'] = $maxDepth;
         $self['maxPages'] = $maxPages;
         $self['source'] = $source;
@@ -145,6 +163,20 @@ final class CrawlControls implements BaseModel
     {
         $self = clone $this;
         $self['followSubdomains'] = $followSubdomains;
+
+        return $self;
+    }
+
+    /**
+     * Languages whose pages were followed: `same_as_start_url` or a list of language codes. Null when every language was followed, which is always the case for a sitemap crawl.
+     *
+     * @param LanguagesShape|null $languages
+     */
+    public function withLanguages(
+        UnionMember0|array|string|null $languages
+    ): self {
+        $self = clone $this;
+        $self['languages'] = $languages;
 
         return $self;
     }
