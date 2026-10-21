@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * API key usage for this request.
+ * Credits this request used and your remaining balance.
  *
  * @phpstan-type KeyMetadataShape = array{
  *   creditsConsumed: int, creditsRemaining: int

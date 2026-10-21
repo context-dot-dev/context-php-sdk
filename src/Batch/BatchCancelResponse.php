@@ -128,7 +128,7 @@ final class BatchCancelResponse implements BaseModel
     public Timing $timing;
 
     /**
-     * API key usage for this request.
+     * Credits this request used and your remaining balance.
      */
     #[Optional('key_metadata')]
     public ?KeyMetadata $keyMetadata;
@@ -382,7 +382,7 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
-     * API key usage for this request.
+     * Credits this request used and your remaining balance.
      *
      * @param KeyMetadata|KeyMetadataShape $keyMetadata
      */

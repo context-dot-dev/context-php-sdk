@@ -128,7 +128,7 @@ final class BatchSubmitResponse implements BaseModel
     public array $tags;
 
     /**
-     * API key usage for this request.
+     * Credits this request used and your remaining balance.
      */
     #[Optional('key_metadata')]
     public ?KeyMetadata $keyMetadata;
@@ -387,7 +387,7 @@ final class BatchSubmitResponse implements BaseModel
     }
 
     /**
-     * API key usage for this request.
+     * Credits this request used and your remaining balance.
      *
      * @param KeyMetadata|KeyMetadataShape $keyMetadata
      */
