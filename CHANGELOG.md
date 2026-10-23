@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.37.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.36.1...v2.37.0) (2026-10-23)
+
+
+### Features
+
+* **people:** publish people search in the API specification ([#2094](https://github.com/context-dot-dev/context-php-sdk/issues/2094)) ([0e713b9](https://github.com/context-dot-dev/context-php-sdk/commit/0e713b90b6e03dc1912e2de9923b62cfa287b605))
+
 ## [2.36.1](https://github.com/context-dot-dev/context-php-sdk/compare/v2.36.0...v2.36.1) (2026-10-21)
 
 
