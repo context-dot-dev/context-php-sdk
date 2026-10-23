@@ -14,6 +14,8 @@ use ContextDev\People\PersonEnrichParams\Name;
 use ContextDev\People\PersonEnrichParams\TimeoutOpts;
 use ContextDev\People\PersonEnrichParams\Zdr;
 use ContextDev\People\PersonEnrichResponse;
+use ContextDev\People\PersonSearchParams\Filters;
+use ContextDev\People\PersonSearchResponse;
 use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\PeopleContract;
 
@@ -23,6 +25,7 @@ use ContextDev\ServiceContracts\PeopleContract;
  * @phpstan-import-type LocationShape from \ContextDev\People\PersonEnrichParams\Location
  * @phpstan-import-type NameShape from \ContextDev\People\PersonEnrichParams\Name
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\People\PersonEnrichParams\TimeoutOpts
+ * @phpstan-import-type FiltersShape from \ContextDev\People\PersonSearchParams\Filters
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class PeopleService implements PeopleContract
@@ -86,6 +89,41 @@ final class PeopleService implements PeopleContract
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->enrich(params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Find people with a natural-language query.
+     *
+     * @param string $query describe the people to find
+     * @param string $cursor use next_cursor with the same query and filters to fetch the next page
+     * @param Filters|FiltersShape $filters additional constraints every result must match
+     * @param list<string> $tags labels for filtering usage in the dashboard
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function search(
+        string $query,
+        ?string $cursor = null,
+        Filters|array|null $filters = null,
+        ?array $tags = null,
+        RequestOptions|array|null $requestOptions = null,
+    ): PersonSearchResponse {
+        $params = Util::removeNulls(
+            [
+                'query' => $query,
+                'cursor' => $cursor,
+                'filters' => $filters,
+                'tags' => $tags,
+            ],
+        );
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->search(params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }

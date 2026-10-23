@@ -5,6 +5,7 @@ namespace Tests\Services;
 use ContextDev\Client;
 use ContextDev\Core\Util;
 use ContextDev\People\PersonEnrichResponse;
+use ContextDev\People\PersonSearchResponse;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -39,5 +40,42 @@ final class PeopleTest extends TestCase
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(PersonEnrichResponse::class, $result);
+    }
+
+    #[Test]
+    public function testSearch(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->people->search(
+            query: 'VPs of sales at solar companies in California'
+        );
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(PersonSearchResponse::class, $result);
+    }
+
+    #[Test]
+    public function testSearchWithOptionalParams(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->people->search(
+            query: 'VPs of sales at solar companies in California',
+            cursor: 'cursor',
+            filters: [
+                'countries' => ['SE'],
+                'yearsOfExperienceMax' => 0,
+                'yearsOfExperienceMin' => 0,
+            ],
+            tags: ['production', 'team-alpha'],
+        );
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(PersonSearchResponse::class, $result);
     }
 }

@@ -15,6 +15,9 @@ use ContextDev\People\PersonEnrichParams\Name;
 use ContextDev\People\PersonEnrichParams\TimeoutOpts;
 use ContextDev\People\PersonEnrichParams\Zdr;
 use ContextDev\People\PersonEnrichResponse;
+use ContextDev\People\PersonSearchParams;
+use ContextDev\People\PersonSearchParams\Filters;
+use ContextDev\People\PersonSearchResponse;
 use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\PeopleRawContract;
 
@@ -24,6 +27,7 @@ use ContextDev\ServiceContracts\PeopleRawContract;
  * @phpstan-import-type LocationShape from \ContextDev\People\PersonEnrichParams\Location
  * @phpstan-import-type NameShape from \ContextDev\People\PersonEnrichParams\Name
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\People\PersonEnrichParams\TimeoutOpts
+ * @phpstan-import-type FiltersShape from \ContextDev\People\PersonSearchParams\Filters
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
 final class PeopleRawService implements PeopleRawContract
@@ -72,6 +76,42 @@ final class PeopleRawService implements PeopleRawContract
             body: (object) $parsed,
             options: $options,
             convert: PersonEnrichResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Find people with a natural-language query.
+     *
+     * @param array{
+     *   query: string,
+     *   cursor?: string,
+     *   filters?: Filters|FiltersShape,
+     *   tags?: list<string>,
+     * }|PersonSearchParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<PersonSearchResponse>
+     *
+     * @throws APIException
+     */
+    public function search(
+        array|PersonSearchParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = PersonSearchParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'post',
+            path: 'people/search',
+            body: (object) $parsed,
+            options: $options,
+            convert: PersonSearchResponse::class,
         );
     }
 }
