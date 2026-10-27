@@ -52,7 +52,7 @@ final class PersonSearchParams implements BaseModel
     public ?Filters $filters;
 
     /**
-     * `fast` matches people on basic criteria (e.g. their role, location or background); `ultra` plans a deeper search, judges each candidate against every criterion in the query and explains each match.
+     * `fast` matches people on basic criteria (e.g. their role, location or background); `ultra` plans a deeper search, judges each candidate against every criterion in the query. Complex `ultra` searches can take up to 60 seconds to complete, so allow for that in your client timeout.
      *
      * @var value-of<Mode>|null $mode
      */
@@ -150,7 +150,7 @@ final class PersonSearchParams implements BaseModel
     }
 
     /**
-     * `fast` matches people on basic criteria (e.g. their role, location or background); `ultra` plans a deeper search, judges each candidate against every criterion in the query and explains each match.
+     * `fast` matches people on basic criteria (e.g. their role, location or background); `ultra` plans a deeper search, judges each candidate against every criterion in the query. Complex `ultra` searches can take up to 60 seconds to complete, so allow for that in your client timeout.
      *
      * @param Mode|value-of<Mode> $mode
      */
