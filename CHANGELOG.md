@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.39.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.38.0...v2.39.0) (2026-10-27)
+
+
+### Features
+
+* **people:** add ultra mode to people search ([#2149](https://github.com/context-dot-dev/context-php-sdk/issues/2149)) ([18acd98](https://github.com/context-dot-dev/context-php-sdk/commit/18acd98d1832c148e13eed33cbf535e1ef73b74d))
+
 ## [2.38.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.37.0...v2.38.0) (2026-10-27)
 
 
