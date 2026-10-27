@@ -24,6 +24,7 @@ use ContextDev\Parse\ParseHandleParams\Zdr;
  *   extension?: null|Extension|value-of<Extension>,
  *   includeImages?: bool|null,
  *   includeLinks?: bool|null,
+ *   includeNumberedPages?: bool|null,
  *   ocr?: bool|null,
  *   pdf?: null|Pdf|PdfShape,
  *   shortenBase64Images?: bool|null,
@@ -63,6 +64,12 @@ final class ParseHandleParams implements BaseModel
      */
     #[Optional]
     public ?bool $includeLinks;
+
+    /**
+     * Start each PDF page in the Markdown with a `<!-- page N -->` line, where N is the original 1-based page number.
+     */
+    #[Optional]
+    public ?bool $includeNumberedPages;
 
     /**
      * Read text from images and scanned PDF pages. PDF page ranges still apply.
@@ -124,6 +131,7 @@ final class ParseHandleParams implements BaseModel
         Extension|string|null $extension = null,
         ?bool $includeImages = null,
         ?bool $includeLinks = null,
+        ?bool $includeNumberedPages = null,
         ?bool $ocr = null,
         Pdf|array|null $pdf = null,
         ?bool $shortenBase64Images = null,
@@ -137,6 +145,7 @@ final class ParseHandleParams implements BaseModel
         null !== $extension && $self['extension'] = $extension;
         null !== $includeImages && $self['includeImages'] = $includeImages;
         null !== $includeLinks && $self['includeLinks'] = $includeLinks;
+        null !== $includeNumberedPages && $self['includeNumberedPages'] = $includeNumberedPages;
         null !== $ocr && $self['ocr'] = $ocr;
         null !== $pdf && $self['pdf'] = $pdf;
         null !== $shortenBase64Images && $self['shortenBase64Images'] = $shortenBase64Images;
@@ -189,6 +198,17 @@ final class ParseHandleParams implements BaseModel
     {
         $self = clone $this;
         $self['includeLinks'] = $includeLinks;
+
+        return $self;
+    }
+
+    /**
+     * Start each PDF page in the Markdown with a `<!-- page N -->` line, where N is the original 1-based page number.
+     */
+    public function withIncludeNumberedPages(bool $includeNumberedPages): self
+    {
+        $self = clone $this;
+        $self['includeNumberedPages'] = $includeNumberedPages;
 
         return $self;
     }

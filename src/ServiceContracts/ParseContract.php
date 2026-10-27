@@ -26,6 +26,7 @@ interface ParseContract
      * @param Extension|value-of<Extension> $extension query param: Optional file extension hint, such as pdf, docx, xlsx, pptx, html, json, csv, md, py, rtf, jpg, png, or txt
      * @param bool $includeImages Query param: Include image references in Markdown output
      * @param bool $includeLinks Query param: Preserve hyperlinks in Markdown output
+     * @param bool $includeNumberedPages query param: Start each PDF page in the Markdown with a `<!-- page N -->` line, where N is the original 1-based page number
      * @param bool $ocr Query param: Read text from images and scanned PDF pages. PDF page ranges still apply.
      * @param Pdf|PdfShape $pdf Query param: PDF page-range options as a JSON object, e.g. {"start": 2, "end": 5}.
      * @param bool $shortenBase64Images Query param: Shorten base64-encoded image data in the Markdown output
@@ -42,6 +43,7 @@ interface ParseContract
         Extension|string|null $extension = null,
         bool $includeImages = false,
         bool $includeLinks = true,
+        bool $includeNumberedPages = false,
         bool $ocr = false,
         Pdf|array|null $pdf = null,
         bool $shortenBase64Images = true,

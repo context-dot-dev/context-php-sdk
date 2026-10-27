@@ -229,7 +229,12 @@ final class WebTest extends TestCase
                 'includeSelectors' => ['P'],
                 'mainContentOnly' => true,
                 'parsers' => [
-                    'pdf' => ['endPage' => 1, 'ocr' => 'off', 'startPage' => 1],
+                    'pdf' => [
+                        'endPage' => 1,
+                        'includeNumberedPages' => true,
+                        'ocr' => 'off',
+                        'startPage' => 1,
+                    ],
                 ],
                 'profile' => [
                     'profileID' => 'prof_210b9798eb53baa4e69d31c1071cf03d',

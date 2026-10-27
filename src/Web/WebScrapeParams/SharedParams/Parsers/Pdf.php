@@ -13,7 +13,10 @@ use ContextDev\Web\WebScrapeParams\SharedParams\Parsers\Pdf\Ocr;
  * PDF page range and OCR.
  *
  * @phpstan-type PdfShape = array{
- *   endPage?: int|null, ocr?: null|Ocr|value-of<Ocr>, startPage?: int|null
+ *   endPage?: int|null,
+ *   includeNumberedPages?: bool|null,
+ *   ocr?: null|Ocr|value-of<Ocr>,
+ *   startPage?: int|null,
  * }
  */
 final class Pdf implements BaseModel
@@ -26,6 +29,12 @@ final class Pdf implements BaseModel
      */
     #[Optional]
     public ?int $endPage;
+
+    /**
+     * Start each page in the Markdown with a `<!-- page N -->` line using its original 1-based page number; these responses are never served from cache.
+     */
+    #[Optional]
+    public ?bool $includeNumberedPages;
 
     /**
      * Set `auto` to read scanned pages with OCR.
@@ -55,12 +64,14 @@ final class Pdf implements BaseModel
      */
     public static function with(
         ?int $endPage = null,
+        ?bool $includeNumberedPages = null,
         Ocr|string|null $ocr = null,
-        ?int $startPage = null
+        ?int $startPage = null,
     ): self {
         $self = new self;
 
         null !== $endPage && $self['endPage'] = $endPage;
+        null !== $includeNumberedPages && $self['includeNumberedPages'] = $includeNumberedPages;
         null !== $ocr && $self['ocr'] = $ocr;
         null !== $startPage && $self['startPage'] = $startPage;
 
@@ -74,6 +85,17 @@ final class Pdf implements BaseModel
     {
         $self = clone $this;
         $self['endPage'] = $endPage;
+
+        return $self;
+    }
+
+    /**
+     * Start each page in the Markdown with a `<!-- page N -->` line using its original 1-based page number; these responses are never served from cache.
+     */
+    public function withIncludeNumberedPages(bool $includeNumberedPages): self
+    {
+        $self = clone $this;
+        $self['includeNumberedPages'] = $includeNumberedPages;
 
         return $self;
     }

@@ -39,6 +39,7 @@ final class ParseRawService implements ParseRawContract
      *   extension?: value-of<Extension>,
      *   includeImages?: bool,
      *   includeLinks?: bool,
+     *   includeNumberedPages?: bool,
      *   ocr?: bool,
      *   pdf?: Pdf|PdfShape,
      *   shortenBase64Images?: bool,
