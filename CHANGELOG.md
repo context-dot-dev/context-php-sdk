@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.38.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.37.0...v2.38.0) (2026-10-27)
+
+
+### Features
+
+* **api:** serve a public OpenAPI spec and generate the SDKs from it ([#2075](https://github.com/context-dot-dev/context-php-sdk/issues/2075)) ([8d273b2](https://github.com/context-dot-dev/context-php-sdk/commit/8d273b2a9f61e81d7abea729803dd3b83ac87180))
+
 ## [2.37.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.36.1...v2.37.0) (2026-10-23)
 
 
