@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.40.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.39.1...v2.40.0) (2026-10-27)
+
+
+### Features
+
+* **parse:** mark PDF page numbers inline in Markdown with includeNumberedPages ([#2110](https://github.com/context-dot-dev/context-php-sdk/issues/2110)) ([21cf9b5](https://github.com/context-dot-dev/context-php-sdk/commit/21cf9b51b8382cff82bf4b645bd46fdbff7ea864))
+
+
+### Bug Fixes
+
+* **people:** split ultra people ranking on its strongest phrase signals ([#2209](https://github.com/context-dot-dev/context-php-sdk/issues/2209)) ([dc0dd88](https://github.com/context-dot-dev/context-php-sdk/commit/dc0dd88ce9991454b3dd3a273a8cefb7edfc9cdb))
+
 ## [2.39.1](https://github.com/context-dot-dev/context-php-sdk/compare/v2.39.0...v2.39.1) (2026-10-27)
 
 
