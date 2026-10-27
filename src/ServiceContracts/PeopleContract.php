@@ -63,7 +63,7 @@ interface PeopleContract
      * @param string $query Describe the people to find. Up to 500 characters in `fast` mode and 5000 in `ultra` mode.
      * @param string $cursor use next_cursor with the same query, mode and filters to fetch the next page
      * @param Filters|FiltersShape $filters additional constraints every result must match
-     * @param Mode|value-of<Mode> $mode `fast` matches people on basic criteria (e.g. their role, location or background); `ultra` plans a deeper search, judges each candidate against every criterion in the query. Complex `ultra` searches can take up to 60 seconds to complete, so allow for that in your client timeout.
+     * @param Mode|value-of<Mode> $mode `fast` matches people on basic criteria (e.g. their role, location or background); `ultra` plans a deeper search, judges each candidate against every criterion in the query. Complex `ultra` searches can take up to 30 seconds to complete, so allow for that in your client timeout.
      * @param list<string> $tags labels for filtering usage in the dashboard
      * @param RequestOpts|null $requestOptions
      *
