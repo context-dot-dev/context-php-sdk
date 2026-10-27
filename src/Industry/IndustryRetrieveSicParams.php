@@ -16,6 +16,7 @@ use ContextDev\Industry\IndustryRetrieveSicParams\Zdr;
 /**
  * Classify a company into SIC industry codes.
  *
+ * @deprecated
  * @see ContextDev\Services\IndustryService::retrieveSic()
  *
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Industry\IndustryRetrieveSicParams\TimeoutOpts

@@ -20,6 +20,8 @@ use ContextDev\RequestOptions;
 interface IndustryContract
 {
     /**
+     * @deprecated
+     *
      * @api
      *
      * @param string $input Brand domain or title to retrieve NAICS code for. If a valid domain is provided, it will be used for classification, otherwise, we will search for the brand using the provided title.
@@ -43,6 +45,8 @@ interface IndustryContract
     ): IndustryGetNaicsResponse;
 
     /**
+     * @deprecated
+     *
      * @api
      *
      * @param string $input Brand domain or title to retrieve SIC code for. If a valid domain is provided, it will be used for classification, otherwise, we will search for the brand using the provided title.

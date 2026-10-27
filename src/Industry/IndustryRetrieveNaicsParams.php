@@ -15,6 +15,7 @@ use ContextDev\Industry\IndustryRetrieveNaicsParams\Zdr;
 /**
  * Classify a company into NAICS industry codes.
  *
+ * @deprecated
  * @see ContextDev\Services\IndustryService::retrieveNaics()
  *
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Industry\IndustryRetrieveNaicsParams\TimeoutOpts

@@ -18,6 +18,8 @@ use ContextDev\RequestOptions;
 interface IndustryRawContract
 {
     /**
+     * @deprecated
+     *
      * @api
      *
      * @param array<string,mixed>|IndustryRetrieveNaicsParams $params
@@ -33,6 +35,8 @@ interface IndustryRawContract
     ): BaseResponse;
 
     /**
+     * @deprecated
+     *
      * @api
      *
      * @param array<string,mixed>|IndustryRetrieveSicParams $params

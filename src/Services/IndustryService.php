@@ -36,6 +36,8 @@ final class IndustryService implements IndustryContract
     }
 
     /**
+     * @deprecated
+     *
      * @api
      *
      * Classify a company into NAICS industry codes.
@@ -77,6 +79,8 @@ final class IndustryService implements IndustryContract
     }
 
     /**
+     * @deprecated
+     *
      * @api
      *
      * Classify a company into SIC industry codes.

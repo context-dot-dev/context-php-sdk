@@ -31,6 +31,8 @@ final class IndustryRawService implements IndustryRawContract
     public function __construct(private Client $client) {}
 
     /**
+     * @deprecated
+     *
      * @api
      *
      * Classify a company into NAICS industry codes.
@@ -69,6 +71,8 @@ final class IndustryRawService implements IndustryRawContract
     }
 
     /**
+     * @deprecated
+     *
      * @api
      *
      * Classify a company into SIC industry codes.
