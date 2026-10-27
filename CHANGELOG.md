@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.39.1](https://github.com/context-dot-dev/context-php-sdk/compare/v2.39.0...v2.39.1) (2026-10-27)
+
+
+### Documentation
+
+* **people:** note that complex ultra people searches can take up to 60 seconds ([#2206](https://github.com/context-dot-dev/context-php-sdk/issues/2206)) ([f16c723](https://github.com/context-dot-dev/context-php-sdk/commit/f16c723052656178e45071eeeba48c6a23e9658c))
+
 ## [2.39.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.38.0...v2.39.0) (2026-10-27)
 
 
