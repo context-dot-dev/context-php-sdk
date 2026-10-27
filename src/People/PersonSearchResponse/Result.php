@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace ContextDev\People\PersonSearchResponse;
 
+use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\People\PersonSearchResponse\Result\Location;
+use ContextDev\People\PersonSearchResponse\Result\Match_;
 use ContextDev\People\PersonSearchResponse\Result\Role;
 
 /**
@@ -15,6 +17,7 @@ use ContextDev\People\PersonSearchResponse\Result\Role;
  *
  * @phpstan-import-type LocationShape from \ContextDev\People\PersonSearchResponse\Result\Location
  * @phpstan-import-type RoleShape from \ContextDev\People\PersonSearchResponse\Result\Role
+ * @phpstan-import-type MatchShape from \ContextDev\People\PersonSearchResponse\Result\Match_
  *
  * @phpstan-type ResultShape = array{
  *   description: string|null,
@@ -26,6 +29,7 @@ use ContextDev\People\PersonSearchResponse\Result\Role;
  *   schools: list<string>,
  *   skills: list<string>,
  *   yearsOfExperience: int|null,
+ *   match?: null|Match_|MatchShape,
  * }
  */
 final class Result implements BaseModel
@@ -94,6 +98,12 @@ final class Result implements BaseModel
     public ?int $yearsOfExperience;
 
     /**
+     * How well the person matches the query. Only returned in `ultra` mode.
+     */
+    #[Optional]
+    public ?Match_ $match;
+
+    /**
      * `new Result()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -141,6 +151,7 @@ final class Result implements BaseModel
      * @param Role|RoleShape $role
      * @param list<string> $schools
      * @param list<string> $skills
+     * @param Match_|MatchShape|null $match
      */
     public static function with(
         ?string $description,
@@ -152,6 +163,7 @@ final class Result implements BaseModel
         array $schools,
         array $skills,
         ?int $yearsOfExperience,
+        Match_|array|null $match = null,
     ): self {
         $self = new self;
 
@@ -164,6 +176,8 @@ final class Result implements BaseModel
         $self['schools'] = $schools;
         $self['skills'] = $skills;
         $self['yearsOfExperience'] = $yearsOfExperience;
+
+        null !== $match && $self['match'] = $match;
 
         return $self;
     }
@@ -273,6 +287,19 @@ final class Result implements BaseModel
     {
         $self = clone $this;
         $self['yearsOfExperience'] = $yearsOfExperience;
+
+        return $self;
+    }
+
+    /**
+     * How well the person matches the query. Only returned in `ultra` mode.
+     *
+     * @param Match_|MatchShape $match
+     */
+    public function withMatch(Match_|array $match): self
+    {
+        $self = clone $this;
+        $self['match'] = $match;
 
         return $self;
     }

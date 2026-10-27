@@ -10,6 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\People\PersonSearchParams\Filters;
+use ContextDev\People\PersonSearchParams\Mode;
 
 /**
  * Find people with a natural-language query.
@@ -22,6 +23,7 @@ use ContextDev\People\PersonSearchParams\Filters;
  *   query: string,
  *   cursor?: string|null,
  *   filters?: null|Filters|FiltersShape,
+ *   mode?: null|Mode|value-of<Mode>,
  *   tags?: list<string>|null,
  * }
  */
@@ -32,13 +34,13 @@ final class PersonSearchParams implements BaseModel
     use SdkParams;
 
     /**
-     * Describe the people to find.
+     * Describe the people to find. Up to 500 characters in `fast` mode and 5000 in `ultra` mode.
      */
     #[Required]
     public string $query;
 
     /**
-     * Use next_cursor with the same query and filters to fetch the next page.
+     * Use next_cursor with the same query, mode and filters to fetch the next page.
      */
     #[Optional]
     public ?string $cursor;
@@ -48,6 +50,14 @@ final class PersonSearchParams implements BaseModel
      */
     #[Optional]
     public ?Filters $filters;
+
+    /**
+     * `fast` matches people on basic criteria (e.g. their role, location or background); `ultra` plans a deeper search, judges each candidate against every criterion in the query and explains each match.
+     *
+     * @var value-of<Mode>|null $mode
+     */
+    #[Optional(enum: Mode::class)]
+    public ?string $mode;
 
     /**
      * Labels for filtering usage in the dashboard.
@@ -82,12 +92,14 @@ final class PersonSearchParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param Filters|FiltersShape|null $filters
+     * @param Mode|value-of<Mode>|null $mode
      * @param list<string>|null $tags
      */
     public static function with(
         string $query,
         ?string $cursor = null,
         Filters|array|null $filters = null,
+        Mode|string|null $mode = null,
         ?array $tags = null,
     ): self {
         $self = new self;
@@ -96,13 +108,14 @@ final class PersonSearchParams implements BaseModel
 
         null !== $cursor && $self['cursor'] = $cursor;
         null !== $filters && $self['filters'] = $filters;
+        null !== $mode && $self['mode'] = $mode;
         null !== $tags && $self['tags'] = $tags;
 
         return $self;
     }
 
     /**
-     * Describe the people to find.
+     * Describe the people to find. Up to 500 characters in `fast` mode and 5000 in `ultra` mode.
      */
     public function withQuery(string $query): self
     {
@@ -113,7 +126,7 @@ final class PersonSearchParams implements BaseModel
     }
 
     /**
-     * Use next_cursor with the same query and filters to fetch the next page.
+     * Use next_cursor with the same query, mode and filters to fetch the next page.
      */
     public function withCursor(string $cursor): self
     {
@@ -132,6 +145,19 @@ final class PersonSearchParams implements BaseModel
     {
         $self = clone $this;
         $self['filters'] = $filters;
+
+        return $self;
+    }
+
+    /**
+     * `fast` matches people on basic criteria (e.g. their role, location or background); `ultra` plans a deeper search, judges each candidate against every criterion in the query and explains each match.
+     *
+     * @param Mode|value-of<Mode> $mode
+     */
+    public function withMode(Mode|string $mode): self
+    {
+        $self = clone $this;
+        $self['mode'] = $mode;
 
         return $self;
     }

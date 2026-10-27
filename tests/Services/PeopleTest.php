@@ -72,6 +72,7 @@ final class PeopleTest extends TestCase
                 'yearsOfExperienceMax' => 0,
                 'yearsOfExperienceMin' => 0,
             ],
+            mode: 'fast',
             tags: ['production', 'team-alpha'],
         );
 

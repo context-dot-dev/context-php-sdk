@@ -13,6 +13,7 @@ use ContextDev\People\PersonEnrichParams\TimeoutOpts;
 use ContextDev\People\PersonEnrichParams\Zdr;
 use ContextDev\People\PersonEnrichResponse;
 use ContextDev\People\PersonSearchParams\Filters;
+use ContextDev\People\PersonSearchParams\Mode;
 use ContextDev\People\PersonSearchResponse;
 use ContextDev\RequestOptions;
 
@@ -59,9 +60,10 @@ interface PeopleContract
     /**
      * @api
      *
-     * @param string $query describe the people to find
-     * @param string $cursor use next_cursor with the same query and filters to fetch the next page
+     * @param string $query Describe the people to find. Up to 500 characters in `fast` mode and 5000 in `ultra` mode.
+     * @param string $cursor use next_cursor with the same query, mode and filters to fetch the next page
      * @param Filters|FiltersShape $filters additional constraints every result must match
+     * @param Mode|value-of<Mode> $mode `fast` matches people on basic criteria (e.g. their role, location or background); `ultra` plans a deeper search, judges each candidate against every criterion in the query and explains each match.
      * @param list<string> $tags labels for filtering usage in the dashboard
      * @param RequestOpts|null $requestOptions
      *
@@ -71,6 +73,7 @@ interface PeopleContract
         string $query,
         ?string $cursor = null,
         Filters|array|null $filters = null,
+        Mode|string $mode = 'fast',
         ?array $tags = null,
         RequestOptions|array|null $requestOptions = null,
     ): PersonSearchResponse;

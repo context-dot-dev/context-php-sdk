@@ -17,6 +17,7 @@ use ContextDev\People\PersonEnrichParams\Zdr;
 use ContextDev\People\PersonEnrichResponse;
 use ContextDev\People\PersonSearchParams;
 use ContextDev\People\PersonSearchParams\Filters;
+use ContextDev\People\PersonSearchParams\Mode;
 use ContextDev\People\PersonSearchResponse;
 use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\PeopleRawContract;
@@ -88,6 +89,7 @@ final class PeopleRawService implements PeopleRawContract
      *   query: string,
      *   cursor?: string,
      *   filters?: Filters|FiltersShape,
+     *   mode?: Mode|value-of<Mode>,
      *   tags?: list<string>,
      * }|PersonSearchParams $params
      * @param RequestOpts|null $requestOptions
