@@ -47,6 +47,7 @@ final class BrandRawService implements BrandRawContract
      *   forceLanguage?: value-of<ForceLanguage>,
      *   maxAgeMs?: int,
      *   maxSpeed?: bool,
+     *   policies?: list<string>,
      *   tags?: list<string>,
      *   timeoutOpts?: TimeoutOpts|TimeoutOptsShape,
      *   name: string,

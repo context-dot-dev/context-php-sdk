@@ -15,6 +15,7 @@ use ContextDev\Batch\CrawlControls;
 use ContextDev\Batch\Failure;
 use ContextDev\Batch\Intake;
 use ContextDev\Batch\PageErrorCount;
+use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
@@ -46,6 +47,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   status: Status|value-of<Status>,
  *   tags: list<string>,
  *   timing: Timing|TimingShape,
+ *   policies?: list<string>|null,
  * }
  */
 final class Data implements BaseModel
@@ -137,6 +139,14 @@ final class Data implements BaseModel
     public Timing $timing;
 
     /**
+     * Access policy IDs applied to every page.
+     *
+     * @var list<string>|null $policies
+     */
+    #[Optional(list: 'string')]
+    public ?array $policies;
+
+    /**
      * `new Data()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -199,6 +209,7 @@ final class Data implements BaseModel
      * @param Status|value-of<Status> $status
      * @param list<string> $tags
      * @param Timing|TimingShape $timing
+     * @param list<string>|null $policies
      */
     public static function with(
         string $id,
@@ -214,6 +225,7 @@ final class Data implements BaseModel
         Status|string $status,
         array $tags,
         Timing|array $timing,
+        ?array $policies = null,
     ): self {
         $self = new self;
 
@@ -230,6 +242,8 @@ final class Data implements BaseModel
         $self['status'] = $status;
         $self['tags'] = $tags;
         $self['timing'] = $timing;
+
+        null !== $policies && $self['policies'] = $policies;
 
         return $self;
     }
@@ -395,6 +409,19 @@ final class Data implements BaseModel
     {
         $self = clone $this;
         $self['timing'] = $timing;
+
+        return $self;
+    }
+
+    /**
+     * Access policy IDs applied to every page.
+     *
+     * @param list<string> $policies
+     */
+    public function withPolicies(array $policies): self
+    {
+        $self = clone $this;
+        $self['policies'] = $policies;
 
         return $self;
     }

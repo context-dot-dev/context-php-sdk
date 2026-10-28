@@ -37,6 +37,7 @@ use ContextDev\Web\WebWebCrawlMdParams\Zdr;
  *   maxDepth?: int|null,
  *   maxPages?: int|null,
  *   pdf?: null|Pdf|PdfShape,
+ *   policies?: list<string>|null,
  *   settleAnimations?: bool|null,
  *   shortenBase64Images?: bool|null,
  *   sourcePreference?: list<SourcePreference|value-of<SourcePreference>>|null,
@@ -140,6 +141,14 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?Pdf $pdf;
 
     /**
+     * Access policy IDs to apply. A URL must pass every policy.
+     *
+     * @var list<string>|null $policies
+     */
+    #[Optional(list: 'string')]
+    public ?array $policies;
+
+    /**
      * Wait briefly for CSS animations and transitions to settle before reading each page.
      */
     #[Optional]
@@ -233,6 +242,7 @@ final class WebWebCrawlMdParams implements BaseModel
      * @param list<string>|null $excludeSelectors
      * @param list<string>|null $includeSelectors
      * @param Pdf|PdfShape|null $pdf
+     * @param list<string>|null $policies
      * @param list<SourcePreference|value-of<SourcePreference>>|null $sourcePreference
      * @param list<string>|null $tags
      * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
@@ -252,6 +262,7 @@ final class WebWebCrawlMdParams implements BaseModel
         ?int $maxDepth = null,
         ?int $maxPages = null,
         Pdf|array|null $pdf = null,
+        ?array $policies = null,
         ?bool $settleAnimations = null,
         ?bool $shortenBase64Images = null,
         ?array $sourcePreference = null,
@@ -279,6 +290,7 @@ final class WebWebCrawlMdParams implements BaseModel
         null !== $maxDepth && $self['maxDepth'] = $maxDepth;
         null !== $maxPages && $self['maxPages'] = $maxPages;
         null !== $pdf && $self['pdf'] = $pdf;
+        null !== $policies && $self['policies'] = $policies;
         null !== $settleAnimations && $self['settleAnimations'] = $settleAnimations;
         null !== $shortenBase64Images && $self['shortenBase64Images'] = $shortenBase64Images;
         null !== $sourcePreference && $self['sourcePreference'] = $sourcePreference;
@@ -440,6 +452,19 @@ final class WebWebCrawlMdParams implements BaseModel
     {
         $self = clone $this;
         $self['pdf'] = $pdf;
+
+        return $self;
+    }
+
+    /**
+     * Access policy IDs to apply. A URL must pass every policy.
+     *
+     * @param list<string> $policies
+     */
+    public function withPolicies(array $policies): self
+    {
+        $self = clone $this;
+        $self['policies'] = $policies;
 
         return $self;
     }

@@ -78,6 +78,7 @@ final class MonitorsTest extends TestCase
             ],
             changeDetection: ['type' => 'exact'],
             mode: 'web',
+            policies: ['pol_3f9c2a7e5b8d4c1f9a6e0b2d7c4f8a1e'],
             schedule: ['frequency' => 6, 'type' => 'interval', 'unit' => 'hours'],
             tags: ['pricing', 'competitor'],
             webhook: [

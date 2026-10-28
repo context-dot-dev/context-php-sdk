@@ -37,6 +37,7 @@ use ContextDev\Monitors\MonitorCreateParams\Webhook;
  *   target: TargetShape,
  *   changeDetection?: ChangeDetectionShape|null,
  *   mode?: null|Mode|value-of<Mode>,
+ *   policies?: list<string>|null,
  *   schedule?: null|Schedule|ScheduleShape,
  *   tags?: list<string>|null,
  *   webhook?: null|Webhook|WebhookShape,
@@ -77,6 +78,14 @@ final class MonitorCreateParams implements BaseModel
      */
     #[Optional(enum: Mode::class)]
     public ?string $mode;
+
+    /**
+     * Access policy IDs to apply to every run.
+     *
+     * @var list<string>|null $policies
+     */
+    #[Optional(list: 'string')]
+    public ?array $policies;
 
     /**
      * Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
@@ -125,6 +134,7 @@ final class MonitorCreateParams implements BaseModel
      * @param TargetShape $target
      * @param ChangeDetectionShape|null $changeDetection
      * @param Mode|value-of<Mode>|null $mode
+     * @param list<string>|null $policies
      * @param Schedule|ScheduleShape|null $schedule
      * @param list<string>|null $tags
      * @param Webhook|WebhookShape|null $webhook
@@ -134,6 +144,7 @@ final class MonitorCreateParams implements BaseModel
         MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget $target,
         MonitorsExactChangeDetection|array|MonitorsSemanticChangeDetection|null $changeDetection = null,
         Mode|string|null $mode = null,
+        ?array $policies = null,
         Schedule|array|null $schedule = null,
         ?array $tags = null,
         Webhook|array|null $webhook = null,
@@ -145,6 +156,7 @@ final class MonitorCreateParams implements BaseModel
 
         null !== $changeDetection && $self['changeDetection'] = $changeDetection;
         null !== $mode && $self['mode'] = $mode;
+        null !== $policies && $self['policies'] = $policies;
         null !== $schedule && $self['schedule'] = $schedule;
         null !== $tags && $self['tags'] = $tags;
         null !== $webhook && $self['webhook'] = $webhook;
@@ -200,6 +212,19 @@ final class MonitorCreateParams implements BaseModel
     {
         $self = clone $this;
         $self['mode'] = $mode;
+
+        return $self;
+    }
+
+    /**
+     * Access policy IDs to apply to every run.
+     *
+     * @param list<string> $policies
+     */
+    public function withPolicies(array $policies): self
+    {
+        $self = clone $this;
+        $self['policies'] = $policies;
 
         return $self;
     }

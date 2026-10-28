@@ -54,6 +54,7 @@ use ContextDev\Monitors\MonitorListResponse\Data\WebhookFailure;
  *   lastError?: null|LastError|LastErrorShape,
  *   lastRunAt?: \DateTimeInterface|null,
  *   nextRunAt?: \DateTimeInterface|null,
+ *   policies?: list<string>|null,
  *   tags?: list<string>|null,
  *   webhook?: null|Webhook|WebhookShape,
  *   webhookFailure?: null|WebhookFailure|WebhookFailureShape,
@@ -141,6 +142,14 @@ final class Data implements BaseModel
     public ?\DateTimeInterface $nextRunAt;
 
     /**
+     * Access policy IDs applied to every run.
+     *
+     * @var list<string>|null $policies
+     */
+    #[Optional(list: 'string')]
+    public ?array $policies;
+
+    /**
      * Labels for filtering monitors, their changes, and their usage.
      *
      * @var list<string>|null $tags
@@ -210,6 +219,7 @@ final class Data implements BaseModel
      * @param TargetShape $target
      * @param BaselineShape|null $baseline
      * @param LastError|LastErrorShape|null $lastError
+     * @param list<string>|null $policies
      * @param list<string>|null $tags
      * @param Webhook|WebhookShape|null $webhook
      * @param WebhookFailure|WebhookFailureShape|null $webhookFailure
@@ -229,6 +239,7 @@ final class Data implements BaseModel
         LastError|array|null $lastError = null,
         ?\DateTimeInterface $lastRunAt = null,
         ?\DateTimeInterface $nextRunAt = null,
+        ?array $policies = null,
         ?array $tags = null,
         Webhook|array|null $webhook = null,
         WebhookFailure|array|null $webhookFailure = null,
@@ -250,6 +261,7 @@ final class Data implements BaseModel
         null !== $lastError && $self['lastError'] = $lastError;
         null !== $lastRunAt && $self['lastRunAt'] = $lastRunAt;
         null !== $nextRunAt && $self['nextRunAt'] = $nextRunAt;
+        null !== $policies && $self['policies'] = $policies;
         null !== $tags && $self['tags'] = $tags;
         null !== $webhook && $self['webhook'] = $webhook;
         null !== $webhookFailure && $self['webhookFailure'] = $webhookFailure;
@@ -406,6 +418,19 @@ final class Data implements BaseModel
     {
         $self = clone $this;
         $self['nextRunAt'] = $nextRunAt;
+
+        return $self;
+    }
+
+    /**
+     * Access policy IDs applied to every run.
+     *
+     * @param list<string> $policies
+     */
+    public function withPolicies(array $policies): self
+    {
+        $self = clone $this;
+        $self['policies'] = $policies;
 
         return $self;
     }

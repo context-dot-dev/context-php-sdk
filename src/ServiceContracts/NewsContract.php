@@ -27,6 +27,7 @@ interface NewsContract
      * @param string|null $cursor opaque next_cursor from the previous response, or null for the first page
      * @param FilterBy|FilterByShape $filterBy Optional result filters. Use at most one of sourceDomain, sourceCountry, articleLanguage, or articleType. A date range may accompany that category; date.from must not exceed date.to.
      * @param int $limit Maximum results to return. Defaults to 10.
+     * @param list<string> $policies Access policy IDs to apply. A URL must pass every policy.
      * @param SortBy|SortByShape $sortBy Result ordering. Defaults to newest for entity searches. Natural-language searches are always ordered by relevance.
      * @param list<string> $tags labels for filtering usage in the dashboard
      * @param RequestOpts|null $requestOptions
@@ -38,6 +39,7 @@ interface NewsContract
         ?string $cursor = null,
         FilterBy|array|null $filterBy = null,
         int $limit = 10,
+        ?array $policies = null,
         SortBy|array|null $sortBy = null,
         ?array $tags = null,
         RequestOptions|array|null $requestOptions = null,

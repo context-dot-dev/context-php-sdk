@@ -26,6 +26,7 @@ use ContextDev\Utility\UtilityPrefetchParams\Type;
  * @phpstan-type UtilityPrefetchParamsShape = array{
  *   identifier: IdentifierShape,
  *   type: Type|value-of<Type>,
+ *   policies?: list<string>|null,
  *   tags?: list<string>|null,
  *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  * }
@@ -51,6 +52,14 @@ final class UtilityPrefetchParams implements BaseModel
      */
     #[Required(enum: Type::class)]
     public string $type;
+
+    /**
+     * Access policy IDs to apply. A URL must pass every policy.
+     *
+     * @var list<string>|null $policies
+     */
+    #[Optional(list: 'string')]
+    public ?array $policies;
 
     /**
      * Labels for filtering usage in the dashboard.
@@ -92,12 +101,14 @@ final class UtilityPrefetchParams implements BaseModel
      *
      * @param IdentifierShape $identifier
      * @param Type|value-of<Type> $type
+     * @param list<string>|null $policies
      * @param list<string>|null $tags
      * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      */
     public static function with(
         UtilityPrefetchDomainIdentifier|array|UtilityPrefetchEmailIdentifier $identifier,
         Type|string $type,
+        ?array $policies = null,
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
     ): self {
@@ -106,6 +117,7 @@ final class UtilityPrefetchParams implements BaseModel
         $self['identifier'] = $identifier;
         $self['type'] = $type;
 
+        null !== $policies && $self['policies'] = $policies;
         null !== $tags && $self['tags'] = $tags;
         null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
 
@@ -135,6 +147,19 @@ final class UtilityPrefetchParams implements BaseModel
     {
         $self = clone $this;
         $self['type'] = $type;
+
+        return $self;
+    }
+
+    /**
+     * Access policy IDs to apply. A URL must pass every policy.
+     *
+     * @param list<string> $policies
+     */
+    public function withPolicies(array $policies): self
+    {
+        $self = clone $this;
+        $self['policies'] = $policies;
 
         return $self;
     }

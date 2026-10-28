@@ -55,6 +55,7 @@ use ContextDev\Monitors\MonitorGetResponse\WebhookFailure;
  *   lastError?: null|LastError|LastErrorShape,
  *   lastRunAt?: \DateTimeInterface|null,
  *   nextRunAt?: \DateTimeInterface|null,
+ *   policies?: list<string>|null,
  *   schedule?: null|Schedule|ScheduleShape,
  *   tags?: list<string>|null,
  *   webhook?: null|Webhook|WebhookShape,
@@ -149,6 +150,14 @@ final class MonitorGetResponse implements BaseModel
     public ?\DateTimeInterface $nextRunAt;
 
     /**
+     * Access policy IDs applied to every run.
+     *
+     * @var list<string>|null $policies
+     */
+    #[Optional(list: 'string')]
+    public ?array $policies;
+
+    /**
      * Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
      */
     #[Optional]
@@ -224,6 +233,7 @@ final class MonitorGetResponse implements BaseModel
      * @param BaselineShape|null $baseline
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
      * @param LastError|LastErrorShape|null $lastError
+     * @param list<string>|null $policies
      * @param Schedule|ScheduleShape|null $schedule
      * @param list<string>|null $tags
      * @param Webhook|WebhookShape|null $webhook
@@ -245,6 +255,7 @@ final class MonitorGetResponse implements BaseModel
         LastError|array|null $lastError = null,
         ?\DateTimeInterface $lastRunAt = null,
         ?\DateTimeInterface $nextRunAt = null,
+        ?array $policies = null,
         Schedule|array|null $schedule = null,
         ?array $tags = null,
         Webhook|array|null $webhook = null,
@@ -268,6 +279,7 @@ final class MonitorGetResponse implements BaseModel
         null !== $lastError && $self['lastError'] = $lastError;
         null !== $lastRunAt && $self['lastRunAt'] = $lastRunAt;
         null !== $nextRunAt && $self['nextRunAt'] = $nextRunAt;
+        null !== $policies && $self['policies'] = $policies;
         null !== $schedule && $self['schedule'] = $schedule;
         null !== $tags && $self['tags'] = $tags;
         null !== $webhook && $self['webhook'] = $webhook;
@@ -436,6 +448,19 @@ final class MonitorGetResponse implements BaseModel
     {
         $self = clone $this;
         $self['nextRunAt'] = $nextRunAt;
+
+        return $self;
+    }
+
+    /**
+     * Access policy IDs applied to every run.
+     *
+     * @param list<string> $policies
+     */
+    public function withPolicies(array $policies): self
+    {
+        $self = clone $this;
+        $self['policies'] = $policies;
 
         return $self;
     }

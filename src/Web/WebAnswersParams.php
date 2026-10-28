@@ -24,6 +24,7 @@ use ContextDev\Web\WebAnswersParams\Zdr;
  *   task: string,
  *   jsonFormat?: array<string,mixed>|null,
  *   mode?: null|Mode|value-of<Mode>,
+ *   policies?: list<string>|null,
  *   tags?: list<string>|null,
  *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  *   zdr?: null|Zdr|value-of<Zdr>,
@@ -56,6 +57,14 @@ final class WebAnswersParams implements BaseModel
      */
     #[Optional(enum: Mode::class)]
     public ?string $mode;
+
+    /**
+     * Access policy IDs to apply. A URL must pass every policy.
+     *
+     * @var list<string>|null $policies
+     */
+    #[Optional(list: 'string')]
+    public ?array $policies;
 
     /**
      * Labels for filtering usage in the dashboard.
@@ -105,6 +114,7 @@ final class WebAnswersParams implements BaseModel
      *
      * @param array<string,mixed>|null $jsonFormat
      * @param Mode|value-of<Mode>|null $mode
+     * @param list<string>|null $policies
      * @param list<string>|null $tags
      * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      * @param Zdr|value-of<Zdr>|null $zdr
@@ -113,6 +123,7 @@ final class WebAnswersParams implements BaseModel
         string $task,
         ?array $jsonFormat = null,
         Mode|string|null $mode = null,
+        ?array $policies = null,
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
         Zdr|string|null $zdr = null,
@@ -123,6 +134,7 @@ final class WebAnswersParams implements BaseModel
 
         null !== $jsonFormat && $self['jsonFormat'] = $jsonFormat;
         null !== $mode && $self['mode'] = $mode;
+        null !== $policies && $self['policies'] = $policies;
         null !== $tags && $self['tags'] = $tags;
         null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
         null !== $zdr && $self['zdr'] = $zdr;
@@ -163,6 +175,19 @@ final class WebAnswersParams implements BaseModel
     {
         $self = clone $this;
         $self['mode'] = $mode;
+
+        return $self;
+    }
+
+    /**
+     * Access policy IDs to apply. A URL must pass every policy.
+     *
+     * @param list<string> $policies
+     */
+    public function withPolicies(array $policies): self
+    {
+        $self = clone $this;
+        $self['policies'] = $policies;
 
         return $self;
     }

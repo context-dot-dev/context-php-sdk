@@ -56,6 +56,7 @@ final class BrandService implements BrandContract
      * @param ForceLanguage|value-of<ForceLanguage>|null $forceLanguage
      * @param int $maxAgeMs Maximum age of cached brand data in ms. Defaults to 3 months; clamped to 0–1 year. `0` refreshes.
      * @param bool $maxSpeed Optional parameter to optimize the API call for maximum speed. When set to true, the API will skip time-consuming operations for faster response at the cost of less comprehensive data.
+     * @param list<string> $policies Access policy IDs to apply. A URL must pass every policy.
      * @param list<string> $tags labels for filtering usage in the dashboard
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts request deadline and what to return when it passes
      * @param CountryGl|value-of<CountryGl> $countryGl two-letter ISO 3166-1 alpha-2 country code (GL parameter) used to localize search
@@ -79,6 +80,7 @@ final class BrandService implements BrandContract
         ForceLanguage|string|null $forceLanguage = null,
         ?int $maxAgeMs = null,
         ?bool $maxSpeed = null,
+        ?array $policies = null,
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
         CountryGl|string|null $countryGl = null,
@@ -96,6 +98,7 @@ final class BrandService implements BrandContract
                 'forceLanguage' => $forceLanguage,
                 'maxAgeMs' => $maxAgeMs,
                 'maxSpeed' => $maxSpeed,
+                'policies' => $policies,
                 'tags' => $tags,
                 'timeoutOpts' => $timeoutOpts,
                 'name' => $name,

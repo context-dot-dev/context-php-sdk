@@ -75,6 +75,7 @@ final class MonitorsService implements MonitorsContract
      * @param TargetShape $target what to watch: a page, a sitemap, or data extracted from a site
      * @param ChangeDetectionShape $changeDetection How changes are judged. Defaults to `semantic` for extract targets and page targets with `instructions`, otherwise `exact`.
      * @param Mode|value-of<Mode> $mode Always `web`. Optional.
+     * @param list<string> $policies access policy IDs to apply to every run
      * @param Schedule|ScheduleShape $schedule Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
      * @param list<string> $tags labels for filtering monitors, their changes, and their usage
      * @param Webhook|WebhookShape|null $webhook Webhook destination and delivery settings. Null means no webhook is configured.
@@ -87,6 +88,7 @@ final class MonitorsService implements MonitorsContract
         MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget $target,
         MonitorsExactChangeDetection|array|MonitorsSemanticChangeDetection|null $changeDetection = null,
         Mode|string|null $mode = null,
+        ?array $policies = null,
         Schedule|array|null $schedule = null,
         ?array $tags = null,
         Webhook|array|null $webhook = null,
@@ -98,6 +100,7 @@ final class MonitorsService implements MonitorsContract
                 'target' => $target,
                 'changeDetection' => $changeDetection,
                 'mode' => $mode,
+                'policies' => $policies,
                 'schedule' => $schedule,
                 'tags' => $tags,
                 'webhook' => $webhook,
@@ -138,6 +141,7 @@ final class MonitorsService implements MonitorsContract
      * @param string $monitorID ID of the monitor
      * @param ChangeDetectionShape1 $changeDetection How changes are judged. Defaults to `semantic` for extract targets and page targets with `instructions`, otherwise `exact`.
      * @param string $name display name for the monitor
+     * @param list<string> $policies Access policy IDs to apply to every run. Send an empty list to remove them.
      * @param \ContextDev\Monitors\MonitorUpdateParams\Schedule|ScheduleShape1 $schedule Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
      * @param Status|value-of<Status> $status set `paused` to stop scheduled runs or `active` to resume them
      * @param list<string> $tags labels for filtering monitors, their changes, and their usage
@@ -151,6 +155,7 @@ final class MonitorsService implements MonitorsContract
         string $monitorID,
         \ContextDev\Monitors\MonitorUpdateParams\ChangeDetection\MonitorsExactChangeDetection|array|\ContextDev\Monitors\MonitorUpdateParams\ChangeDetection\MonitorsSemanticChangeDetection|null $changeDetection = null,
         ?string $name = null,
+        ?array $policies = null,
         \ContextDev\Monitors\MonitorUpdateParams\Schedule|array|null $schedule = null,
         Status|string|null $status = null,
         ?array $tags = null,
@@ -162,6 +167,7 @@ final class MonitorsService implements MonitorsContract
             [
                 'changeDetection' => $changeDetection,
                 'name' => $name,
+                'policies' => $policies,
                 'schedule' => $schedule,
                 'status' => $status,
                 'tags' => $tags,

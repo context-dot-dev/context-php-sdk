@@ -196,6 +196,7 @@ final class BatchRawService implements BatchRawContract
      *
      * @param array{
      *   input: InputShape,
+     *   policies?: list<string>,
      *   tags?: list<string>,
      *   webhook?: Webhook|WebhookShape,
      *   webhookURL?: string,

@@ -25,6 +25,7 @@ use ContextDev\Web\WebMapURLsParams\Zdr;
  *   headers?: array<string,string>|null,
  *   includeSubdomains?: bool|null,
  *   maxLinks?: int|null,
+ *   policies?: list<string>|null,
  *   search?: string|null,
  *   sitemapURL?: string|null,
  *   tags?: list<string>|null,
@@ -70,6 +71,14 @@ final class WebMapURLsParams implements BaseModel
      */
     #[Optional]
     public ?int $maxLinks;
+
+    /**
+     * Comma-separated access policy IDs to apply. A URL must pass every policy.
+     *
+     * @var list<string>|null $policies
+     */
+    #[Optional(list: 'string')]
+    public ?array $policies;
 
     /**
      * Filter URLs by a topic or phrase, most relevant first.
@@ -136,6 +145,7 @@ final class WebMapURLsParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param array<string,string>|null $headers
+     * @param list<string>|null $policies
      * @param list<string>|null $tags
      * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      * @param Zdr|value-of<Zdr>|null $zdr
@@ -146,6 +156,7 @@ final class WebMapURLsParams implements BaseModel
         ?array $headers = null,
         ?bool $includeSubdomains = null,
         ?int $maxLinks = null,
+        ?array $policies = null,
         ?string $search = null,
         ?string $sitemapURL = null,
         ?array $tags = null,
@@ -161,6 +172,7 @@ final class WebMapURLsParams implements BaseModel
         null !== $headers && $self['headers'] = $headers;
         null !== $includeSubdomains && $self['includeSubdomains'] = $includeSubdomains;
         null !== $maxLinks && $self['maxLinks'] = $maxLinks;
+        null !== $policies && $self['policies'] = $policies;
         null !== $search && $self['search'] = $search;
         null !== $sitemapURL && $self['sitemapURL'] = $sitemapURL;
         null !== $tags && $self['tags'] = $tags;
@@ -224,6 +236,19 @@ final class WebMapURLsParams implements BaseModel
     {
         $self = clone $this;
         $self['maxLinks'] = $maxLinks;
+
+        return $self;
+    }
+
+    /**
+     * Comma-separated access policy IDs to apply. A URL must pass every policy.
+     *
+     * @param list<string> $policies
+     */
+    public function withPolicies(array $policies): self
+    {
+        $self = clone $this;
+        $self['policies'] = $policies;
 
         return $self;
     }

@@ -34,6 +34,7 @@ use ContextDev\Monitors\MonitorUpdateParams\Webhook;
  * @phpstan-type MonitorUpdateParamsShape = array{
  *   changeDetection?: ChangeDetectionShape|null,
  *   name?: string|null,
+ *   policies?: list<string>|null,
  *   schedule?: null|Schedule|ScheduleShape,
  *   status?: null|Status|value-of<Status>,
  *   tags?: list<string>|null,
@@ -60,6 +61,14 @@ final class MonitorUpdateParams implements BaseModel
      */
     #[Optional]
     public ?string $name;
+
+    /**
+     * Access policy IDs to apply to every run. Send an empty list to remove them.
+     *
+     * @var list<string>|null $policies
+     */
+    #[Optional(list: 'string')]
+    public ?array $policies;
 
     /**
      * Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
@@ -108,6 +117,7 @@ final class MonitorUpdateParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param ChangeDetectionShape|null $changeDetection
+     * @param list<string>|null $policies
      * @param Schedule|ScheduleShape|null $schedule
      * @param Status|value-of<Status>|null $status
      * @param list<string>|null $tags
@@ -117,6 +127,7 @@ final class MonitorUpdateParams implements BaseModel
     public static function with(
         MonitorsExactChangeDetection|array|MonitorsSemanticChangeDetection|null $changeDetection = null,
         ?string $name = null,
+        ?array $policies = null,
         Schedule|array|null $schedule = null,
         Status|string|null $status = null,
         ?array $tags = null,
@@ -127,6 +138,7 @@ final class MonitorUpdateParams implements BaseModel
 
         null !== $changeDetection && $self['changeDetection'] = $changeDetection;
         null !== $name && $self['name'] = $name;
+        null !== $policies && $self['policies'] = $policies;
         null !== $schedule && $self['schedule'] = $schedule;
         null !== $status && $self['status'] = $status;
         null !== $tags && $self['tags'] = $tags;
@@ -157,6 +169,19 @@ final class MonitorUpdateParams implements BaseModel
     {
         $self = clone $this;
         $self['name'] = $name;
+
+        return $self;
+    }
+
+    /**
+     * Access policy IDs to apply to every run. Send an empty list to remove them.
+     *
+     * @param list<string> $policies
+     */
+    public function withPolicies(array $policies): self
+    {
+        $self = clone $this;
+        $self['policies'] = $policies;
 
         return $self;
     }

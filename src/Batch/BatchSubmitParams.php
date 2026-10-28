@@ -25,6 +25,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *
  * @phpstan-type BatchSubmitParamsShape = array{
  *   input: InputShape,
+ *   policies?: list<string>|null,
  *   tags?: list<string>|null,
  *   webhook?: null|Webhook|WebhookShape,
  *   webhookURL?: string|null,
@@ -44,6 +45,14 @@ final class BatchSubmitParams implements BaseModel
      */
     #[Required(union: Input::class)]
     public Scrape|Crawl $input;
+
+    /**
+     * Access policy IDs to apply to every page. A URL must pass every policy.
+     *
+     * @var list<string>|null $policies
+     */
+    #[Optional(list: 'string')]
+    public ?array $policies;
 
     /**
      * Tags stored on the batch. Filter the batch list by them later.
@@ -96,11 +105,13 @@ final class BatchSubmitParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param InputShape $input
+     * @param list<string>|null $policies
      * @param list<string>|null $tags
      * @param Webhook|WebhookShape|null $webhook
      */
     public static function with(
         Scrape|array|Crawl $input,
+        ?array $policies = null,
         ?array $tags = null,
         Webhook|array|null $webhook = null,
         ?string $webhookURL = null,
@@ -110,6 +121,7 @@ final class BatchSubmitParams implements BaseModel
 
         $self['input'] = $input;
 
+        null !== $policies && $self['policies'] = $policies;
         null !== $tags && $self['tags'] = $tags;
         null !== $webhook && $self['webhook'] = $webhook;
         null !== $webhookURL && $self['webhookURL'] = $webhookURL;
@@ -127,6 +139,19 @@ final class BatchSubmitParams implements BaseModel
     {
         $self = clone $this;
         $self['input'] = $input;
+
+        return $self;
+    }
+
+    /**
+     * Access policy IDs to apply to every page. A URL must pass every policy.
+     *
+     * @param list<string> $policies
+     */
+    public function withPolicies(array $policies): self
+    {
+        $self = clone $this;
+        $self['policies'] = $policies;
 
         return $self;
     }

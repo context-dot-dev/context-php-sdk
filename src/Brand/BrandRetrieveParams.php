@@ -32,6 +32,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   forceLanguage?: null|ForceLanguage|value-of<ForceLanguage>,
  *   maxAgeMs?: int|null,
  *   maxSpeed?: bool|null,
+ *   policies?: list<string>|null,
  *   tags?: list<string>|null,
  *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  *   name: string,
@@ -82,6 +83,14 @@ final class BrandRetrieveParams implements BaseModel
      */
     #[Optional]
     public ?bool $maxSpeed;
+
+    /**
+     * Access policy IDs to apply. A URL must pass every policy.
+     *
+     * @var list<string>|null $policies
+     */
+    #[Optional(list: 'string')]
+    public ?array $policies;
 
     /**
      * Labels for filtering usage in the dashboard.
@@ -212,6 +221,7 @@ final class BrandRetrieveParams implements BaseModel
      *
      * @param Type|value-of<Type> $type
      * @param ForceLanguage|value-of<ForceLanguage>|null $forceLanguage
+     * @param list<string>|null $policies
      * @param list<string>|null $tags
      * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      * @param CountryGl|value-of<CountryGl>|null $countryGl
@@ -230,6 +240,7 @@ final class BrandRetrieveParams implements BaseModel
         ForceLanguage|string|null $forceLanguage = null,
         ?int $maxAgeMs = null,
         ?bool $maxSpeed = null,
+        ?array $policies = null,
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
         CountryGl|string|null $countryGl = null,
@@ -252,6 +263,7 @@ final class BrandRetrieveParams implements BaseModel
         null !== $forceLanguage && $self['forceLanguage'] = $forceLanguage;
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
         null !== $maxSpeed && $self['maxSpeed'] = $maxSpeed;
+        null !== $policies && $self['policies'] = $policies;
         null !== $tags && $self['tags'] = $tags;
         null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
         null !== $countryGl && $self['countryGl'] = $countryGl;
@@ -318,6 +330,19 @@ final class BrandRetrieveParams implements BaseModel
     {
         $self = clone $this;
         $self['maxSpeed'] = $maxSpeed;
+
+        return $self;
+    }
+
+    /**
+     * Access policy IDs to apply. A URL must pass every policy.
+     *
+     * @param list<string> $policies
+     */
+    public function withPolicies(array $policies): self
+    {
+        $self = clone $this;
+        $self['policies'] = $policies;
 
         return $self;
     }

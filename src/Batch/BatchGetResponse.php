@@ -48,6 +48,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   tags: list<string>,
  *   timing: Timing|TimingShape,
  *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
+ *   policies?: list<string>|null,
  *   webhookDeliveryID?: string|null,
  * }
  */
@@ -160,6 +161,14 @@ final class BatchGetResponse implements BaseModel
     public ?KeyMetadata $keyMetadata;
 
     /**
+     * Access policy IDs applied to every page.
+     *
+     * @var list<string>|null $policies
+     */
+    #[Optional(list: 'string')]
+    public ?array $policies;
+
+    /**
      * Batch completion delivery ID, when available.
      */
     #[Optional('webhook_delivery_id')]
@@ -234,6 +243,7 @@ final class BatchGetResponse implements BaseModel
      * @param list<string> $tags
      * @param Timing|TimingShape $timing
      * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
+     * @param list<string>|null $policies
      */
     public static function with(
         string $id,
@@ -252,6 +262,7 @@ final class BatchGetResponse implements BaseModel
         array $tags,
         Timing|array $timing,
         KeyMetadata|array|null $keyMetadata = null,
+        ?array $policies = null,
         ?string $webhookDeliveryID = null,
     ): self {
         $self = new self;
@@ -273,6 +284,7 @@ final class BatchGetResponse implements BaseModel
         $self['timing'] = $timing;
 
         null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
+        null !== $policies && $self['policies'] = $policies;
         null !== $webhookDeliveryID && $self['webhookDeliveryID'] = $webhookDeliveryID;
 
         return $self;
@@ -476,6 +488,19 @@ final class BatchGetResponse implements BaseModel
     {
         $self = clone $this;
         $self['keyMetadata'] = $keyMetadata;
+
+        return $self;
+    }
+
+    /**
+     * Access policy IDs applied to every page.
+     *
+     * @param list<string> $policies
+     */
+    public function withPolicies(array $policies): self
+    {
+        $self = clone $this;
+        $self['policies'] = $policies;
 
         return $self;
     }

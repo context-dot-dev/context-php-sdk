@@ -63,6 +63,7 @@ final class BrandTest extends TestCase
             forceLanguage: 'afrikaans',
             maxAgeMs: 0,
             maxSpeed: true,
+            policies: ['pol_3f9c2a7e5b8d4c1f9a6e0b2d7c4f8a1e'],
             tags: ['production', 'team-alpha'],
             timeoutOpts: ['milliseconds' => 1000, 'behavior' => 'fail'],
             name: 'xxx',

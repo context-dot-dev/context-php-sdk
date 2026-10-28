@@ -24,6 +24,7 @@ use ContextDev\Web\WebExtractStyleguideParams\Zdr;
  *   directURL?: string|null,
  *   domain?: string|null,
  *   maxAgeMs?: int|null,
+ *   policies?: list<string>|null,
  *   tags?: list<string>|null,
  *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  *   zdr?: null|Zdr|value-of<Zdr>,
@@ -62,6 +63,14 @@ final class WebExtractStyleguideParams implements BaseModel
     public ?int $maxAgeMs;
 
     /**
+     * Comma-separated access policy IDs to apply. A URL must pass every policy.
+     *
+     * @var list<string>|null $policies
+     */
+    #[Optional(list: 'string')]
+    public ?array $policies;
+
+    /**
      * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      *
      * @var list<string>|null $tags
@@ -94,6 +103,7 @@ final class WebExtractStyleguideParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param ColorScheme|value-of<ColorScheme>|null $colorScheme
+     * @param list<string>|null $policies
      * @param list<string>|null $tags
      * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      * @param Zdr|value-of<Zdr>|null $zdr
@@ -103,6 +113,7 @@ final class WebExtractStyleguideParams implements BaseModel
         ?string $directURL = null,
         ?string $domain = null,
         ?int $maxAgeMs = null,
+        ?array $policies = null,
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
         Zdr|string|null $zdr = null,
@@ -113,6 +124,7 @@ final class WebExtractStyleguideParams implements BaseModel
         null !== $directURL && $self['directURL'] = $directURL;
         null !== $domain && $self['domain'] = $domain;
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
+        null !== $policies && $self['policies'] = $policies;
         null !== $tags && $self['tags'] = $tags;
         null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
         null !== $zdr && $self['zdr'] = $zdr;
@@ -162,6 +174,19 @@ final class WebExtractStyleguideParams implements BaseModel
     {
         $self = clone $this;
         $self['maxAgeMs'] = $maxAgeMs;
+
+        return $self;
+    }
+
+    /**
+     * Comma-separated access policy IDs to apply. A URL must pass every policy.
+     *
+     * @param list<string> $policies
+     */
+    public function withPolicies(array $policies): self
+    {
+        $self = clone $this;
+        $self['policies'] = $policies;
 
         return $self;
     }

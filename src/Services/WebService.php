@@ -90,6 +90,7 @@ final class WebService implements WebContract
      * @param string $task Research task. The agent selects company/profile lookups, web searches, or page reads. Include domains or URLs to focus the research.
      * @param array<string,mixed> $jsonFormat Example answer object, not JSON Schema. Up to 8 levels, 500 values, and 16000 characters; unknowns may be null.
      * @param Mode|value-of<Mode> $mode `fast` prioritizes speed, with extra verification for people and companies; `ultra` supports deeper research (default)
+     * @param list<string> $policies Access policy IDs to apply. A URL must pass every policy.
      * @param list<string> $tags labels for filtering usage in the dashboard
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts request deadline and what to return when it passes
      * @param Zdr|value-of<Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
@@ -101,6 +102,7 @@ final class WebService implements WebContract
         string $task,
         ?array $jsonFormat = null,
         Mode|string|null $mode = null,
+        ?array $policies = null,
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
         Zdr|string|null $zdr = null,
@@ -111,6 +113,7 @@ final class WebService implements WebContract
                 'task' => $task,
                 'jsonFormat' => $jsonFormat,
                 'mode' => $mode,
+                'policies' => $policies,
                 'tags' => $tags,
                 'timeoutOpts' => $timeoutOpts,
                 'zdr' => $zdr,
@@ -170,6 +173,7 @@ final class WebService implements WebContract
      * @param string $directURL Exact URL to inspect. Provide either `domain` or `directUrl`, not both.
      * @param string $domain Domain name to extract styleguide from (e.g., 'example.com', 'google.com'). The domain will be automatically normalized and validated. You must provide either 'domain' or 'directUrl', but not both.
      * @param int|null $maxAgeMs Maximum age of cached brand data in ms. Defaults to 3 months; clamped to 0–1 year. `0` refreshes.
+     * @param list<string> $policies Comma-separated access policy IDs to apply. A URL must pass every policy.
      * @param list<string> $tags Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      * @param \ContextDev\Web\WebExtractStyleguideParams\TimeoutOpts|TimeoutOptsShape2 $timeoutOpts request deadline and what to return when it passes
      * @param \ContextDev\Web\WebExtractStyleguideParams\Zdr|value-of<\ContextDev\Web\WebExtractStyleguideParams\Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
@@ -182,6 +186,7 @@ final class WebService implements WebContract
         ?string $directURL = null,
         ?string $domain = null,
         ?int $maxAgeMs = 7776000000,
+        ?array $policies = null,
         ?array $tags = null,
         \ContextDev\Web\WebExtractStyleguideParams\TimeoutOpts|array|null $timeoutOpts = null,
         \ContextDev\Web\WebExtractStyleguideParams\Zdr|string $zdr = 'disabled',
@@ -193,6 +198,7 @@ final class WebService implements WebContract
                 'directURL' => $directURL,
                 'domain' => $domain,
                 'maxAgeMs' => $maxAgeMs,
+                'policies' => $policies,
                 'tags' => $tags,
                 'timeoutOpts' => $timeoutOpts,
                 'zdr' => $zdr,
@@ -215,6 +221,7 @@ final class WebService implements WebContract
      * @param array<string,string> $headers HTTP headers for the target origin. Non-empty headers bypass caching.
      * @param bool $includeSubdomains include URLs on subdomains
      * @param int $maxLinks maximum number of URLs to return
+     * @param list<string> $policies Comma-separated access policy IDs to apply. A URL must pass every policy.
      * @param string $search filter URLs by a topic or phrase, most relevant first
      * @param string $sitemapURL Fetch this sitemap instead of discovering sitemaps. Must belong to the domain or a subdomain.
      * @param list<string> $tags Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
@@ -231,6 +238,7 @@ final class WebService implements WebContract
         ?array $headers = null,
         bool $includeSubdomains = false,
         int $maxLinks = 10000,
+        ?array $policies = null,
         ?string $search = null,
         ?string $sitemapURL = null,
         ?array $tags = null,
@@ -246,6 +254,7 @@ final class WebService implements WebContract
                 'headers' => $headers,
                 'includeSubdomains' => $includeSubdomains,
                 'maxLinks' => $maxLinks,
+                'policies' => $policies,
                 'search' => $search,
                 'sitemapURL' => $sitemapURL,
                 'tags' => $tags,
@@ -274,6 +283,7 @@ final class WebService implements WebContract
      * @param MarkdownParams|MarkdownParamsShape $markdownParams Markdown options. Requires `formats.markdown`.
      * @param int $maxAgeMs Maximum age of a cached output, in milliseconds. `0` fetches fresh. Defaults to 3 days (259200000 ms). Maximum: 1 year (31536000000 ms).
      * @param ParseParamsShape $parseParams Requires `formats.parse: true`; required when it is set.
+     * @param list<string> $policies Access policy IDs to apply. A URL must pass every policy.
      * @param ProductParams|ProductParamsShape $productParams Product options. Requires formats.product: true.
      * @param ScreenshotParams|ScreenshotParamsShape $screenshotParams Screenshot options. Requires formats.screenshot: true.
      * @param SharedParams|SharedParamsShape $sharedParams browser and content settings shared by all outputs
@@ -293,6 +303,7 @@ final class WebService implements WebContract
         MarkdownParams|array|null $markdownParams = null,
         int $maxAgeMs = 259200000,
         CustomParser|array|PrebuiltParser|null $parseParams = null,
+        ?array $policies = null,
         ProductParams|array|null $productParams = null,
         ScreenshotParams|array|null $screenshotParams = null,
         SharedParams|array|null $sharedParams = null,
@@ -313,6 +324,7 @@ final class WebService implements WebContract
                 'markdownParams' => $markdownParams,
                 'maxAgeMs' => $maxAgeMs,
                 'parseParams' => $parseParams,
+                'policies' => $policies,
                 'productParams' => $productParams,
                 'screenshotParams' => $screenshotParams,
                 'sharedParams' => $sharedParams,
@@ -414,6 +426,7 @@ final class WebService implements WebContract
      * @param LanguagesShape $languages Languages to return results in, as BCP 47 language codes such as `en` or `de`, or "all" for any language. Defaults to "all". Example: ["en", "de"].
      * @param MarkdownOptions|MarkdownOptionsShape|null $markdownOptions Inline Markdown scraping for each result. Set `enabled: true` to activate.
      * @param int $numResults Number of results to request and return (1–100). Defaults to 10.
+     * @param list<string> $policies Access policy IDs to apply. A URL must pass every policy.
      * @param bool $queryFanout currently has no effect
      * @param list<string> $tags labels for filtering usage in the dashboard
      * @param \ContextDev\Web\WebSearchParams\TimeoutOpts|TimeoutOptsShape6 $timeoutOpts request deadline and what to return when it passes
@@ -433,6 +446,7 @@ final class WebService implements WebContract
         UnionMember0|array|string $languages = 'all',
         MarkdownOptions|array|null $markdownOptions = null,
         int $numResults = 10,
+        ?array $policies = null,
         ?bool $queryFanout = null,
         ?array $tags = null,
         \ContextDev\Web\WebSearchParams\TimeoutOpts|array|null $timeoutOpts = null,
@@ -451,6 +465,7 @@ final class WebService implements WebContract
                 'languages' => $languages,
                 'markdownOptions' => $markdownOptions,
                 'numResults' => $numResults,
+                'policies' => $policies,
                 'queryFanout' => $queryFanout,
                 'tags' => $tags,
                 'timeoutOpts' => $timeoutOpts,
@@ -482,6 +497,7 @@ final class WebService implements WebContract
      * @param int $maxDepth Maximum link depth from the starting URL (0 = only the starting page)
      * @param int $maxPages maximum pages to crawl
      * @param Pdf|PdfShape $pdf PDF handling. `start`/`end` limit parsing to an inclusive, 1-based page range.
+     * @param list<string> $policies Access policy IDs to apply. A URL must pass every policy.
      * @param bool $settleAnimations wait briefly for CSS animations and transitions to settle before reading each page
      * @param bool $shortenBase64Images truncate base64-encoded image data in the Markdown output (`html-conversion` only)
      * @param list<SourcePreference|value-of<SourcePreference>> $sourcePreference markdown sources in order of preference: `html-conversion` converts the page HTML, `markdown-direct` uses Markdown the site publishes
@@ -510,6 +526,7 @@ final class WebService implements WebContract
         ?int $maxDepth = null,
         int $maxPages = 100,
         Pdf|array $pdf = ['shouldParse' => true, 'ocr' => false],
+        ?array $policies = null,
         bool $settleAnimations = false,
         bool $shortenBase64Images = true,
         array $sourcePreference = ['html-conversion', 'markdown-direct'],
@@ -537,6 +554,7 @@ final class WebService implements WebContract
                 'maxDepth' => $maxDepth,
                 'maxPages' => $maxPages,
                 'pdf' => $pdf,
+                'policies' => $policies,
                 'settleAnimations' => $settleAnimations,
                 'shortenBase64Images' => $shortenBase64Images,
                 'sourcePreference' => $sourcePreference,

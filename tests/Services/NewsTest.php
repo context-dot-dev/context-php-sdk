@@ -67,6 +67,7 @@ final class NewsTest extends TestCase
                 'sourceDomain' => ['x'],
             ],
             limit: 1,
+            policies: ['pol_3f9c2a7e5b8d4c1f9a6e0b2d7c4f8a1e'],
             sortBy: ['type' => 'relevance'],
             tags: ['production', 'team-alpha'],
         );

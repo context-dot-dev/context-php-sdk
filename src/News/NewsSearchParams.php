@@ -30,6 +30,7 @@ use ContextDev\News\NewsSearchParams\SortBy;
  *   cursor?: string|null,
  *   filterBy?: null|FilterBy|FilterByShape,
  *   limit?: int|null,
+ *   policies?: list<string>|null,
  *   sortBy?: null|SortBy|SortByShape,
  *   tags?: list<string>|null,
  * }
@@ -65,6 +66,14 @@ final class NewsSearchParams implements BaseModel
      */
     #[Optional]
     public ?int $limit;
+
+    /**
+     * Access policy IDs to apply. A URL must pass every policy.
+     *
+     * @var list<string>|null $policies
+     */
+    #[Optional(list: 'string')]
+    public ?array $policies;
 
     /**
      * Result ordering. Defaults to newest for entity searches. Natural-language searches are always ordered by relevance.
@@ -106,6 +115,7 @@ final class NewsSearchParams implements BaseModel
      *
      * @param SearchByShape $searchBy
      * @param FilterBy|FilterByShape|null $filterBy
+     * @param list<string>|null $policies
      * @param SortBy|SortByShape|null $sortBy
      * @param list<string>|null $tags
      */
@@ -114,6 +124,7 @@ final class NewsSearchParams implements BaseModel
         ?string $cursor = null,
         FilterBy|array|null $filterBy = null,
         ?int $limit = null,
+        ?array $policies = null,
         SortBy|array|null $sortBy = null,
         ?array $tags = null,
     ): self {
@@ -124,6 +135,7 @@ final class NewsSearchParams implements BaseModel
         null !== $cursor && $self['cursor'] = $cursor;
         null !== $filterBy && $self['filterBy'] = $filterBy;
         null !== $limit && $self['limit'] = $limit;
+        null !== $policies && $self['policies'] = $policies;
         null !== $sortBy && $self['sortBy'] = $sortBy;
         null !== $tags && $self['tags'] = $tags;
 
@@ -175,6 +187,19 @@ final class NewsSearchParams implements BaseModel
     {
         $self = clone $this;
         $self['limit'] = $limit;
+
+        return $self;
+    }
+
+    /**
+     * Access policy IDs to apply. A URL must pass every policy.
+     *
+     * @param list<string> $policies
+     */
+    public function withPolicies(array $policies): self
+    {
+        $self = clone $this;
+        $self['policies'] = $policies;
 
         return $self;
     }

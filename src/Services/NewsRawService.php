@@ -40,6 +40,7 @@ final class NewsRawService implements NewsRawContract
      *   cursor?: string|null,
      *   filterBy?: FilterBy|FilterByShape,
      *   limit?: int,
+     *   policies?: list<string>,
      *   sortBy?: SortBy|SortByShape,
      *   tags?: list<string>,
      * }|NewsSearchParams $params

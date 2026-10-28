@@ -180,6 +180,7 @@ final class BatchService implements BatchContract
      * Scrape up to 100,000 URLs, or crawl a site, asynchronously using the same formats and scrape parameters as POST /web/scrape. Choose Markdown, HTML, screenshots, images, bytes, parsed fields, products, highlights, and JSON. Poll the batch ID or receive a webhook when it finishes.
      *
      * @param InputShape $input body param: Choose a URL list or a site crawl
+     * @param list<string> $policies Body param: Access policy IDs to apply to every page. A URL must pass every policy.
      * @param list<string> $tags Body param: Tags stored on the batch. Filter the batch list by them later.
      * @param Webhook|WebhookShape $webhook Body param: Where to send the batch's final-status event. Omit `retry` for one attempt; `{}` uses the default retry schedule.
      * @param string $webhookURL Body param: Legacy URL notified when the batch finishes. Preserves one best-effort attempt. Cannot be combined with webhook.
@@ -190,6 +191,7 @@ final class BatchService implements BatchContract
      */
     public function submit(
         Scrape|array|Crawl $input,
+        ?array $policies = null,
         ?array $tags = null,
         Webhook|array|null $webhook = null,
         ?string $webhookURL = null,
@@ -199,6 +201,7 @@ final class BatchService implements BatchContract
         $params = Util::removeNulls(
             [
                 'input' => $input,
+                'policies' => $policies,
                 'tags' => $tags,
                 'webhook' => $webhook,
                 'webhookURL' => $webhookURL,

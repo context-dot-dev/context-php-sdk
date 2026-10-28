@@ -48,6 +48,7 @@ use ContextDev\Web\WebScrapeParams\Zdr;
  *   markdownParams?: null|MarkdownParams|MarkdownParamsShape,
  *   maxAgeMs?: int|null,
  *   parseParams?: ParseParamsShape|null,
+ *   policies?: list<string>|null,
  *   productParams?: null|ProductParams|ProductParamsShape,
  *   screenshotParams?: null|ScreenshotParams|ScreenshotParamsShape,
  *   sharedParams?: null|SharedParams|SharedParamsShape,
@@ -111,6 +112,14 @@ final class WebScrapeParams implements BaseModel
      */
     #[Optional]
     public CustomParser|PrebuiltParser|null $parseParams;
+
+    /**
+     * Access policy IDs to apply. A URL must pass every policy.
+     *
+     * @var list<string>|null $policies
+     */
+    #[Optional(list: 'string')]
+    public ?array $policies;
 
     /**
      * Product options. Requires formats.product: true.
@@ -182,6 +191,7 @@ final class WebScrapeParams implements BaseModel
      * @param JsonParams|JsonParamsShape|null $jsonParams
      * @param MarkdownParams|MarkdownParamsShape|null $markdownParams
      * @param ParseParamsShape|null $parseParams
+     * @param list<string>|null $policies
      * @param ProductParams|ProductParamsShape|null $productParams
      * @param ScreenshotParams|ScreenshotParamsShape|null $screenshotParams
      * @param SharedParams|SharedParamsShape|null $sharedParams
@@ -198,6 +208,7 @@ final class WebScrapeParams implements BaseModel
         MarkdownParams|array|null $markdownParams = null,
         ?int $maxAgeMs = null,
         CustomParser|array|PrebuiltParser|null $parseParams = null,
+        ?array $policies = null,
         ProductParams|array|null $productParams = null,
         ScreenshotParams|array|null $screenshotParams = null,
         SharedParams|array|null $sharedParams = null,
@@ -216,6 +227,7 @@ final class WebScrapeParams implements BaseModel
         null !== $markdownParams && $self['markdownParams'] = $markdownParams;
         null !== $maxAgeMs && $self['maxAgeMs'] = $maxAgeMs;
         null !== $parseParams && $self['parseParams'] = $parseParams;
+        null !== $policies && $self['policies'] = $policies;
         null !== $productParams && $self['productParams'] = $productParams;
         null !== $screenshotParams && $self['screenshotParams'] = $screenshotParams;
         null !== $sharedParams && $self['sharedParams'] = $sharedParams;
@@ -325,6 +337,19 @@ final class WebScrapeParams implements BaseModel
     ): self {
         $self = clone $this;
         $self['parseParams'] = $parseParams;
+
+        return $self;
+    }
+
+    /**
+     * Access policy IDs to apply. A URL must pass every policy.
+     *
+     * @param list<string> $policies
+     */
+    public function withPolicies(array $policies): self
+    {
+        $self = clone $this;
+        $self['policies'] = $policies;
 
         return $self;
     }

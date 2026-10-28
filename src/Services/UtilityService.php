@@ -42,6 +42,7 @@ final class UtilityService implements UtilityContract
      *
      * @param IdentifierShape $identifier Identifier of the target to prefetch. Provide exactly one of domain or email.
      * @param Type|value-of<Type> $type data to prefetch
+     * @param list<string> $policies Access policy IDs to apply. A URL must pass every policy.
      * @param list<string> $tags labels for filtering usage in the dashboard
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts request deadline and what to return when it passes
      * @param RequestOpts|null $requestOptions
@@ -51,6 +52,7 @@ final class UtilityService implements UtilityContract
     public function prefetch(
         UtilityPrefetchDomainIdentifier|array|UtilityPrefetchEmailIdentifier $identifier,
         Type|string $type,
+        ?array $policies = null,
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
         RequestOptions|array|null $requestOptions = null,
@@ -59,6 +61,7 @@ final class UtilityService implements UtilityContract
             [
                 'identifier' => $identifier,
                 'type' => $type,
+                'policies' => $policies,
                 'tags' => $tags,
                 'timeoutOpts' => $timeoutOpts,
             ],

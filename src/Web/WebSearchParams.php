@@ -40,6 +40,7 @@ use ContextDev\Web\WebSearchParams\Zdr;
  *   languages?: LanguagesShape|null,
  *   markdownOptions?: null|MarkdownOptions|MarkdownOptionsShape,
  *   numResults?: int|null,
+ *   policies?: list<string>|null,
  *   queryFanout?: bool|null,
  *   tags?: list<string>|null,
  *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
@@ -123,6 +124,14 @@ final class WebSearchParams implements BaseModel
     public ?int $numResults;
 
     /**
+     * Access policy IDs to apply. A URL must pass every policy.
+     *
+     * @var list<string>|null $policies
+     */
+    #[Optional(list: 'string')]
+    public ?array $policies;
+
+    /**
      * Currently has no effect.
      */
     #[Optional]
@@ -181,6 +190,7 @@ final class WebSearchParams implements BaseModel
      * @param list<string>|null $includeDomains
      * @param LanguagesShape|null $languages
      * @param MarkdownOptions|MarkdownOptionsShape|null $markdownOptions
+     * @param list<string>|null $policies
      * @param list<string>|null $tags
      * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      * @param Zdr|value-of<Zdr>|null $zdr
@@ -196,6 +206,7 @@ final class WebSearchParams implements BaseModel
         UnionMember0|array|string|null $languages = null,
         MarkdownOptions|array|null $markdownOptions = null,
         ?int $numResults = null,
+        ?array $policies = null,
         ?bool $queryFanout = null,
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
@@ -214,6 +225,7 @@ final class WebSearchParams implements BaseModel
         null !== $languages && $self['languages'] = $languages;
         null !== $markdownOptions && $self['markdownOptions'] = $markdownOptions;
         null !== $numResults && $self['numResults'] = $numResults;
+        null !== $policies && $self['policies'] = $policies;
         null !== $queryFanout && $self['queryFanout'] = $queryFanout;
         null !== $tags && $self['tags'] = $tags;
         null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
@@ -345,6 +357,19 @@ final class WebSearchParams implements BaseModel
     {
         $self = clone $this;
         $self['numResults'] = $numResults;
+
+        return $self;
+    }
+
+    /**
+     * Access policy IDs to apply. A URL must pass every policy.
+     *
+     * @param list<string> $policies
+     */
+    public function withPolicies(array $policies): self
+    {
+        $self = clone $this;
+        $self['policies'] = $policies;
 
         return $self;
     }

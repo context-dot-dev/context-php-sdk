@@ -35,6 +35,7 @@ final class UtilityRawService implements UtilityRawContract
      * @param array{
      *   identifier: IdentifierShape,
      *   type: Type|value-of<Type>,
+     *   policies?: list<string>,
      *   tags?: list<string>,
      *   timeoutOpts?: TimeoutOpts|TimeoutOptsShape,
      * }|UtilityPrefetchParams $params

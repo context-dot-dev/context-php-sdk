@@ -74,6 +74,7 @@ final class MonitorsRawService implements MonitorsRawContract
      *   target: TargetShape,
      *   changeDetection?: ChangeDetectionShape,
      *   mode?: Mode|value-of<Mode>,
+     *   policies?: list<string>,
      *   schedule?: Schedule|ScheduleShape,
      *   tags?: list<string>,
      *   webhook?: Webhook|WebhookShape|null,
@@ -137,6 +138,7 @@ final class MonitorsRawService implements MonitorsRawContract
      * @param array{
      *   changeDetection?: ChangeDetectionShape1,
      *   name?: string,
+     *   policies?: list<string>,
      *   schedule?: MonitorUpdateParams\Schedule|ScheduleShape1,
      *   status?: Status|value-of<Status>,
      *   tags?: list<string>,
