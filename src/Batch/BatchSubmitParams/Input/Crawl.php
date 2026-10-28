@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace ContextDev\Batch\BatchSubmitParams\Input;
 
-use ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data;
+use ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\BatchUnifiedCrawlData;
+use ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\HTML;
+use ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\Markdown;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
@@ -12,9 +14,10 @@ use ContextDev\Core\Contracts\BaseModel;
 /**
  * Crawl pages starting from a URL or from a domain's sitemap.
  *
+ * @phpstan-import-type DataVariants from \ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data
  * @phpstan-import-type DataShape from \ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data
  *
- * @phpstan-type CrawlShape = array{data: Data|DataShape, mode: 'crawl'}
+ * @phpstan-type CrawlShape = array{data: DataShape, mode: 'crawl'}
  */
 final class Crawl implements BaseModel
 {
@@ -30,10 +33,12 @@ final class Crawl implements BaseModel
     public string $mode = 'crawl';
 
     /**
-     * Use the same formats and parameters as POST /web/scrape, replacing url with source. Options apply to every page.
+     * Crawl source and output format.
+     *
+     * @var DataVariants $data
      */
     #[Required]
-    public Data $data;
+    public Markdown|HTML|BatchUnifiedCrawlData $data;
 
     /**
      * `new Crawl()` is missing required properties by the API.
@@ -59,10 +64,11 @@ final class Crawl implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param Data|DataShape $data
+     * @param DataShape $data
      */
-    public static function with(Data|array $data): self
-    {
+    public static function with(
+        Markdown|array|HTML|BatchUnifiedCrawlData $data
+    ): self {
         $self = new self;
 
         $self['data'] = $data;
@@ -71,12 +77,13 @@ final class Crawl implements BaseModel
     }
 
     /**
-     * Use the same formats and parameters as POST /web/scrape, replacing url with source. Options apply to every page.
+     * Crawl source and output format.
      *
-     * @param Data|DataShape $data
+     * @param DataShape $data
      */
-    public function withData(Data|array $data): self
-    {
+    public function withData(
+        Markdown|array|HTML|BatchUnifiedCrawlData $data
+    ): self {
         $self = clone $this;
         $self['data'] = $data;
 

@@ -1,0 +1,29 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\BatchUnifiedCrawlData\SharedParams\Action\Scroll;
+
+use ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\BatchUnifiedCrawlData\SharedParams\Action\Scroll\Amount\UnionMember1;
+use ContextDev\Core\Concerns\SdkUnion;
+use ContextDev\Core\Conversion\Contracts\Converter;
+use ContextDev\Core\Conversion\Contracts\ConverterSource;
+
+/**
+ * Distance per scroll: pixels, one `viewport`, or `max` to reach the end.
+ *
+ * @phpstan-type AmountVariants = int|value-of<UnionMember1>
+ * @phpstan-type AmountShape = AmountVariants
+ */
+final class Amount implements ConverterSource
+{
+    use SdkUnion;
+
+    /**
+     * @return list<string|Converter|ConverterSource>|array<string,string|Converter|ConverterSource>
+     */
+    public static function variants(): array
+    {
+        return ['int', UnionMember1::class];
+    }
+}
