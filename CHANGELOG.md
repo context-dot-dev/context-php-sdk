@@ -1,5 +1,47 @@
 # Changelog
 
+## [2.41.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.40.0...v2.41.0) (2026-10-28)
+
+
+### Features
+
+* **access-policies:** limit which websites API requests can reach ([#2213](https://github.com/context-dot-dev/context-php-sdk/issues/2213)) ([7888dfa](https://github.com/context-dot-dev/context-php-sdk/commit/7888dfa7edea785d0b23dbd19a8b7beddf0349eb))
+* **access-policies:** limit which websites API requests can reach ([#2213](https://github.com/context-dot-dev/context-php-sdk/issues/2213)) ([c76f7ab](https://github.com/context-dot-dev/context-php-sdk/commit/c76f7abbfc492c17dd190f1ce81f9907927c571d))
+* **access-policies:** limit which websites API requests can reach ([#2213](https://github.com/context-dot-dev/context-php-sdk/issues/2213)) ([eeff179](https://github.com/context-dot-dev/context-php-sdk/commit/eeff17952718f06835ce0212a205b65f1ca33738))
+* **access-policies:** limit which websites API requests can reach ([#2213](https://github.com/context-dot-dev/context-php-sdk/issues/2213)) ([14c81c8](https://github.com/context-dot-dev/context-php-sdk/commit/14c81c865790fc9edc1e971f82a12aa116b69127))
+* **access-policies:** limit which websites API requests can reach ([#2213](https://github.com/context-dot-dev/context-php-sdk/issues/2213)) ([3a7c4ab](https://github.com/context-dot-dev/context-php-sdk/commit/3a7c4abcd634475d901b7c8ed4db8ba7880715b4))
+* **access-policies:** limit which websites API requests can reach ([#2213](https://github.com/context-dot-dev/context-php-sdk/issues/2213)) ([0625fbf](https://github.com/context-dot-dev/context-php-sdk/commit/0625fbf32051b0a4725c8880fe7699ba8a0082c8))
+* **brand:** support log-free brand and styleguide requests ([#2231](https://github.com/context-dot-dev/context-php-sdk/issues/2231)) ([7888dfa](https://github.com/context-dot-dev/context-php-sdk/commit/7888dfa7edea785d0b23dbd19a8b7beddf0349eb))
+* **brand:** support log-free brand and styleguide requests ([#2231](https://github.com/context-dot-dev/context-php-sdk/issues/2231)) ([c76f7ab](https://github.com/context-dot-dev/context-php-sdk/commit/c76f7abbfc492c17dd190f1ce81f9907927c571d))
+* **brand:** support log-free brand and styleguide requests ([#2231](https://github.com/context-dot-dev/context-php-sdk/issues/2231)) ([eeff179](https://github.com/context-dot-dev/context-php-sdk/commit/eeff17952718f06835ce0212a205b65f1ca33738))
+* **brand:** support log-free brand and styleguide requests ([#2231](https://github.com/context-dot-dev/context-php-sdk/issues/2231)) ([14c81c8](https://github.com/context-dot-dev/context-php-sdk/commit/14c81c865790fc9edc1e971f82a12aa116b69127))
+* **brand:** support log-free brand and styleguide requests ([#2231](https://github.com/context-dot-dev/context-php-sdk/issues/2231)) ([3a7c4ab](https://github.com/context-dot-dev/context-php-sdk/commit/3a7c4abcd634475d901b7c8ed4db8ba7880715b4))
+* **monitors:** add search target to watch the web for new developments ([#2215](https://github.com/context-dot-dev/context-php-sdk/issues/2215)) ([7888dfa](https://github.com/context-dot-dev/context-php-sdk/commit/7888dfa7edea785d0b23dbd19a8b7beddf0349eb))
+* **monitors:** add search target to watch the web for new developments ([#2215](https://github.com/context-dot-dev/context-php-sdk/issues/2215)) ([c76f7ab](https://github.com/context-dot-dev/context-php-sdk/commit/c76f7abbfc492c17dd190f1ce81f9907927c571d))
+* **monitors:** add search target to watch the web for new developments ([#2215](https://github.com/context-dot-dev/context-php-sdk/issues/2215)) ([eeff179](https://github.com/context-dot-dev/context-php-sdk/commit/eeff17952718f06835ce0212a205b65f1ca33738))
+
+
+### Bug Fixes
+
+* **brand:** keep metadata-only usage logs for ZDR brand requests ([#2234](https://github.com/context-dot-dev/context-php-sdk/issues/2234)) ([7888dfa](https://github.com/context-dot-dev/context-php-sdk/commit/7888dfa7edea785d0b23dbd19a8b7beddf0349eb))
+* **brand:** keep metadata-only usage logs for ZDR brand requests ([#2234](https://github.com/context-dot-dev/context-php-sdk/issues/2234)) ([c76f7ab](https://github.com/context-dot-dev/context-php-sdk/commit/c76f7abbfc492c17dd190f1ce81f9907927c571d))
+* **brand:** keep metadata-only usage logs for ZDR brand requests ([#2234](https://github.com/context-dot-dev/context-php-sdk/issues/2234)) ([eeff179](https://github.com/context-dot-dev/context-php-sdk/commit/eeff17952718f06835ce0212a205b65f1ca33738))
+* **brand:** keep metadata-only usage logs for ZDR brand requests ([#2234](https://github.com/context-dot-dev/context-php-sdk/issues/2234)) ([14c81c8](https://github.com/context-dot-dev/context-php-sdk/commit/14c81c865790fc9edc1e971f82a12aa116b69127))
+* **openapi:** keep legacy batch inputs in the spec as deprecated ([#2225](https://github.com/context-dot-dev/context-php-sdk/issues/2225)) ([7888dfa](https://github.com/context-dot-dev/context-php-sdk/commit/7888dfa7edea785d0b23dbd19a8b7beddf0349eb))
+* **openapi:** keep legacy batch inputs in the spec as deprecated ([#2225](https://github.com/context-dot-dev/context-php-sdk/issues/2225)) ([c76f7ab](https://github.com/context-dot-dev/context-php-sdk/commit/c76f7abbfc492c17dd190f1ce81f9907927c571d))
+* **openapi:** keep legacy batch inputs in the spec as deprecated ([#2225](https://github.com/context-dot-dev/context-php-sdk/issues/2225)) ([eeff179](https://github.com/context-dot-dev/context-php-sdk/commit/eeff17952718f06835ce0212a205b65f1ca33738))
+* **openapi:** keep legacy batch inputs in the spec as deprecated ([#2225](https://github.com/context-dot-dev/context-php-sdk/issues/2225)) ([14c81c8](https://github.com/context-dot-dev/context-php-sdk/commit/14c81c865790fc9edc1e971f82a12aa116b69127))
+* **openapi:** keep legacy batch inputs in the spec as deprecated ([#2225](https://github.com/context-dot-dev/context-php-sdk/issues/2225)) ([3a7c4ab](https://github.com/context-dot-dev/context-php-sdk/commit/3a7c4abcd634475d901b7c8ed4db8ba7880715b4))
+* **openapi:** keep legacy batch inputs in the spec as deprecated ([#2225](https://github.com/context-dot-dev/context-php-sdk/issues/2225)) ([0625fbf](https://github.com/context-dot-dev/context-php-sdk/commit/0625fbf32051b0a4725c8880fe7699ba8a0082c8))
+* **openapi:** keep legacy batch inputs in the spec as deprecated ([#2225](https://github.com/context-dot-dev/context-php-sdk/issues/2225)) ([a1dc01d](https://github.com/context-dot-dev/context-php-sdk/commit/a1dc01d933927507c6d580372a221017af9a7093))
+* **scrape:** restore Instagram profile posts from public pages ([#2233](https://github.com/context-dot-dev/context-php-sdk/issues/2233)) ([7888dfa](https://github.com/context-dot-dev/context-php-sdk/commit/7888dfa7edea785d0b23dbd19a8b7beddf0349eb))
+* **scrape:** restore Instagram profile posts from public pages ([#2233](https://github.com/context-dot-dev/context-php-sdk/issues/2233)) ([c76f7ab](https://github.com/context-dot-dev/context-php-sdk/commit/c76f7abbfc492c17dd190f1ce81f9907927c571d))
+
+
+### Chores
+
+* unblock SDK generation, docs OpenAPI sync, and worker pool tests ([#2235](https://github.com/context-dot-dev/context-php-sdk/issues/2235)) ([7888dfa](https://github.com/context-dot-dev/context-php-sdk/commit/7888dfa7edea785d0b23dbd19a8b7beddf0349eb))
+
 ## [2.40.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.39.1...v2.40.0) (2026-10-27)
 
 
