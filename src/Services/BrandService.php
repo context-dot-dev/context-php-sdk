@@ -60,7 +60,7 @@ final class BrandService implements BrandContract
      * @param list<string> $policies Access policy IDs to apply. A URL must pass every policy.
      * @param list<string> $tags labels for filtering usage in the dashboard
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts request deadline and what to return when it passes
-     * @param Zdr|value-of<Zdr> $zdr `enabled` disables request logs, usage logs, and traces. Brand data and hosted assets may still be stored. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
+     * @param Zdr|value-of<Zdr> $zdr `enabled` disables request logs and traces and omits request and response content from usage logs. Brand data and hosted assets may still be stored. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param CountryGl|value-of<CountryGl> $countryGl two-letter ISO 3166-1 alpha-2 country code (GL parameter) used to localize search
      * @param TickerExchange|value-of<TickerExchange> $tickerExchange stock exchange code
      * @param string $city optional city name to prioritize when searching for the brand

@@ -176,7 +176,7 @@ final class WebService implements WebContract
      * @param list<string> $policies Comma-separated access policy IDs to apply. A URL must pass every policy.
      * @param list<string> $tags Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
      * @param \ContextDev\Web\WebExtractStyleguideParams\TimeoutOpts|TimeoutOptsShape2 $timeoutOpts request deadline and what to return when it passes
-     * @param \ContextDev\Web\WebExtractStyleguideParams\Zdr|value-of<\ContextDev\Web\WebExtractStyleguideParams\Zdr> $zdr `enabled` disables request logs, usage logs, and traces. Brand data and hosted assets may still be stored. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
+     * @param \ContextDev\Web\WebExtractStyleguideParams\Zdr|value-of<\ContextDev\Web\WebExtractStyleguideParams\Zdr> $zdr `enabled` disables request logs and traces and omits request and response content from usage logs. Brand data and hosted assets may still be stored. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
