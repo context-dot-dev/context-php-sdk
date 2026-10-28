@@ -10,6 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Monitors\MonitorUpdateResponse\Baseline\MonitorsExtractBaseline;
 use ContextDev\Monitors\MonitorUpdateResponse\Baseline\MonitorsPageBaseline;
+use ContextDev\Monitors\MonitorUpdateResponse\Baseline\MonitorsSearchBaseline;
 use ContextDev\Monitors\MonitorUpdateResponse\Baseline\MonitorsSitemapBaseline;
 use ContextDev\Monitors\MonitorUpdateResponse\ChangeDetection;
 use ContextDev\Monitors\MonitorUpdateResponse\ChangeDetection\MonitorsExactChangeDetection;
@@ -22,6 +23,7 @@ use ContextDev\Monitors\MonitorUpdateResponse\Status;
 use ContextDev\Monitors\MonitorUpdateResponse\Target;
 use ContextDev\Monitors\MonitorUpdateResponse\Target\MonitorsExtractTarget;
 use ContextDev\Monitors\MonitorUpdateResponse\Target\MonitorsPageTarget;
+use ContextDev\Monitors\MonitorUpdateResponse\Target\MonitorsSearchTarget;
 use ContextDev\Monitors\MonitorUpdateResponse\Target\MonitorsSitemapTarget;
 use ContextDev\Monitors\MonitorUpdateResponse\Webhook;
 use ContextDev\Monitors\MonitorUpdateResponse\WebhookFailure;
@@ -71,7 +73,7 @@ final class MonitorUpdateResponse implements BaseModel
     public string $id;
 
     /**
-     * How changes are judged. Defaults to `semantic` for extract targets and page targets with `instructions`, otherwise `exact`.
+     * How changes are judged. Defaults to `semantic` for extract and search targets and page targets with `instructions`, otherwise `exact`.
      *
      * @var ChangeDetectionVariants $changeDetection
      */
@@ -107,12 +109,12 @@ final class MonitorUpdateResponse implements BaseModel
     public string $status;
 
     /**
-     * What to watch: a page, a sitemap, or data extracted from a site.
+     * What to watch: a page, a sitemap, data extracted from a site, or web search results.
      *
      * @var TargetVariants $target
      */
     #[Required(union: Target::class)]
-    public MonitorsPageTarget|MonitorsSitemapTarget|MonitorsExtractTarget $target;
+    public MonitorsPageTarget|MonitorsSitemapTarget|MonitorsExtractTarget|MonitorsSearchTarget $target;
 
     #[Required('updated_at')]
     public \DateTimeInterface $updatedAt;
@@ -123,7 +125,7 @@ final class MonitorUpdateResponse implements BaseModel
      * @var BaselineVariants|null $baseline
      */
     #[Optional(nullable: true)]
-    public MonitorsPageBaseline|MonitorsSitemapBaseline|MonitorsExtractBaseline|null $baseline;
+    public MonitorsPageBaseline|MonitorsSitemapBaseline|MonitorsExtractBaseline|MonitorsSearchBaseline|null $baseline;
 
     /**
      * Credits this request used and your remaining balance.
@@ -247,9 +249,9 @@ final class MonitorUpdateResponse implements BaseModel
         string $name,
         string $requestID,
         Status|string $status,
-        MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget $target,
+        MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget|MonitorsSearchTarget $target,
         \DateTimeInterface $updatedAt,
-        MonitorsPageBaseline|array|MonitorsSitemapBaseline|MonitorsExtractBaseline|null $baseline = null,
+        MonitorsPageBaseline|array|MonitorsSitemapBaseline|MonitorsExtractBaseline|MonitorsSearchBaseline|null $baseline = null,
         KeyMetadata|array|null $keyMetadata = null,
         ?\DateTimeInterface $lastChangeAt = null,
         LastError|array|null $lastError = null,
@@ -297,7 +299,7 @@ final class MonitorUpdateResponse implements BaseModel
     }
 
     /**
-     * How changes are judged. Defaults to `semantic` for extract targets and page targets with `instructions`, otherwise `exact`.
+     * How changes are judged. Defaults to `semantic` for extract and search targets and page targets with `instructions`, otherwise `exact`.
      *
      * @param ChangeDetectionShape $changeDetection
      */
@@ -364,12 +366,12 @@ final class MonitorUpdateResponse implements BaseModel
     }
 
     /**
-     * What to watch: a page, a sitemap, or data extracted from a site.
+     * What to watch: a page, a sitemap, data extracted from a site, or web search results.
      *
      * @param TargetShape $target
      */
     public function withTarget(
-        MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget $target
+        MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget|MonitorsSearchTarget $target,
     ): self {
         $self = clone $this;
         $self['target'] = $target;
@@ -391,7 +393,7 @@ final class MonitorUpdateResponse implements BaseModel
      * @param BaselineShape|null $baseline
      */
     public function withBaseline(
-        MonitorsPageBaseline|array|MonitorsSitemapBaseline|MonitorsExtractBaseline|null $baseline,
+        MonitorsPageBaseline|array|MonitorsSitemapBaseline|MonitorsExtractBaseline|MonitorsSearchBaseline|null $baseline,
     ): self {
         $self = clone $this;
         $self['baseline'] = $baseline;

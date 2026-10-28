@@ -13,6 +13,7 @@ use ContextDev\Monitors\MonitorCreateParams\Mode;
 use ContextDev\Monitors\MonitorCreateParams\Schedule;
 use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsExtractTarget;
 use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsPageTarget;
+use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsSearchTarget;
 use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsSitemapTarget;
 use ContextDev\Monitors\MonitorCreateParams\Webhook;
 use ContextDev\Monitors\MonitorDeleteResponse;
@@ -72,8 +73,8 @@ final class MonitorsService implements MonitorsContract
      * Watch a page, URL inventory, or extracted website data on a schedule. A run starts immediately to capture the baseline.
      *
      * @param string $name display name for the monitor
-     * @param TargetShape $target what to watch: a page, a sitemap, or data extracted from a site
-     * @param ChangeDetectionShape $changeDetection How changes are judged. Defaults to `semantic` for extract targets and page targets with `instructions`, otherwise `exact`.
+     * @param TargetShape $target what to watch: a page, a sitemap, data extracted from a site, or web search results
+     * @param ChangeDetectionShape $changeDetection How changes are judged. Defaults to `semantic` for extract and search targets and page targets with `instructions`, otherwise `exact`.
      * @param Mode|value-of<Mode> $mode Always `web`. Optional.
      * @param list<string> $policies access policy IDs to apply to every run
      * @param Schedule|ScheduleShape $schedule Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
@@ -85,7 +86,7 @@ final class MonitorsService implements MonitorsContract
      */
     public function create(
         string $name,
-        MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget $target,
+        MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget|MonitorsSearchTarget $target,
         MonitorsExactChangeDetection|array|MonitorsSemanticChangeDetection|null $changeDetection = null,
         Mode|string|null $mode = null,
         ?array $policies = null,
@@ -139,13 +140,13 @@ final class MonitorsService implements MonitorsContract
      * Update a monitor. Changing its target or change detection replaces the baseline and queues a new baseline run.
      *
      * @param string $monitorID ID of the monitor
-     * @param ChangeDetectionShape1 $changeDetection How changes are judged. Defaults to `semantic` for extract targets and page targets with `instructions`, otherwise `exact`.
+     * @param ChangeDetectionShape1 $changeDetection How changes are judged. Defaults to `semantic` for extract and search targets and page targets with `instructions`, otherwise `exact`.
      * @param string $name display name for the monitor
      * @param list<string> $policies Access policy IDs to apply to every run. Send an empty list to remove them.
      * @param \ContextDev\Monitors\MonitorUpdateParams\Schedule|ScheduleShape1 $schedule Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
      * @param Status|value-of<Status> $status set `paused` to stop scheduled runs or `active` to resume them
      * @param list<string> $tags labels for filtering monitors, their changes, and their usage
-     * @param TargetShape1 $target what to watch: a page, a sitemap, or data extracted from a site
+     * @param TargetShape1 $target what to watch: a page, a sitemap, data extracted from a site, or web search results
      * @param \ContextDev\Monitors\MonitorUpdateParams\Webhook|WebhookShape1|null $webhook Set to null to remove the webhook. Changing `url` issues a new secret.
      * @param RequestOpts|null $requestOptions
      *
@@ -159,7 +160,7 @@ final class MonitorsService implements MonitorsContract
         \ContextDev\Monitors\MonitorUpdateParams\Schedule|array|null $schedule = null,
         Status|string|null $status = null,
         ?array $tags = null,
-        \ContextDev\Monitors\MonitorUpdateParams\Target\MonitorsPageTarget|array|\ContextDev\Monitors\MonitorUpdateParams\Target\MonitorsSitemapTarget|\ContextDev\Monitors\MonitorUpdateParams\Target\MonitorsExtractTarget|null $target = null,
+        \ContextDev\Monitors\MonitorUpdateParams\Target\MonitorsPageTarget|array|\ContextDev\Monitors\MonitorUpdateParams\Target\MonitorsSitemapTarget|\ContextDev\Monitors\MonitorUpdateParams\Target\MonitorsExtractTarget|\ContextDev\Monitors\MonitorUpdateParams\Target\MonitorsSearchTarget|null $target = null,
         \ContextDev\Monitors\MonitorUpdateParams\Webhook|array|null $webhook = null,
         RequestOptions|array|null $requestOptions = null,
     ): MonitorUpdateResponse {
@@ -191,7 +192,7 @@ final class MonitorsService implements MonitorsContract
      * @param string $cursor opaque pagination cursor from a previous response
      * @param int $limit Maximum number of items to return per page (1-100). Defaults to 25.
      * @param string $q free-text search term, matched against the fields named in `search_by`
-     * @param list<SearchBy|value-of<SearchBy>>|null $searchBy Fields to search with `q`. Defaults to all fields; page and extract targets can have instructions.
+     * @param list<SearchBy|value-of<SearchBy>>|null $searchBy Fields to search with `q`. Defaults to all fields; page, extract, and search targets can have instructions, and `url` matches a search target’s query.
      * @param SearchType|value-of<SearchType> $searchType `prefix` for as-you-type prefix matching (default), `exact` for full-token matching
      * @param \ContextDev\Monitors\MonitorListParams\Status|value-of<\ContextDev\Monitors\MonitorListParams\Status> $status filter monitors by lifecycle status
      * @param string $tag filter to items that have this tag

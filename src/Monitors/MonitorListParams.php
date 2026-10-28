@@ -65,7 +65,7 @@ final class MonitorListParams implements BaseModel
     public ?string $q;
 
     /**
-     * Fields to search with `q`. Defaults to all fields; page and extract targets can have instructions.
+     * Fields to search with `q`. Defaults to all fields; page, extract, and search targets can have instructions, and `url` matches a search target’s query.
      *
      * @var list<value-of<SearchBy>>|null $searchBy
      */
@@ -203,7 +203,7 @@ final class MonitorListParams implements BaseModel
     }
 
     /**
-     * Fields to search with `q`. Defaults to all fields; page and extract targets can have instructions.
+     * Fields to search with `q`. Defaults to all fields; page, extract, and search targets can have instructions, and `url` matches a search target’s query.
      *
      * @param list<SearchBy|value-of<SearchBy>>|null $searchBy
      */

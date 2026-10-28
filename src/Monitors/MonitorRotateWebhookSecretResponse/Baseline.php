@@ -9,6 +9,7 @@ use ContextDev\Core\Conversion\Contracts\Converter;
 use ContextDev\Core\Conversion\Contracts\ConverterSource;
 use ContextDev\Monitors\MonitorRotateWebhookSecretResponse\Baseline\MonitorsExtractBaseline;
 use ContextDev\Monitors\MonitorRotateWebhookSecretResponse\Baseline\MonitorsPageBaseline;
+use ContextDev\Monitors\MonitorRotateWebhookSecretResponse\Baseline\MonitorsSearchBaseline;
 use ContextDev\Monitors\MonitorRotateWebhookSecretResponse\Baseline\MonitorsSitemapBaseline;
 
 /**
@@ -17,9 +18,10 @@ use ContextDev\Monitors\MonitorRotateWebhookSecretResponse\Baseline\MonitorsSite
  * @phpstan-import-type MonitorsPageBaselineShape from \ContextDev\Monitors\MonitorRotateWebhookSecretResponse\Baseline\MonitorsPageBaseline
  * @phpstan-import-type MonitorsSitemapBaselineShape from \ContextDev\Monitors\MonitorRotateWebhookSecretResponse\Baseline\MonitorsSitemapBaseline
  * @phpstan-import-type MonitorsExtractBaselineShape from \ContextDev\Monitors\MonitorRotateWebhookSecretResponse\Baseline\MonitorsExtractBaseline
+ * @phpstan-import-type MonitorsSearchBaselineShape from \ContextDev\Monitors\MonitorRotateWebhookSecretResponse\Baseline\MonitorsSearchBaseline
  *
- * @phpstan-type BaselineVariants = MonitorsPageBaseline|MonitorsSitemapBaseline|MonitorsExtractBaseline
- * @phpstan-type BaselineShape = BaselineVariants|MonitorsPageBaselineShape|MonitorsSitemapBaselineShape|MonitorsExtractBaselineShape
+ * @phpstan-type BaselineVariants = MonitorsPageBaseline|MonitorsSitemapBaseline|MonitorsExtractBaseline|MonitorsSearchBaseline
+ * @phpstan-type BaselineShape = BaselineVariants|MonitorsPageBaselineShape|MonitorsSitemapBaselineShape|MonitorsExtractBaselineShape|MonitorsSearchBaselineShape
  */
 final class Baseline implements ConverterSource
 {
@@ -34,6 +36,7 @@ final class Baseline implements ConverterSource
             MonitorsPageBaseline::class,
             MonitorsSitemapBaseline::class,
             MonitorsExtractBaseline::class,
+            MonitorsSearchBaseline::class,
         ];
     }
 }

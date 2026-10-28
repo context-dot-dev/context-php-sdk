@@ -16,6 +16,7 @@ use ContextDev\Monitors\MonitorUpdateParams\Status;
 use ContextDev\Monitors\MonitorUpdateParams\Target;
 use ContextDev\Monitors\MonitorUpdateParams\Target\MonitorsExtractTarget;
 use ContextDev\Monitors\MonitorUpdateParams\Target\MonitorsPageTarget;
+use ContextDev\Monitors\MonitorUpdateParams\Target\MonitorsSearchTarget;
 use ContextDev\Monitors\MonitorUpdateParams\Target\MonitorsSitemapTarget;
 use ContextDev\Monitors\MonitorUpdateParams\Webhook;
 
@@ -49,7 +50,7 @@ final class MonitorUpdateParams implements BaseModel
     use SdkParams;
 
     /**
-     * How changes are judged. Defaults to `semantic` for extract targets and page targets with `instructions`, otherwise `exact`.
+     * How changes are judged. Defaults to `semantic` for extract and search targets and page targets with `instructions`, otherwise `exact`.
      *
      * @var ChangeDetectionVariants|null $changeDetection
      */
@@ -93,12 +94,12 @@ final class MonitorUpdateParams implements BaseModel
     public ?array $tags;
 
     /**
-     * What to watch: a page, a sitemap, or data extracted from a site.
+     * What to watch: a page, a sitemap, data extracted from a site, or web search results.
      *
      * @var TargetVariants|null $target
      */
     #[Optional(union: Target::class)]
-    public MonitorsPageTarget|MonitorsSitemapTarget|MonitorsExtractTarget|null $target;
+    public MonitorsPageTarget|MonitorsSitemapTarget|MonitorsExtractTarget|MonitorsSearchTarget|null $target;
 
     /**
      * Set to null to remove the webhook. Changing `url` issues a new secret.
@@ -131,7 +132,7 @@ final class MonitorUpdateParams implements BaseModel
         Schedule|array|null $schedule = null,
         Status|string|null $status = null,
         ?array $tags = null,
-        MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget|null $target = null,
+        MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget|MonitorsSearchTarget|null $target = null,
         Webhook|array|null $webhook = null,
     ): self {
         $self = new self;
@@ -149,7 +150,7 @@ final class MonitorUpdateParams implements BaseModel
     }
 
     /**
-     * How changes are judged. Defaults to `semantic` for extract targets and page targets with `instructions`, otherwise `exact`.
+     * How changes are judged. Defaults to `semantic` for extract and search targets and page targets with `instructions`, otherwise `exact`.
      *
      * @param ChangeDetectionShape $changeDetection
      */
@@ -226,12 +227,12 @@ final class MonitorUpdateParams implements BaseModel
     }
 
     /**
-     * What to watch: a page, a sitemap, or data extracted from a site.
+     * What to watch: a page, a sitemap, data extracted from a site, or web search results.
      *
      * @param TargetShape $target
      */
     public function withTarget(
-        MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget $target
+        MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget|MonitorsSearchTarget $target,
     ): self {
         $self = clone $this;
         $self['target'] = $target;

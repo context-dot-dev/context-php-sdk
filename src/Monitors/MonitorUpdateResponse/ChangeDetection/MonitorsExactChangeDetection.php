@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Detect exact changes. For page targets, this means visible text diffs. For sitemap targets, this means URL additions and removals.
+ * Detect exact changes. For page targets, this means visible text diffs. For sitemap targets, this means URL additions and removals. For search targets, this means every new result.
  *
  * @phpstan-type MonitorsExactChangeDetectionShape = array{type: 'exact'}
  */
@@ -19,7 +19,7 @@ final class MonitorsExactChangeDetection implements BaseModel
     use SdkModel;
 
     /**
-     * Use `exact` to compare visible text or sitemap URLs.
+     * Use `exact` to compare visible text, sitemap URLs, or search results.
      *
      * @var 'exact' $type
      */
@@ -42,7 +42,7 @@ final class MonitorsExactChangeDetection implements BaseModel
     }
 
     /**
-     * Use `exact` to compare visible text or sitemap URLs.
+     * Use `exact` to compare visible text, sitemap URLs, or search results.
      *
      * @param 'exact' $type
      */

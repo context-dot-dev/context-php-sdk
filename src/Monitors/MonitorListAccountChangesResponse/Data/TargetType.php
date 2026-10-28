@@ -11,4 +11,6 @@ enum TargetType: string
     case SITEMAP = 'sitemap';
 
     case EXTRACT = 'extract';
+
+    case SEARCH = 'search';
 }

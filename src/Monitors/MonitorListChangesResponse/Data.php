@@ -95,6 +95,9 @@ final class Data implements BaseModel
     #[Required]
     public string $title;
 
+    /**
+     * The monitored URL. For search targets, the first newly reported result.
+     */
     #[Required]
     public string $url;
 
@@ -366,6 +369,9 @@ final class Data implements BaseModel
         return $self;
     }
 
+    /**
+     * The monitored URL. For search targets, the first newly reported result.
+     */
     public function withURL(string $url): self
     {
         $self = clone $this;

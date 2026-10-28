@@ -9,17 +9,19 @@ use ContextDev\Core\Conversion\Contracts\Converter;
 use ContextDev\Core\Conversion\Contracts\ConverterSource;
 use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsExtractTarget;
 use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsPageTarget;
+use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsSearchTarget;
 use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsSitemapTarget;
 
 /**
- * What to watch: a page, a sitemap, or data extracted from a site.
+ * What to watch: a page, a sitemap, data extracted from a site, or web search results.
  *
  * @phpstan-import-type MonitorsPageTargetShape from \ContextDev\Monitors\MonitorCreateParams\Target\MonitorsPageTarget
  * @phpstan-import-type MonitorsSitemapTargetShape from \ContextDev\Monitors\MonitorCreateParams\Target\MonitorsSitemapTarget
  * @phpstan-import-type MonitorsExtractTargetShape from \ContextDev\Monitors\MonitorCreateParams\Target\MonitorsExtractTarget
+ * @phpstan-import-type MonitorsSearchTargetShape from \ContextDev\Monitors\MonitorCreateParams\Target\MonitorsSearchTarget
  *
- * @phpstan-type TargetVariants = MonitorsPageTarget|MonitorsSitemapTarget|MonitorsExtractTarget
- * @phpstan-type TargetShape = TargetVariants|MonitorsPageTargetShape|MonitorsSitemapTargetShape|MonitorsExtractTargetShape
+ * @phpstan-type TargetVariants = MonitorsPageTarget|MonitorsSitemapTarget|MonitorsExtractTarget|MonitorsSearchTarget
+ * @phpstan-type TargetShape = TargetVariants|MonitorsPageTargetShape|MonitorsSitemapTargetShape|MonitorsExtractTargetShape|MonitorsSearchTargetShape
  */
 final class Target implements ConverterSource
 {
@@ -39,6 +41,7 @@ final class Target implements ConverterSource
             'page' => MonitorsPageTarget::class,
             'sitemap' => MonitorsSitemapTarget::class,
             'extract' => MonitorsExtractTarget::class,
+            'search' => MonitorsSearchTarget::class,
         ];
     }
 }

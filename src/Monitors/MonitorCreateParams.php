@@ -17,6 +17,7 @@ use ContextDev\Monitors\MonitorCreateParams\Schedule;
 use ContextDev\Monitors\MonitorCreateParams\Target;
 use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsExtractTarget;
 use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsPageTarget;
+use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsSearchTarget;
 use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsSitemapTarget;
 use ContextDev\Monitors\MonitorCreateParams\Webhook;
 
@@ -56,15 +57,15 @@ final class MonitorCreateParams implements BaseModel
     public string $name;
 
     /**
-     * What to watch: a page, a sitemap, or data extracted from a site.
+     * What to watch: a page, a sitemap, data extracted from a site, or web search results.
      *
      * @var TargetVariants $target
      */
     #[Required(union: Target::class)]
-    public MonitorsPageTarget|MonitorsSitemapTarget|MonitorsExtractTarget $target;
+    public MonitorsPageTarget|MonitorsSitemapTarget|MonitorsExtractTarget|MonitorsSearchTarget $target;
 
     /**
-     * How changes are judged. Defaults to `semantic` for extract targets and page targets with `instructions`, otherwise `exact`.
+     * How changes are judged. Defaults to `semantic` for extract and search targets and page targets with `instructions`, otherwise `exact`.
      *
      * @var ChangeDetectionVariants|null $changeDetection
      */
@@ -141,7 +142,7 @@ final class MonitorCreateParams implements BaseModel
      */
     public static function with(
         string $name,
-        MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget $target,
+        MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget|MonitorsSearchTarget $target,
         MonitorsExactChangeDetection|array|MonitorsSemanticChangeDetection|null $changeDetection = null,
         Mode|string|null $mode = null,
         ?array $policies = null,
@@ -176,12 +177,12 @@ final class MonitorCreateParams implements BaseModel
     }
 
     /**
-     * What to watch: a page, a sitemap, or data extracted from a site.
+     * What to watch: a page, a sitemap, data extracted from a site, or web search results.
      *
      * @param TargetShape $target
      */
     public function withTarget(
-        MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget $target
+        MonitorsPageTarget|array|MonitorsSitemapTarget|MonitorsExtractTarget|MonitorsSearchTarget $target,
     ): self {
         $self = clone $this;
         $self['target'] = $target;
@@ -190,7 +191,7 @@ final class MonitorCreateParams implements BaseModel
     }
 
     /**
-     * How changes are judged. Defaults to `semantic` for extract targets and page targets with `instructions`, otherwise `exact`.
+     * How changes are judged. Defaults to `semantic` for extract and search targets and page targets with `instructions`, otherwise `exact`.
      *
      * @param ChangeDetectionShape $changeDetection
      */
