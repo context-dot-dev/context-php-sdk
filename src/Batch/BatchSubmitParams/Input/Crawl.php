@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace ContextDev\Batch\BatchSubmitParams\Input;
 
-use ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\BatchUnifiedCrawlData;
-use ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\HTML;
-use ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\Markdown;
+use ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
@@ -14,10 +12,9 @@ use ContextDev\Core\Contracts\BaseModel;
 /**
  * Crawl pages starting from a URL or from a domain's sitemap.
  *
- * @phpstan-import-type DataVariants from \ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data
  * @phpstan-import-type DataShape from \ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data
  *
- * @phpstan-type CrawlShape = array{data: DataShape, mode: 'crawl'}
+ * @phpstan-type CrawlShape = array{data: Data|DataShape, mode: 'crawl'}
  */
 final class Crawl implements BaseModel
 {
@@ -34,11 +31,9 @@ final class Crawl implements BaseModel
 
     /**
      * Crawl source and output format.
-     *
-     * @var DataVariants $data
      */
     #[Required]
-    public Markdown|HTML|BatchUnifiedCrawlData $data;
+    public Data $data;
 
     /**
      * `new Crawl()` is missing required properties by the API.
@@ -64,11 +59,10 @@ final class Crawl implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param DataShape $data
+     * @param Data|DataShape $data
      */
-    public static function with(
-        Markdown|array|HTML|BatchUnifiedCrawlData $data
-    ): self {
+    public static function with(Data|array $data): self
+    {
         $self = new self;
 
         $self['data'] = $data;
@@ -79,11 +73,10 @@ final class Crawl implements BaseModel
     /**
      * Crawl source and output format.
      *
-     * @param DataShape $data
+     * @param Data|DataShape $data
      */
-    public function withData(
-        Markdown|array|HTML|BatchUnifiedCrawlData $data
-    ): self {
+    public function withData(Data|array $data): self
+    {
         $self = clone $this;
         $self['data'] = $data;
 
