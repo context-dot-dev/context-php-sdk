@@ -11,6 +11,7 @@ use ContextDev\Brand\BrandRetrieveParams\ForceLanguage;
 use ContextDev\Brand\BrandRetrieveParams\TickerExchange;
 use ContextDev\Brand\BrandRetrieveParams\TimeoutOpts;
 use ContextDev\Brand\BrandRetrieveParams\Type;
+use ContextDev\Brand\BrandRetrieveParams\Zdr;
 use ContextDev\Brand\BrandSearchParams;
 use ContextDev\Brand\BrandSearchParams\Country;
 use ContextDev\Brand\BrandSearchParams\Language;
@@ -50,6 +51,7 @@ final class BrandRawService implements BrandRawContract
      *   policies?: list<string>,
      *   tags?: list<string>,
      *   timeoutOpts?: TimeoutOpts|TimeoutOptsShape,
+     *   zdr?: Zdr|value-of<Zdr>,
      *   name: string,
      *   countryGl?: value-of<CountryGl>,
      *   email: string,

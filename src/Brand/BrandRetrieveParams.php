@@ -9,6 +9,7 @@ use ContextDev\Brand\BrandRetrieveParams\ForceLanguage;
 use ContextDev\Brand\BrandRetrieveParams\TickerExchange;
 use ContextDev\Brand\BrandRetrieveParams\TimeoutOpts;
 use ContextDev\Brand\BrandRetrieveParams\Type;
+use ContextDev\Brand\BrandRetrieveParams\Zdr;
 use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
@@ -35,6 +36,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   policies?: list<string>|null,
  *   tags?: list<string>|null,
  *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
+ *   zdr?: null|Zdr|value-of<Zdr>,
  *   name: string,
  *   countryGl?: null|CountryGl|value-of<CountryGl>,
  *   email: string,
@@ -105,6 +107,14 @@ final class BrandRetrieveParams implements BaseModel
      */
     #[Optional]
     public ?TimeoutOpts $timeoutOpts;
+
+    /**
+     * `enabled` disables request logs, usage logs, and traces. Brand data and hosted assets may still be stored. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
+     *
+     * @var value-of<Zdr>|null $zdr
+     */
+    #[Optional(enum: Zdr::class)]
+    public ?string $zdr;
 
     /**
      * Company name to retrieve brand data for (e.g., 'Apple Inc').
@@ -224,6 +234,7 @@ final class BrandRetrieveParams implements BaseModel
      * @param list<string>|null $policies
      * @param list<string>|null $tags
      * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
+     * @param Zdr|value-of<Zdr>|null $zdr
      * @param CountryGl|value-of<CountryGl>|null $countryGl
      * @param TickerExchange|value-of<TickerExchange>|null $tickerExchange
      * @param MccShape|null $mcc
@@ -243,6 +254,7 @@ final class BrandRetrieveParams implements BaseModel
         ?array $policies = null,
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
+        Zdr|string|null $zdr = null,
         CountryGl|string|null $countryGl = null,
         TickerExchange|string|null $tickerExchange = null,
         ?string $city = null,
@@ -266,6 +278,7 @@ final class BrandRetrieveParams implements BaseModel
         null !== $policies && $self['policies'] = $policies;
         null !== $tags && $self['tags'] = $tags;
         null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
+        null !== $zdr && $self['zdr'] = $zdr;
         null !== $countryGl && $self['countryGl'] = $countryGl;
         null !== $tickerExchange && $self['tickerExchange'] = $tickerExchange;
         null !== $city && $self['city'] = $city;
@@ -369,6 +382,19 @@ final class BrandRetrieveParams implements BaseModel
     {
         $self = clone $this;
         $self['timeoutOpts'] = $timeoutOpts;
+
+        return $self;
+    }
+
+    /**
+     * `enabled` disables request logs, usage logs, and traces. Brand data and hosted assets may still be stored. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
+     *
+     * @param Zdr|value-of<Zdr> $zdr
+     */
+    public function withZdr(Zdr|string $zdr): self
+    {
+        $self = clone $this;
+        $self['zdr'] = $zdr;
 
         return $self;
     }
