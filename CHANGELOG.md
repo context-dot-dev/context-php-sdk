@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.41.1](https://github.com/context-dot-dev/context-php-sdk/compare/v2.41.0...v2.41.1) (2026-10-29)
+
+
+### Bug Fixes
+
+* **scrape:** derive the /web/scrape request spec from its zod schema ([#2044](https://github.com/context-dot-dev/context-php-sdk/issues/2044)) ([9b6bd56](https://github.com/context-dot-dev/context-php-sdk/commit/9b6bd563b11311b30db9187612eeda0133753501))
+
 ## [2.41.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.40.0...v2.41.0) (2026-10-28)
 
 
