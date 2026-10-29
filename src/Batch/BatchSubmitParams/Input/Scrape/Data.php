@@ -9,8 +9,8 @@ use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\HighlightsParams;
 use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\ImageParams;
 use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\JsonParams;
 use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\MarkdownParams;
-use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\ParseParams\CustomParser;
-use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\ParseParams\PrebuiltParser;
+use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\ParseParams\UnionMember0;
+use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\ParseParams\UnionMember1;
 use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\ProductParams;
 use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\ScreenshotParams;
 use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams;
@@ -110,7 +110,7 @@ final class Data implements BaseModel
      * @var ParseParamsVariants|null $parseParams
      */
     #[Optional]
-    public CustomParser|PrebuiltParser|null $parseParams;
+    public UnionMember0|UnionMember1|null $parseParams;
 
     /**
      * Product options. Requires formats.product: true.
@@ -131,7 +131,7 @@ final class Data implements BaseModel
     public ?SharedParams $sharedParams;
 
     /**
-     * Labels for tracking request usage. Not retained when zdr is enabled.
+     * Labels for filtering usage in the dashboard.
      *
      * @var list<string>|null $tags
      */
@@ -198,7 +198,7 @@ final class Data implements BaseModel
         JsonParams|array|null $jsonParams = null,
         MarkdownParams|array|null $markdownParams = null,
         ?int $maxAgeMs = null,
-        CustomParser|array|PrebuiltParser|null $parseParams = null,
+        UnionMember0|array|UnionMember1|null $parseParams = null,
         ProductParams|array|null $productParams = null,
         ScreenshotParams|array|null $screenshotParams = null,
         SharedParams|array|null $sharedParams = null,
@@ -324,7 +324,7 @@ final class Data implements BaseModel
      * @param ParseParamsShape $parseParams
      */
     public function withParseParams(
-        CustomParser|array|PrebuiltParser $parseParams
+        UnionMember0|array|UnionMember1 $parseParams
     ): self {
         $self = clone $this;
         $self['parseParams'] = $parseParams;
@@ -373,7 +373,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Labels for tracking request usage. Not retained when zdr is enabled.
+     * Labels for filtering usage in the dashboard.
      *
      * @param list<string> $tags
      */

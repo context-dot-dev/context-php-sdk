@@ -19,8 +19,8 @@ use ContextDev\Web\WebScrapeParams\HighlightsParams;
 use ContextDev\Web\WebScrapeParams\ImageParams;
 use ContextDev\Web\WebScrapeParams\JsonParams;
 use ContextDev\Web\WebScrapeParams\MarkdownParams;
-use ContextDev\Web\WebScrapeParams\ParseParams\CustomParser;
-use ContextDev\Web\WebScrapeParams\ParseParams\PrebuiltParser;
+use ContextDev\Web\WebScrapeParams\ParseParams\UnionMember0;
+use ContextDev\Web\WebScrapeParams\ParseParams\UnionMember1;
 use ContextDev\Web\WebScrapeParams\ProductParams;
 use ContextDev\Web\WebScrapeParams\ScreenshotParams;
 use ContextDev\Web\WebScrapeParams\SharedParams;
@@ -32,7 +32,6 @@ use ContextDev\Web\WebScreenshotParams\Viewport;
 use ContextDev\Web\WebScreenshotResponse;
 use ContextDev\Web\WebSearchParams\Freshness;
 use ContextDev\Web\WebSearchParams\HighlightsOptions;
-use ContextDev\Web\WebSearchParams\Languages\UnionMember0;
 use ContextDev\Web\WebSearchParams\MarkdownOptions;
 use ContextDev\Web\WebSearchResponse;
 use ContextDev\Web\WebWebCrawlMdParams\Pdf;
@@ -189,8 +188,8 @@ interface WebContract
      * @param ProductParams|ProductParamsShape $productParams Product options. Requires formats.product: true.
      * @param ScreenshotParams|ScreenshotParamsShape $screenshotParams Screenshot options. Requires formats.screenshot: true.
      * @param SharedParams|SharedParamsShape $sharedParams browser and content settings shared by all outputs
-     * @param list<string> $tags Labels for tracking request usage. Not retained when zdr is enabled.
-     * @param \ContextDev\Web\WebScrapeParams\TimeoutOpts|TimeoutOptsShape4 $timeoutOpts Deadline for the whole request. Defaults to 90000 ms with `fail`. Fixed waits must end before it.
+     * @param list<string> $tags labels for filtering usage in the dashboard
+     * @param \ContextDev\Web\WebScrapeParams\TimeoutOpts|TimeoutOptsShape4 $timeoutOpts request deadline and what to return when it passes
      * @param \ContextDev\Web\WebScrapeParams\Zdr|value-of<\ContextDev\Web\WebScrapeParams\Zdr> $zdr `enabled` turns on zero data retention. Your organization must have ZDR enabled.
      * @param RequestOpts|null $requestOptions
      *
@@ -204,15 +203,13 @@ interface WebContract
         JsonParams|array|null $jsonParams = null,
         MarkdownParams|array|null $markdownParams = null,
         int $maxAgeMs = 259200000,
-        CustomParser|array|PrebuiltParser|null $parseParams = null,
+        UnionMember0|array|UnionMember1|null $parseParams = null,
         ?array $policies = null,
         ProductParams|array|null $productParams = null,
         ScreenshotParams|array|null $screenshotParams = null,
         SharedParams|array|null $sharedParams = null,
         ?array $tags = null,
-        \ContextDev\Web\WebScrapeParams\TimeoutOpts|array $timeoutOpts = [
-            'milliseconds' => 90000, 'behavior' => 'fail',
-        ],
+        \ContextDev\Web\WebScrapeParams\TimeoutOpts|array|null $timeoutOpts = null,
         \ContextDev\Web\WebScrapeParams\Zdr|string $zdr = 'disabled',
         RequestOptions|array|null $requestOptions = null,
     ): WebScrapeResponse;
@@ -290,7 +287,7 @@ interface WebContract
         Freshness|string|null $freshness = null,
         HighlightsOptions|array|null $highlightsOptions = null,
         ?array $includeDomains = null,
-        UnionMember0|array|string $languages = 'all',
+        \ContextDev\Web\WebSearchParams\Languages\UnionMember0|array|string $languages = 'all',
         MarkdownOptions|array|null $markdownOptions = null,
         int $numResults = 10,
         ?array $policies = null,

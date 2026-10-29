@@ -14,8 +14,8 @@ use ContextDev\Web\WebScrapeParams\HighlightsParams;
 use ContextDev\Web\WebScrapeParams\ImageParams;
 use ContextDev\Web\WebScrapeParams\JsonParams;
 use ContextDev\Web\WebScrapeParams\MarkdownParams;
-use ContextDev\Web\WebScrapeParams\ParseParams\CustomParser;
-use ContextDev\Web\WebScrapeParams\ParseParams\PrebuiltParser;
+use ContextDev\Web\WebScrapeParams\ParseParams\UnionMember0;
+use ContextDev\Web\WebScrapeParams\ParseParams\UnionMember1;
 use ContextDev\Web\WebScrapeParams\ProductParams;
 use ContextDev\Web\WebScrapeParams\ScreenshotParams;
 use ContextDev\Web\WebScrapeParams\SharedParams;
@@ -111,7 +111,7 @@ final class WebScrapeParams implements BaseModel
      * @var ParseParamsVariants|null $parseParams
      */
     #[Optional]
-    public CustomParser|PrebuiltParser|null $parseParams;
+    public UnionMember0|UnionMember1|null $parseParams;
 
     /**
      * Access policy IDs to apply. A URL must pass every policy.
@@ -140,7 +140,7 @@ final class WebScrapeParams implements BaseModel
     public ?SharedParams $sharedParams;
 
     /**
-     * Labels for tracking request usage. Not retained when zdr is enabled.
+     * Labels for filtering usage in the dashboard.
      *
      * @var list<string>|null $tags
      */
@@ -148,7 +148,7 @@ final class WebScrapeParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Deadline for the whole request. Defaults to 90000 ms with `fail`. Fixed waits must end before it.
+     * Request deadline and what to return when it passes.
      */
     #[Optional]
     public ?TimeoutOpts $timeoutOpts;
@@ -207,7 +207,7 @@ final class WebScrapeParams implements BaseModel
         JsonParams|array|null $jsonParams = null,
         MarkdownParams|array|null $markdownParams = null,
         ?int $maxAgeMs = null,
-        CustomParser|array|PrebuiltParser|null $parseParams = null,
+        UnionMember0|array|UnionMember1|null $parseParams = null,
         ?array $policies = null,
         ProductParams|array|null $productParams = null,
         ScreenshotParams|array|null $screenshotParams = null,
@@ -333,7 +333,7 @@ final class WebScrapeParams implements BaseModel
      * @param ParseParamsShape $parseParams
      */
     public function withParseParams(
-        CustomParser|array|PrebuiltParser $parseParams
+        UnionMember0|array|UnionMember1 $parseParams
     ): self {
         $self = clone $this;
         $self['parseParams'] = $parseParams;
@@ -395,7 +395,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Labels for tracking request usage. Not retained when zdr is enabled.
+     * Labels for filtering usage in the dashboard.
      *
      * @param list<string> $tags
      */
@@ -408,7 +408,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Deadline for the whole request. Defaults to 90000 ms with `fail`. Fixed waits must end before it.
+     * Request deadline and what to return when it passes.
      *
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */

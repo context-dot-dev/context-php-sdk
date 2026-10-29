@@ -7,19 +7,19 @@ namespace ContextDev\Web\WebScrapeParams\SharedParams;
 use ContextDev\Core\Concerns\SdkUnion;
 use ContextDev\Core\Conversion\Contracts\Converter;
 use ContextDev\Core\Conversion\Contracts\ConverterSource;
-use ContextDev\Web\WebScrapeParams\SharedParams\Action\Instruction;
+use ContextDev\Web\WebScrapeParams\SharedParams\Action\Perform;
 use ContextDev\Web\WebScrapeParams\SharedParams\Action\Scroll;
 use ContextDev\Web\WebScrapeParams\SharedParams\Action\Wait;
-use ContextDev\Web\WebScrapeParams\SharedParams\Action\WaitForElement;
+use ContextDev\Web\WebScrapeParams\SharedParams\Action\WaitFor;
 
 /**
- * @phpstan-import-type InstructionShape from \ContextDev\Web\WebScrapeParams\SharedParams\Action\Instruction
+ * @phpstan-import-type PerformShape from \ContextDev\Web\WebScrapeParams\SharedParams\Action\Perform
  * @phpstan-import-type ScrollShape from \ContextDev\Web\WebScrapeParams\SharedParams\Action\Scroll
  * @phpstan-import-type WaitShape from \ContextDev\Web\WebScrapeParams\SharedParams\Action\Wait
- * @phpstan-import-type WaitForElementShape from \ContextDev\Web\WebScrapeParams\SharedParams\Action\WaitForElement
+ * @phpstan-import-type WaitForShape from \ContextDev\Web\WebScrapeParams\SharedParams\Action\WaitFor
  *
- * @phpstan-type ActionVariants = Instruction|Scroll|Wait|WaitForElement
- * @phpstan-type ActionShape = ActionVariants|InstructionShape|ScrollShape|WaitShape|WaitForElementShape
+ * @phpstan-type ActionVariants = Perform|Scroll|Wait|\ContextDev\Web\WebScrapeParams\SharedParams\Action\WaitFor
+ * @phpstan-type ActionShape = ActionVariants|PerformShape|ScrollShape|WaitShape|WaitForShape
  */
 final class Action implements ConverterSource
 {
@@ -36,10 +36,10 @@ final class Action implements ConverterSource
     public static function variants(): array
     {
         return [
-            'perform' => Instruction::class,
+            'perform' => Perform::class,
             'scroll' => Scroll::class,
             'wait' => Wait::class,
-            'waitFor' => WaitForElement::class,
+            'waitFor' => WaitFor::class,
         ];
     }
 }

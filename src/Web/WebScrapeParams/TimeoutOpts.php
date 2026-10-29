@@ -11,7 +11,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebScrapeParams\TimeoutOpts\Behavior;
 
 /**
- * Deadline for the whole request. Defaults to 90000 ms with `fail`. Fixed waits must end before it.
+ * Request deadline and what to return when it passes.
  *
  * @phpstan-type TimeoutOptsShape = array{
  *   milliseconds: int, behavior?: null|Behavior|value-of<Behavior>

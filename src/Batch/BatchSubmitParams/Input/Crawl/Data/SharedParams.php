@@ -7,8 +7,8 @@ namespace ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data;
 use ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\SharedParams\Action;
 use ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\SharedParams\Parsers;
 use ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\SharedParams\Profile;
-use ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\SharedParams\Profile\ExistingProfile;
-use ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\SharedParams\Profile\NewProfile;
+use ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\SharedParams\Profile\Existing;
+use ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\SharedParams\Profile\New_;
 use ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\SharedParams\Theme;
 use ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\SharedParams\Viewport;
 use ContextDev\Core\Attributes\Optional;
@@ -124,7 +124,7 @@ final class SharedParams implements BaseModel
      * @var ProfileVariants|null $profile
      */
     #[Optional(union: Profile::class)]
-    public ExistingProfile|NewProfile|null $profile;
+    public Existing|New_|null $profile;
 
     /**
      * Wait for CSS animations to finish before capture. Defaults to `true` when `screenshot` is requested.
@@ -185,7 +185,7 @@ final class SharedParams implements BaseModel
         ?array $includeSelectors = null,
         ?bool $mainContentOnly = null,
         Parsers|array|null $parsers = null,
-        ExistingProfile|array|NewProfile|null $profile = null,
+        Existing|array|New_|null $profile = null,
         ?bool $settleAnimations = null,
         Theme|string|null $theme = null,
         Viewport|array|null $viewport = null,
@@ -337,7 +337,7 @@ final class SharedParams implements BaseModel
      *
      * @param ProfileShape $profile
      */
-    public function withProfile(ExistingProfile|array|NewProfile $profile): self
+    public function withProfile(Existing|array|New_ $profile): self
     {
         $self = clone $this;
         $self['profile'] = $profile;

@@ -1,0 +1,89 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ContextDev\Web\WebScrapeParams\SharedParams\Action;
+
+use ContextDev\Core\Attributes\Required;
+use ContextDev\Core\Concerns\SdkModel;
+use ContextDev\Core\Contracts\BaseModel;
+
+/**
+ * @phpstan-type PerformShape = array{action: string, type: 'perform'}
+ */
+final class Perform implements BaseModel
+{
+    /** @use SdkModel<PerformShape> */
+    use SdkModel;
+
+    /**
+     * Use `perform` for a plain-language browser instruction.
+     *
+     * @var 'perform' $type
+     */
+    #[Required]
+    public string $type = 'perform';
+
+    /**
+     * One browser instruction, such as clicking a button or entering text.
+     */
+    #[Required]
+    public string $action;
+
+    /**
+     * `new Perform()` is missing required properties by the API.
+     *
+     * To enforce required parameters use
+     * ```
+     * Perform::with(action: ...)
+     * ```
+     *
+     * Otherwise ensure the following setters are called
+     *
+     * ```
+     * (new Perform)->withAction(...)
+     * ```
+     */
+    public function __construct()
+    {
+        $this->initialize();
+    }
+
+    /**
+     * Construct an instance from the required parameters.
+     *
+     * You must use named parameters to construct any parameters with a default value.
+     */
+    public static function with(string $action): self
+    {
+        $self = new self;
+
+        $self['action'] = $action;
+
+        return $self;
+    }
+
+    /**
+     * One browser instruction, such as clicking a button or entering text.
+     */
+    public function withAction(string $action): self
+    {
+        $self = clone $this;
+        $self['action'] = $action;
+
+        return $self;
+    }
+
+    /**
+     * Use `perform` for a plain-language browser instruction.
+     *
+     * @param 'perform' $type
+     */
+    public function withType(string $type): self
+    {
+        $self = clone $this;
+        $self['type'] = $type;
+
+        return $self;
+    }
+}

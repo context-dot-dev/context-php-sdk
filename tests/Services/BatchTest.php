@@ -182,7 +182,7 @@ final class BatchTest extends TestCase
                         ],
                         'type' => 'custom',
                     ],
-                    'productParams' => ['dedupeImages' => true],
+                    'productParams' => ['dedupeImages' => true, 'useAIFallback' => true],
                     'screenshotParams' => ['area' => 'viewport', 'format' => 'png'],
                     'sharedParams' => [
                         'actions' => [

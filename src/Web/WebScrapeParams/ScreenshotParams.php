@@ -8,9 +8,9 @@ use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebScrapeParams\ScreenshotParams\Area;
-use ContextDev\Web\WebScrapeParams\ScreenshotParams\Area\Element;
-use ContextDev\Web\WebScrapeParams\ScreenshotParams\Area\Page;
-use ContextDev\Web\WebScrapeParams\ScreenshotParams\Area\Rectangle;
+use ContextDev\Web\WebScrapeParams\ScreenshotParams\Area\Selector;
+use ContextDev\Web\WebScrapeParams\ScreenshotParams\Area\UnionMember0;
+use ContextDev\Web\WebScrapeParams\ScreenshotParams\Area\UnionMember2;
 use ContextDev\Web\WebScrapeParams\ScreenshotParams\Format;
 
 /**
@@ -34,7 +34,7 @@ final class ScreenshotParams implements BaseModel
      * @var AreaVariants|null $area
      */
     #[Optional(union: Area::class)]
-    public Element|Rectangle|string|null $area;
+    public Selector|UnionMember2|string|null $area;
 
     /**
      * Image format for the screenshot.
@@ -58,7 +58,7 @@ final class ScreenshotParams implements BaseModel
      * @param Format|value-of<Format>|null $format
      */
     public static function with(
-        Page|Element|array|Rectangle|string|null $area = null,
+        UnionMember0|Selector|array|UnionMember2|string|null $area = null,
         Format|string|null $format = null,
     ): self {
         $self = new self;
@@ -74,8 +74,9 @@ final class ScreenshotParams implements BaseModel
      *
      * @param AreaShape $area
      */
-    public function withArea(Page|Element|array|Rectangle|string $area): self
-    {
+    public function withArea(
+        UnionMember0|Selector|array|UnionMember2|string $area
+    ): self {
         $self = clone $this;
         $self['area'] = $area;
 

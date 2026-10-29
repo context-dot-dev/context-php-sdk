@@ -10,8 +10,8 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebScrapeParams\SharedParams\Action;
 use ContextDev\Web\WebScrapeParams\SharedParams\Parsers;
 use ContextDev\Web\WebScrapeParams\SharedParams\Profile;
-use ContextDev\Web\WebScrapeParams\SharedParams\Profile\ExistingProfile;
-use ContextDev\Web\WebScrapeParams\SharedParams\Profile\NewProfile;
+use ContextDev\Web\WebScrapeParams\SharedParams\Profile\Existing;
+use ContextDev\Web\WebScrapeParams\SharedParams\Profile\New_;
 use ContextDev\Web\WebScrapeParams\SharedParams\Theme;
 use ContextDev\Web\WebScrapeParams\SharedParams\Viewport;
 
@@ -124,7 +124,7 @@ final class SharedParams implements BaseModel
      * @var ProfileVariants|null $profile
      */
     #[Optional(union: Profile::class)]
-    public ExistingProfile|NewProfile|null $profile;
+    public Existing|New_|null $profile;
 
     /**
      * Wait for CSS animations to finish before capture. Defaults to `true` when `screenshot` is requested.
@@ -185,7 +185,7 @@ final class SharedParams implements BaseModel
         ?array $includeSelectors = null,
         ?bool $mainContentOnly = null,
         Parsers|array|null $parsers = null,
-        ExistingProfile|array|NewProfile|null $profile = null,
+        Existing|array|New_|null $profile = null,
         ?bool $settleAnimations = null,
         Theme|string|null $theme = null,
         Viewport|array|null $viewport = null,
@@ -337,7 +337,7 @@ final class SharedParams implements BaseModel
      *
      * @param ProfileShape $profile
      */
-    public function withProfile(ExistingProfile|array|NewProfile $profile): self
+    public function withProfile(Existing|array|New_ $profile): self
     {
         $self = clone $this;
         $self['profile'] = $profile;

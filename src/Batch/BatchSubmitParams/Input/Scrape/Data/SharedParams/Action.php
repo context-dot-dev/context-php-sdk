@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams;
 
-use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Action\Instruction;
+use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Action\Perform;
 use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Action\Scroll;
 use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Action\Wait;
-use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Action\WaitForElement;
+use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Action\WaitFor;
 use ContextDev\Core\Concerns\SdkUnion;
 use ContextDev\Core\Conversion\Contracts\Converter;
 use ContextDev\Core\Conversion\Contracts\ConverterSource;
 
 /**
- * @phpstan-import-type InstructionShape from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Action\Instruction
+ * @phpstan-import-type PerformShape from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Action\Perform
  * @phpstan-import-type ScrollShape from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Action\Scroll
  * @phpstan-import-type WaitShape from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Action\Wait
- * @phpstan-import-type WaitForElementShape from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Action\WaitForElement
+ * @phpstan-import-type WaitForShape from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Action\WaitFor
  *
- * @phpstan-type ActionVariants = Instruction|Scroll|Wait|WaitForElement
- * @phpstan-type ActionShape = ActionVariants|InstructionShape|ScrollShape|WaitShape|WaitForElementShape
+ * @phpstan-type ActionVariants = Perform|Scroll|Wait|\ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Action\WaitFor
+ * @phpstan-type ActionShape = ActionVariants|PerformShape|ScrollShape|WaitShape|WaitForShape
  */
 final class Action implements ConverterSource
 {
@@ -36,10 +36,10 @@ final class Action implements ConverterSource
     public static function variants(): array
     {
         return [
-            'perform' => Instruction::class,
+            'perform' => Perform::class,
             'scroll' => Scroll::class,
             'wait' => Wait::class,
-            'waitFor' => WaitForElement::class,
+            'waitFor' => WaitFor::class,
         ];
     }
 }

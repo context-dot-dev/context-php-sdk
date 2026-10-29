@@ -11,7 +11,9 @@ use ContextDev\Core\Contracts\BaseModel;
 /**
  * Product options. Requires formats.product: true.
  *
- * @phpstan-type ProductParamsShape = array{dedupeImages?: bool|null}
+ * @phpstan-type ProductParamsShape = array{
+ *   dedupeImages?: bool|null, useAIFallback?: bool|null
+ * }
  */
 final class ProductParams implements BaseModel
 {
@@ -24,6 +26,14 @@ final class ProductParams implements BaseModel
     #[Optional]
     public ?bool $dedupeImages;
 
+    /**
+     * @deprecated
+     *
+     * Ignored. The AI fallback runs automatically.
+     */
+    #[Optional]
+    public ?bool $useAIFallback;
+
     public function __construct()
     {
         $this->initialize();
@@ -34,11 +44,14 @@ final class ProductParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(?bool $dedupeImages = null): self
-    {
+    public static function with(
+        ?bool $dedupeImages = null,
+        ?bool $useAIFallback = null
+    ): self {
         $self = new self;
 
         null !== $dedupeImages && $self['dedupeImages'] = $dedupeImages;
+        null !== $useAIFallback && $self['useAIFallback'] = $useAIFallback;
 
         return $self;
     }
@@ -50,6 +63,17 @@ final class ProductParams implements BaseModel
     {
         $self = clone $this;
         $self['dedupeImages'] = $dedupeImages;
+
+        return $self;
+    }
+
+    /**
+     * Ignored. The AI fallback runs automatically.
+     */
+    public function withUseAIFallback(bool $useAIFallback): self
+    {
+        $self = clone $this;
+        $self['useAIFallback'] = $useAIFallback;
 
         return $self;
     }
