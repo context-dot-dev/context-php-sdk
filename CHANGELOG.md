@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.42.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.41.1...v2.42.0) (2026-10-30)
+
+
+### Features
+
+* **scrape:** add Yelp reviews parser ([e2b3779](https://github.com/context-dot-dev/context-php-sdk/commit/e2b3779918f70f47761c70bbd8e8839af0b79b62))
+* **scrape:** add Yelp search parser ([1f47a8e](https://github.com/context-dot-dev/context-php-sdk/commit/1f47a8e518bc9016c397974a73dd3af98434916b))
+
 ## [2.41.1](https://github.com/context-dot-dev/context-php-sdk/compare/v2.41.0...v2.41.1) (2026-10-29)
 
 
