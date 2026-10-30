@@ -45,6 +45,8 @@ enum Type: string
 
     case TIKTOK_USER_SEARCH = 'tiktok-user-search';
 
+    case YELP_SEARCH = 'yelp-search';
+
     case EMAILS = 'emails';
 
     case PHONE_NUMBERS = 'phone-numbers';
