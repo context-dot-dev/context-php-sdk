@@ -45,6 +45,14 @@ enum Type: string
 
     case TIKTOK_USER_SEARCH = 'tiktok-user-search';
 
+    case REDDIT_POST = 'reddit-post';
+
+    case REDDIT_SEARCH = 'reddit-search';
+
+    case REDDIT_SUBREDDIT = 'reddit-subreddit';
+
+    case REDDIT_USER = 'reddit-user';
+
     case YELP_SEARCH = 'yelp-search';
 
     case YELP_REVIEWS = 'yelp-reviews';
