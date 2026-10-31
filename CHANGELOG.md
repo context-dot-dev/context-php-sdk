@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.43.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.42.0...v2.43.0) (2026-10-31)
+
+
+### Features
+
+* **scrape:** add reddit-post prebuilt parser with full comment trees ([#2217](https://github.com/context-dot-dev/context-php-sdk/issues/2217)) ([8eaf806](https://github.com/context-dot-dev/context-php-sdk/commit/8eaf806817ea969e1bdf0a849bd9d9d6ba493b60))
+
 ## [2.42.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.41.1...v2.42.0) (2026-10-30)
 
 
