@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.44.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.43.0...v2.44.0) (2026-11-01)
+
+
+### Features
+
+* **scrape:** return Yelp reviewer id and profile url in yelp-reviews ([#2402](https://github.com/context-dot-dev/context-php-sdk/issues/2402)) ([eeb4604](https://github.com/context-dot-dev/context-php-sdk/commit/eeb4604555c76ed3eed189382c8da61c034aad01))
+
 ## [2.43.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.42.0...v2.43.0) (2026-10-31)
 
 
