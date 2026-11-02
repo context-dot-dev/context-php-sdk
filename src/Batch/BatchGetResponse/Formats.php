@@ -53,7 +53,7 @@ final class Formats implements BaseModel
     public ?bool $images;
 
     /**
-     * An object matching `jsonParams.schema`, extracted from the page.
+     * An object matching `jsonParams.schema`, extracted from the page text and its embedded data (JSON-LD, meta tags, framework state).
      */
     #[Optional]
     public ?bool $json;
@@ -163,7 +163,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * An object matching `jsonParams.schema`, extracted from the page.
+     * An object matching `jsonParams.schema`, extracted from the page text and its embedded data (JSON-LD, meta tags, framework state).
      */
     public function withJson(bool $json): self
     {
