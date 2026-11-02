@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.45.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.44.0...v2.45.0) (2026-11-02)
+
+
+### Features
+
+* **scrape:** read framework-embedded page data in the json format ([#2405](https://github.com/context-dot-dev/context-php-sdk/issues/2405)) ([be39e63](https://github.com/context-dot-dev/context-php-sdk/commit/be39e63ec9c8327f9f640f841d831c1ac1c95604))
+
 ## [2.44.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.43.0...v2.44.0) (2026-11-01)
 
 
