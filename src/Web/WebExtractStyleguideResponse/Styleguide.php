@@ -59,7 +59,7 @@ final class Styleguide implements BaseModel
     public ElementSpacing $elementSpacing;
 
     /**
-     * Font assets keyed by family name as it appears in fontFamily/fontFallbacks (non-generic names only). Clients match typography.fontFamily / fontWeight or button styles to pick a file URL from files.
+     * Font assets keyed by family name as it appears in fontFamily/fontFallbacks (non-generic names only). Match font style and weight against faces to select a file URL.
      *
      * @var array<string,FontLink> $fontLinks
      */
@@ -196,7 +196,7 @@ final class Styleguide implements BaseModel
     }
 
     /**
-     * Font assets keyed by family name as it appears in fontFamily/fontFallbacks (non-generic names only). Clients match typography.fontFamily / fontWeight or button styles to pick a file URL from files.
+     * Font assets keyed by family name as it appears in fontFamily/fontFallbacks (non-generic names only). Match font style and weight against faces to select a file URL.
      *
      * @param array<string,FontLink|FontLinkShape> $fontLinks
      */
