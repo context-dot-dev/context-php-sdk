@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.46.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.45.1...v2.46.0) (2026-11-05)
+
+
+### Features
+
+* **scrape:** add Tripadvisor reviews parser ([#2508](https://github.com/context-dot-dev/context-php-sdk/issues/2508)) ([8041997](https://github.com/context-dot-dev/context-php-sdk/commit/80419970aee9eaa03d2d36c6fa4ba0e26f057635))
+
 ## [2.45.1](https://github.com/context-dot-dev/context-php-sdk/compare/v2.45.0...v2.45.1) (2026-11-04)
 
 
