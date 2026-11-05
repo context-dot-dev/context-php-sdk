@@ -35,7 +35,7 @@ final class LogsService implements LogsContract
     /**
      * @api
      *
-     * Retrieve a request’s metadata, retained input, and response.
+     * Retrieve a request’s metadata, retained input, and response. An entry becomes retrievable a few seconds after its request completes, so a 404 NOT_FOUND for a request that just finished means ingestion has not caught up yet; retry after a few seconds.
      *
      * @param string $requestID the request ID of the logged API call
      * @param RequestOpts|null $requestOptions
