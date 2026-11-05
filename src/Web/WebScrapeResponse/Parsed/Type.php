@@ -57,6 +57,8 @@ enum Type: string
 
     case YELP_REVIEWS = 'yelp-reviews';
 
+    case TRIPADVISOR_REVIEWS = 'tripadvisor-reviews';
+
     case EMAILS = 'emails';
 
     case PHONE_NUMBERS = 'phone-numbers';
