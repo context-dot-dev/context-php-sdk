@@ -177,7 +177,7 @@ final class BatchService implements BatchContract
     /**
      * @api
      *
-     * Scrape up to 100,000 URLs, or crawl a site, asynchronously using the same formats and scrape parameters as POST /web/scrape. Choose Markdown, HTML, screenshots, images, bytes, parsed fields, products, highlights, and JSON. Poll the batch ID or receive a webhook when it finishes.
+     * Scrape up to 100,000 URLs, or crawl a site, asynchronously using the same formats and scrape parameters as POST /web/scrape. Choose Markdown, HTML, screenshots, images, bytes, parsed fields, products, highlights, and JSON. Submission persists the input and returns immediately with status pending. Organizations with fewer than 10 available credits and no overage are rejected with 402 up front. Each organization can submit up to 1,000 batches per minute, independently of its polling budget. Batches wait pending when execution capacity is full. Validation, sitemap discovery, the full credit quote, and shard scheduling happen afterward. Poll the batch ID or receive a webhook when it finishes. Deferred rejections appear as status failed with a failure code and message.
      *
      * @param InputShape $input body param: Choose a URL list or a site crawl
      * @param list<string> $policies Body param: Access policy IDs to apply to every page. A URL must pass every policy.

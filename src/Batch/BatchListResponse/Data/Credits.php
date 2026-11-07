@@ -39,7 +39,7 @@ final class Credits implements BaseModel
     public int $refunded;
 
     /**
-     * Credits held when the batch was accepted.
+     * Credits held by background preparation before scraping starts. Zero while pending.
      */
     #[Required]
     public int $reserved;
@@ -122,7 +122,7 @@ final class Credits implements BaseModel
     }
 
     /**
-     * Credits held when the batch was accepted.
+     * Credits held by background preparation before scraping starts. Zero while pending.
      */
     public function withReserved(int $reserved): self
     {

@@ -9,6 +9,8 @@ namespace ContextDev\Batch\BatchListParams;
  */
 enum Status: string
 {
+    case PENDING = 'pending';
+
     case QUEUED = 'queued';
 
     case RUNNING = 'running';

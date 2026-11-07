@@ -72,7 +72,7 @@ final class BatchSubmitResponse implements BaseModel
     public string $createdAt;
 
     /**
-     * What accepting this batch cost.
+     * Credits are reserved after background validation, before scraping starts.
      */
     #[Required]
     public Credits $credits;
@@ -112,7 +112,7 @@ final class BatchSubmitResponse implements BaseModel
     public string $requestID;
 
     /**
-     * Always `queued`. An accepted batch has not started yet.
+     * Current state. `pending` means waiting for execution capacity or background validation. Capacity-limited batches remain pending until a slot opens. `completed`, `cancelled`, and `failed` are final.
      *
      * @var value-of<Status> $status
      */
@@ -285,7 +285,7 @@ final class BatchSubmitResponse implements BaseModel
     }
 
     /**
-     * What accepting this batch cost.
+     * Credits are reserved after background validation, before scraping starts.
      *
      * @param Credits|CreditsShape $credits
      */
@@ -361,7 +361,7 @@ final class BatchSubmitResponse implements BaseModel
     }
 
     /**
-     * Always `queued`. An accepted batch has not started yet.
+     * Current state. `pending` means waiting for execution capacity or background validation. Capacity-limited batches remain pending until a slot opens. `completed`, `cancelled`, and `failed` are final.
      *
      * @param Status|value-of<Status> $status
      */

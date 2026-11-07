@@ -120,7 +120,7 @@ final class Data implements BaseModel
     public ?Results $results;
 
     /**
-     * Current state. `completed`, `cancelled`, and `failed` are final.
+     * Current state. `pending` means waiting for execution capacity or background validation. Capacity-limited batches remain pending until a slot opens. `completed`, `cancelled`, and `failed` are final.
      *
      * @var value-of<Status> $status
      */
@@ -377,7 +377,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Current state. `completed`, `cancelled`, and `failed` are final.
+     * Current state. `pending` means waiting for execution capacity or background validation. Capacity-limited batches remain pending until a slot opens. `completed`, `cancelled`, and `failed` are final.
      *
      * @param Status|value-of<Status> $status
      */
