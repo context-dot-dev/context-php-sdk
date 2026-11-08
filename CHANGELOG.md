@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.48.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.47.0...v2.48.0) (2026-11-08)
+
+
+### Features
+
+* **batch:** raise batch submissions to 2,500 per minute per organization ([#2734](https://github.com/context-dot-dev/context-php-sdk/issues/2734)) ([2c52960](https://github.com/context-dot-dev/context-php-sdk/commit/2c529609ebe21ade8a63f1a5498a8ac7ca007c0c))
+
 ## [2.47.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.46.1...v2.47.0) (2026-11-07)
 
 
