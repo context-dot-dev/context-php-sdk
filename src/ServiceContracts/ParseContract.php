@@ -23,7 +23,7 @@ interface ParseContract
      *
      * @param string|FileParam $body Body param
      * @param string $client query param: Optional client identifier used for usage attribution
-     * @param Extension|value-of<Extension> $extension query param: Optional file extension hint, such as pdf, docx, xlsx, pptx, html, json, csv, md, py, rtf, jpg, png, or txt
+     * @param Extension|value-of<Extension> $extension Query param: Optional file extension hint, such as pdf, docx, xlsx, pptx, html, json, csv, md, py, rtf, jpg, png, txt, warc, or warc.gz.
      * @param bool $includeImages Query param: Include image references in Markdown output
      * @param bool $includeLinks Query param: Preserve hyperlinks in Markdown output
      * @param bool $includeNumberedPages query param: Start each PDF page in the Markdown with a `<!-- page N -->` line, where N is the original 1-based page number

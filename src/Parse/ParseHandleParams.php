@@ -13,7 +13,7 @@ use ContextDev\Parse\ParseHandleParams\Pdf;
 use ContextDev\Parse\ParseHandleParams\Zdr;
 
 /**
- * Convert uploaded file bytes into Markdown and optional HTML.
+ * Convert uploaded file bytes into Markdown and optional HTML. WARC and WARC.GZ archives combine HTTP response, resource, and conversion records in archive order. Revisit and segmented records are skipped. Decoded WARC content is limited to 50 MiB.
  *
  * @see ContextDev\Services\ParseService::handle()
  *
@@ -46,7 +46,7 @@ final class ParseHandleParams implements BaseModel
     public ?string $client;
 
     /**
-     * Optional file extension hint, such as pdf, docx, xlsx, pptx, html, json, csv, md, py, rtf, jpg, png, or txt.
+     * Optional file extension hint, such as pdf, docx, xlsx, pptx, html, json, csv, md, py, rtf, jpg, png, txt, warc, or warc.gz.
      *
      * @var value-of<Extension>|null $extension
      */
@@ -168,7 +168,7 @@ final class ParseHandleParams implements BaseModel
     }
 
     /**
-     * Optional file extension hint, such as pdf, docx, xlsx, pptx, html, json, csv, md, py, rtf, jpg, png, or txt.
+     * Optional file extension hint, such as pdf, docx, xlsx, pptx, html, json, csv, md, py, rtf, jpg, png, txt, warc, or warc.gz.
      *
      * @param Extension|value-of<Extension> $extension
      */

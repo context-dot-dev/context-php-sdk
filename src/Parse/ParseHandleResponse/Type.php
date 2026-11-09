@@ -9,6 +9,8 @@ namespace ContextDev\Parse\ParseHandleResponse;
  */
 enum Type: string
 {
+    case WARC = 'warc';
+
     case HTML = 'html';
 
     case XML = 'xml';

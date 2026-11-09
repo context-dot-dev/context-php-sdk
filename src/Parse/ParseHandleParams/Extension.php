@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace ContextDev\Parse\ParseHandleParams;
 
 /**
- * Optional file extension hint, such as pdf, docx, xlsx, pptx, html, json, csv, md, py, rtf, jpg, png, or txt.
+ * Optional file extension hint, such as pdf, docx, xlsx, pptx, html, json, csv, md, py, rtf, jpg, png, txt, warc, or warc.gz.
  */
 enum Extension: string
 {
+    case WARC = 'warc';
+
+    case WARC_GZ = 'warc.gz';
+
     case TXT = 'txt';
 
     case TEXT = 'text';
