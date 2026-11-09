@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.50.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.49.0...v2.50.0) (2026-11-09)
+
+
+### Features
+
+* **parse:** support WARC archives in parsing and scraping ([#2761](https://github.com/context-dot-dev/context-php-sdk/issues/2761)) ([4acd4a2](https://github.com/context-dot-dev/context-php-sdk/commit/4acd4a27641c6f75678d8c3e1530e4bb3f0fc65b))
+
 ## [2.49.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.48.0...v2.49.0) (2026-11-09)
 
 
