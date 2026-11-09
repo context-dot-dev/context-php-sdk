@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.49.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.48.0...v2.49.0) (2026-11-09)
+
+
+### Features
+
+* **batches:** let sitemap crawls choose which paths count as non-pages ([#2796](https://github.com/context-dot-dev/context-php-sdk/issues/2796)) ([47eb27a](https://github.com/context-dot-dev/context-php-sdk/commit/47eb27a854b0b7f7648b8ae52251db062c848149))
+
 ## [2.48.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.47.0...v2.48.0) (2026-11-08)
 
 
