@@ -91,6 +91,7 @@ final class PeopleRawService implements PeopleRawContract
      *   filters?: Filters|FiltersShape,
      *   mode?: Mode|value-of<Mode>,
      *   tags?: list<string>,
+     *   zdr?: PersonSearchParams\Zdr|value-of<PersonSearchParams\Zdr>,
      * }|PersonSearchParams $params
      * @param RequestOpts|null $requestOptions
      *

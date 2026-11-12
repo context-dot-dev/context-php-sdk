@@ -104,6 +104,7 @@ final class PeopleService implements PeopleContract
      * @param Filters|FiltersShape $filters additional constraints every result must match
      * @param Mode|value-of<Mode> $mode `fast` matches people on basic criteria (e.g. their role, location or background); `ultra` plans a deeper search, judges each candidate against every criterion in the query. Complex `ultra` searches can take up to 30 seconds to complete, so allow for that in your client timeout.
      * @param list<string> $tags labels for filtering usage in the dashboard
+     * @param \ContextDev\People\PersonSearchParams\Zdr|value-of<\ContextDev\People\PersonSearchParams\Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -114,6 +115,7 @@ final class PeopleService implements PeopleContract
         Filters|array|null $filters = null,
         Mode|string $mode = 'fast',
         ?array $tags = null,
+        \ContextDev\People\PersonSearchParams\Zdr|string|null $zdr = null,
         RequestOptions|array|null $requestOptions = null,
     ): PersonSearchResponse {
         $params = Util::removeNulls(
@@ -123,6 +125,7 @@ final class PeopleService implements PeopleContract
                 'filters' => $filters,
                 'mode' => $mode,
                 'tags' => $tags,
+                'zdr' => $zdr,
             ],
         );
 

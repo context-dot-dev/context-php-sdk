@@ -74,6 +74,7 @@ final class PeopleTest extends TestCase
             ],
             mode: 'fast',
             tags: ['production', 'team-alpha'],
+            zdr: 'enabled',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

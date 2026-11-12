@@ -11,6 +11,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\People\PersonSearchParams\Filters;
 use ContextDev\People\PersonSearchParams\Mode;
+use ContextDev\People\PersonSearchParams\Zdr;
 
 /**
  * Find people with a natural-language query.
@@ -25,6 +26,7 @@ use ContextDev\People\PersonSearchParams\Mode;
  *   filters?: null|Filters|FiltersShape,
  *   mode?: null|Mode|value-of<Mode>,
  *   tags?: list<string>|null,
+ *   zdr?: null|Zdr|value-of<Zdr>,
  * }
  */
 final class PersonSearchParams implements BaseModel
@@ -68,6 +70,14 @@ final class PersonSearchParams implements BaseModel
     public ?array $tags;
 
     /**
+     * `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
+     *
+     * @var value-of<Zdr>|null $zdr
+     */
+    #[Optional(enum: Zdr::class)]
+    public ?string $zdr;
+
+    /**
      * `new PersonSearchParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -94,6 +104,7 @@ final class PersonSearchParams implements BaseModel
      * @param Filters|FiltersShape|null $filters
      * @param Mode|value-of<Mode>|null $mode
      * @param list<string>|null $tags
+     * @param Zdr|value-of<Zdr>|null $zdr
      */
     public static function with(
         string $query,
@@ -101,6 +112,7 @@ final class PersonSearchParams implements BaseModel
         Filters|array|null $filters = null,
         Mode|string|null $mode = null,
         ?array $tags = null,
+        Zdr|string|null $zdr = null,
     ): self {
         $self = new self;
 
@@ -110,6 +122,7 @@ final class PersonSearchParams implements BaseModel
         null !== $filters && $self['filters'] = $filters;
         null !== $mode && $self['mode'] = $mode;
         null !== $tags && $self['tags'] = $tags;
+        null !== $zdr && $self['zdr'] = $zdr;
 
         return $self;
     }
@@ -171,6 +184,19 @@ final class PersonSearchParams implements BaseModel
     {
         $self = clone $this;
         $self['tags'] = $tags;
+
+        return $self;
+    }
+
+    /**
+     * `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
+     *
+     * @param Zdr|value-of<Zdr> $zdr
+     */
+    public function withZdr(Zdr|string $zdr): self
+    {
+        $self = clone $this;
+        $self['zdr'] = $zdr;
 
         return $self;
     }
