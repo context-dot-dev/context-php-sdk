@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.51.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.50.0...v2.51.0) (2026-11-12)
+
+
+### Features
+
+* **zdr:** accept zero data retention on people search and company search ([#2852](https://github.com/context-dot-dev/context-php-sdk/issues/2852)) ([d7ffafd](https://github.com/context-dot-dev/context-php-sdk/commit/d7ffafd9c7bacceda8c6fd5d3ff5426580579a05))
+
 ## [2.50.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.49.0...v2.50.0) (2026-11-09)
 
 
