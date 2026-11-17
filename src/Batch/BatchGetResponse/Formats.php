@@ -59,7 +59,7 @@ final class Formats implements BaseModel
     public ?bool $json;
 
     /**
-     * Page content as Markdown.
+     * Page content or video transcript as Markdown.
      */
     #[Optional]
     public ?bool $markdown;
@@ -174,7 +174,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * Page content as Markdown.
+     * Page content or video transcript as Markdown.
      */
     public function withMarkdown(bool $markdown): self
     {
