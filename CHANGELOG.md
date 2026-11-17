@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.52.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.51.0...v2.52.0) (2026-11-17)
+
+
+### Features
+
+* **billing:** report plan facts in usage and limit errors ([#2897](https://github.com/context-dot-dev/context-php-sdk/issues/2897)) ([d32ba63](https://github.com/context-dot-dev/context-php-sdk/commit/d32ba632c67eb562692e3672537551a9cc6d390f))
+
+
+### Chores
+
+* run release-please centrally from brand-dev-server ([68c92a6](https://github.com/context-dot-dev/context-php-sdk/commit/68c92a687c4e13d55b5d011b8fbb1af3a1b89424))
+
+
+### Documentation
+
+* **scrape:** mention transcripts on the Markdown format ([#2903](https://github.com/context-dot-dev/context-php-sdk/issues/2903)) ([d32ba63](https://github.com/context-dot-dev/context-php-sdk/commit/d32ba632c67eb562692e3672537551a9cc6d390f))
+
 ## [2.51.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.50.0...v2.51.0) (2026-11-12)
 
 
