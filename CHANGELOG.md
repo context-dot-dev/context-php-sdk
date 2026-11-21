@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.52.1](https://github.com/context-dot-dev/context-php-sdk/compare/v2.52.0...v2.52.1) (2026-11-21)
+
+
+### Chores
+
+* **stlc:** stop generating the PHP SDK's Packagist publish workflow ([#2952](https://github.com/context-dot-dev/context-php-sdk/issues/2952)) ([6b2639f](https://github.com/context-dot-dev/context-php-sdk/commit/6b2639f5bcd2e4704fdd0c55934d51e48d5044b5))
+
 ## [2.52.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.51.0...v2.52.0) (2026-11-17)
 
 
