@@ -32,7 +32,7 @@ final class FeedbackRawService implements FeedbackRawContract
      * Report an API issue or documentation mismatch, including request IDs when available.
      *
      * @param array{
-     *   category: Category|value-of<Category>,
+     *   category: value-of<Category>,
      *   note: string,
      *   requestID?: string,
      *   tags?: list<string>,

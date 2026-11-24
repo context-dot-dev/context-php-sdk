@@ -19,5 +19,7 @@ enum Category: string
 
     case QUALITY_DEGRADATION = 'quality_degradation';
 
+    case BAD_BRAND = 'bad_brand';
+
     case OTHER = 'other';
 }

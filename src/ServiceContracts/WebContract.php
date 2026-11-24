@@ -68,7 +68,7 @@ interface WebContract
     /**
      * @api
      *
-     * @param string $task Research task. The agent selects company/profile lookups, web searches, or page reads. Include domains or URLs to focus the research.
+     * @param string $task Research task, up to 2000 characters. The agent selects company/profile lookups, web searches, or page reads. Include domains or URLs to focus the research.
      * @param array<string,mixed> $jsonFormat Example answer object, not JSON Schema. Up to 8 levels, 500 values, and 16000 characters; unknowns may be null.
      * @param Mode|value-of<Mode> $mode `fast` prioritizes speed, with extra verification for people and companies; `ultra` supports deeper research (default)
      * @param list<string> $policies Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.

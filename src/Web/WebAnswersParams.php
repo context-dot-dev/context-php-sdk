@@ -37,7 +37,7 @@ final class WebAnswersParams implements BaseModel
     use SdkParams;
 
     /**
-     * Research task. The agent selects company/profile lookups, web searches, or page reads. Include domains or URLs to focus the research.
+     * Research task, up to 2000 characters. The agent selects company/profile lookups, web searches, or page reads. Include domains or URLs to focus the research.
      */
     #[Required]
     public string $task;
@@ -143,7 +143,7 @@ final class WebAnswersParams implements BaseModel
     }
 
     /**
-     * Research task. The agent selects company/profile lookups, web searches, or page reads. Include domains or URLs to focus the research.
+     * Research task, up to 2000 characters. The agent selects company/profile lookups, web searches, or page reads. Include domains or URLs to focus the research.
      */
     public function withTask(string $task): self
     {
