@@ -42,7 +42,7 @@ final class UtilityService implements UtilityContract
      *
      * @param IdentifierShape $identifier Identifier of the target to prefetch. Provide exactly one of domain or email.
      * @param Type|value-of<Type> $type data to prefetch
-     * @param list<string> $policies Access policy IDs to apply. A URL must pass every policy.
+     * @param list<string> $policies Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
      * @param list<string> $tags labels for filtering usage in the dashboard
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts request deadline and what to return when it passes
      * @param RequestOpts|null $requestOptions

@@ -64,7 +64,7 @@ final class MonitorUpdateParams implements BaseModel
     public ?string $name;
 
     /**
-     * Access policy IDs to apply to every run. Send an empty list to remove them.
+     * Access policy IDs to apply to every run. Send an empty list to remove them. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @var list<string>|null $policies
      */
@@ -175,7 +175,7 @@ final class MonitorUpdateParams implements BaseModel
     }
 
     /**
-     * Access policy IDs to apply to every run. Send an empty list to remove them.
+     * Access policy IDs to apply to every run. Send an empty list to remove them. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @param list<string> $policies
      */

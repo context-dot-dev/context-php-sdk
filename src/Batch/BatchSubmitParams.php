@@ -47,7 +47,7 @@ final class BatchSubmitParams implements BaseModel
     public Scrape|Crawl $input;
 
     /**
-     * Access policy IDs to apply to every page. A URL must pass every policy.
+     * Access policy IDs to apply to every page. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @var list<string>|null $policies
      */
@@ -144,7 +144,7 @@ final class BatchSubmitParams implements BaseModel
     }
 
     /**
-     * Access policy IDs to apply to every page. A URL must pass every policy.
+     * Access policy IDs to apply to every page. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @param list<string> $policies
      */

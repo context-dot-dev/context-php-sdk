@@ -56,7 +56,7 @@ interface MonitorsContract
      * @param TargetShape $target what to watch: a page, a sitemap, data extracted from a site, or web search results
      * @param ChangeDetectionShape $changeDetection How changes are judged. Defaults to `semantic` for extract and search targets and page targets with `instructions`, otherwise `exact`.
      * @param Mode|value-of<Mode> $mode Always `web`. Optional.
-     * @param list<string> $policies access policy IDs to apply to every run
+     * @param list<string> $policies Access policy IDs to apply to every run. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
      * @param Schedule|ScheduleShape $schedule Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
      * @param list<string> $tags labels for filtering monitors, their changes, and their usage
      * @param Webhook|WebhookShape|null $webhook Webhook destination and delivery settings. Null means no webhook is configured.
@@ -95,7 +95,7 @@ interface MonitorsContract
      * @param string $monitorID ID of the monitor
      * @param ChangeDetectionShape1 $changeDetection How changes are judged. Defaults to `semantic` for extract and search targets and page targets with `instructions`, otherwise `exact`.
      * @param string $name display name for the monitor
-     * @param list<string> $policies Access policy IDs to apply to every run. Send an empty list to remove them.
+     * @param list<string> $policies Access policy IDs to apply to every run. Send an empty list to remove them. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
      * @param \ContextDev\Monitors\MonitorUpdateParams\Schedule|ScheduleShape1 $schedule Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
      * @param Status|value-of<Status> $status set `paused` to stop scheduled runs or `active` to resume them
      * @param list<string> $tags labels for filtering monitors, their changes, and their usage

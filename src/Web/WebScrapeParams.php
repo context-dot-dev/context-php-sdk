@@ -114,7 +114,7 @@ final class WebScrapeParams implements BaseModel
     public UnionMember0|UnionMember1|null $parseParams;
 
     /**
-     * Access policy IDs to apply. A URL must pass every policy.
+     * Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @var list<string>|null $policies
      */
@@ -342,7 +342,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Access policy IDs to apply. A URL must pass every policy.
+     * Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @param list<string> $policies
      */

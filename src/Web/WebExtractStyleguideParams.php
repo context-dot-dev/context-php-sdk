@@ -63,7 +63,7 @@ final class WebExtractStyleguideParams implements BaseModel
     public ?int $maxAgeMs;
 
     /**
-     * Comma-separated access policy IDs to apply. A URL must pass every policy.
+     * Comma-separated access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @var list<string>|null $policies
      */
@@ -179,7 +179,7 @@ final class WebExtractStyleguideParams implements BaseModel
     }
 
     /**
-     * Comma-separated access policy IDs to apply. A URL must pass every policy.
+     * Comma-separated access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @param list<string> $policies
      */

@@ -111,7 +111,7 @@ interface BatchContract
      * @api
      *
      * @param InputShape $input body param: Choose a URL list or a site crawl
-     * @param list<string> $policies Body param: Access policy IDs to apply to every page. A URL must pass every policy.
+     * @param list<string> $policies Body param: Access policy IDs to apply to every page. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
      * @param list<string> $tags Body param: Tags stored on the batch. Filter the batch list by them later.
      * @param Webhook|WebhookShape $webhook Body param: Where to send the batch's final-status event. Omit `retry` for one attempt; `{}` uses the default retry schedule.
      * @param string $webhookURL Body param: Legacy URL notified when the batch finishes. Preserves one best-effort attempt. Cannot be combined with webhook.

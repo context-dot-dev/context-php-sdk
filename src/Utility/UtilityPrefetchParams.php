@@ -54,7 +54,7 @@ final class UtilityPrefetchParams implements BaseModel
     public string $type;
 
     /**
-     * Access policy IDs to apply. A URL must pass every policy.
+     * Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @var list<string>|null $policies
      */
@@ -152,7 +152,7 @@ final class UtilityPrefetchParams implements BaseModel
     }
 
     /**
-     * Access policy IDs to apply. A URL must pass every policy.
+     * Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @param list<string> $policies
      */

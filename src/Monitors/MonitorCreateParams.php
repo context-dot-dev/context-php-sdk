@@ -81,7 +81,7 @@ final class MonitorCreateParams implements BaseModel
     public ?string $mode;
 
     /**
-     * Access policy IDs to apply to every run.
+     * Access policy IDs to apply to every run. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @var list<string>|null $policies
      */
@@ -218,7 +218,7 @@ final class MonitorCreateParams implements BaseModel
     }
 
     /**
-     * Access policy IDs to apply to every run.
+     * Access policy IDs to apply to every run. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @param list<string> $policies
      */
