@@ -38,6 +38,7 @@ use ContextDev\Web\WebWebCrawlMdResponse\Result\Metadata\Twitter;
  *   author?: string|null,
  *   canonicalURL?: string|null,
  *   description?: string|null,
+ *   errorCode?: string|null,
  *   favicon?: string|null,
  *   headings?: list<Heading|HeadingShape>|null,
  *   image?: string|null,
@@ -76,7 +77,7 @@ final class Metadata implements BaseModel
     public string $sourceURL;
 
     /**
-     * HTTP status code of the response.
+     * HTTP status code of the response (0 when the page could not be retrieved).
      */
     #[Required]
     public int $statusCode;
@@ -132,6 +133,12 @@ final class Metadata implements BaseModel
      */
     #[Optional]
     public ?string $description;
+
+    /**
+     * Why the page failed. Present only when `success` is `false`: `WEBSITE_BLOCKED` (the site served an anti-bot challenge or access wall), `WEBSITE_ACCESS_ERROR` (the page could not be retrieved or had no usable content), `NOT_FOUND`, `UNSUPPORTED_CONTENT`, `NO_PUBLISHED_MARKDOWN`, or `INTERNAL_ERROR`.
+     */
+    #[Optional('error_code')]
+    public ?string $errorCode;
 
     /**
      * Resolved favicon URL, when present.
@@ -275,6 +282,7 @@ final class Metadata implements BaseModel
         ?string $author = null,
         ?string $canonicalURL = null,
         ?string $description = null,
+        ?string $errorCode = null,
         ?string $favicon = null,
         ?array $headings = null,
         ?string $image = null,
@@ -303,6 +311,7 @@ final class Metadata implements BaseModel
         null !== $author && $self['author'] = $author;
         null !== $canonicalURL && $self['canonicalURL'] = $canonicalURL;
         null !== $description && $self['description'] = $description;
+        null !== $errorCode && $self['errorCode'] = $errorCode;
         null !== $favicon && $self['favicon'] = $favicon;
         null !== $headings && $self['headings'] = $headings;
         null !== $image && $self['image'] = $image;
@@ -353,7 +362,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * HTTP status code of the response.
+     * HTTP status code of the response (0 when the page could not be retrieved).
      */
     public function withStatusCode(int $statusCode): self
     {
@@ -451,6 +460,17 @@ final class Metadata implements BaseModel
     {
         $self = clone $this;
         $self['description'] = $description;
+
+        return $self;
+    }
+
+    /**
+     * Why the page failed. Present only when `success` is `false`: `WEBSITE_BLOCKED` (the site served an anti-bot challenge or access wall), `WEBSITE_ACCESS_ERROR` (the page could not be retrieved or had no usable content), `NOT_FOUND`, `UNSUPPORTED_CONTENT`, `NO_PUBLISHED_MARKDOWN`, or `INTERNAL_ERROR`.
+     */
+    public function withErrorCode(string $errorCode): self
+    {
+        $self = clone $this;
+        $self['errorCode'] = $errorCode;
 
         return $self;
     }

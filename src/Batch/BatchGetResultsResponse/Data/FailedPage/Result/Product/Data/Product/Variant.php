@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ContextDev\Batch\BatchGetResultsResponse\Data\FailedPage\Result\Product\Data\Product;
 
+use ContextDev\Batch\BatchGetResultsResponse\Data\FailedPage\Result\Product\Data\Product\Variant\Availability;
+use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
@@ -14,6 +16,9 @@ use ContextDev\Core\Contracts\BaseModel;
  *   images: list<string>,
  *   sku: string|null,
  *   url: string|null,
+ *   availability?: null|\ContextDev\Batch\BatchGetResultsResponse\Data\FailedPage\Result\Product\Data\Product\Variant\Availability|value-of<\ContextDev\Batch\BatchGetResultsResponse\Data\FailedPage\Result\Product\Data\Product\Variant\Availability>,
+ *   currency?: string|null,
+ *   price?: float|null,
  * }
  */
 final class Variant implements BaseModel
@@ -47,6 +52,29 @@ final class Variant implements BaseModel
     public ?string $url;
 
     /**
+     * Normalized stock or ordering availability of this variant.
+     *
+     * @var value-of<Availability>|null $availability
+     */
+    #[Optional(
+        enum: Availability::class,
+        nullable: true,
+    )]
+    public ?string $availability;
+
+    /**
+     * Currency code for the variant price (e.g., USD, EUR) when stated with it.
+     */
+    #[Optional(nullable: true)]
+    public ?string $currency;
+
+    /**
+     * Price of this variant when the source states one per variant.
+     */
+    #[Optional(nullable: true)]
+    public ?float $price;
+
+    /**
      * `new Variant()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -72,12 +100,16 @@ final class Variant implements BaseModel
      *
      * @param array<string,string> $attributes
      * @param list<string> $images
+     * @param Availability|value-of<Availability>|null $availability
      */
     public static function with(
         array $attributes,
         array $images,
         ?string $sku,
-        ?string $url
+        ?string $url,
+        Availability|string|null $availability = null,
+        ?string $currency = null,
+        ?float $price = null,
     ): self {
         $self = new self;
 
@@ -85,6 +117,10 @@ final class Variant implements BaseModel
         $self['images'] = $images;
         $self['sku'] = $sku;
         $self['url'] = $url;
+
+        null !== $availability && $self['availability'] = $availability;
+        null !== $currency && $self['currency'] = $currency;
+        null !== $price && $self['price'] = $price;
 
         return $self;
     }
@@ -130,6 +166,42 @@ final class Variant implements BaseModel
     {
         $self = clone $this;
         $self['url'] = $url;
+
+        return $self;
+    }
+
+    /**
+     * Normalized stock or ordering availability of this variant.
+     *
+     * @param Availability|value-of<Availability>|null $availability
+     */
+    public function withAvailability(
+        Availability|string|null $availability,
+    ): self {
+        $self = clone $this;
+        $self['availability'] = $availability;
+
+        return $self;
+    }
+
+    /**
+     * Currency code for the variant price (e.g., USD, EUR) when stated with it.
+     */
+    public function withCurrency(?string $currency): self
+    {
+        $self = clone $this;
+        $self['currency'] = $currency;
+
+        return $self;
+    }
+
+    /**
+     * Price of this variant when the source states one per variant.
+     */
+    public function withPrice(?float $price): self
+    {
+        $self = clone $this;
+        $self['price'] = $price;
 
         return $self;
     }
