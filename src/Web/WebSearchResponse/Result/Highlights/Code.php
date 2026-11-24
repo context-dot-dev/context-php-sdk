@@ -21,5 +21,7 @@ enum Code: string
 
     case WEBSITE_BLOCKED = 'WEBSITE_BLOCKED';
 
+    case WEBSITE_NOT_FOUND = 'WEBSITE_NOT_FOUND';
+
     case ERROR = 'ERROR';
 }

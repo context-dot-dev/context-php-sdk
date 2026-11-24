@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ContextDev\Web\WebSearchResponse\Result;
 
+use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
@@ -13,7 +14,9 @@ use ContextDev\Web\WebSearchResponse\Result\Highlights\Code;
  * Highlights status and passages for this result.
  *
  * @phpstan-type HighlightsShape = array{
- *   code: Code|value-of<Code>, highlights: list<string>|null
+ *   code: Code|value-of<Code>,
+ *   highlights: list<string>|null,
+ *   message?: string|null,
  * }
  */
 final class Highlights implements BaseModel
@@ -36,6 +39,12 @@ final class Highlights implements BaseModel
      */
     #[Required(list: 'string')]
     public ?array $highlights;
+
+    /**
+     * Why this output is missing. Present only when `code` is a failure.
+     */
+    #[Optional]
+    public ?string $message;
 
     /**
      * `new Highlights()` is missing required properties by the API.
@@ -64,12 +73,17 @@ final class Highlights implements BaseModel
      * @param Code|value-of<Code> $code
      * @param list<string>|null $highlights
      */
-    public static function with(Code|string $code, ?array $highlights): self
-    {
+    public static function with(
+        Code|string $code,
+        ?array $highlights,
+        ?string $message = null
+    ): self {
         $self = new self;
 
         $self['code'] = $code;
         $self['highlights'] = $highlights;
+
+        null !== $message && $self['message'] = $message;
 
         return $self;
     }
@@ -96,6 +110,17 @@ final class Highlights implements BaseModel
     {
         $self = clone $this;
         $self['highlights'] = $highlights;
+
+        return $self;
+    }
+
+    /**
+     * Why this output is missing. Present only when `code` is a failure.
+     */
+    public function withMessage(string $message): self
+    {
+        $self = clone $this;
+        $self['message'] = $message;
 
         return $self;
     }

@@ -18,6 +18,7 @@ use ContextDev\Web\WebSearchResponse\Result\Markdown\FinalDomState;
  *   code: Code|value-of<Code>,
  *   markdown: string|null,
  *   finalDomState?: null|FinalDomState|value-of<FinalDomState>,
+ *   message?: string|null,
  * }
  */
 final class Markdown implements BaseModel
@@ -46,6 +47,12 @@ final class Markdown implements BaseModel
      */
     #[Optional('finalDOMState', enum: FinalDomState::class)]
     public ?string $finalDomState;
+
+    /**
+     * Why this output is missing. Present only when `code` is a failure.
+     */
+    #[Optional]
+    public ?string $message;
 
     /**
      * `new Markdown()` is missing required properties by the API.
@@ -78,6 +85,7 @@ final class Markdown implements BaseModel
         Code|string $code,
         ?string $markdown,
         FinalDomState|string|null $finalDomState = null,
+        ?string $message = null,
     ): self {
         $self = new self;
 
@@ -85,6 +93,7 @@ final class Markdown implements BaseModel
         $self['markdown'] = $markdown;
 
         null !== $finalDomState && $self['finalDomState'] = $finalDomState;
+        null !== $message && $self['message'] = $message;
 
         return $self;
     }
@@ -122,6 +131,17 @@ final class Markdown implements BaseModel
     {
         $self = clone $this;
         $self['finalDomState'] = $finalDomState;
+
+        return $self;
+    }
+
+    /**
+     * Why this output is missing. Present only when `code` is a failure.
+     */
+    public function withMessage(string $message): self
+    {
+        $self = clone $this;
+        $self['message'] = $message;
 
         return $self;
     }
