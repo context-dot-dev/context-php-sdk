@@ -29,7 +29,7 @@ final class TimeoutOpts implements BaseModel
     public int $milliseconds;
 
     /**
-     * "fail" returns 408 at the deadline. "return-partial" returns available results; inspect the response’s partial flag. "return-partial" requires at least 5000 ms.
+     * "fail" returns 408 at the deadline. "return-partial" returns available results; inspect the response’s partial flag. "return-partial" requires at least 5000 ms. On POST /web/scrape, an output that is not ready in time fails with error_code REQUEST_TIMEOUT inside a 200 response under either behavior; 408 is returned only when the whole request cannot respond by the deadline.
      *
      * @var value-of<Behavior>|null $behavior
      */
@@ -87,7 +87,7 @@ final class TimeoutOpts implements BaseModel
     }
 
     /**
-     * "fail" returns 408 at the deadline. "return-partial" returns available results; inspect the response’s partial flag. "return-partial" requires at least 5000 ms.
+     * "fail" returns 408 at the deadline. "return-partial" returns available results; inspect the response’s partial flag. "return-partial" requires at least 5000 ms. On POST /web/scrape, an output that is not ready in time fails with error_code REQUEST_TIMEOUT inside a 200 response under either behavior; 408 is returned only when the whole request cannot respond by the deadline.
      *
      * @param Behavior|value-of<Behavior> $behavior
      */
