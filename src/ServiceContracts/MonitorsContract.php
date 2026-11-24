@@ -166,6 +166,7 @@ interface MonitorsContract
      * @api
      *
      * @param \DateTimeInterface $since only include items at or after this ISO 8601 timestamp
+     * @param string $tag Only include monitors that currently have this tag. Deleted monitors are left out.
      * @param \DateTimeInterface $until only include items before this ISO 8601 timestamp
      * @param RequestOpts|null $requestOptions
      *
@@ -173,6 +174,7 @@ interface MonitorsContract
      */
     public function getCreditUsage(
         ?\DateTimeInterface $since = null,
+        ?string $tag = null,
         ?\DateTimeInterface $until = null,
         RequestOptions|array|null $requestOptions = null,
     ): MonitorGetCreditUsageResponse;

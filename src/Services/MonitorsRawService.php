@@ -249,10 +249,10 @@ final class MonitorsRawService implements MonitorsRawContract
     /**
      * @api
      *
-     * Return usage per monitor, highest first, for up to the 10,000 most recent runs in the requested window.
+     * Return usage per monitor, highest first, for up to the 10,000 most recent runs in the requested window. Pass `tag` to report only the monitors that carry that tag, such as one customer’s monitors.
      *
      * @param array{
-     *   since?: \DateTimeInterface, until?: \DateTimeInterface
+     *   since?: \DateTimeInterface, tag?: string, until?: \DateTimeInterface
      * }|MonitorGetCreditUsageParams $params
      * @param RequestOpts|null $requestOptions
      *

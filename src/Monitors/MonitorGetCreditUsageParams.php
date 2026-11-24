@@ -10,12 +10,14 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Return usage per monitor, highest first, for up to the 10,000 most recent runs in the requested window.
+ * Return usage per monitor, highest first, for up to the 10,000 most recent runs in the requested window. Pass `tag` to report only the monitors that carry that tag, such as one customer’s monitors.
  *
  * @see ContextDev\Services\MonitorsService::getCreditUsage()
  *
  * @phpstan-type MonitorGetCreditUsageParamsShape = array{
- *   since?: \DateTimeInterface|null, until?: \DateTimeInterface|null
+ *   since?: \DateTimeInterface|null,
+ *   tag?: string|null,
+ *   until?: \DateTimeInterface|null,
  * }
  */
 final class MonitorGetCreditUsageParams implements BaseModel
@@ -29,6 +31,12 @@ final class MonitorGetCreditUsageParams implements BaseModel
      */
     #[Optional]
     public ?\DateTimeInterface $since;
+
+    /**
+     * Only include monitors that currently have this tag. Deleted monitors are left out.
+     */
+    #[Optional]
+    public ?string $tag;
 
     /**
      * Only include items before this ISO 8601 timestamp.
@@ -48,11 +56,13 @@ final class MonitorGetCreditUsageParams implements BaseModel
      */
     public static function with(
         ?\DateTimeInterface $since = null,
-        ?\DateTimeInterface $until = null
+        ?string $tag = null,
+        ?\DateTimeInterface $until = null,
     ): self {
         $self = new self;
 
         null !== $since && $self['since'] = $since;
+        null !== $tag && $self['tag'] = $tag;
         null !== $until && $self['until'] = $until;
 
         return $self;
@@ -65,6 +75,17 @@ final class MonitorGetCreditUsageParams implements BaseModel
     {
         $self = clone $this;
         $self['since'] = $since;
+
+        return $self;
+    }
+
+    /**
+     * Only include monitors that currently have this tag. Deleted monitors are left out.
+     */
+    public function withTag(string $tag): self
+    {
+        $self = clone $this;
+        $self['tag'] = $tag;
 
         return $self;
     }

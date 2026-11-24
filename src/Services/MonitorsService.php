@@ -259,9 +259,10 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Return usage per monitor, highest first, for up to the 10,000 most recent runs in the requested window.
+     * Return usage per monitor, highest first, for up to the 10,000 most recent runs in the requested window. Pass `tag` to report only the monitors that carry that tag, such as one customer’s monitors.
      *
      * @param \DateTimeInterface $since only include items at or after this ISO 8601 timestamp
+     * @param string $tag Only include monitors that currently have this tag. Deleted monitors are left out.
      * @param \DateTimeInterface $until only include items before this ISO 8601 timestamp
      * @param RequestOpts|null $requestOptions
      *
@@ -269,10 +270,13 @@ final class MonitorsService implements MonitorsContract
      */
     public function getCreditUsage(
         ?\DateTimeInterface $since = null,
+        ?string $tag = null,
         ?\DateTimeInterface $until = null,
         RequestOptions|array|null $requestOptions = null,
     ): MonitorGetCreditUsageResponse {
-        $params = Util::removeNulls(['since' => $since, 'until' => $until]);
+        $params = Util::removeNulls(
+            ['since' => $since, 'tag' => $tag, 'until' => $until]
+        );
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->getCreditUsage(params: $params, requestOptions: $requestOptions);
