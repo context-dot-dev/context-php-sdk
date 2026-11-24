@@ -55,7 +55,7 @@ final class WebAnswersResponse implements BaseModel
     public ?KeyMetadata $keyMetadata;
 
     /**
-     * True when the request deadline ended research and the answer uses the evidence collected so far.
+     * True when the answer is incomplete: the request deadline ended research, or a requested list item has no researched values.
      */
     #[Optional]
     public ?bool $partial;
@@ -161,7 +161,7 @@ final class WebAnswersResponse implements BaseModel
     }
 
     /**
-     * True when the request deadline ended research and the answer uses the evidence collected so far.
+     * True when the answer is incomplete: the request deadline ended research, or a requested list item has no researched values.
      */
     public function withPartial(bool $partial): self
     {
