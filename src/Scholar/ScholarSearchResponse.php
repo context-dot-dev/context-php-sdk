@@ -1,0 +1,199 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ContextDev\Scholar;
+
+use ContextDev\Core\Attributes\Optional;
+use ContextDev\Core\Attributes\Required;
+use ContextDev\Core\Concerns\SdkModel;
+use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Scholar\ScholarSearchResponse\Data;
+use ContextDev\Scholar\ScholarSearchResponse\KeyMetadata;
+use ContextDev\Scholar\ScholarSearchResponse\Meta;
+
+/**
+ * @phpstan-import-type DataShape from \ContextDev\Scholar\ScholarSearchResponse\Data
+ * @phpstan-import-type MetaShape from \ContextDev\Scholar\ScholarSearchResponse\Meta
+ * @phpstan-import-type KeyMetadataShape from \ContextDev\Scholar\ScholarSearchResponse\KeyMetadata
+ *
+ * @phpstan-type ScholarSearchResponseShape = array{
+ *   data: list<Data|DataShape>,
+ *   hasMore: bool,
+ *   meta: Meta|MetaShape,
+ *   nextCursor: string|null,
+ *   requestID: string,
+ *   keyMetadata?: null|KeyMetadata|KeyMetadataShape,
+ * }
+ */
+final class ScholarSearchResponse implements BaseModel
+{
+    /** @use SdkModel<ScholarSearchResponseShape> */
+    use SdkModel;
+
+    /**
+     * Matching papers in the requested order.
+     *
+     * @var list<Data> $data
+     */
+    #[Required(list: Data::class)]
+    public array $data;
+
+    /**
+     * Whether another page is available.
+     */
+    #[Required('has_more')]
+    public bool $hasMore;
+
+    /**
+     * Page summary.
+     */
+    #[Required]
+    public Meta $meta;
+
+    /**
+     * Cursor for the next page, or null on the last page.
+     */
+    #[Required('next_cursor')]
+    public ?string $nextCursor;
+
+    /**
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
+     */
+    #[Required('request_id')]
+    public string $requestID;
+
+    /**
+     * Credits this request used and your remaining balance.
+     */
+    #[Optional('key_metadata')]
+    public ?KeyMetadata $keyMetadata;
+
+    /**
+     * `new ScholarSearchResponse()` is missing required properties by the API.
+     *
+     * To enforce required parameters use
+     * ```
+     * ScholarSearchResponse::with(
+     *   data: ..., hasMore: ..., meta: ..., nextCursor: ..., requestID: ...
+     * )
+     * ```
+     *
+     * Otherwise ensure the following setters are called
+     *
+     * ```
+     * (new ScholarSearchResponse)
+     *   ->withData(...)
+     *   ->withHasMore(...)
+     *   ->withMeta(...)
+     *   ->withNextCursor(...)
+     *   ->withRequestID(...)
+     * ```
+     */
+    public function __construct()
+    {
+        $this->initialize();
+    }
+
+    /**
+     * Construct an instance from the required parameters.
+     *
+     * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param list<Data|DataShape> $data
+     * @param Meta|MetaShape $meta
+     * @param KeyMetadata|KeyMetadataShape|null $keyMetadata
+     */
+    public static function with(
+        array $data,
+        bool $hasMore,
+        Meta|array $meta,
+        ?string $nextCursor,
+        string $requestID,
+        KeyMetadata|array|null $keyMetadata = null,
+    ): self {
+        $self = new self;
+
+        $self['data'] = $data;
+        $self['hasMore'] = $hasMore;
+        $self['meta'] = $meta;
+        $self['nextCursor'] = $nextCursor;
+        $self['requestID'] = $requestID;
+
+        null !== $keyMetadata && $self['keyMetadata'] = $keyMetadata;
+
+        return $self;
+    }
+
+    /**
+     * Matching papers in the requested order.
+     *
+     * @param list<Data|DataShape> $data
+     */
+    public function withData(array $data): self
+    {
+        $self = clone $this;
+        $self['data'] = $data;
+
+        return $self;
+    }
+
+    /**
+     * Whether another page is available.
+     */
+    public function withHasMore(bool $hasMore): self
+    {
+        $self = clone $this;
+        $self['hasMore'] = $hasMore;
+
+        return $self;
+    }
+
+    /**
+     * Page summary.
+     *
+     * @param Meta|MetaShape $meta
+     */
+    public function withMeta(Meta|array $meta): self
+    {
+        $self = clone $this;
+        $self['meta'] = $meta;
+
+        return $self;
+    }
+
+    /**
+     * Cursor for the next page, or null on the last page.
+     */
+    public function withNextCursor(?string $nextCursor): self
+    {
+        $self = clone $this;
+        $self['nextCursor'] = $nextCursor;
+
+        return $self;
+    }
+
+    /**
+     * Unique ID of this request, also in `X-Request-Id`. Include it when contacting support.
+     */
+    public function withRequestID(string $requestID): self
+    {
+        $self = clone $this;
+        $self['requestID'] = $requestID;
+
+        return $self;
+    }
+
+    /**
+     * Credits this request used and your remaining balance.
+     *
+     * @param KeyMetadata|KeyMetadataShape $keyMetadata
+     */
+    public function withKeyMetadata(KeyMetadata|array $keyMetadata): self
+    {
+        $self = clone $this;
+        $self['keyMetadata'] = $keyMetadata;
+
+        return $self;
+    }
+}

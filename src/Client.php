@@ -17,6 +17,7 @@ use ContextDev\Services\MonitorsService;
 use ContextDev\Services\NewsService;
 use ContextDev\Services\ParseService;
 use ContextDev\Services\PeopleService;
+use ContextDev\Services\ScholarService;
 use ContextDev\Services\UtilityService;
 use ContextDev\Services\WebhooksService;
 use ContextDev\Services\WebService;
@@ -80,6 +81,11 @@ class Client extends BaseClient
      * @api
      */
     public NewsService $news;
+
+    /**
+     * @api
+     */
+    public ScholarService $scholar;
 
     /**
      * @api
@@ -164,6 +170,7 @@ class Client extends BaseClient
         $this->webhooks = new WebhooksService($this);
         $this->people = new PeopleService($this);
         $this->news = new NewsService($this);
+        $this->scholar = new ScholarService($this);
         $this->logs = new LogsService($this);
         $this->browser = new BrowserService($this);
         $this->feedback = new FeedbackService($this);
