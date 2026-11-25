@@ -59,6 +59,10 @@ enum Type: string
 
     case TRIPADVISOR_REVIEWS = 'tripadvisor-reviews';
 
+    case CAR_RENTAL_AVAILABILITY = 'car-rental-availability';
+
+    case CAR_RENTAL_LOCATIONS = 'car-rental-locations';
+
     case EMAILS = 'emails';
 
     case PHONE_NUMBERS = 'phone-numbers';
