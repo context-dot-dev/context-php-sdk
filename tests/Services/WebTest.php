@@ -59,6 +59,7 @@ final class WebTest extends TestCase
 
         $result = $this->client->web->answers(
             task: 'Find the pricing page URL and plan names for context.dev.',
+            controls: ['excludeSources' => ['string'], 'sources' => ['string']],
             jsonFormat: ['pricing_page_url' => 'bar', 'plans' => 'bar'],
             mode: 'fast',
             policies: ['pol_3f9c2a7e5b8d4c1f9a6e0b2d7c4f8a1e'],

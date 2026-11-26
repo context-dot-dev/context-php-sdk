@@ -9,6 +9,7 @@ use ContextDev\Core\Exceptions\APIException;
 use ContextDev\Core\Util;
 use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\WebContract;
+use ContextDev\Web\WebAnswersParams\Controls;
 use ContextDev\Web\WebAnswersParams\Mode;
 use ContextDev\Web\WebAnswersParams\TimeoutOpts;
 use ContextDev\Web\WebAnswersParams\Zdr;
@@ -42,6 +43,7 @@ use ContextDev\Web\WebWebCrawlMdParams\SourcePreference;
 use ContextDev\Web\WebWebCrawlMdResponse;
 
 /**
+ * @phpstan-import-type ControlsShape from \ContextDev\Web\WebAnswersParams\Controls
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebAnswersParams\TimeoutOpts
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebExtractCompetitorsParams\TimeoutOpts as TimeoutOptsShape1
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebExtractStyleguideParams\TimeoutOpts as TimeoutOptsShape2
@@ -87,6 +89,7 @@ final class WebService implements WebContract
      * Research the web and return a sourced answer in your JSON shape. Choose `fast` for a short task or `ultra` for deeper research.
      *
      * @param string $task Research task, up to 2000 characters. The agent selects company/profile lookups, web searches, or page reads. Include domains or URLs to focus the research.
+     * @param Controls|ControlsShape $controls limits what the research may use
      * @param array<string,mixed> $jsonFormat Example answer object, not JSON Schema. Up to 8 levels, 500 values, and 16000 characters; unknowns may be null.
      * @param Mode|value-of<Mode> $mode `fast` prioritizes speed, with extra verification for people and companies; `ultra` supports deeper research (default)
      * @param list<string> $policies Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
@@ -99,6 +102,7 @@ final class WebService implements WebContract
      */
     public function answers(
         string $task,
+        Controls|array|null $controls = null,
         ?array $jsonFormat = null,
         Mode|string|null $mode = null,
         ?array $policies = null,
@@ -110,6 +114,7 @@ final class WebService implements WebContract
         $params = Util::removeNulls(
             [
                 'task' => $task,
+                'controls' => $controls,
                 'jsonFormat' => $jsonFormat,
                 'mode' => $mode,
                 'policies' => $policies,

@@ -9,6 +9,7 @@ use ContextDev\Core\Attributes\Required;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebAnswersParams\Controls;
 use ContextDev\Web\WebAnswersParams\Mode;
 use ContextDev\Web\WebAnswersParams\TimeoutOpts;
 use ContextDev\Web\WebAnswersParams\Zdr;
@@ -18,10 +19,12 @@ use ContextDev\Web\WebAnswersParams\Zdr;
  *
  * @see ContextDev\Services\WebService::answers()
  *
+ * @phpstan-import-type ControlsShape from \ContextDev\Web\WebAnswersParams\Controls
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebAnswersParams\TimeoutOpts
  *
  * @phpstan-type WebAnswersParamsShape = array{
  *   task: string,
+ *   controls?: null|Controls|ControlsShape,
  *   jsonFormat?: array<string,mixed>|null,
  *   mode?: null|Mode|value-of<Mode>,
  *   policies?: list<string>|null,
@@ -41,6 +44,12 @@ final class WebAnswersParams implements BaseModel
      */
     #[Required]
     public string $task;
+
+    /**
+     * Limits what the research may use.
+     */
+    #[Optional]
+    public ?Controls $controls;
 
     /**
      * Example answer object, not JSON Schema. Up to 8 levels, 500 values, and 16000 characters; unknowns may be null.
@@ -112,6 +121,7 @@ final class WebAnswersParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param Controls|ControlsShape|null $controls
      * @param array<string,mixed>|null $jsonFormat
      * @param Mode|value-of<Mode>|null $mode
      * @param list<string>|null $policies
@@ -121,6 +131,7 @@ final class WebAnswersParams implements BaseModel
      */
     public static function with(
         string $task,
+        Controls|array|null $controls = null,
         ?array $jsonFormat = null,
         Mode|string|null $mode = null,
         ?array $policies = null,
@@ -132,6 +143,7 @@ final class WebAnswersParams implements BaseModel
 
         $self['task'] = $task;
 
+        null !== $controls && $self['controls'] = $controls;
         null !== $jsonFormat && $self['jsonFormat'] = $jsonFormat;
         null !== $mode && $self['mode'] = $mode;
         null !== $policies && $self['policies'] = $policies;
@@ -149,6 +161,19 @@ final class WebAnswersParams implements BaseModel
     {
         $self = clone $this;
         $self['task'] = $task;
+
+        return $self;
+    }
+
+    /**
+     * Limits what the research may use.
+     *
+     * @param Controls|ControlsShape $controls
+     */
+    public function withControls(Controls|array $controls): self
+    {
+        $self = clone $this;
+        $self['controls'] = $controls;
 
         return $self;
     }

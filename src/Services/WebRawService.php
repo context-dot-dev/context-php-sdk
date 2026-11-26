@@ -11,6 +11,7 @@ use ContextDev\Core\Util;
 use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\WebRawContract;
 use ContextDev\Web\WebAnswersParams;
+use ContextDev\Web\WebAnswersParams\Controls;
 use ContextDev\Web\WebAnswersParams\Mode;
 use ContextDev\Web\WebAnswersParams\TimeoutOpts;
 use ContextDev\Web\WebAnswersParams\Zdr;
@@ -49,6 +50,7 @@ use ContextDev\Web\WebWebCrawlMdParams\SourcePreference;
 use ContextDev\Web\WebWebCrawlMdResponse;
 
 /**
+ * @phpstan-import-type ControlsShape from \ContextDev\Web\WebAnswersParams\Controls
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebAnswersParams\TimeoutOpts
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebExtractCompetitorsParams\TimeoutOpts as TimeoutOptsShape1
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebExtractStyleguideParams\TimeoutOpts as TimeoutOptsShape2
@@ -88,6 +90,7 @@ final class WebRawService implements WebRawContract
      *
      * @param array{
      *   task: string,
+     *   controls?: Controls|ControlsShape,
      *   jsonFormat?: array<string,mixed>,
      *   mode?: Mode|value-of<Mode>,
      *   policies?: list<string>,
