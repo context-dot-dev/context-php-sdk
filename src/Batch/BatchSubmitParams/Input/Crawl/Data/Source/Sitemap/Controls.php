@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\Source\Sitemap;
 
+use ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\Source\Sitemap\Controls\Exclude;
+use ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\Source\Sitemap\Controls\Scrape;
 use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
@@ -11,11 +13,16 @@ use ContextDev\Core\Contracts\BaseModel;
 /**
  * Limits and filters for the sitemap URLs. A sitemap batch scrapes exactly those URLs and never follows links off them, so there is no crawl depth here.
  *
+ * @phpstan-import-type ExcludeVariants from \ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\Source\Sitemap\Controls\Exclude
+ * @phpstan-import-type ScrapeVariants from \ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\Source\Sitemap\Controls\Scrape
+ * @phpstan-import-type ExcludeShape from \ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\Source\Sitemap\Controls\Exclude
+ * @phpstan-import-type ScrapeShape from \ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\Source\Sitemap\Controls\Scrape
+ *
  * @phpstan-type ControlsShape = array{
+ *   exclude?: list<ExcludeShape>|null,
  *   excludePaths?: list<string>|null,
- *   excludeRegex?: string|null,
  *   maxURLs?: int|null,
- *   regex?: string|null,
+ *   scrape?: list<ScrapeShape>|null,
  * }
  */
 final class Controls implements BaseModel
@@ -24,18 +31,20 @@ final class Controls implements BaseModel
     use SdkModel;
 
     /**
-     * Path fragments that skip a sitemap URL in a crawl. Works separately from any regex inclusion or exclusion you define. Defaults to ["/feed","/rss","/atom","/api/","/cdn-cgi/","/_next/","/__"]. Pass `[]` to keep every listed URL.
+     * Sitemap pages to skip, even when they match `scrape`.
+     *
+     * @var list<ExcludeVariants>|null $exclude
+     */
+    #[Optional(list: Exclude::class)]
+    public ?array $exclude;
+
+    /**
+     * Path fragments that skip a sitemap URL in a crawl. Works separately from `scrape` and `exclude`. Defaults to ["/feed","/rss","/atom","/api/","/cdn-cgi/","/_next/","/__"]. Pass `[]` to keep every listed URL.
      *
      * @var list<string>|null $excludePaths
      */
     #[Optional(list: 'string')]
     public ?array $excludePaths;
-
-    /**
-     * Regex pattern; sitemap URLs matching it are not scraped, even when they match `regex`.
-     */
-    #[Optional]
-    public ?string $excludeRegex;
 
     /**
      * Maximum pages to fetch. Unused reserved credits are refunded. Maximum 100000.
@@ -44,10 +53,12 @@ final class Controls implements BaseModel
     public ?int $maxURLs;
 
     /**
-     * Regex pattern; only sitemap URLs matching it are scraped.
+     * Sitemap pages to return in the results. Returns every listed page when omitted.
+     *
+     * @var list<ScrapeVariants>|null $scrape
      */
-    #[Optional]
-    public ?string $regex;
+    #[Optional(list: Scrape::class)]
+    public ?array $scrape;
 
     public function __construct()
     {
@@ -59,26 +70,41 @@ final class Controls implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param list<ExcludeShape>|null $exclude
      * @param list<string>|null $excludePaths
+     * @param list<ScrapeShape>|null $scrape
      */
     public static function with(
+        ?array $exclude = null,
         ?array $excludePaths = null,
-        ?string $excludeRegex = null,
         ?int $maxURLs = null,
-        ?string $regex = null,
+        ?array $scrape = null,
     ): self {
         $self = new self;
 
+        null !== $exclude && $self['exclude'] = $exclude;
         null !== $excludePaths && $self['excludePaths'] = $excludePaths;
-        null !== $excludeRegex && $self['excludeRegex'] = $excludeRegex;
         null !== $maxURLs && $self['maxURLs'] = $maxURLs;
-        null !== $regex && $self['regex'] = $regex;
+        null !== $scrape && $self['scrape'] = $scrape;
 
         return $self;
     }
 
     /**
-     * Path fragments that skip a sitemap URL in a crawl. Works separately from any regex inclusion or exclusion you define. Defaults to ["/feed","/rss","/atom","/api/","/cdn-cgi/","/_next/","/__"]. Pass `[]` to keep every listed URL.
+     * Sitemap pages to skip, even when they match `scrape`.
+     *
+     * @param list<ExcludeShape> $exclude
+     */
+    public function withExclude(array $exclude): self
+    {
+        $self = clone $this;
+        $self['exclude'] = $exclude;
+
+        return $self;
+    }
+
+    /**
+     * Path fragments that skip a sitemap URL in a crawl. Works separately from `scrape` and `exclude`. Defaults to ["/feed","/rss","/atom","/api/","/cdn-cgi/","/_next/","/__"]. Pass `[]` to keep every listed URL.
      *
      * @param list<string> $excludePaths
      */
@@ -86,17 +112,6 @@ final class Controls implements BaseModel
     {
         $self = clone $this;
         $self['excludePaths'] = $excludePaths;
-
-        return $self;
-    }
-
-    /**
-     * Regex pattern; sitemap URLs matching it are not scraped, even when they match `regex`.
-     */
-    public function withExcludeRegex(string $excludeRegex): self
-    {
-        $self = clone $this;
-        $self['excludeRegex'] = $excludeRegex;
 
         return $self;
     }
@@ -113,12 +128,14 @@ final class Controls implements BaseModel
     }
 
     /**
-     * Regex pattern; only sitemap URLs matching it are scraped.
+     * Sitemap pages to return in the results. Returns every listed page when omitted.
+     *
+     * @param list<ScrapeShape> $scrape
      */
-    public function withRegex(string $regex): self
+    public function withScrape(array $scrape): self
     {
         $self = clone $this;
-        $self['regex'] = $regex;
+        $self['scrape'] = $scrape;
 
         return $self;
     }

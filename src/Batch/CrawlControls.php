@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace ContextDev\Batch;
 
+use ContextDev\Batch\CrawlControls\Exclude;
+use ContextDev\Batch\CrawlControls\Follow;
 use ContextDev\Batch\CrawlControls\Languages;
 use ContextDev\Batch\CrawlControls\Languages\UnionMember0;
+use ContextDev\Batch\CrawlControls\Scrape;
 use ContextDev\Batch\CrawlControls\Source\Sitemap;
 use ContextDev\Batch\CrawlControls\Source\StartURL;
 use ContextDev\Core\Attributes\Required;
@@ -15,17 +18,26 @@ use ContextDev\Core\Contracts\BaseModel;
 /**
  * Crawl settings as submitted.
  *
+ * @phpstan-import-type ExcludeVariants from \ContextDev\Batch\CrawlControls\Exclude
+ * @phpstan-import-type FollowVariants from \ContextDev\Batch\CrawlControls\Follow
  * @phpstan-import-type LanguagesVariants from \ContextDev\Batch\CrawlControls\Languages
+ * @phpstan-import-type ScrapeVariants from \ContextDev\Batch\CrawlControls\Scrape
  * @phpstan-import-type SourceVariants from \ContextDev\Batch\CrawlControls\Source
+ * @phpstan-import-type ExcludeShape from \ContextDev\Batch\CrawlControls\Exclude
+ * @phpstan-import-type FollowShape from \ContextDev\Batch\CrawlControls\Follow
  * @phpstan-import-type LanguagesShape from \ContextDev\Batch\CrawlControls\Languages
+ * @phpstan-import-type ScrapeShape from \ContextDev\Batch\CrawlControls\Scrape
  * @phpstan-import-type SourceShape from \ContextDev\Batch\CrawlControls\Source
  *
  * @phpstan-type CrawlControlsShape = array{
+ *   exclude: list<ExcludeShape>|null,
  *   excludeURLPattern: string|null,
+ *   follow: list<FollowShape>|null,
  *   followSubdomains: bool,
  *   languages: LanguagesShape|null,
  *   maxDepth: int|null,
  *   maxPages: int,
+ *   scrape: list<ScrapeShape>|null,
  *   source: SourceShape,
  *   urlPattern: string|null,
  * }
@@ -36,10 +48,26 @@ final class CrawlControls implements BaseModel
     use SdkModel;
 
     /**
+     * Pages the crawl skipped. Null when it skipped none.
+     *
+     * @var list<ExcludeVariants>|null $exclude
+     */
+    #[Required(list: Exclude::class)]
+    public ?array $exclude;
+
+    /**
      * Regex pattern URLs must not match to be crawled. Null when the crawl set none.
      */
     #[Required('exclude_url_pattern')]
     public ?string $excludeURLPattern;
+
+    /**
+     * Links the crawl followed. Null when it followed every link.
+     *
+     * @var list<FollowVariants>|null $follow
+     */
+    #[Required(list: Follow::class)]
+    public ?array $follow;
 
     /**
      * Whether links to subdomains were followed. Always false for a sitemap crawl.
@@ -68,6 +96,14 @@ final class CrawlControls implements BaseModel
     public int $maxPages;
 
     /**
+     * Pages the crawl returned. Null when it returned every fetched page.
+     *
+     * @var list<ScrapeVariants>|null $scrape
+     */
+    #[Required(list: Scrape::class)]
+    public ?array $scrape;
+
+    /**
      * Where the crawl started.
      *
      * @var SourceVariants $source
@@ -87,11 +123,14 @@ final class CrawlControls implements BaseModel
      * To enforce required parameters use
      * ```
      * CrawlControls::with(
+     *   exclude: ...,
      *   excludeURLPattern: ...,
+     *   follow: ...,
      *   followSubdomains: ...,
      *   languages: ...,
      *   maxDepth: ...,
      *   maxPages: ...,
+     *   scrape: ...,
      *   source: ...,
      *   urlPattern: ...,
      * )
@@ -101,11 +140,14 @@ final class CrawlControls implements BaseModel
      *
      * ```
      * (new CrawlControls)
+     *   ->withExclude(...)
      *   ->withExcludeURLPattern(...)
+     *   ->withFollow(...)
      *   ->withFollowSubdomains(...)
      *   ->withLanguages(...)
      *   ->withMaxDepth(...)
      *   ->withMaxPages(...)
+     *   ->withScrape(...)
      *   ->withSource(...)
      *   ->withURLPattern(...)
      * ```
@@ -120,27 +162,49 @@ final class CrawlControls implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param list<ExcludeShape>|null $exclude
+     * @param list<FollowShape>|null $follow
      * @param LanguagesShape|null $languages
+     * @param list<ScrapeShape>|null $scrape
      * @param SourceShape $source
      */
     public static function with(
+        ?array $exclude,
         ?string $excludeURLPattern,
+        ?array $follow,
         bool $followSubdomains,
         UnionMember0|array|string|null $languages,
         ?int $maxDepth,
         int $maxPages,
+        ?array $scrape,
         StartURL|array|Sitemap $source,
         ?string $urlPattern,
     ): self {
         $self = new self;
 
+        $self['exclude'] = $exclude;
         $self['excludeURLPattern'] = $excludeURLPattern;
+        $self['follow'] = $follow;
         $self['followSubdomains'] = $followSubdomains;
         $self['languages'] = $languages;
         $self['maxDepth'] = $maxDepth;
         $self['maxPages'] = $maxPages;
+        $self['scrape'] = $scrape;
         $self['source'] = $source;
         $self['urlPattern'] = $urlPattern;
+
+        return $self;
+    }
+
+    /**
+     * Pages the crawl skipped. Null when it skipped none.
+     *
+     * @param list<ExcludeShape>|null $exclude
+     */
+    public function withExclude(?array $exclude): self
+    {
+        $self = clone $this;
+        $self['exclude'] = $exclude;
 
         return $self;
     }
@@ -152,6 +216,19 @@ final class CrawlControls implements BaseModel
     {
         $self = clone $this;
         $self['excludeURLPattern'] = $excludeURLPattern;
+
+        return $self;
+    }
+
+    /**
+     * Links the crawl followed. Null when it followed every link.
+     *
+     * @param list<FollowShape>|null $follow
+     */
+    public function withFollow(?array $follow): self
+    {
+        $self = clone $this;
+        $self['follow'] = $follow;
 
         return $self;
     }
@@ -199,6 +276,19 @@ final class CrawlControls implements BaseModel
     {
         $self = clone $this;
         $self['maxPages'] = $maxPages;
+
+        return $self;
+    }
+
+    /**
+     * Pages the crawl returned. Null when it returned every fetched page.
+     *
+     * @param list<ScrapeShape>|null $scrape
+     */
+    public function withScrape(?array $scrape): self
+    {
+        $self = clone $this;
+        $self['scrape'] = $scrape;
 
         return $self;
     }
