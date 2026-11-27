@@ -360,7 +360,6 @@ final class WebRawService implements WebRawContract
      *   markdownOptions?: MarkdownOptions|MarkdownOptionsShape|null,
      *   numResults?: int,
      *   policies?: list<string>,
-     *   queryFanout?: bool,
      *   tags?: list<string>,
      *   timeoutOpts?: WebSearchParams\TimeoutOpts|TimeoutOptsShape6,
      *   zdr?: WebSearchParams\Zdr|value-of<WebSearchParams\Zdr>,

@@ -27,7 +27,6 @@ use ContextDev\Monitors\MonitorListParams\TargetType;
  *   searchBy?: list<SearchBy|value-of<SearchBy>>|null,
  *   searchType?: null|SearchType|value-of<SearchType>,
  *   status?: null|Status|value-of<Status>,
- *   tag?: string|null,
  *   tags?: list<string>|null,
  *   targetType?: null|TargetType|value-of<TargetType>,
  * }
@@ -89,12 +88,6 @@ final class MonitorListParams implements BaseModel
     public ?string $status;
 
     /**
-     * Filter to items that have this tag.
-     */
-    #[Optional]
-    public ?string $tag;
-
-    /**
      * Comma-separated list of tags to filter by (matches monitors having any of them).
      *
      * @var list<string>|null $tags
@@ -135,7 +128,6 @@ final class MonitorListParams implements BaseModel
         ?array $searchBy = null,
         SearchType|string|null $searchType = null,
         Status|string|null $status = null,
-        ?string $tag = null,
         ?array $tags = null,
         TargetType|string|null $targetType = null,
     ): self {
@@ -148,7 +140,6 @@ final class MonitorListParams implements BaseModel
         null !== $searchBy && $self['searchBy'] = $searchBy;
         null !== $searchType && $self['searchType'] = $searchType;
         null !== $status && $self['status'] = $status;
-        null !== $tag && $self['tag'] = $tag;
         null !== $tags && $self['tags'] = $tags;
         null !== $targetType && $self['targetType'] = $targetType;
 
@@ -237,17 +228,6 @@ final class MonitorListParams implements BaseModel
     {
         $self = clone $this;
         $self['status'] = $status;
-
-        return $self;
-    }
-
-    /**
-     * Filter to items that have this tag.
-     */
-    public function withTag(string $tag): self
-    {
-        $self = clone $this;
-        $self['tag'] = $tag;
 
         return $self;
     }

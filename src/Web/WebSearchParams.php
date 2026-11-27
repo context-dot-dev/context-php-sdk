@@ -41,7 +41,6 @@ use ContextDev\Web\WebSearchParams\Zdr;
  *   markdownOptions?: null|MarkdownOptions|MarkdownOptionsShape,
  *   numResults?: int|null,
  *   policies?: list<string>|null,
- *   queryFanout?: bool|null,
  *   tags?: list<string>|null,
  *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  *   zdr?: null|Zdr|value-of<Zdr>,
@@ -132,12 +131,6 @@ final class WebSearchParams implements BaseModel
     public ?array $policies;
 
     /**
-     * Currently has no effect.
-     */
-    #[Optional]
-    public ?bool $queryFanout;
-
-    /**
      * Labels for filtering usage in the dashboard.
      *
      * @var list<string>|null $tags
@@ -207,7 +200,6 @@ final class WebSearchParams implements BaseModel
         MarkdownOptions|array|null $markdownOptions = null,
         ?int $numResults = null,
         ?array $policies = null,
-        ?bool $queryFanout = null,
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
         Zdr|string|null $zdr = null,
@@ -226,7 +218,6 @@ final class WebSearchParams implements BaseModel
         null !== $markdownOptions && $self['markdownOptions'] = $markdownOptions;
         null !== $numResults && $self['numResults'] = $numResults;
         null !== $policies && $self['policies'] = $policies;
-        null !== $queryFanout && $self['queryFanout'] = $queryFanout;
         null !== $tags && $self['tags'] = $tags;
         null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
         null !== $zdr && $self['zdr'] = $zdr;
@@ -370,17 +361,6 @@ final class WebSearchParams implements BaseModel
     {
         $self = clone $this;
         $self['policies'] = $policies;
-
-        return $self;
-    }
-
-    /**
-     * Currently has no effect.
-     */
-    public function withQueryFanout(bool $queryFanout): self
-    {
-        $self = clone $this;
-        $self['queryFanout'] = $queryFanout;
 
         return $self;
     }

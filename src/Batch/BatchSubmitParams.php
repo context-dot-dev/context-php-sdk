@@ -28,7 +28,6 @@ use ContextDev\Core\Contracts\BaseModel;
  *   policies?: list<string>|null,
  *   tags?: list<string>|null,
  *   webhook?: null|Webhook|WebhookShape,
- *   webhookURL?: string|null,
  *   idempotencyKey?: string|null,
  * }
  */
@@ -67,12 +66,6 @@ final class BatchSubmitParams implements BaseModel
      */
     #[Optional]
     public ?Webhook $webhook;
-
-    /**
-     * Legacy URL notified when the batch finishes. Preserves one best-effort attempt. Cannot be combined with webhook.
-     */
-    #[Optional('webhookUrl')]
-    public ?string $webhookURL;
 
     /**
      * Unique key per submission. Retrying with the same key and body returns the original batch; a different body returns `409`.
@@ -114,7 +107,6 @@ final class BatchSubmitParams implements BaseModel
         ?array $policies = null,
         ?array $tags = null,
         Webhook|array|null $webhook = null,
-        ?string $webhookURL = null,
         ?string $idempotencyKey = null,
     ): self {
         $self = new self;
@@ -124,7 +116,6 @@ final class BatchSubmitParams implements BaseModel
         null !== $policies && $self['policies'] = $policies;
         null !== $tags && $self['tags'] = $tags;
         null !== $webhook && $self['webhook'] = $webhook;
-        null !== $webhookURL && $self['webhookURL'] = $webhookURL;
         null !== $idempotencyKey && $self['idempotencyKey'] = $idempotencyKey;
 
         return $self;
@@ -178,17 +169,6 @@ final class BatchSubmitParams implements BaseModel
     {
         $self = clone $this;
         $self['webhook'] = $webhook;
-
-        return $self;
-    }
-
-    /**
-     * Legacy URL notified when the batch finishes. Preserves one best-effort attempt. Cannot be combined with webhook.
-     */
-    public function withWebhookURL(string $webhookURL): self
-    {
-        $self = clone $this;
-        $self['webhookURL'] = $webhookURL;
 
         return $self;
     }

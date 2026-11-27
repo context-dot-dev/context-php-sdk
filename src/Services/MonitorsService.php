@@ -195,7 +195,6 @@ final class MonitorsService implements MonitorsContract
      * @param list<SearchBy|value-of<SearchBy>>|null $searchBy Fields to search with `q`. Defaults to all fields; page, extract, and search targets can have instructions, and `url` matches a search target’s query.
      * @param SearchType|value-of<SearchType> $searchType `prefix` for as-you-type prefix matching (default), `exact` for full-token matching
      * @param \ContextDev\Monitors\MonitorListParams\Status|value-of<\ContextDev\Monitors\MonitorListParams\Status> $status filter monitors by lifecycle status
-     * @param string $tag filter to items that have this tag
      * @param list<string>|null $tags comma-separated list of tags to filter by (matches monitors having any of them)
      * @param TargetType|value-of<TargetType> $targetType filter by target type
      * @param RequestOpts|null $requestOptions
@@ -210,7 +209,6 @@ final class MonitorsService implements MonitorsContract
         ?array $searchBy = null,
         SearchType|string|null $searchType = null,
         \ContextDev\Monitors\MonitorListParams\Status|string|null $status = null,
-        ?string $tag = null,
         ?array $tags = null,
         TargetType|string|null $targetType = null,
         RequestOptions|array|null $requestOptions = null,
@@ -224,7 +222,6 @@ final class MonitorsService implements MonitorsContract
                 'searchBy' => $searchBy,
                 'searchType' => $searchType,
                 'status' => $status,
-                'tag' => $tag,
                 'tags' => $tags,
                 'targetType' => $targetType,
             ],

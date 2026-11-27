@@ -198,7 +198,6 @@ final class BatchRawService implements BatchRawContract
      *   policies?: list<string>,
      *   tags?: list<string>,
      *   webhook?: Webhook|WebhookShape,
-     *   webhookURL?: string,
      *   idempotencyKey?: string,
      * }|BatchSubmitParams $params
      * @param RequestOpts|null $requestOptions

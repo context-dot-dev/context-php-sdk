@@ -430,7 +430,6 @@ final class WebService implements WebContract
      * @param MarkdownOptions|MarkdownOptionsShape|null $markdownOptions Inline Markdown scraping for each result. Set `enabled: true` to activate.
      * @param int $numResults Number of results to request and return (1–100). Defaults to 10.
      * @param list<string> $policies Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
-     * @param bool $queryFanout currently has no effect
      * @param list<string> $tags labels for filtering usage in the dashboard
      * @param \ContextDev\Web\WebSearchParams\TimeoutOpts|TimeoutOptsShape6 $timeoutOpts request deadline and what to return when it passes
      * @param \ContextDev\Web\WebSearchParams\Zdr|value-of<\ContextDev\Web\WebSearchParams\Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
@@ -450,7 +449,6 @@ final class WebService implements WebContract
         MarkdownOptions|array|null $markdownOptions = null,
         int $numResults = 10,
         ?array $policies = null,
-        ?bool $queryFanout = null,
         ?array $tags = null,
         \ContextDev\Web\WebSearchParams\TimeoutOpts|array|null $timeoutOpts = null,
         \ContextDev\Web\WebSearchParams\Zdr|string $zdr = 'disabled',
@@ -469,7 +467,6 @@ final class WebService implements WebContract
                 'markdownOptions' => $markdownOptions,
                 'numResults' => $numResults,
                 'policies' => $policies,
-                'queryFanout' => $queryFanout,
                 'tags' => $tags,
                 'timeoutOpts' => $timeoutOpts,
                 'zdr' => $zdr,
