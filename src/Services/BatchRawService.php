@@ -74,7 +74,6 @@ final class BatchRawService implements BatchRawContract
      *   limit?: int,
      *   q?: string,
      *   searchType?: SearchType|value-of<SearchType>,
-     *   shouldIncludeUnified?: bool,
      *   status?: Status|value-of<Status>,
      *   tags?: TagsShape,
      * }|BatchListParams $params

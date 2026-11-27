@@ -25,7 +25,6 @@ use ContextDev\Core\Contracts\BaseModel;
  *   limit?: int|null,
  *   q?: string|null,
  *   searchType?: null|SearchType|value-of<SearchType>,
- *   shouldIncludeUnified?: bool|null,
  *   status?: null|Status|value-of<Status>,
  *   tags?: TagsShape|null,
  * }
@@ -63,12 +62,6 @@ final class BatchListParams implements BaseModel
     public ?string $searchType;
 
     /**
-     * Include batches submitted with Scrape Anything formats. Defaults to false.
-     */
-    #[Optional]
-    public ?bool $shouldIncludeUnified;
-
-    /**
      * Filter by status.
      *
      * @var value-of<Status>|null $status
@@ -103,7 +96,6 @@ final class BatchListParams implements BaseModel
         ?int $limit = null,
         ?string $q = null,
         SearchType|string|null $searchType = null,
-        ?bool $shouldIncludeUnified = null,
         Status|string|null $status = null,
         string|array|null $tags = null,
     ): self {
@@ -113,7 +105,6 @@ final class BatchListParams implements BaseModel
         null !== $limit && $self['limit'] = $limit;
         null !== $q && $self['q'] = $q;
         null !== $searchType && $self['searchType'] = $searchType;
-        null !== $shouldIncludeUnified && $self['shouldIncludeUnified'] = $shouldIncludeUnified;
         null !== $status && $self['status'] = $status;
         null !== $tags && $self['tags'] = $tags;
 
@@ -162,17 +153,6 @@ final class BatchListParams implements BaseModel
     {
         $self = clone $this;
         $self['searchType'] = $searchType;
-
-        return $self;
-    }
-
-    /**
-     * Include batches submitted with Scrape Anything formats. Defaults to false.
-     */
-    public function withShouldIncludeUnified(bool $shouldIncludeUnified): self
-    {
-        $self = clone $this;
-        $self['shouldIncludeUnified'] = $shouldIncludeUnified;
 
         return $self;
     }
