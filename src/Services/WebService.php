@@ -64,6 +64,7 @@ use ContextDev\Web\WebWebCrawlMdResponse;
  * @phpstan-import-type LanguagesShape from \ContextDev\Web\WebSearchParams\Languages
  * @phpstan-import-type MarkdownOptionsShape from \ContextDev\Web\WebSearchParams\MarkdownOptions
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebSearchParams\TimeoutOpts as TimeoutOptsShape6
+ * @phpstan-import-type IncludeFramesShape from \ContextDev\Web\WebWebCrawlMdParams\IncludeFrames
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebCrawlMdParams\Pdf
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts as TimeoutOptsShape7
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
@@ -491,7 +492,7 @@ final class WebService implements WebContract
      * @param list<string>|null $excludeSelectors Remove matching elements after inclusions. Exclusions take precedence.
      * @param string $excludeURLRegex Regex pattern. URLs matching this pattern are never followed or scraped, even when they match urlRegex. The starting URL is always scraped.
      * @param bool $followSubdomains When true, follow links on subdomains of the starting URL's domain (e.g. docs.example.com when starting from example.com). www and apex are always treated as equivalent.
-     * @param bool $includeFrames when true, the contents of iframes are rendered to Markdown for each crawled page
+     * @param IncludeFramesShape $includeFrames Which iframe contents to render to Markdown for each crawled page. `auto` (default) inlines only iframes that hold page content, such as same-site documents, framesets, job boards, forms and embedded documents, and skips ads and widgets. `true` inlines every iframe. `false` inlines none.
      * @param bool $includeImages include image references in the Markdown output (`html-conversion` only)
      * @param bool $includeLinks preserve hyperlinks in the Markdown output (`html-conversion` only)
      * @param list<string>|null $includeSelectors keep matching HTML subtrees before converting each page to Markdown
@@ -520,7 +521,7 @@ final class WebService implements WebContract
         ?array $excludeSelectors = null,
         ?string $excludeURLRegex = null,
         bool $followSubdomains = false,
-        bool $includeFrames = false,
+        bool|\ContextDev\Web\WebWebCrawlMdParams\IncludeFrames\UnionMember1|string $includeFrames = 'auto',
         bool $includeImages = false,
         bool $includeLinks = true,
         ?array $includeSelectors = null,

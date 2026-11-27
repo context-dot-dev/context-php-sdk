@@ -193,7 +193,7 @@ final class BatchTest extends TestCase
                         'dismissPopups' => true,
                         'excludeSelectors' => ['P'],
                         'headers' => ['Accept-Language' => 'en-US'],
-                        'includeFrames' => true,
+                        'includeFrames' => 'auto',
                         'includeSelectors' => ['P'],
                         'mainContentOnly' => true,
                         'parsers' => [

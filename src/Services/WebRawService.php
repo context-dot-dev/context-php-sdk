@@ -71,6 +71,7 @@ use ContextDev\Web\WebWebCrawlMdResponse;
  * @phpstan-import-type LanguagesShape from \ContextDev\Web\WebSearchParams\Languages
  * @phpstan-import-type MarkdownOptionsShape from \ContextDev\Web\WebSearchParams\MarkdownOptions
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebSearchParams\TimeoutOpts as TimeoutOptsShape6
+ * @phpstan-import-type IncludeFramesShape from \ContextDev\Web\WebWebCrawlMdParams\IncludeFrames
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebCrawlMdParams\Pdf
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts as TimeoutOptsShape7
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
@@ -400,7 +401,7 @@ final class WebRawService implements WebRawContract
      *   excludeSelectors?: list<string>|null,
      *   excludeURLRegex?: string,
      *   followSubdomains?: bool,
-     *   includeFrames?: bool,
+     *   includeFrames?: IncludeFramesShape,
      *   includeImages?: bool,
      *   includeLinks?: bool,
      *   includeSelectors?: list<string>|null,

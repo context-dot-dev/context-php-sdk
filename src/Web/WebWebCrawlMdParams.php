@@ -10,6 +10,8 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebWebCrawlMdParams\Country;
+use ContextDev\Web\WebWebCrawlMdParams\IncludeFrames;
+use ContextDev\Web\WebWebCrawlMdParams\IncludeFrames\UnionMember1;
 use ContextDev\Web\WebWebCrawlMdParams\Pdf;
 use ContextDev\Web\WebWebCrawlMdParams\SourcePreference;
 use ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts;
@@ -20,6 +22,8 @@ use ContextDev\Web\WebWebCrawlMdParams\Zdr;
  *
  * @see ContextDev\Services\WebService::webCrawlMd()
  *
+ * @phpstan-import-type IncludeFramesVariants from \ContextDev\Web\WebWebCrawlMdParams\IncludeFrames
+ * @phpstan-import-type IncludeFramesShape from \ContextDev\Web\WebWebCrawlMdParams\IncludeFrames
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebWebCrawlMdParams\Pdf
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts
  *
@@ -29,7 +33,7 @@ use ContextDev\Web\WebWebCrawlMdParams\Zdr;
  *   excludeSelectors?: list<string>|null,
  *   excludeURLRegex?: string|null,
  *   followSubdomains?: bool|null,
- *   includeFrames?: bool|null,
+ *   includeFrames?: IncludeFramesShape|null,
  *   includeImages?: bool|null,
  *   includeLinks?: bool|null,
  *   includeSelectors?: list<string>|null,
@@ -91,10 +95,12 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?bool $followSubdomains;
 
     /**
-     * When true, the contents of iframes are rendered to Markdown for each crawled page.
+     * Which iframe contents to render to Markdown for each crawled page. `auto` (default) inlines only iframes that hold page content, such as same-site documents, framesets, job boards, forms and embedded documents, and skips ads and widgets. `true` inlines every iframe. `false` inlines none.
+     *
+     * @var IncludeFramesVariants|null $includeFrames
      */
-    #[Optional]
-    public ?bool $includeFrames;
+    #[Optional(union: IncludeFrames::class)]
+    public bool|string|null $includeFrames;
 
     /**
      * Include image references in the Markdown output (`html-conversion` only).
@@ -240,6 +246,7 @@ final class WebWebCrawlMdParams implements BaseModel
      *
      * @param Country|value-of<Country>|null $country
      * @param list<string>|null $excludeSelectors
+     * @param IncludeFramesShape|null $includeFrames
      * @param list<string>|null $includeSelectors
      * @param Pdf|PdfShape|null $pdf
      * @param list<string>|null $policies
@@ -254,7 +261,7 @@ final class WebWebCrawlMdParams implements BaseModel
         ?array $excludeSelectors = null,
         ?string $excludeURLRegex = null,
         ?bool $followSubdomains = null,
-        ?bool $includeFrames = null,
+        bool|UnionMember1|string|null $includeFrames = null,
         ?bool $includeImages = null,
         ?bool $includeLinks = null,
         ?array $includeSelectors = null,
@@ -365,10 +372,13 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * When true, the contents of iframes are rendered to Markdown for each crawled page.
+     * Which iframe contents to render to Markdown for each crawled page. `auto` (default) inlines only iframes that hold page content, such as same-site documents, framesets, job boards, forms and embedded documents, and skips ads and widgets. `true` inlines every iframe. `false` inlines none.
+     *
+     * @param IncludeFramesShape $includeFrames
      */
-    public function withIncludeFrames(bool $includeFrames): self
-    {
+    public function withIncludeFrames(
+        bool|UnionMember1|string $includeFrames
+    ): self {
         $self = clone $this;
         $self['includeFrames'] = $includeFrames;
 

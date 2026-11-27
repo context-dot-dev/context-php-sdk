@@ -229,7 +229,7 @@ final class WebTest extends TestCase
                 'dismissPopups' => true,
                 'excludeSelectors' => ['P'],
                 'headers' => ['Accept-Language' => 'en-US'],
-                'includeFrames' => true,
+                'includeFrames' => 'auto',
                 'includeSelectors' => ['P'],
                 'mainContentOnly' => true,
                 'parsers' => [
@@ -302,7 +302,7 @@ final class WebTest extends TestCase
             languages: 'all',
             markdownOptions: [
                 'enabled' => true,
-                'includeFrames' => true,
+                'includeFrames' => 'auto',
                 'includeImages' => true,
                 'includeLinks' => true,
                 'maxAgeMs' => 0,
@@ -350,7 +350,7 @@ final class WebTest extends TestCase
             excludeSelectors: ['x'],
             excludeURLRegex: '/tag/|/author/',
             followSubdomains: true,
-            includeFrames: true,
+            includeFrames: 'auto',
             includeImages: true,
             includeLinks: true,
             includeSelectors: ['x'],

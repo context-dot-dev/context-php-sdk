@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data;
 
 use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Action;
+use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\IncludeFrames;
+use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\IncludeFrames\UnionMember1;
 use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Parsers;
 use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Profile;
 use ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Profile\Existing;
@@ -19,9 +21,11 @@ use ContextDev\Core\Contracts\BaseModel;
  * Browser and content settings shared by all outputs.
  *
  * @phpstan-import-type ActionVariants from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Action
+ * @phpstan-import-type IncludeFramesVariants from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\IncludeFrames
  * @phpstan-import-type ProfileVariants from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Profile
  * @phpstan-import-type WaitForVariants from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\WaitFor
  * @phpstan-import-type ActionShape from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Action
+ * @phpstan-import-type IncludeFramesShape from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\IncludeFrames
  * @phpstan-import-type ParsersShape from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Parsers
  * @phpstan-import-type ProfileShape from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Profile
  * @phpstan-import-type ViewportShape from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Viewport
@@ -34,7 +38,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   dismissPopups?: bool|null,
  *   excludeSelectors?: list<string>|null,
  *   headers?: array<string,string>|null,
- *   includeFrames?: bool|null,
+ *   includeFrames?: IncludeFramesShape|null,
  *   includeSelectors?: list<string>|null,
  *   mainContentOnly?: bool|null,
  *   parsers?: null|Parsers|ParsersShape,
@@ -93,10 +97,12 @@ final class SharedParams implements BaseModel
     public ?array $headers;
 
     /**
-     * Include iframe content in HTML and text outputs. Screenshots always show visible frames.
+     * Which iframe contents to include in HTML and text outputs. Screenshots always show visible frames. `auto` (default) inlines only iframes that hold page content, such as same-site documents, framesets, job boards, forms and embedded documents, and skips ads and widgets. `true` inlines every iframe. `false` inlines none.
+     *
+     * @var IncludeFramesVariants|null $includeFrames
      */
-    #[Optional]
-    public ?bool $includeFrames;
+    #[Optional(union: IncludeFrames::class)]
+    public bool|string|null $includeFrames;
 
     /**
      * Keep only elements matching these CSS selectors.
@@ -167,6 +173,7 @@ final class SharedParams implements BaseModel
      * @param list<ActionShape>|null $actions
      * @param list<string>|null $excludeSelectors
      * @param array<string,string>|null $headers
+     * @param IncludeFramesShape|null $includeFrames
      * @param list<string>|null $includeSelectors
      * @param Parsers|ParsersShape|null $parsers
      * @param ProfileShape|null $profile
@@ -181,7 +188,7 @@ final class SharedParams implements BaseModel
         ?bool $dismissPopups = null,
         ?array $excludeSelectors = null,
         ?array $headers = null,
-        ?bool $includeFrames = null,
+        bool|UnionMember1|string|null $includeFrames = null,
         ?array $includeSelectors = null,
         ?bool $mainContentOnly = null,
         Parsers|array|null $parsers = null,
@@ -285,10 +292,13 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * Include iframe content in HTML and text outputs. Screenshots always show visible frames.
+     * Which iframe contents to include in HTML and text outputs. Screenshots always show visible frames. `auto` (default) inlines only iframes that hold page content, such as same-site documents, framesets, job boards, forms and embedded documents, and skips ads and widgets. `true` inlines every iframe. `false` inlines none.
+     *
+     * @param IncludeFramesShape $includeFrames
      */
-    public function withIncludeFrames(bool $includeFrames): self
-    {
+    public function withIncludeFrames(
+        bool|UnionMember1|string $includeFrames
+    ): self {
         $self = clone $this;
         $self['includeFrames'] = $includeFrames;
 

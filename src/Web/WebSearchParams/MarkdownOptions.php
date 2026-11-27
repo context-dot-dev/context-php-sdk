@@ -7,18 +7,22 @@ namespace ContextDev\Web\WebSearchParams;
 use ContextDev\Core\Attributes\Optional;
 use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
+use ContextDev\Web\WebSearchParams\MarkdownOptions\IncludeFrames;
+use ContextDev\Web\WebSearchParams\MarkdownOptions\IncludeFrames\UnionMember1;
 use ContextDev\Web\WebSearchParams\MarkdownOptions\Pdf;
 use ContextDev\Web\WebSearchParams\MarkdownOptions\TimeoutOpts;
 
 /**
  * Inline Markdown scraping for each result. Set `enabled: true` to activate.
  *
+ * @phpstan-import-type IncludeFramesVariants from \ContextDev\Web\WebSearchParams\MarkdownOptions\IncludeFrames
+ * @phpstan-import-type IncludeFramesShape from \ContextDev\Web\WebSearchParams\MarkdownOptions\IncludeFrames
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebSearchParams\MarkdownOptions\Pdf
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Web\WebSearchParams\MarkdownOptions\TimeoutOpts
  *
  * @phpstan-type MarkdownOptionsShape = array{
  *   enabled?: bool|null,
- *   includeFrames?: bool|null,
+ *   includeFrames?: IncludeFramesShape|null,
  *   includeImages?: bool|null,
  *   includeLinks?: bool|null,
  *   maxAgeMs?: int|null,
@@ -41,10 +45,12 @@ final class MarkdownOptions implements BaseModel
     public ?bool $enabled;
 
     /**
-     * Render iframe contents into the Markdown.
+     * Which iframe contents to render into the Markdown. `auto` (default) inlines only iframes that hold page content, such as same-site documents, framesets, job boards, forms and embedded documents, and skips ads and widgets. `true` inlines every iframe. `false` inlines none.
+     *
+     * @var IncludeFramesVariants|null $includeFrames
      */
-    #[Optional]
-    public ?bool $includeFrames;
+    #[Optional(union: IncludeFrames::class)]
+    public bool|string|null $includeFrames;
 
     /**
      * Emit image references in the Markdown.
@@ -104,12 +110,13 @@ final class MarkdownOptions implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param IncludeFramesShape|null $includeFrames
      * @param Pdf|PdfShape|null $pdf
      * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      */
     public static function with(
         ?bool $enabled = null,
-        ?bool $includeFrames = null,
+        bool|UnionMember1|string|null $includeFrames = null,
         ?bool $includeImages = null,
         ?bool $includeLinks = null,
         ?int $maxAgeMs = null,
@@ -147,10 +154,13 @@ final class MarkdownOptions implements BaseModel
     }
 
     /**
-     * Render iframe contents into the Markdown.
+     * Which iframe contents to render into the Markdown. `auto` (default) inlines only iframes that hold page content, such as same-site documents, framesets, job boards, forms and embedded documents, and skips ads and widgets. `true` inlines every iframe. `false` inlines none.
+     *
+     * @param IncludeFramesShape $includeFrames
      */
-    public function withIncludeFrames(bool $includeFrames): self
-    {
+    public function withIncludeFrames(
+        bool|UnionMember1|string $includeFrames
+    ): self {
         $self = clone $this;
         $self['includeFrames'] = $includeFrames;
 
