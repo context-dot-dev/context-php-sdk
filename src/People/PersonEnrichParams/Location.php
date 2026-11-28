@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Location context to help identify the person. Provide a city, region, or country.
+ * Location associated with the person. Send at least one of `city`, `region`, or `country`.
  *
  * @phpstan-type LocationShape = array{
  *   city?: string|null, country?: string|null, region?: string|null

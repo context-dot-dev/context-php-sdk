@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * PDF handling. `start`/`end` limit parsing to an inclusive, 1-based page range.
+ * Whether to parse PDFs and which pages to read.
  *
  * @phpstan-type PdfShape = array{
  *   end?: int|null, ocr?: bool|null, shouldParse?: bool|null, start?: int|null
@@ -21,25 +21,25 @@ final class Pdf implements BaseModel
     use SdkModel;
 
     /**
-     * Last PDF page to parse (1-based, inclusive). Defaults to the final page. Must be >= start.
+     * Last page to parse. Defaults to the last page. Must be at least `start`.
      */
     #[Optional]
     public ?int $end;
 
     /**
-     * Read scanned PDF pages with OCR; preserve pages that already have text.
+     * Read scanned PDF pages with OCR. Pages that already have text are kept as is.
      */
     #[Optional]
     public ?bool $ocr;
 
     /**
-     * When true, PDF pages are fetched and parsed. When false, PDF pages are skipped entirely (not included in results and not counted as failures).
+     * Parse PDF pages. When `false`, PDFs are left out of the results and not counted as failures.
      */
     #[Optional]
     public ?bool $shouldParse;
 
     /**
-     * First 1-based PDF page to parse.
+     * First page to parse, starting at 1.
      */
     #[Optional]
     public ?int $start;
@@ -71,7 +71,7 @@ final class Pdf implements BaseModel
     }
 
     /**
-     * Last PDF page to parse (1-based, inclusive). Defaults to the final page. Must be >= start.
+     * Last page to parse. Defaults to the last page. Must be at least `start`.
      */
     public function withEnd(int $end): self
     {
@@ -82,7 +82,7 @@ final class Pdf implements BaseModel
     }
 
     /**
-     * Read scanned PDF pages with OCR; preserve pages that already have text.
+     * Read scanned PDF pages with OCR. Pages that already have text are kept as is.
      */
     public function withOcr(bool $ocr): self
     {
@@ -93,7 +93,7 @@ final class Pdf implements BaseModel
     }
 
     /**
-     * When true, PDF pages are fetched and parsed. When false, PDF pages are skipped entirely (not included in results and not counted as failures).
+     * Parse PDF pages. When `false`, PDFs are left out of the results and not counted as failures.
      */
     public function withShouldParse(bool $shouldParse): self
     {
@@ -104,7 +104,7 @@ final class Pdf implements BaseModel
     }
 
     /**
-     * First 1-based PDF page to parse.
+     * First page to parse, starting at 1.
      */
     public function withStart(int $start): self
     {

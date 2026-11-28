@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Stock market information for this brand (will be null if not a publicly traded company).
+ * Stock listing. Omitted when the company is not publicly traded.
  *
  * @phpstan-type StockShape = array{exchange?: string|null, ticker?: string|null}
  */
@@ -19,7 +19,7 @@ final class Stock implements BaseModel
     use SdkModel;
 
     /**
-     * Stock exchange name.
+     * Exchange the stock trades on.
      */
     #[Optional]
     public ?string $exchange;
@@ -53,7 +53,7 @@ final class Stock implements BaseModel
     }
 
     /**
-     * Stock exchange name.
+     * Exchange the stock trades on.
      */
     public function withExchange(string $exchange): self
     {

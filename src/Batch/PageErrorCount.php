@@ -25,7 +25,7 @@ final class PageErrorCount implements BaseModel
     public string $code;
 
     /**
-     * Pages that failed with this code.
+     * Number of pages that failed with this code.
      */
     #[Required]
     public int $count;
@@ -76,7 +76,7 @@ final class PageErrorCount implements BaseModel
     }
 
     /**
-     * Pages that failed with this code.
+     * Number of pages that failed with this code.
      */
     public function withCount(int $count): self
     {

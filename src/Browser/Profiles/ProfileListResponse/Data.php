@@ -19,19 +19,19 @@ final class Data implements BaseModel
     use SdkModel;
 
     /**
-     * Profile ID to pass as `sharedParams.profile.profileId` on `/web/scrape`.
+     * Unique ID of the browser profile. Pass it as `sharedParams.profile.profileId` on `POST /web/scrape`.
      */
     #[Required]
     public string $id;
 
     /**
-     * When the profile was created.
+     * When the browser profile was created.
      */
     #[Required('created_at')]
     public \DateTimeInterface $createdAt;
 
     /**
-     * The description supplied when the profile was created, or null.
+     * Label set when the profile was created. `null` when none was set.
      */
     #[Required]
     public ?string $description;
@@ -75,7 +75,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Profile ID to pass as `sharedParams.profile.profileId` on `/web/scrape`.
+     * Unique ID of the browser profile. Pass it as `sharedParams.profile.profileId` on `POST /web/scrape`.
      */
     public function withID(string $id): self
     {
@@ -86,7 +86,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * When the profile was created.
+     * When the browser profile was created.
      */
     public function withCreatedAt(\DateTimeInterface $createdAt): self
     {
@@ -97,7 +97,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * The description supplied when the profile was created, or null.
+     * Label set when the profile was created. `null` when none was set.
      */
     public function withDescription(?string $description): self
     {

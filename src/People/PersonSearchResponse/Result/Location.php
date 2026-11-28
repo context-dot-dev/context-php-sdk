@@ -27,7 +27,7 @@ final class Location implements BaseModel
     public ?string $city;
 
     /**
-     * Country as a two-letter code, such as US or GB.
+     * ISO 3166-1 alpha-2 country code, such as `US`.
      */
     #[Required('country_code')]
     public ?string $countryCode;
@@ -88,7 +88,7 @@ final class Location implements BaseModel
     }
 
     /**
-     * Country as a two-letter code, such as US or GB.
+     * ISO 3166-1 alpha-2 country code, such as `US`.
      */
     public function withCountryCode(?string $countryCode): self
     {

@@ -21,7 +21,7 @@ use ContextDev\Monitors\MonitorUpdateParams\Target\MonitorsSitemapTarget;
 use ContextDev\Monitors\MonitorUpdateParams\Webhook;
 
 /**
- * Update a monitor. Changing its target or change detection replaces the baseline and queues a new baseline run.
+ * Change a monitor's settings, or pause and resume it. Changing the target or change detection replaces the baseline and queues a new baseline run.
  *
  * @see ContextDev\Services\MonitorsService::update()
  *
@@ -50,7 +50,7 @@ final class MonitorUpdateParams implements BaseModel
     use SdkParams;
 
     /**
-     * How changes are judged. Defaults to `semantic` for extract and search targets and page targets with `instructions`, otherwise `exact`.
+     * How changes are judged. Defaults to `semantic` for extract and search targets and for page targets with `instructions`; otherwise `exact`. Sitemap targets support only `exact`, and extract targets only `semantic`.
      *
      * @var ChangeDetectionVariants|null $changeDetection
      */
@@ -64,7 +64,7 @@ final class MonitorUpdateParams implements BaseModel
     public ?string $name;
 
     /**
-     * Access policy IDs to apply to every run. Send an empty list to remove them. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Access policy IDs to apply to every run, or an empty list to remove them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @var list<string>|null $policies
      */
@@ -72,13 +72,13 @@ final class MonitorUpdateParams implements BaseModel
     public ?array $policies;
 
     /**
-     * Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
+     * Run the monitor at a fixed interval, such as every 6 hours or every 2 days. The interval must be between 10 minutes and 1 year.
      */
     #[Optional]
     public ?Schedule $schedule;
 
     /**
-     * Set `paused` to stop scheduled runs or `active` to resume them.
+     * Set `paused` to stop scheduled runs or `active` to resume them. A resumed monitor runs promptly instead of waiting a full interval.
      *
      * @var value-of<Status>|null $status
      */
@@ -86,7 +86,7 @@ final class MonitorUpdateParams implements BaseModel
     public ?string $status;
 
     /**
-     * Labels for filtering monitors, their changes, and their usage.
+     * Labels for grouping monitors. Filter monitors, changes, and credit usage by tag.
      *
      * @var list<string>|null $tags
      */
@@ -102,7 +102,7 @@ final class MonitorUpdateParams implements BaseModel
     public MonitorsPageTarget|MonitorsSitemapTarget|MonitorsExtractTarget|MonitorsSearchTarget|null $target;
 
     /**
-     * Set to null to remove the webhook. Changing `url` issues a new secret.
+     * Set to `null` to remove the webhook. Changing `url` generates a new secret.
      */
     #[Optional(nullable: true)]
     public ?Webhook $webhook;
@@ -150,7 +150,7 @@ final class MonitorUpdateParams implements BaseModel
     }
 
     /**
-     * How changes are judged. Defaults to `semantic` for extract and search targets and page targets with `instructions`, otherwise `exact`.
+     * How changes are judged. Defaults to `semantic` for extract and search targets and for page targets with `instructions`; otherwise `exact`. Sitemap targets support only `exact`, and extract targets only `semantic`.
      *
      * @param ChangeDetectionShape $changeDetection
      */
@@ -175,7 +175,7 @@ final class MonitorUpdateParams implements BaseModel
     }
 
     /**
-     * Access policy IDs to apply to every run. Send an empty list to remove them. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Access policy IDs to apply to every run, or an empty list to remove them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @param list<string> $policies
      */
@@ -188,7 +188,7 @@ final class MonitorUpdateParams implements BaseModel
     }
 
     /**
-     * Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
+     * Run the monitor at a fixed interval, such as every 6 hours or every 2 days. The interval must be between 10 minutes and 1 year.
      *
      * @param Schedule|ScheduleShape $schedule
      */
@@ -201,7 +201,7 @@ final class MonitorUpdateParams implements BaseModel
     }
 
     /**
-     * Set `paused` to stop scheduled runs or `active` to resume them.
+     * Set `paused` to stop scheduled runs or `active` to resume them. A resumed monitor runs promptly instead of waiting a full interval.
      *
      * @param Status|value-of<Status> $status
      */
@@ -214,7 +214,7 @@ final class MonitorUpdateParams implements BaseModel
     }
 
     /**
-     * Labels for filtering monitors, their changes, and their usage.
+     * Labels for grouping monitors. Filter monitors, changes, and credit usage by tag.
      *
      * @param list<string> $tags
      */
@@ -241,7 +241,7 @@ final class MonitorUpdateParams implements BaseModel
     }
 
     /**
-     * Set to null to remove the webhook. Changing `url` issues a new secret.
+     * Set to `null` to remove the webhook. Changing `url` generates a new secret.
      *
      * @param Webhook|WebhookShape|null $webhook
      */

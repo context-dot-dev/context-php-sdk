@@ -31,13 +31,13 @@ interface PeopleContract
     /**
      * @api
      *
-     * @param Company|CompanyShape $company Company context to help identify the person. Provide a name or domain.
+     * @param Company|CompanyShape $company Company associated with the person. Send a `name`, a `domain`, or both.
      * @param list<Education|EducationShape> $education education history to help distinguish people with similar names
-     * @param string $email email address of the person to find
-     * @param Location|LocationShape $location Location context to help identify the person. Provide a city, region, or country.
-     * @param Name|NameShape $name Person name. Without an email or person-profile URL, provide both first and last name plus company, education, or location.
-     * @param list<string> $socialURLs Public profile URLs for the person. A person-profile URL can identify the person without a name.
-     * @param list<string> $tags labels for filtering usage in the dashboard
+     * @param string $email Work email address of the person. Free and disposable email providers return 422.
+     * @param Location|LocationShape $location Location associated with the person. Send at least one of `city`, `region`, or `country`.
+     * @param Name|NameShape $name Name of the person. Without an email or profile URL, send both `first` and `last` plus `company`, `education`, or `location`.
+     * @param list<string> $socialURLs Public profile URLs for the person. A person-profile URL is enough to identify them without a name.
+     * @param list<string> $tags Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts request deadline and what to return when it passes
      * @param Zdr|value-of<Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
@@ -60,11 +60,11 @@ interface PeopleContract
     /**
      * @api
      *
-     * @param string $query Describe the people to find. Up to 500 characters in `fast` mode and 5000 in `ultra` mode.
-     * @param string $cursor use next_cursor with the same query, mode and filters to fetch the next page
-     * @param Filters|FiltersShape $filters additional constraints every result must match
-     * @param Mode|value-of<Mode> $mode `fast` matches people on basic criteria (e.g. their role, location or background); `ultra` plans a deeper search, judges each candidate against every criterion in the query. Complex `ultra` searches can take up to 30 seconds to complete, so allow for that in your client timeout.
-     * @param list<string> $tags labels for filtering usage in the dashboard
+     * @param string $query Plain-language description of the people to find. Up to 500 characters in `fast` mode and 5000 in `ultra` mode.
+     * @param string $cursor Cursor from the previous page's `next_cursor`. Omit for the first page. Send the same `query`, `mode`, and `filters` with it.
+     * @param Filters|FiltersShape $filters constraints every result must match, in addition to `query`
+     * @param Mode|value-of<Mode> $mode `fast` matches people on basic criteria such as role, location, or background; `ultra` runs a deeper search, checks every candidate against each criterion in your query, and adds a `match` score. Complex `ultra` searches can take up to 30 seconds, so set your client timeout to match.
+     * @param list<string> $tags Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      * @param \ContextDev\People\PersonSearchParams\Zdr|value-of<\ContextDev\People\PersonSearchParams\Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
      *

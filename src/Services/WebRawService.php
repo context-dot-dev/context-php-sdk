@@ -87,7 +87,7 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Research the web and return a sourced answer in your JSON shape. Choose `fast` for a short task or `ultra` for deeper research.
+     * Research a task across the live web and Context.dev's company and people data, and get the answer in the JSON shape you provide, with the URLs it used. `fast` (10 credits) suits short lookups; `ultra` (100 credits, the default) reads more sources for deeper research.
      *
      * @param array{
      *   task: string,
@@ -127,7 +127,7 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Analyze a company's landing page and web search evidence to return direct competitors for the same product or market.
+     * Find a company's direct competitors from its website and web search results. Each competitor comes with a confidence level and the search results behind it.
      *
      * @param array{
      *   domain: string,
@@ -164,7 +164,7 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Extract colors, typography, spacing, and component styles from a website.
+     * Extract a website's design system: colors, typography, spacing, shadows, button and card styles, and downloadable font files. Every component style includes ready-to-use CSS.
      *
      * @param array{
      *   colorScheme?: ColorScheme|value-of<ColorScheme>,
@@ -204,7 +204,7 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Discover a site's URLs, with page titles, descriptions, keywords, and language when available. Metadata can be missing on newly discovered URLs.
+     * Map up to 100,000 URLs on a domain, with titles, descriptions, keywords, and language when available. Filter with regex patterns, or rank by topic with `search` for 1 extra credit. Newly discovered URLs can lack metadata.
      *
      * @param array{
      *   domain: string,
@@ -251,7 +251,7 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Scrape anything from a URL on the internet. Returns the outputs you enable in formats. Handles PDFs, DOCX, PPT, XLSX, and 40 other file formats.
+     * Turn any URL into Markdown, HTML, a screenshot, images, raw bytes, parsed fields, product data, highlights, or schema-matched JSON in one request. Choose the outputs in `formats`; each one succeeds or fails on its own. Handles PDF, Word, Excel, PowerPoint, and 40 other file formats.
      *
      * @param array{
      *   formats: Formats|FormatsShape,
@@ -298,7 +298,7 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Capture a screenshot of a website.
+     * Capture a screenshot of a website's home page, a page type such as pricing, or an exact URL. Returns the visible viewport, a scroll slice, or the full page.
      *
      * @param array{
      *   clearPopups?: bool,
@@ -346,7 +346,7 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Search the web and optionally return page content or relevant passages with each result.
+     * Search the web and get ranked results, with optional page Markdown or query-relevant passages for each one. Supports search operators and filters for domain, freshness, country, and language.
      *
      * @param array{
      *   query: string,
@@ -392,7 +392,7 @@ final class WebRawService implements WebRawContract
     /**
      * @api
      *
-     * Crawl a website and return page content as Markdown. Use a batch for crawls beyond 500 pages.
+     * Crawl up to 500 pages from a start URL and get each page back as Markdown with metadata. Control scope with depth limits, regex patterns, and subdomain rules. For larger crawls, use a batch.
      *
      * @param array{
      *   url: string,

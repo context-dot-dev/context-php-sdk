@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Detect exact changes. For page targets, this means visible text diffs. For sitemap targets, this means URL additions and removals. For search targets, this means every new result.
+ * Report every change: visible-text diffs for pages, added or removed URLs for sitemaps, and every new result for searches.
  *
  * @phpstan-type MonitorsExactChangeDetectionShape = array{type: 'exact'}
  */

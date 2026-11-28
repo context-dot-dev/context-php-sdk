@@ -11,7 +11,7 @@ use ContextDev\Web\WebScrapeParams\ParseParams\UnionMember0;
 use ContextDev\Web\WebScrapeParams\ParseParams\UnionMember1;
 
 /**
- * Requires `formats.parse: true`; required when it is set.
+ * Custom rules or a prebuilt parser for the `parsed` output. Required when `formats.parse` is `true`, and allowed only then.
  *
  * @phpstan-import-type UnionMember0Shape from \ContextDev\Web\WebScrapeParams\ParseParams\UnionMember0
  * @phpstan-import-type UnionMember1Shape from \ContextDev\Web\WebScrapeParams\ParseParams\UnionMember1

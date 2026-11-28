@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Brand\BrandGetResponse\Brand\Logo;
 
 /**
- * Type of the logo based on resolution (e.g., 'icon', 'logo').
+ * Whether the image is an `icon` or a full `logo`, based on its dimensions.
  */
 enum Type: string
 {

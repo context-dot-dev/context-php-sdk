@@ -19,7 +19,7 @@ final class NewsSearchEntityByName implements BaseModel
     use SdkModel;
 
     /**
-     * Use `name` to identify the company by name.
+     * Set to `name` to identify the company by name.
      *
      * @var 'name' $type
      */
@@ -27,7 +27,7 @@ final class NewsSearchEntityByName implements BaseModel
     public string $type = 'name';
 
     /**
-     * Company name.
+     * Company name, such as `Stripe`.
      */
     #[Required]
     public string $name;
@@ -66,7 +66,7 @@ final class NewsSearchEntityByName implements BaseModel
     }
 
     /**
-     * Company name.
+     * Company name, such as `Stripe`.
      */
     public function withName(string $name): self
     {
@@ -77,7 +77,7 @@ final class NewsSearchEntityByName implements BaseModel
     }
 
     /**
-     * Use `name` to identify the company by name.
+     * Set to `name` to identify the company by name.
      *
      * @param 'name' $type
      */

@@ -21,7 +21,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * An asynchronous web scraping job.
+ * An asynchronous scrape or crawl job.
  *
  * @phpstan-import-type CrawlControlsShape from \ContextDev\Batch\CrawlControls
  * @phpstan-import-type CreditsShape from \ContextDev\Batch\BatchListResponse\Data\Credits
@@ -56,7 +56,7 @@ final class Data implements BaseModel
     use SdkModel;
 
     /**
-     * Batch ID.
+     * Unique ID of the batch.
      */
     #[Required]
     public string $id;
@@ -68,31 +68,31 @@ final class Data implements BaseModel
     public ?CrawlControls $crawl;
 
     /**
-     * Batch credit usage and settlement.
+     * Credits reserved, refunded, and charged for the batch.
      */
     #[Required]
     public Credits $credits;
 
     /**
-     * A failure of the batch as a whole, distinct from the per-page failures in `page_errors`.
+     * Why the batch as a whole failed. Individual page failures are counted in `page_errors`.
      */
     #[Required]
     public ?Failure $failure;
 
     /**
-     * Outputs requested for each page. Matches input.data.formats on submission.
+     * Formats requested for each page, as submitted in `input.data.formats`.
      */
     #[Required]
     public Formats $formats;
 
     /**
-     * What the submission accepted.
+     * Page counts from your submission.
      */
     #[Required]
     public Intake $input;
 
     /**
-     * `scrape` (URL list) or `crawl`.
+     * `scrape` for a URL list, `crawl` for a site crawl.
      *
      * @var value-of<Mode> $mode
      */
@@ -100,7 +100,7 @@ final class Data implements BaseModel
     public string $mode;
 
     /**
-     * Individual page failures grouped by error code, sorted by count. Unrelated to `failure`, which is the batch itself failing.
+     * Page failures grouped by error code, most common first. For the batch itself failing, see `failure`.
      *
      * @var list<PageErrorCount> $pageErrors
      */
@@ -108,19 +108,19 @@ final class Data implements BaseModel
     public array $pageErrors;
 
     /**
-     * Pages attempted so far. Use `status` to check completion.
+     * Page counts so far. Check `status` to know when the batch is done.
      */
     #[Required]
     public Progress $progress;
 
     /**
-     * Result download links; null until the batch finishes. Files are deleted 180 days after the batch finishes.
+     * Links to download the results. `null` until the batch finishes; the files are deleted 180 days after that.
      */
     #[Required]
     public ?Results $results;
 
     /**
-     * Current state. `pending` means waiting for execution capacity or background validation. Capacity-limited batches remain pending until a slot opens. `completed`, `cancelled`, and `failed` are final.
+     * Current state. `pending` batches are being validated or are waiting for a slot under your plan's concurrent batch limit, `queued` batches are ready to start, and `running` batches are scraping. `completed`, `cancelled`, and `failed` are final.
      *
      * @var value-of<Status> $status
      */
@@ -128,13 +128,16 @@ final class Data implements BaseModel
     public string $status;
 
     /**
-     * Tags stored on the batch at submission.
+     * Tags set when the batch was submitted.
      *
      * @var list<string> $tags
      */
     #[Required(list: 'string')]
     public array $tags;
 
+    /**
+     * When the batch was created, started, and finished.
+     */
     #[Required]
     public Timing $timing;
 
@@ -249,7 +252,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Batch ID.
+     * Unique ID of the batch.
      */
     public function withID(string $id): self
     {
@@ -273,7 +276,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Batch credit usage and settlement.
+     * Credits reserved, refunded, and charged for the batch.
      *
      * @param Credits|CreditsShape $credits
      */
@@ -286,7 +289,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * A failure of the batch as a whole, distinct from the per-page failures in `page_errors`.
+     * Why the batch as a whole failed. Individual page failures are counted in `page_errors`.
      *
      * @param Failure|FailureShape|null $failure
      */
@@ -299,7 +302,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Outputs requested for each page. Matches input.data.formats on submission.
+     * Formats requested for each page, as submitted in `input.data.formats`.
      *
      * @param Formats|FormatsShape $formats
      */
@@ -312,7 +315,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * What the submission accepted.
+     * Page counts from your submission.
      *
      * @param Intake|IntakeShape $input
      */
@@ -325,7 +328,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * `scrape` (URL list) or `crawl`.
+     * `scrape` for a URL list, `crawl` for a site crawl.
      *
      * @param Mode|value-of<Mode> $mode
      */
@@ -338,7 +341,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Individual page failures grouped by error code, sorted by count. Unrelated to `failure`, which is the batch itself failing.
+     * Page failures grouped by error code, most common first. For the batch itself failing, see `failure`.
      *
      * @param list<PageErrorCount|PageErrorCountShape> $pageErrors
      */
@@ -351,7 +354,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Pages attempted so far. Use `status` to check completion.
+     * Page counts so far. Check `status` to know when the batch is done.
      *
      * @param Progress|ProgressShape $progress
      */
@@ -364,7 +367,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Result download links; null until the batch finishes. Files are deleted 180 days after the batch finishes.
+     * Links to download the results. `null` until the batch finishes; the files are deleted 180 days after that.
      *
      * @param Results|ResultsShape|null $results
      */
@@ -377,7 +380,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Current state. `pending` means waiting for execution capacity or background validation. Capacity-limited batches remain pending until a slot opens. `completed`, `cancelled`, and `failed` are final.
+     * Current state. `pending` batches are being validated or are waiting for a slot under your plan's concurrent batch limit, `queued` batches are ready to start, and `running` batches are scraping. `completed`, `cancelled`, and `failed` are final.
      *
      * @param Status|value-of<Status> $status
      */
@@ -390,7 +393,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Tags stored on the batch at submission.
+     * Tags set when the batch was submitted.
      *
      * @param list<string> $tags
      */
@@ -403,6 +406,8 @@ final class Data implements BaseModel
     }
 
     /**
+     * When the batch was created, started, and finished.
+     *
      * @param Timing|TimingShape $timing
      */
     public function withTiming(Timing|array $timing): self

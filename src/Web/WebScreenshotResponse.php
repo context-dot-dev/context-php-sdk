@@ -37,7 +37,7 @@ final class WebScreenshotResponse implements BaseModel
     use SdkModel;
 
     /**
-     * Whether this response came from cache.
+     * Cache status of this response.
      */
     #[Required('cache_metadata')]
     public CacheMetadata $cacheMetadata;
@@ -49,13 +49,13 @@ final class WebScreenshotResponse implements BaseModel
     public string $requestID;
 
     /**
-     * HTTP status code.
+     * HTTP status code, repeated in the body.
      */
     #[Optional]
     public ?int $code;
 
     /**
-     * The normalized domain that was processed.
+     * Normalized domain that was captured.
      */
     #[Optional]
     public ?string $domain;
@@ -69,7 +69,7 @@ final class WebScreenshotResponse implements BaseModel
     public ?string $finalDomState;
 
     /**
-     * Height in pixels of the returned screenshot image.
+     * Height of the returned image, in pixels.
      */
     #[Optional]
     public ?int $height;
@@ -81,13 +81,13 @@ final class WebScreenshotResponse implements BaseModel
     public ?KeyMetadata $keyMetadata;
 
     /**
-     * Public image URL for standard requests, or an in-memory data URL when ZDR or non-empty custom headers are supplied.
+     * URL of the screenshot image. A data URL instead when `zdr` is `enabled` or `headers` are sent.
      */
     #[Optional]
     public ?string $screenshot;
 
     /**
-     * Type of screenshot that was captured.
+     * Whether the image covers the viewport or the full page.
      *
      * @var value-of<ScreenshotType>|null $screenshotType
      */
@@ -101,7 +101,7 @@ final class WebScreenshotResponse implements BaseModel
     public ?string $status;
 
     /**
-     * Width in pixels of the returned screenshot image.
+     * Width of the returned image, in pixels.
      */
     #[Optional]
     public ?int $width;
@@ -167,7 +167,7 @@ final class WebScreenshotResponse implements BaseModel
     }
 
     /**
-     * Whether this response came from cache.
+     * Cache status of this response.
      *
      * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      */
@@ -191,7 +191,7 @@ final class WebScreenshotResponse implements BaseModel
     }
 
     /**
-     * HTTP status code.
+     * HTTP status code, repeated in the body.
      */
     public function withCode(int $code): self
     {
@@ -202,7 +202,7 @@ final class WebScreenshotResponse implements BaseModel
     }
 
     /**
-     * The normalized domain that was processed.
+     * Normalized domain that was captured.
      */
     public function withDomain(string $domain): self
     {
@@ -226,7 +226,7 @@ final class WebScreenshotResponse implements BaseModel
     }
 
     /**
-     * Height in pixels of the returned screenshot image.
+     * Height of the returned image, in pixels.
      */
     public function withHeight(int $height): self
     {
@@ -250,7 +250,7 @@ final class WebScreenshotResponse implements BaseModel
     }
 
     /**
-     * Public image URL for standard requests, or an in-memory data URL when ZDR or non-empty custom headers are supplied.
+     * URL of the screenshot image. A data URL instead when `zdr` is `enabled` or `headers` are sent.
      */
     public function withScreenshot(string $screenshot): self
     {
@@ -261,7 +261,7 @@ final class WebScreenshotResponse implements BaseModel
     }
 
     /**
-     * Type of screenshot that was captured.
+     * Whether the image covers the viewport or the full page.
      *
      * @param ScreenshotType|value-of<ScreenshotType> $screenshotType
      */
@@ -286,7 +286,7 @@ final class WebScreenshotResponse implements BaseModel
     }
 
     /**
-     * Width in pixels of the returned screenshot image.
+     * Width of the returned image, in pixels.
      */
     public function withWidth(int $width): self
     {

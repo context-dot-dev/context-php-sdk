@@ -17,11 +17,14 @@ final class Data implements BaseModel
     use SdkModel;
 
     /**
-     * Body as base64, after HTTP decompression. Up to 50 MiB decoded.
+     * Response body as base64, after HTTP decompression. Up to 50 MiB decoded.
      */
     #[Required]
     public string $base64;
 
+    /**
+     * `Content-Type` of the response.
+     */
     #[Required]
     public string $contentType;
 
@@ -60,7 +63,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Body as base64, after HTTP decompression. Up to 50 MiB decoded.
+     * Response body as base64, after HTTP decompression. Up to 50 MiB decoded.
      */
     public function withBase64(string $base64): self
     {
@@ -70,6 +73,9 @@ final class Data implements BaseModel
         return $self;
     }
 
+    /**
+     * `Content-Type` of the response.
+     */
     public function withContentType(string $contentType): self
     {
         $self = clone $this;

@@ -10,7 +10,7 @@ use ContextDev\Core\Conversion\Contracts\Converter;
 use ContextDev\Core\Conversion\Contracts\ConverterSource;
 
 /**
- * Distance per scroll: pixels, one `viewport`, or `max` to reach the end.
+ * Distance per scroll step: a number of pixels, one `viewport`, or `max` to reach the end.
  *
  * @phpstan-type AmountVariants = int|value-of<UnionMember1>
  * @phpstan-type AmountShape = AmountVariants

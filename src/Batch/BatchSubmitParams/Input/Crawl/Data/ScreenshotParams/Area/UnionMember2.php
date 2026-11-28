@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Pixels from the document origin.
+ * Rectangle to capture, in pixels from the document origin.
  *
  * @phpstan-type UnionMember2Shape = array{height: int, width: int, x: int, y: int}
  */

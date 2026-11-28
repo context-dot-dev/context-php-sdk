@@ -31,7 +31,7 @@ final class PersonEnrichResponse implements BaseModel
     use SdkModel;
 
     /**
-     * The highest-scoring person candidate.
+     * The best-matching person, with an identity-match score.
      *
      * @var MatchVariants $match
      */
@@ -51,7 +51,7 @@ final class PersonEnrichResponse implements BaseModel
     public ?KeyMetadata $keyMetadata;
 
     /**
-     * True when the timeout ended processing and this response contains the usable data completed so far. Unfinished fields are omitted.
+     * `true` when the `timeoutOpts` deadline ended processing early. The response holds the data completed so far; unfinished fields are omitted.
      */
     #[Optional]
     public ?bool $partial;
@@ -101,7 +101,7 @@ final class PersonEnrichResponse implements BaseModel
     }
 
     /**
-     * The highest-scoring person candidate.
+     * The best-matching person, with an identity-match score.
      *
      * @param MatchShape $match
      */
@@ -139,7 +139,7 @@ final class PersonEnrichResponse implements BaseModel
     }
 
     /**
-     * True when the timeout ended processing and this response contains the usable data completed so far. Unfinished fields are omitted.
+     * `true` when the `timeoutOpts` deadline ended processing early. The response holds the data completed so far; unfinished fields are omitted.
      */
     public function withPartial(bool $partial): self
     {

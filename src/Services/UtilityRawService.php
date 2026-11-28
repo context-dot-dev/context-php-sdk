@@ -15,6 +15,8 @@ use ContextDev\Utility\UtilityPrefetchParams\Type;
 use ContextDev\Utility\UtilityPrefetchResponse;
 
 /**
+ * Prefetch brand and styleguide data so later lookups return sooner.
+ *
  * @phpstan-import-type IdentifierShape from \ContextDev\Utility\UtilityPrefetchParams\Identifier
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Utility\UtilityPrefetchParams\TimeoutOpts
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
@@ -30,7 +32,7 @@ final class UtilityRawService implements UtilityRawContract
     /**
      * @api
      *
-     * Queue brand or styleguide data so a later lookup can return sooner.
+     * Start fetching a domain's brand or styleguide data in the background so a later lookup returns faster. Accepts a domain or a work email.
      *
      * @param array{
      *   identifier: IdentifierShape,

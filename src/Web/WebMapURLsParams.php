@@ -13,7 +13,7 @@ use ContextDev\Web\WebMapURLsParams\TimeoutOpts;
 use ContextDev\Web\WebMapURLsParams\Zdr;
 
 /**
- * Discover a site's URLs, with page titles, descriptions, keywords, and language when available. Metadata can be missing on newly discovered URLs.
+ * Map up to 100,000 URLs on a domain, with titles, descriptions, keywords, and language when available. Filter with regex patterns, or rank by topic with `search` for 1 extra credit. Newly discovered URLs can lack metadata.
  *
  * @see ContextDev\Services\WebService::mapUrls()
  *
@@ -41,19 +41,19 @@ final class WebMapURLsParams implements BaseModel
     use SdkParams;
 
     /**
-     * Domain to map, e.g. `stripe.com`.
+     * Domain to map, such as `stripe.com`.
      */
     #[Required]
     public string $domain;
 
     /**
-     * Regex pattern. URLs matching this pattern are not returned, even when they match urlRegex.
+     * Leave out URLs matching this regex, even when they match `urlRegex`.
      */
     #[Optional]
     public ?string $excludeURLRegex;
 
     /**
-     * HTTP headers for the target origin. Non-empty headers bypass caching.
+     * HTTP headers to send to the target site. Requests with headers skip the cache.
      *
      * @var array<string,string>|null $headers
      */
@@ -73,7 +73,7 @@ final class WebMapURLsParams implements BaseModel
     public ?int $maxLinks;
 
     /**
-     * Comma-separated access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Comma-separated access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @var list<string>|null $policies
      */
@@ -93,7 +93,7 @@ final class WebMapURLsParams implements BaseModel
     public ?string $sitemapURL;
 
     /**
-     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
      *
      * @var list<string>|null $tags
      */
@@ -107,7 +107,7 @@ final class WebMapURLsParams implements BaseModel
     public ?TimeoutOpts $timeoutOpts;
 
     /**
-     * Regex pattern. Only URLs matching this pattern are returned and counted against maxLinks.
+     * Only return URLs matching this regex. Only matches count toward `maxLinks`.
      */
     #[Optional]
     public ?string $urlRegex;
@@ -184,7 +184,7 @@ final class WebMapURLsParams implements BaseModel
     }
 
     /**
-     * Domain to map, e.g. `stripe.com`.
+     * Domain to map, such as `stripe.com`.
      */
     public function withDomain(string $domain): self
     {
@@ -195,7 +195,7 @@ final class WebMapURLsParams implements BaseModel
     }
 
     /**
-     * Regex pattern. URLs matching this pattern are not returned, even when they match urlRegex.
+     * Leave out URLs matching this regex, even when they match `urlRegex`.
      */
     public function withExcludeURLRegex(string $excludeURLRegex): self
     {
@@ -206,7 +206,7 @@ final class WebMapURLsParams implements BaseModel
     }
 
     /**
-     * HTTP headers for the target origin. Non-empty headers bypass caching.
+     * HTTP headers to send to the target site. Requests with headers skip the cache.
      *
      * @param array<string,string> $headers
      */
@@ -241,7 +241,7 @@ final class WebMapURLsParams implements BaseModel
     }
 
     /**
-     * Comma-separated access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Comma-separated access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @param list<string> $policies
      */
@@ -276,7 +276,7 @@ final class WebMapURLsParams implements BaseModel
     }
 
     /**
-     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
      *
      * @param list<string> $tags
      */
@@ -302,7 +302,7 @@ final class WebMapURLsParams implements BaseModel
     }
 
     /**
-     * Regex pattern. Only URLs matching this pattern are returned and counted against maxLinks.
+     * Only return URLs matching this regex. Only matches count toward `maxLinks`.
      */
     public function withURLRegex(string $urlRegex): self
     {

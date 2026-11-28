@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Attempt error, or null if none.
+ * Why the attempt failed. `null` when it did not fail.
  *
  * @phpstan-type ErrorShape = array{code: string, message: string}
  */
@@ -19,13 +19,13 @@ final class Error implements BaseModel
     use SdkModel;
 
     /**
-     * Error code.
+     * Machine-readable error code.
      */
     #[Required]
     public string $code;
 
     /**
-     * Error details.
+     * Human-readable explanation of the error.
      */
     #[Required]
     public string $message;
@@ -65,7 +65,7 @@ final class Error implements BaseModel
     }
 
     /**
-     * Error code.
+     * Machine-readable error code.
      */
     public function withCode(string $code): self
     {
@@ -76,7 +76,7 @@ final class Error implements BaseModel
     }
 
     /**
-     * Error details.
+     * Human-readable explanation of the error.
      */
     public function withMessage(string $message): self
     {

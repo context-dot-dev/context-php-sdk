@@ -23,6 +23,8 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\BrandRawContract;
 
 /**
+ * Retrieve a brand's logos, colors, company details, and social links, or find brands by name or domain.
+ *
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Brand\BrandRetrieveParams\TimeoutOpts
  * @phpstan-import-type MccShape from \ContextDev\Brand\BrandRetrieveParams\Mcc
  * @phpstan-import-type PhoneShape from \ContextDev\Brand\BrandRetrieveParams\Phone
@@ -39,7 +41,7 @@ final class BrandRawService implements BrandRawContract
     /**
      * @api
      *
-     * Retrieve logos, colors, company details, and social links using one lookup identifier. A direct URL limits extraction to that page.
+     * Look up a brand by domain, company name, work email, stock ticker, page URL, or card transaction descriptor. Returns logos, colors, backdrops, description, industries, address, stock listing, and social links. A `by_direct_url` lookup reads only that page.
      *
      * @param array{
      *   domain: string,
@@ -91,7 +93,7 @@ final class BrandRawService implements BrandRawContract
     /**
      * @api
      *
-     * Find up to 10 brands by name or domain, ordered by popularity. Optionally filter by country and primary language; both filters must match when provided together. Results include description, country, and language when available. Use the returned domain to retrieve a full brand profile.
+     * Autocomplete brand names and domains as a user types, with up to 10 brands ranked by popularity and a ready-to-use logo URL for each. Filter by country and primary language. Pass a returned `domain` to `POST /brand/retrieve` for the full brand profile.
      *
      * @param array{
      *   query: string,

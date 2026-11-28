@@ -39,7 +39,7 @@ final class Primary implements BaseModel
     public string $backgroundColor;
 
     /**
-     * Border color as CSS hex (#RRGGBB or #RRGGBBAA when computed border-color has alpha).
+     * Border color in hex: `#RRGGBB`, or `#RRGGBBAA` when the border is translucent.
      */
     #[Required]
     public string $borderColor;
@@ -54,7 +54,7 @@ final class Primary implements BaseModel
     public string $borderWidth;
 
     /**
-     * Computed box-shadow (comma-separated layers when present).
+     * Computed `box-shadow`, with layers separated by commas.
      */
     #[Required]
     public string $boxShadow;
@@ -63,7 +63,7 @@ final class Primary implements BaseModel
     public string $color;
 
     /**
-     * Ready-to-use CSS declaration block for this component style.
+     * Ready-to-use CSS declarations for this style.
      */
     #[Required]
     public string $css;
@@ -75,13 +75,13 @@ final class Primary implements BaseModel
     public float $fontWeight;
 
     /**
-     * Sampled minimum height of the button box (typically px).
+     * Minimum height as a CSS length, usually in pixels.
      */
     #[Required]
     public string $minHeight;
 
     /**
-     * Minimum width (usually px).
+     * Minimum width as a CSS length, usually in pixels.
      */
     #[Required]
     public string $minWidth;
@@ -93,7 +93,7 @@ final class Primary implements BaseModel
     public string $textDecoration;
 
     /**
-     * Full ordered font list from computed font-family.
+     * Full font stack from the computed `font-family`, in order.
      *
      * @var list<string>|null $fontFallbacks
      */
@@ -101,13 +101,13 @@ final class Primary implements BaseModel
     public ?array $fontFallbacks;
 
     /**
-     * Primary button typeface (first in fontFallbacks).
+     * Button typeface, the first entry in `fontFallbacks`.
      */
     #[Optional]
     public ?string $fontFamily;
 
     /**
-     * Hex color of the underline when it differs from the text color.
+     * Underline color in hex, when it differs from the text color.
      */
     #[Optional]
     public ?string $textDecorationColor;
@@ -219,7 +219,7 @@ final class Primary implements BaseModel
     }
 
     /**
-     * Border color as CSS hex (#RRGGBB or #RRGGBBAA when computed border-color has alpha).
+     * Border color in hex: `#RRGGBB`, or `#RRGGBBAA` when the border is translucent.
      */
     public function withBorderColor(string $borderColor): self
     {
@@ -254,7 +254,7 @@ final class Primary implements BaseModel
     }
 
     /**
-     * Computed box-shadow (comma-separated layers when present).
+     * Computed `box-shadow`, with layers separated by commas.
      */
     public function withBoxShadow(string $boxShadow): self
     {
@@ -273,7 +273,7 @@ final class Primary implements BaseModel
     }
 
     /**
-     * Ready-to-use CSS declaration block for this component style.
+     * Ready-to-use CSS declarations for this style.
      */
     public function withCss(string $css): self
     {
@@ -300,7 +300,7 @@ final class Primary implements BaseModel
     }
 
     /**
-     * Sampled minimum height of the button box (typically px).
+     * Minimum height as a CSS length, usually in pixels.
      */
     public function withMinHeight(string $minHeight): self
     {
@@ -311,7 +311,7 @@ final class Primary implements BaseModel
     }
 
     /**
-     * Minimum width (usually px).
+     * Minimum width as a CSS length, usually in pixels.
      */
     public function withMinWidth(string $minWidth): self
     {
@@ -338,7 +338,7 @@ final class Primary implements BaseModel
     }
 
     /**
-     * Full ordered font list from computed font-family.
+     * Full font stack from the computed `font-family`, in order.
      *
      * @param list<string> $fontFallbacks
      */
@@ -351,7 +351,7 @@ final class Primary implements BaseModel
     }
 
     /**
-     * Primary button typeface (first in fontFallbacks).
+     * Button typeface, the first entry in `fontFallbacks`.
      */
     public function withFontFamily(string $fontFamily): self
     {
@@ -362,7 +362,7 @@ final class Primary implements BaseModel
     }
 
     /**
-     * Hex color of the underline when it differs from the text color.
+     * Underline color in hex, when it differs from the text color.
      */
     public function withTextDecorationColor(string $textDecorationColor): self
     {

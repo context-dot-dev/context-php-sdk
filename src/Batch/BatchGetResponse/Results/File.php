@@ -23,13 +23,13 @@ final class File implements BaseModel
     public int $bytes;
 
     /**
-     * Results in this file.
+     * Number of result records in this file.
      */
     #[Required]
     public int $items;
 
     /**
-     * Temporary URL for a gzipped NDJSON file.
+     * Temporary download URL for a gzipped NDJSON file of result records.
      */
     #[Required]
     public string $url;
@@ -81,7 +81,7 @@ final class File implements BaseModel
     }
 
     /**
-     * Results in this file.
+     * Number of result records in this file.
      */
     public function withItems(int $items): self
     {
@@ -92,7 +92,7 @@ final class File implements BaseModel
     }
 
     /**
-     * Temporary URL for a gzipped NDJSON file.
+     * Temporary download URL for a gzipped NDJSON file of result records.
      */
     public function withURL(string $url): self
     {

@@ -12,7 +12,7 @@ use ContextDev\Web\WebExtractStyleguideResponse\Styleguide\Components\Button\Pri
 use ContextDev\Web\WebExtractStyleguideResponse\Styleguide\Components\Button\Secondary;
 
 /**
- * Button component styles.
+ * Primary, secondary, and link button styles.
  *
  * @phpstan-import-type LinkShape from \ContextDev\Web\WebExtractStyleguideResponse\Styleguide\Components\Button\Link
  * @phpstan-import-type PrimaryShape from \ContextDev\Web\WebExtractStyleguideResponse\Styleguide\Components\Button\Primary

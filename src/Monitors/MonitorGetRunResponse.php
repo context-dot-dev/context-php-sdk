@@ -48,28 +48,41 @@ final class MonitorGetRunResponse implements BaseModel
     /** @use SdkModel<MonitorGetRunResponseShape> */
     use SdkModel;
 
+    /**
+     * Unique ID of the run.
+     */
     #[Required]
     public string $id;
 
     /**
-     * True when this run established the monitor's initial baseline; baseline runs perform no change detection.
+     * `true` when this run captured the monitor's baseline instead of checking for changes.
      */
     #[Required('baseline_created')]
     public bool $baselineCreated;
 
+    /**
+     * Whether the run detected a change.
+     */
     #[Required('change_detected')]
     public bool $changeDetected;
 
-    /** @var value-of<ChangeDetectionType> $changeDetectionType */
+    /**
+     * Change detection type the monitor uses.
+     *
+     * @var value-of<ChangeDetectionType> $changeDetectionType
+     */
     #[Required('change_detection_type', enum: ChangeDetectionType::class)]
     public string $changeDetectionType;
 
     /**
-     * Credits charged for this run (0 for skipped/failed runs).
+     * Credits charged for this run. `0` for skipped and failed runs.
      */
     #[Required('credits_charged')]
     public int $creditsCharged;
 
+    /**
+     * ID of the monitor this run belongs to.
+     */
     #[Required('monitor_id')]
     public string $monitorID;
 
@@ -80,7 +93,7 @@ final class MonitorGetRunResponse implements BaseModel
     public string $requestID;
 
     /**
-     * A baseline run follows creation or a target or detection change.
+     * `baseline` runs capture a fresh baseline after creation or a target or detection change. `scheduled` runs, including on-demand ones, check for changes.
      *
      * @var value-of<RunType> $runType
      */
@@ -88,20 +101,30 @@ final class MonitorGetRunResponse implements BaseModel
     public string $runType;
 
     /**
-     * Lifecycle status of a run. `skipped` runs never executed — see `skip_reason` (insufficient credits, monitor paused, or superseded by a concurrent run).
+     * Run status. `skipped` runs never executed; `skip_reason` says why.
      *
      * @var value-of<Status> $status
      */
     #[Required(enum: Status::class)]
     public string $status;
 
-    /** @var value-of<TargetType> $targetType */
+    /**
+     * Type of target the monitor watches.
+     *
+     * @var value-of<TargetType> $targetType
+     */
     #[Required('target_type', enum: TargetType::class)]
     public string $targetType;
 
+    /**
+     * ID of the change this run detected. `null` when it found none.
+     */
     #[Optional('change_id', nullable: true)]
     public ?string $changeID;
 
+    /**
+     * When the run ended. `null` until it ends.
+     */
     #[Optional('completed_at', nullable: true)]
     public ?\DateTimeInterface $completedAt;
 
@@ -115,18 +138,21 @@ final class MonitorGetRunResponse implements BaseModel
     public ?KeyMetadata $keyMetadata;
 
     /**
-     * Why a skipped run never executed; null unless status is `skipped`.
+     * Why the run was skipped; `superseded` means a concurrent run took its place or the monitor was deleted. `null` unless `status` is `skipped`.
      *
      * @var value-of<SkipReason>|null $skipReason
      */
     #[Optional('skip_reason', enum: SkipReason::class, nullable: true)]
     public ?string $skipReason;
 
+    /**
+     * When the run started. `null` until it starts.
+     */
     #[Optional('started_at', nullable: true)]
     public ?\DateTimeInterface $startedAt;
 
     /**
-     * All webhook deliveries attempted by this run — one per subscribed event that fired. Omitted when no webhook was attempted, including runs created before event selection was added.
+     * Webhook deliveries for this run, one per subscribed event that fired. Omitted when no delivery was attempted.
      *
      * @var list<WebhookDelivery>|null $webhookDeliveries
      */
@@ -142,7 +168,7 @@ final class MonitorGetRunResponse implements BaseModel
     public ?WebhookDelivery $webhookDelivery;
 
     /**
-     * Webhook delivery IDs for this run.
+     * IDs of the webhook deliveries sent for this run.
      *
      * @var list<string>|null $webhookDeliveryIDs
      */
@@ -252,6 +278,9 @@ final class MonitorGetRunResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Unique ID of the run.
+     */
     public function withID(string $id): self
     {
         $self = clone $this;
@@ -261,7 +290,7 @@ final class MonitorGetRunResponse implements BaseModel
     }
 
     /**
-     * True when this run established the monitor's initial baseline; baseline runs perform no change detection.
+     * `true` when this run captured the monitor's baseline instead of checking for changes.
      */
     public function withBaselineCreated(bool $baselineCreated): self
     {
@@ -271,6 +300,9 @@ final class MonitorGetRunResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Whether the run detected a change.
+     */
     public function withChangeDetected(bool $changeDetected): self
     {
         $self = clone $this;
@@ -280,6 +312,8 @@ final class MonitorGetRunResponse implements BaseModel
     }
 
     /**
+     * Change detection type the monitor uses.
+     *
      * @param ChangeDetectionType|value-of<ChangeDetectionType> $changeDetectionType
      */
     public function withChangeDetectionType(
@@ -292,7 +326,7 @@ final class MonitorGetRunResponse implements BaseModel
     }
 
     /**
-     * Credits charged for this run (0 for skipped/failed runs).
+     * Credits charged for this run. `0` for skipped and failed runs.
      */
     public function withCreditsCharged(int $creditsCharged): self
     {
@@ -302,6 +336,9 @@ final class MonitorGetRunResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * ID of the monitor this run belongs to.
+     */
     public function withMonitorID(string $monitorID): self
     {
         $self = clone $this;
@@ -322,7 +359,7 @@ final class MonitorGetRunResponse implements BaseModel
     }
 
     /**
-     * A baseline run follows creation or a target or detection change.
+     * `baseline` runs capture a fresh baseline after creation or a target or detection change. `scheduled` runs, including on-demand ones, check for changes.
      *
      * @param RunType|value-of<RunType> $runType
      */
@@ -335,7 +372,7 @@ final class MonitorGetRunResponse implements BaseModel
     }
 
     /**
-     * Lifecycle status of a run. `skipped` runs never executed — see `skip_reason` (insufficient credits, monitor paused, or superseded by a concurrent run).
+     * Run status. `skipped` runs never executed; `skip_reason` says why.
      *
      * @param Status|value-of<Status> $status
      */
@@ -348,6 +385,8 @@ final class MonitorGetRunResponse implements BaseModel
     }
 
     /**
+     * Type of target the monitor watches.
+     *
      * @param TargetType|value-of<TargetType> $targetType
      */
     public function withTargetType(TargetType|string $targetType): self
@@ -358,6 +397,9 @@ final class MonitorGetRunResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * ID of the change this run detected. `null` when it found none.
+     */
     public function withChangeID(?string $changeID): self
     {
         $self = clone $this;
@@ -366,6 +408,9 @@ final class MonitorGetRunResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * When the run ended. `null` until it ends.
+     */
     public function withCompletedAt(?\DateTimeInterface $completedAt): self
     {
         $self = clone $this;
@@ -399,7 +444,7 @@ final class MonitorGetRunResponse implements BaseModel
     }
 
     /**
-     * Why a skipped run never executed; null unless status is `skipped`.
+     * Why the run was skipped; `superseded` means a concurrent run took its place or the monitor was deleted. `null` unless `status` is `skipped`.
      *
      * @param SkipReason|value-of<SkipReason>|null $skipReason
      */
@@ -411,6 +456,9 @@ final class MonitorGetRunResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * When the run started. `null` until it starts.
+     */
     public function withStartedAt(?\DateTimeInterface $startedAt): self
     {
         $self = clone $this;
@@ -420,7 +468,7 @@ final class MonitorGetRunResponse implements BaseModel
     }
 
     /**
-     * All webhook deliveries attempted by this run — one per subscribed event that fired. Omitted when no webhook was attempted, including runs created before event selection was added.
+     * Webhook deliveries for this run, one per subscribed event that fired. Omitted when no delivery was attempted.
      *
      * @param list<WebhookDelivery|WebhookDeliveryShape> $webhookDeliveries
      */
@@ -447,7 +495,7 @@ final class MonitorGetRunResponse implements BaseModel
     }
 
     /**
-     * Webhook delivery IDs for this run.
+     * IDs of the webhook deliveries sent for this run.
      *
      * @param list<string> $webhookDeliveryIDs
      */

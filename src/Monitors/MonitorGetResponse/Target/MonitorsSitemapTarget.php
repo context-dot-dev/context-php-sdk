@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Watch a site’s URL inventory for confirmed additions and removals.
+ * Watch a sitemap and report URLs that are added or removed.
  *
  * @phpstan-type MonitorsSitemapTargetShape = array{
  *   type: 'sitemap',
@@ -34,13 +34,13 @@ final class MonitorsSitemapTarget implements BaseModel
     public string $type = 'sitemap';
 
     /**
-     * Sitemap URL to monitor.
+     * Public HTTP(S) URL of the sitemap to watch.
      */
     #[Required]
     public string $url;
 
     /**
-     * URL path patterns to exclude (max 50).
+     * Path patterns of URLs to ignore, such as `/legal/*`.
      *
      * @var list<string>|null $exclude
      */
@@ -48,7 +48,7 @@ final class MonitorsSitemapTarget implements BaseModel
     public ?array $exclude;
 
     /**
-     * URL path patterns to include (max 50).
+     * Path patterns of URLs to track, such as `/blog/*`.
      *
      * @var list<string>|null $include
      */
@@ -56,7 +56,7 @@ final class MonitorsSitemapTarget implements BaseModel
     public ?array $include;
 
     /**
-     * Maximum number of sitemap URLs to track (capped at 10,000).
+     * Maximum number of URLs to track.
      */
     #[Optional('max_urls')]
     public ?int $maxURLs;
@@ -119,7 +119,7 @@ final class MonitorsSitemapTarget implements BaseModel
     }
 
     /**
-     * Sitemap URL to monitor.
+     * Public HTTP(S) URL of the sitemap to watch.
      */
     public function withURL(string $url): self
     {
@@ -130,7 +130,7 @@ final class MonitorsSitemapTarget implements BaseModel
     }
 
     /**
-     * URL path patterns to exclude (max 50).
+     * Path patterns of URLs to ignore, such as `/legal/*`.
      *
      * @param list<string> $exclude
      */
@@ -143,7 +143,7 @@ final class MonitorsSitemapTarget implements BaseModel
     }
 
     /**
-     * URL path patterns to include (max 50).
+     * Path patterns of URLs to track, such as `/blog/*`.
      *
      * @param list<string> $include
      */
@@ -156,7 +156,7 @@ final class MonitorsSitemapTarget implements BaseModel
     }
 
     /**
-     * Maximum number of sitemap URLs to track (capped at 10,000).
+     * Maximum number of URLs to track.
      */
     public function withMaxURLs(int $maxURLs): self
     {

@@ -48,7 +48,7 @@ final class BatchCancelResponse implements BaseModel
     use SdkModel;
 
     /**
-     * Batch ID.
+     * Unique ID of the batch.
      */
     #[Required]
     public string $id;
@@ -60,25 +60,25 @@ final class BatchCancelResponse implements BaseModel
     public ?CrawlControls $crawl;
 
     /**
-     * What this batch cost so far.
+     * Credits reserved for the batch.
      */
     #[Required]
     public Credits $credits;
 
     /**
-     * Outputs requested for each page. Matches input.data.formats on submission.
+     * Formats requested for each page, as submitted in `input.data.formats`.
      */
     #[Required]
     public Formats $formats;
 
     /**
-     * What the submission accepted.
+     * Page counts from your submission.
      */
     #[Required]
     public Intake $input;
 
     /**
-     * How pages were selected.
+     * `scrape` for a URL list, `crawl` for a site crawl.
      *
      * @var value-of<Mode> $mode
      */
@@ -86,7 +86,7 @@ final class BatchCancelResponse implements BaseModel
     public string $mode;
 
     /**
-     * Page failures so far, grouped by error code and sorted by count.
+     * Page failures so far, grouped by error code, most common first.
      *
      * @var list<PageErrorCount> $pageErrors
      */
@@ -106,7 +106,7 @@ final class BatchCancelResponse implements BaseModel
     public string $requestID;
 
     /**
-     * Always `cancelling`. Work already in flight finishes; the batch reaches `cancelled` shortly after.
+     * Always `cancelling`. Pages in progress finish, then the batch becomes `cancelled`.
      *
      * @var value-of<Status> $status
      */
@@ -114,7 +114,7 @@ final class BatchCancelResponse implements BaseModel
     public string $status;
 
     /**
-     * Tags stored on the batch at submission.
+     * Tags set when the batch was submitted.
      *
      * @var list<string> $tags
      */
@@ -122,7 +122,7 @@ final class BatchCancelResponse implements BaseModel
     public array $tags;
 
     /**
-     * Batch timestamps.
+     * When the batch was created and started.
      */
     #[Required]
     public Timing $timing;
@@ -230,7 +230,7 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
-     * Batch ID.
+     * Unique ID of the batch.
      */
     public function withID(string $id): self
     {
@@ -254,7 +254,7 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
-     * What this batch cost so far.
+     * Credits reserved for the batch.
      *
      * @param Credits|CreditsShape $credits
      */
@@ -267,7 +267,7 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
-     * Outputs requested for each page. Matches input.data.formats on submission.
+     * Formats requested for each page, as submitted in `input.data.formats`.
      *
      * @param Formats|FormatsShape $formats
      */
@@ -280,7 +280,7 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
-     * What the submission accepted.
+     * Page counts from your submission.
      *
      * @param Intake|IntakeShape $input
      */
@@ -293,7 +293,7 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
-     * How pages were selected.
+     * `scrape` for a URL list, `crawl` for a site crawl.
      *
      * @param Mode|value-of<Mode> $mode
      */
@@ -306,7 +306,7 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
-     * Page failures so far, grouped by error code and sorted by count.
+     * Page failures so far, grouped by error code, most common first.
      *
      * @param list<PageErrorCount|PageErrorCountShape> $pageErrors
      */
@@ -343,7 +343,7 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
-     * Always `cancelling`. Work already in flight finishes; the batch reaches `cancelled` shortly after.
+     * Always `cancelling`. Pages in progress finish, then the batch becomes `cancelled`.
      *
      * @param Status|value-of<Status> $status
      */
@@ -356,7 +356,7 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
-     * Tags stored on the batch at submission.
+     * Tags set when the batch was submitted.
      *
      * @param list<string> $tags
      */
@@ -369,7 +369,7 @@ final class BatchCancelResponse implements BaseModel
     }
 
     /**
-     * Batch timestamps.
+     * When the batch was created and started.
      *
      * @param Timing|TimingShape $timing
      */

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Monitors\MonitorListAccountRunsParams;
 
 /**
- * Filter runs by lifecycle status.
+ * Filter by run status.
  */
 enum Status: string
 {

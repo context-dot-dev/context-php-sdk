@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Web\WebSearchResponse\Result\Markdown;
 
 /**
- * Per-result scrape outcome. Inspect this before reading `markdown`.
+ * Scrape outcome for this result. Check it before reading `markdown`.
  */
 enum Code: string
 {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Monitors\WebhookDelivery;
 
 /**
- * Outcome of the delivery attempt. Any 2xx response counts as delivered.
+ * Outcome of the delivery: `delivered` (2xx response), `rejected` (non-2xx response), `failed` (no response), or `skipped_unsafe_url` (the URL isn't a safe public endpoint).
  */
 enum Status: string
 {

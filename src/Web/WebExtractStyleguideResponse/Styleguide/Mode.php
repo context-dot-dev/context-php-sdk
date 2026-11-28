@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Web\WebExtractStyleguideResponse\Styleguide;
 
 /**
- * The primary color mode of the website design.
+ * Whether the site's design is mainly light or dark.
  */
 enum Mode: string
 {

@@ -28,7 +28,7 @@ final class ParseHandleResponse implements BaseModel
     use SdkModel;
 
     /**
-     * Input bytes converted to GitHub Flavored Markdown.
+     * The file content as GitHub Flavored Markdown.
      */
     #[Required]
     public string $markdown;
@@ -40,13 +40,13 @@ final class ParseHandleResponse implements BaseModel
     public string $requestID;
 
     /**
-     * Indicates success.
+     * Always `true` for a successful parse.
      */
     #[Required]
     public bool $success;
 
     /**
-     * Detected content type used for parsing.
+     * File type the input was parsed as.
      *
      * @var value-of<Type> $type
      */
@@ -112,7 +112,7 @@ final class ParseHandleResponse implements BaseModel
     }
 
     /**
-     * Input bytes converted to GitHub Flavored Markdown.
+     * The file content as GitHub Flavored Markdown.
      */
     public function withMarkdown(string $markdown): self
     {
@@ -134,7 +134,7 @@ final class ParseHandleResponse implements BaseModel
     }
 
     /**
-     * Indicates success.
+     * Always `true` for a successful parse.
      */
     public function withSuccess(bool $success): self
     {
@@ -145,7 +145,7 @@ final class ParseHandleResponse implements BaseModel
     }
 
     /**
-     * Detected content type used for parsing.
+     * File type the input was parsed as.
      *
      * @param Type|value-of<Type> $type
      */

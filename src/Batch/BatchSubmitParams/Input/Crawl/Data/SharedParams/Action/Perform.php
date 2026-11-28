@@ -17,7 +17,7 @@ final class Perform implements BaseModel
     use SdkModel;
 
     /**
-     * Use `perform` for a plain-language browser instruction.
+     * Follow a plain-language instruction.
      *
      * @var 'perform' $type
      */
@@ -75,7 +75,7 @@ final class Perform implements BaseModel
     }
 
     /**
-     * Use `perform` for a plain-language browser instruction.
+     * Follow a plain-language instruction.
      *
      * @param 'perform' $type
      */

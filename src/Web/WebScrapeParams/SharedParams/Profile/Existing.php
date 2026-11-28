@@ -25,7 +25,7 @@ final class Existing implements BaseModel
     public string $type = 'existing';
 
     /**
-     * The ID returned in profile.id by an earlier scrape.
+     * ID of the browser profile, from `profile.id` in an earlier scrape response.
      */
     #[Required('profileId')]
     public string $profileID;
@@ -64,7 +64,7 @@ final class Existing implements BaseModel
     }
 
     /**
-     * The ID returned in profile.id by an earlier scrape.
+     * ID of the browser profile, from `profile.id` in an earlier scrape response.
      */
     public function withProfileID(string $profileID): self
     {

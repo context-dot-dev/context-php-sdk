@@ -11,7 +11,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Webhooks\RetryConfig;
 
 /**
- * Where to send the batch's final-status event. Omit `retry` for one attempt; `{}` uses the default retry schedule.
+ * Webhook to notify when the batch finishes. Omit `retry` for a single attempt, or pass `retry: {}` for the default retry schedule.
  *
  * @phpstan-import-type RetryConfigShape from \ContextDev\Webhooks\RetryConfig
  *
@@ -25,13 +25,13 @@ final class Webhook implements BaseModel
     use SdkModel;
 
     /**
-     * Public HTTP(S) URL that receives batch completion, failure, or cancellation events.
+     * Public HTTP or HTTPS URL that receives the `batch.completed`, `batch.failed`, or `batch.cancelled` event.
      */
     #[Required]
     public string $url;
 
     /**
-     * Webhook retry settings. Use {} for the default schedule.
+     * Automatic retry settings. Pass `{}` for the default schedule.
      */
     #[Optional]
     public ?RetryConfig $retry;
@@ -76,7 +76,7 @@ final class Webhook implements BaseModel
     }
 
     /**
-     * Public HTTP(S) URL that receives batch completion, failure, or cancellation events.
+     * Public HTTP or HTTPS URL that receives the `batch.completed`, `batch.failed`, or `batch.cancelled` event.
      */
     public function withURL(string $url): self
     {
@@ -87,7 +87,7 @@ final class Webhook implements BaseModel
     }
 
     /**
-     * Webhook retry settings. Use {} for the default schedule.
+     * Automatic retry settings. Pass `{}` for the default schedule.
      *
      * @param RetryConfig|RetryConfigShape $retry
      */

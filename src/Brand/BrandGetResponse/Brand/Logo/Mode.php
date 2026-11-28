@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Brand\BrandGetResponse\Brand\Logo;
 
 /**
- * Indicates when this logo is best used: 'light' = best for light mode, 'dark' = best for dark mode, 'has_opaque_background' = can be used for either as image has its own background.
+ * `light` works best in light mode, `dark` works best in dark mode, and `has_opaque_background` works in either because the image has its own background.
  */
 enum Mode: string
 {

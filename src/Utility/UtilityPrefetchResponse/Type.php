@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Utility\UtilityPrefetchResponse;
 
 /**
- * The type of prefetch that was queued, echoed from the request.
+ * Data type that was queued, from the request.
  */
 enum Type: string
 {

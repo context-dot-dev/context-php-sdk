@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * What the submission accepted.
+ * Page counts from your submission.
  *
  * @phpstan-type IntakeShape = array{
  *   duplicates: int,
@@ -25,31 +25,31 @@ final class Intake implements BaseModel
     use SdkModel;
 
     /**
-     * URLs dropped before reserving because another entry resolved to the same page. Non-zero for sitemap crawls too, whose sitemaps routinely list a page more than once.
+     * URLs dropped because another entry resolved to the same page. Sitemap crawls report duplicates too, since sitemaps often list a page more than once.
      */
     #[Required]
     public int $duplicates;
 
     /**
-     * Rejected input URLs; `null` for a crawl.
+     * URLs rejected as invalid. `null` for a crawl.
      */
     #[Required]
     public ?int $invalid;
 
     /**
-     * Pages accepted; progress counts toward this total.
+     * Pages accepted for scraping. `progress` counts toward this total.
      */
     #[Required]
     public int $reserved;
 
     /**
-     * True when `reserved` is a crawl ceiling; false when it is an exact URL count.
+     * `true` when `reserved` is a crawl ceiling, `false` when it is an exact URL count.
      */
     #[Required('reserved_is_ceiling')]
     public bool $reservedIsCeiling;
 
     /**
-     * URLs in the list you sent, before validation and de-duplication. Null for a crawl, which is given a source rather than a list.
+     * URLs in your list before validation and de-duplication. `null` for a crawl.
      */
     #[Required]
     public ?int $submitted;
@@ -108,7 +108,7 @@ final class Intake implements BaseModel
     }
 
     /**
-     * URLs dropped before reserving because another entry resolved to the same page. Non-zero for sitemap crawls too, whose sitemaps routinely list a page more than once.
+     * URLs dropped because another entry resolved to the same page. Sitemap crawls report duplicates too, since sitemaps often list a page more than once.
      */
     public function withDuplicates(int $duplicates): self
     {
@@ -119,7 +119,7 @@ final class Intake implements BaseModel
     }
 
     /**
-     * Rejected input URLs; `null` for a crawl.
+     * URLs rejected as invalid. `null` for a crawl.
      */
     public function withInvalid(?int $invalid): self
     {
@@ -130,7 +130,7 @@ final class Intake implements BaseModel
     }
 
     /**
-     * Pages accepted; progress counts toward this total.
+     * Pages accepted for scraping. `progress` counts toward this total.
      */
     public function withReserved(int $reserved): self
     {
@@ -141,7 +141,7 @@ final class Intake implements BaseModel
     }
 
     /**
-     * True when `reserved` is a crawl ceiling; false when it is an exact URL count.
+     * `true` when `reserved` is a crawl ceiling, `false` when it is an exact URL count.
      */
     public function withReservedIsCeiling(bool $reservedIsCeiling): self
     {
@@ -152,7 +152,7 @@ final class Intake implements BaseModel
     }
 
     /**
-     * URLs in the list you sent, before validation and de-duplication. Null for a crawl, which is given a source rather than a list.
+     * URLs in your list before validation and de-duplication. `null` for a crawl.
      */
     public function withSubmitted(?int $submitted): self
     {

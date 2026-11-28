@@ -18,7 +18,7 @@ use ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts;
 use ContextDev\Web\WebWebCrawlMdParams\Zdr;
 
 /**
- * Crawl a website and return page content as Markdown. Use a batch for crawls beyond 500 pages.
+ * Crawl up to 500 pages from a start URL and get each page back as Markdown with metadata. Control scope with depth limits, regex patterns, and subdomain rules. For larger crawls, use a batch.
  *
  * @see ContextDev\Services\WebService::webCrawlMd()
  *
@@ -67,7 +67,7 @@ final class WebWebCrawlMdParams implements BaseModel
     public string $url;
 
     /**
-     * Fetch from this country (ISO 3166-1 alpha-2).
+     * Country to fetch from, as an ISO 3166-1 alpha-2 code.
      *
      * @var value-of<Country>|null $country
      */
@@ -75,7 +75,7 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?string $country;
 
     /**
-     * Remove matching elements after inclusions. Exclusions take precedence.
+     * Remove elements matching these CSS selectors. Overrides `includeSelectors`.
      *
      * @var list<string>|null $excludeSelectors
      */
@@ -83,19 +83,19 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?array $excludeSelectors;
 
     /**
-     * Regex pattern. URLs matching this pattern are never followed or scraped, even when they match urlRegex. The starting URL is always scraped.
+     * Never follow or scrape URLs matching this regex, even when they match `urlRegex`. The start URL is always scraped.
      */
     #[Optional('excludeUrlRegex')]
     public ?string $excludeURLRegex;
 
     /**
-     * When true, follow links on subdomains of the starting URL's domain (e.g. docs.example.com when starting from example.com). www and apex are always treated as equivalent.
+     * Follow links to subdomains of the start URL's domain, such as `docs.example.com` from `example.com`. `www` and the apex domain always count as the same site.
      */
     #[Optional]
     public ?bool $followSubdomains;
 
     /**
-     * Which iframe contents to render to Markdown for each crawled page. `auto` (default) inlines only iframes that hold page content, such as same-site documents, framesets, job boards, forms and embedded documents, and skips ads and widgets. `true` inlines every iframe. `false` inlines none.
+     * Which iframe contents to include in each page's Markdown. `auto` inlines only iframes that hold page content, such as same-site documents, framesets, job boards, forms, and embedded documents, and skips ads and widgets. `true` inlines every iframe; `false` inlines none.
      *
      * @var IncludeFramesVariants|null $includeFrames
      */
@@ -103,19 +103,19 @@ final class WebWebCrawlMdParams implements BaseModel
     public bool|string|null $includeFrames;
 
     /**
-     * Include image references in the Markdown output (`html-conversion` only).
+     * Include image references in the Markdown (`html-conversion` only).
      */
     #[Optional]
     public ?bool $includeImages;
 
     /**
-     * Preserve hyperlinks in the Markdown output (`html-conversion` only).
+     * Keep link URLs in the Markdown (`html-conversion` only).
      */
     #[Optional]
     public ?bool $includeLinks;
 
     /**
-     * Keep matching HTML subtrees before converting each page to Markdown.
+     * Keep only elements matching these CSS selectors.
      *
      * @var list<string>|null $includeSelectors
      */
@@ -123,31 +123,31 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?array $includeSelectors;
 
     /**
-     * Maximum cache age in milliseconds. Defaults to 1 day; `0` fetches fresh.
+     * Maximum age of a cached result, in milliseconds. `0` always fetches fresh. Defaults to 1 day (86400000 ms). Maximum: 30 days (2592000000 ms).
      */
     #[Optional(nullable: true)]
     public ?int $maxAgeMs;
 
     /**
-     * Maximum link depth from the starting URL (0 = only the starting page).
+     * Maximum link depth from the start URL. `0` crawls only the start URL. Omit for no depth limit.
      */
     #[Optional]
     public ?int $maxDepth;
 
     /**
-     * Maximum pages to crawl.
+     * Maximum number of pages to crawl.
      */
     #[Optional]
     public ?int $maxPages;
 
     /**
-     * PDF handling. `start`/`end` limit parsing to an inclusive, 1-based page range.
+     * Whether to parse PDFs and which pages to read.
      */
     #[Optional]
     public ?Pdf $pdf;
 
     /**
-     * Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @var list<string>|null $policies
      */
@@ -161,7 +161,7 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?bool $settleAnimations;
 
     /**
-     * Truncate base64-encoded image data in the Markdown output (`html-conversion` only).
+     * Shorten inline base64 image data (`html-conversion` only).
      */
     #[Optional]
     public ?bool $shortenBase64Images;
@@ -175,13 +175,13 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?array $sourcePreference;
 
     /**
-     * Soft crawl deadline in milliseconds. Returns pages collected before the next deadline check.
+     * Soft time budget for the crawl, in milliseconds. When it runs out, the crawl returns the pages collected so far. Larger values are capped at 110 seconds.
      */
     #[Optional]
     public ?int $stopAfterMs;
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @var list<string>|null $tags
      */
@@ -195,19 +195,19 @@ final class WebWebCrawlMdParams implements BaseModel
     public ?TimeoutOpts $timeoutOpts;
 
     /**
-     * Regex pattern. Only URLs matching this pattern will be followed and scraped. An automatic prefix scope in the form ^<starting URL> follows a redirect of the starting page.
+     * Only follow and scrape URLs matching this regex. A prefix pattern of the form `^<start URL>` also follows a redirect of the start page.
      */
     #[Optional]
     public ?string $urlRegex;
 
     /**
-     * Extract only the main content, stripping headers, footers, sidebars, and navigation.
+     * Keep only the main content, without navigation, headers, footers, or sidebars.
      */
     #[Optional]
     public ?bool $useMainContentOnly;
 
     /**
-     * Browser wait time in milliseconds after initial page load for each crawled page. Defaults to 3500 (3.5 seconds). Min: 0. Max: 30000 (30 seconds).
+     * Time to wait after each page loads before reading it, in milliseconds. `0` waits 500 ms. `timeoutOpts.milliseconds` must be at least `waitForMs` plus 10000 ms, or the request fails with `TIMEOUT_TOO_SHORT_FOR_WAIT`.
      */
     #[Optional(nullable: true)]
     public ?int $waitForMs;
@@ -324,7 +324,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Fetch from this country (ISO 3166-1 alpha-2).
+     * Country to fetch from, as an ISO 3166-1 alpha-2 code.
      *
      * @param Country|value-of<Country> $country
      */
@@ -337,7 +337,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Remove matching elements after inclusions. Exclusions take precedence.
+     * Remove elements matching these CSS selectors. Overrides `includeSelectors`.
      *
      * @param list<string>|null $excludeSelectors
      */
@@ -350,7 +350,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Regex pattern. URLs matching this pattern are never followed or scraped, even when they match urlRegex. The starting URL is always scraped.
+     * Never follow or scrape URLs matching this regex, even when they match `urlRegex`. The start URL is always scraped.
      */
     public function withExcludeURLRegex(string $excludeURLRegex): self
     {
@@ -361,7 +361,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * When true, follow links on subdomains of the starting URL's domain (e.g. docs.example.com when starting from example.com). www and apex are always treated as equivalent.
+     * Follow links to subdomains of the start URL's domain, such as `docs.example.com` from `example.com`. `www` and the apex domain always count as the same site.
      */
     public function withFollowSubdomains(bool $followSubdomains): self
     {
@@ -372,7 +372,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Which iframe contents to render to Markdown for each crawled page. `auto` (default) inlines only iframes that hold page content, such as same-site documents, framesets, job boards, forms and embedded documents, and skips ads and widgets. `true` inlines every iframe. `false` inlines none.
+     * Which iframe contents to include in each page's Markdown. `auto` inlines only iframes that hold page content, such as same-site documents, framesets, job boards, forms, and embedded documents, and skips ads and widgets. `true` inlines every iframe; `false` inlines none.
      *
      * @param IncludeFramesShape $includeFrames
      */
@@ -386,7 +386,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Include image references in the Markdown output (`html-conversion` only).
+     * Include image references in the Markdown (`html-conversion` only).
      */
     public function withIncludeImages(bool $includeImages): self
     {
@@ -397,7 +397,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Preserve hyperlinks in the Markdown output (`html-conversion` only).
+     * Keep link URLs in the Markdown (`html-conversion` only).
      */
     public function withIncludeLinks(bool $includeLinks): self
     {
@@ -408,7 +408,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Keep matching HTML subtrees before converting each page to Markdown.
+     * Keep only elements matching these CSS selectors.
      *
      * @param list<string>|null $includeSelectors
      */
@@ -421,7 +421,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Maximum cache age in milliseconds. Defaults to 1 day; `0` fetches fresh.
+     * Maximum age of a cached result, in milliseconds. `0` always fetches fresh. Defaults to 1 day (86400000 ms). Maximum: 30 days (2592000000 ms).
      */
     public function withMaxAgeMs(?int $maxAgeMs): self
     {
@@ -432,7 +432,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Maximum link depth from the starting URL (0 = only the starting page).
+     * Maximum link depth from the start URL. `0` crawls only the start URL. Omit for no depth limit.
      */
     public function withMaxDepth(int $maxDepth): self
     {
@@ -443,7 +443,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Maximum pages to crawl.
+     * Maximum number of pages to crawl.
      */
     public function withMaxPages(int $maxPages): self
     {
@@ -454,7 +454,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * PDF handling. `start`/`end` limit parsing to an inclusive, 1-based page range.
+     * Whether to parse PDFs and which pages to read.
      *
      * @param Pdf|PdfShape $pdf
      */
@@ -467,7 +467,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @param list<string> $policies
      */
@@ -491,7 +491,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Truncate base64-encoded image data in the Markdown output (`html-conversion` only).
+     * Shorten inline base64 image data (`html-conversion` only).
      */
     public function withShortenBase64Images(bool $shortenBase64Images): self
     {
@@ -515,7 +515,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Soft crawl deadline in milliseconds. Returns pages collected before the next deadline check.
+     * Soft time budget for the crawl, in milliseconds. When it runs out, the crawl returns the pages collected so far. Larger values are capped at 110 seconds.
      */
     public function withStopAfterMs(int $stopAfterMs): self
     {
@@ -526,7 +526,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @param list<string> $tags
      */
@@ -552,7 +552,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Regex pattern. Only URLs matching this pattern will be followed and scraped. An automatic prefix scope in the form ^<starting URL> follows a redirect of the starting page.
+     * Only follow and scrape URLs matching this regex. A prefix pattern of the form `^<start URL>` also follows a redirect of the start page.
      */
     public function withURLRegex(string $urlRegex): self
     {
@@ -563,7 +563,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Extract only the main content, stripping headers, footers, sidebars, and navigation.
+     * Keep only the main content, without navigation, headers, footers, or sidebars.
      */
     public function withUseMainContentOnly(bool $useMainContentOnly): self
     {
@@ -574,7 +574,7 @@ final class WebWebCrawlMdParams implements BaseModel
     }
 
     /**
-     * Browser wait time in milliseconds after initial page load for each crawled page. Defaults to 3500 (3.5 seconds). Min: 0. Max: 30000 (30 seconds).
+     * Time to wait after each page loads before reading it, in milliseconds. `0` waits 500 ms. `timeoutOpts.milliseconds` must be at least `waitForMs` plus 10000 ms, or the request fails with `TIMEOUT_TOO_SHORT_FOR_WAIT`.
      */
     public function withWaitForMs(?int $waitForMs): self
     {

@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Employee headcount information for the brand (will be null if unknown).
+ * Employee headcount. Omitted when unknown.
  *
  * @phpstan-type EmployeesShape = array{
  *   exact?: int|null, range?: null|Range|value-of<Range>
@@ -22,13 +22,13 @@ final class Employees implements BaseModel
     use SdkModel;
 
     /**
-     * Exact employee count when a precise headcount is known.
+     * Exact employee count, when known.
      */
     #[Optional]
     public ?int $exact;
 
     /**
-     * Employee count range for the brand (e.g. '11 to 50').
+     * Headcount range, such as `11 to 50`.
      *
      * @var value-of<Range>|null $range
      */
@@ -60,7 +60,7 @@ final class Employees implements BaseModel
     }
 
     /**
-     * Exact employee count when a precise headcount is known.
+     * Exact employee count, when known.
      */
     public function withExact(int $exact): self
     {
@@ -71,7 +71,7 @@ final class Employees implements BaseModel
     }
 
     /**
-     * Employee count range for the brand (e.g. '11 to 50').
+     * Headcount range, such as `11 to 50`.
      *
      * @param Range|value-of<Range> $range
      */

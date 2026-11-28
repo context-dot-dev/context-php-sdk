@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Batch\BatchGetResultsResponse\Data\ScrapedPage\Result\Product\Data\Product\Variant;
 
 /**
- * Normalized stock or ordering availability of this variant.
+ * Stock or ordering availability of this variant.
  */
 enum Availability: string
 {

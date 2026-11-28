@@ -19,19 +19,19 @@ final class Progress implements BaseModel
     use SdkModel;
 
     /**
-     * Pages that could not be scraped before the request landed.
+     * Pages that could not be scraped before cancellation.
      */
     #[Required]
     public int $failed;
 
     /**
-     * Pages that will be skipped.
+     * Pages not yet attempted, which will be skipped.
      */
     #[Required]
     public int $pending;
 
     /**
-     * Pages scraped successfully before the request landed.
+     * Pages scraped successfully before cancellation.
      */
     #[Required]
     public int $succeeded;
@@ -72,7 +72,7 @@ final class Progress implements BaseModel
     }
 
     /**
-     * Pages that could not be scraped before the request landed.
+     * Pages that could not be scraped before cancellation.
      */
     public function withFailed(int $failed): self
     {
@@ -83,7 +83,7 @@ final class Progress implements BaseModel
     }
 
     /**
-     * Pages that will be skipped.
+     * Pages not yet attempted, which will be skipped.
      */
     public function withPending(int $pending): self
     {
@@ -94,7 +94,7 @@ final class Progress implements BaseModel
     }
 
     /**
-     * Pages scraped successfully before the request landed.
+     * Pages scraped successfully before cancellation.
      */
     public function withSucceeded(int $succeeded): self
     {

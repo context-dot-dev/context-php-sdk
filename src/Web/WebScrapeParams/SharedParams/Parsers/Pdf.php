@@ -10,7 +10,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebScrapeParams\SharedParams\Parsers\Pdf\Ocr;
 
 /**
- * PDF page range and OCR.
+ * Page range, OCR, and page markers for PDFs.
  *
  * @phpstan-type PdfShape = array{
  *   endPage?: int|null,
@@ -25,19 +25,19 @@ final class Pdf implements BaseModel
     use SdkModel;
 
     /**
-     * Last page to parse. Must be at least `startPage`.
+     * Last page to parse. Defaults to the last page. Must be at least `startPage`.
      */
     #[Optional]
     public ?int $endPage;
 
     /**
-     * Start each page in the Markdown with a `<!-- page N -->` line using its original 1-based page number; these responses are never served from cache.
+     * Start each PDF page in the Markdown with a `<!-- page N -->` line, where `N` is the original 1-based page number. These responses are never served from cache.
      */
     #[Optional]
     public ?bool $includeNumberedPages;
 
     /**
-     * Set `auto` to read scanned pages with OCR.
+     * Set to `auto` to read scanned pages with OCR. Adds 1 credit per page read.
      *
      * @var value-of<Ocr>|null $ocr
      */
@@ -79,7 +79,7 @@ final class Pdf implements BaseModel
     }
 
     /**
-     * Last page to parse. Must be at least `startPage`.
+     * Last page to parse. Defaults to the last page. Must be at least `startPage`.
      */
     public function withEndPage(int $endPage): self
     {
@@ -90,7 +90,7 @@ final class Pdf implements BaseModel
     }
 
     /**
-     * Start each page in the Markdown with a `<!-- page N -->` line using its original 1-based page number; these responses are never served from cache.
+     * Start each PDF page in the Markdown with a `<!-- page N -->` line, where `N` is the original 1-based page number. These responses are never served from cache.
      */
     public function withIncludeNumberedPages(bool $includeNumberedPages): self
     {
@@ -101,7 +101,7 @@ final class Pdf implements BaseModel
     }
 
     /**
-     * Set `auto` to read scanned pages with OCR.
+     * Set to `auto` to read scanned pages with OCR. Adds 1 credit per page read.
      *
      * @param Ocr|value-of<Ocr> $ocr
      */

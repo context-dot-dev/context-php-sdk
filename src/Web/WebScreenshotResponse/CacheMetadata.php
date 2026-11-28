@@ -10,7 +10,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebScreenshotResponse\CacheMetadata\Status;
 
 /**
- * Whether this response came from cache.
+ * Cache status of this response.
  *
  * @phpstan-type CacheMetadataShape = array{
  *   ageMs: int, status: Status|value-of<Status>
@@ -22,13 +22,13 @@ final class CacheMetadata implements BaseModel
     use SdkModel;
 
     /**
-     * Age of the cached data in milliseconds. Zero for miss and zdr responses.
+     * Age of the cached data, in milliseconds. `0` for `miss` and `zdr`.
      */
     #[Required('age_ms')]
     public int $ageMs;
 
     /**
-     * Whether the response was served from cache, required fresh work, or honored zero-data-retention cache bypass.
+     * `hit` when served from cache, `miss` when fetched fresh, `zdr` when zero data retention bypassed the cache.
      *
      * @var value-of<Status> $status
      */
@@ -72,7 +72,7 @@ final class CacheMetadata implements BaseModel
     }
 
     /**
-     * Age of the cached data in milliseconds. Zero for miss and zdr responses.
+     * Age of the cached data, in milliseconds. `0` for `miss` and `zdr`.
      */
     public function withAgeMs(int $ageMs): self
     {
@@ -83,7 +83,7 @@ final class CacheMetadata implements BaseModel
     }
 
     /**
-     * Whether the response was served from cache, required fresh work, or honored zero-data-retention cache bypass.
+     * `hit` when served from cache, `miss` when fetched fresh, `zdr` when zero data retention bypassed the cache.
      *
      * @param Status|value-of<Status> $status
      */

@@ -10,7 +10,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\People\PersonSearchResponse\Result\Role\Company;
 
 /**
- * The person’s current role.
+ * The person's current role.
  *
  * @phpstan-import-type CompanyShape from \ContextDev\People\PersonSearchResponse\Result\Role\Company
  *
@@ -28,13 +28,13 @@ final class Role implements BaseModel
     use SdkModel;
 
     /**
-     * Current employer, when known.
+     * Current employer. `null` when unknown.
      */
     #[Required]
     public ?Company $company;
 
     /**
-     * Areas of responsibility.
+     * Areas of responsibility, such as `sales`.
      *
      * @var list<string> $functions
      */
@@ -42,13 +42,13 @@ final class Role implements BaseModel
     public array $functions;
 
     /**
-     * Seniority level.
+     * Seniority level, such as `executive`.
      */
     #[Required]
     public ?string $seniority;
 
     /**
-     * Role start date (YYYY-MM-DD).
+     * When the role started, as `YYYY-MM-DD`.
      */
     #[Required('started_on')]
     public ?string $startedOn;
@@ -112,7 +112,7 @@ final class Role implements BaseModel
     }
 
     /**
-     * Current employer, when known.
+     * Current employer. `null` when unknown.
      *
      * @param Company|CompanyShape|null $company
      */
@@ -125,7 +125,7 @@ final class Role implements BaseModel
     }
 
     /**
-     * Areas of responsibility.
+     * Areas of responsibility, such as `sales`.
      *
      * @param list<string> $functions
      */
@@ -138,7 +138,7 @@ final class Role implements BaseModel
     }
 
     /**
-     * Seniority level.
+     * Seniority level, such as `executive`.
      */
     public function withSeniority(?string $seniority): self
     {
@@ -149,7 +149,7 @@ final class Role implements BaseModel
     }
 
     /**
-     * Role start date (YYYY-MM-DD).
+     * When the role started, as `YYYY-MM-DD`.
      */
     public function withStartedOn(?string $startedOn): self
     {

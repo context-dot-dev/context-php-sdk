@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * The publication that published the article.
+ * Publication that published the article.
  *
  * @phpstan-type SourceShape = array{direct: bool, domain: string, name: string}
  */
@@ -19,13 +19,13 @@ final class Source implements BaseModel
     use SdkModel;
 
     /**
-     * True when Context observed this article in the publisher-owned feed.
+     * Whether the article came directly from the publisher's own feed rather than through an aggregator.
      */
     #[Required]
     public bool $direct;
 
     /**
-     * Website domain of the publication.
+     * Website domain of the publication, such as `reuters.com`.
      */
     #[Required]
     public string $domain;
@@ -75,7 +75,7 @@ final class Source implements BaseModel
     }
 
     /**
-     * True when Context observed this article in the publisher-owned feed.
+     * Whether the article came directly from the publisher's own feed rather than through an aggregator.
      */
     public function withDirect(bool $direct): self
     {
@@ -86,7 +86,7 @@ final class Source implements BaseModel
     }
 
     /**
-     * Website domain of the publication.
+     * Website domain of the publication, such as `reuters.com`.
      */
     public function withDomain(string $domain): self
     {

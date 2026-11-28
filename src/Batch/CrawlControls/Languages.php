@@ -12,7 +12,7 @@ use ContextDev\Core\Conversion\Contracts\ConverterSource;
 use ContextDev\Core\Conversion\ListOf;
 
 /**
- * Languages whose pages were followed; null when all languages were.
+ * Languages whose pages were followed. `null` when all languages were.
  *
  * @phpstan-type LanguagesVariants = list<value-of<UnionMember1>>|value-of<UnionMember0>
  * @phpstan-type LanguagesShape = LanguagesVariants

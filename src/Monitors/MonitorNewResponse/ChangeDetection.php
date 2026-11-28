@@ -11,7 +11,7 @@ use ContextDev\Monitors\MonitorNewResponse\ChangeDetection\MonitorsExactChangeDe
 use ContextDev\Monitors\MonitorNewResponse\ChangeDetection\MonitorsSemanticChangeDetection;
 
 /**
- * How changes are judged. Defaults to `semantic` for extract and search targets and page targets with `instructions`, otherwise `exact`.
+ * How changes are judged. Defaults to `semantic` for extract and search targets and for page targets with `instructions`; otherwise `exact`. Sitemap targets support only `exact`, and extract targets only `semantic`.
  *
  * @phpstan-import-type MonitorsExactChangeDetectionShape from \ContextDev\Monitors\MonitorNewResponse\ChangeDetection\MonitorsExactChangeDetection
  * @phpstan-import-type MonitorsSemanticChangeDetectionShape from \ContextDev\Monitors\MonitorNewResponse\ChangeDetection\MonitorsSemanticChangeDetection

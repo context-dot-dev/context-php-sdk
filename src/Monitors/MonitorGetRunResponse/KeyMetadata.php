@@ -27,7 +27,7 @@ final class KeyMetadata implements BaseModel
     public int $creditsConsumed;
 
     /**
-     * Credits remaining for your organization.
+     * Credits your organization has left after this request.
      */
     #[Required('credits_remaining')]
     public int $creditsRemaining;
@@ -80,7 +80,7 @@ final class KeyMetadata implements BaseModel
     }
 
     /**
-     * Credits remaining for your organization.
+     * Credits your organization has left after this request.
      */
     public function withCreditsRemaining(int $creditsRemaining): self
     {

@@ -26,7 +26,7 @@ final class Backdrop implements BaseModel
     use SdkModel;
 
     /**
-     * Array of colors in the backdrop image.
+     * Colors in the backdrop image.
      *
      * @var list<Color>|null $colors
      */
@@ -36,7 +36,7 @@ final class Backdrop implements BaseModel
     public ?array $colors;
 
     /**
-     * Resolution of the backdrop image.
+     * Size of the backdrop image.
      */
     #[Optional]
     public ?Resolution $resolution;
@@ -75,7 +75,7 @@ final class Backdrop implements BaseModel
     }
 
     /**
-     * Array of colors in the backdrop image.
+     * Colors in the backdrop image.
      *
      * @param list<Color|ColorShape> $colors
      */
@@ -88,7 +88,7 @@ final class Backdrop implements BaseModel
     }
 
     /**
-     * Resolution of the backdrop image.
+     * Size of the backdrop image.
      *
      * @param Resolution|ResolutionShape $resolution
      */

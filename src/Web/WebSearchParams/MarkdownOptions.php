@@ -13,7 +13,7 @@ use ContextDev\Web\WebSearchParams\MarkdownOptions\Pdf;
 use ContextDev\Web\WebSearchParams\MarkdownOptions\TimeoutOpts;
 
 /**
- * Inline Markdown scraping for each result. Set `enabled: true` to activate.
+ * Scrape each result page to Markdown. Set `enabled` to `true` to turn it on.
  *
  * @phpstan-import-type IncludeFramesVariants from \ContextDev\Web\WebSearchParams\MarkdownOptions\IncludeFrames
  * @phpstan-import-type IncludeFramesShape from \ContextDev\Web\WebSearchParams\MarkdownOptions\IncludeFrames
@@ -39,13 +39,13 @@ final class MarkdownOptions implements BaseModel
     use SdkModel;
 
     /**
-     * Scrape each result to Markdown. Adds 1 credit per result with Markdown.
+     * Scrape each result page to Markdown. Adds 1 credit per result that returns Markdown.
      */
     #[Optional]
     public ?bool $enabled;
 
     /**
-     * Which iframe contents to render into the Markdown. `auto` (default) inlines only iframes that hold page content, such as same-site documents, framesets, job boards, forms and embedded documents, and skips ads and widgets. `true` inlines every iframe. `false` inlines none.
+     * Which iframe contents to include in the Markdown. `auto` inlines only iframes that hold page content, such as same-site documents, framesets, job boards, forms, and embedded documents, and skips ads and widgets. `true` inlines every iframe; `false` inlines none.
      *
      * @var IncludeFramesVariants|null $includeFrames
      */
@@ -53,31 +53,31 @@ final class MarkdownOptions implements BaseModel
     public bool|string|null $includeFrames;
 
     /**
-     * Emit image references in the Markdown.
+     * Include image references in the Markdown.
      */
     #[Optional]
     public ?bool $includeImages;
 
     /**
-     * Keep hyperlinks in the Markdown.
+     * Keep link URLs in the Markdown.
      */
     #[Optional]
     public ?bool $includeLinks;
 
     /**
-     * Maximum cache age in milliseconds for result page content. Defaults to 180 days (15552000000 ms) when Markdown is requested, or 365 days (31536000000 ms) when only highlights are requested. Explicit values override either default. Maximum: 365 days. Set to 0 to force a fresh scrape.
+     * Maximum age of a cached result, in milliseconds. `0` always fetches fresh. Defaults to 180 days (15552000000 ms) with Markdown, or 365 days (31536000000 ms) with highlights only.
      */
     #[Optional(nullable: true)]
     public ?int $maxAgeMs;
 
     /**
-     * PDF handling. `start`/`end` limit parsing to an inclusive, 1-based page range.
+     * Whether to parse PDFs and which pages to read.
      */
     #[Optional]
     public ?Pdf $pdf;
 
     /**
-     * Truncate inline base64 image payloads to keep responses small.
+     * Shorten inline base64 image data.
      */
     #[Optional]
     public ?bool $shortenBase64Images;
@@ -89,13 +89,13 @@ final class MarkdownOptions implements BaseModel
     public ?TimeoutOpts $timeoutOpts;
 
     /**
-     * Strip nav, header, footer, and sidebar — keep only the primary article content.
+     * Keep only the main content, without navigation, headers, footers, or sidebars.
      */
     #[Optional]
     public ?bool $useMainContentOnly;
 
     /**
-     * Extra wait after page load before rendering, in ms (0–30000). Useful for JS-heavy pages.
+     * Time to wait after each result page loads before reading it, in milliseconds. `0` waits 500 ms. Helps with JavaScript-heavy pages.
      */
     #[Optional(nullable: true)]
     public ?int $waitForMs;
@@ -143,7 +143,7 @@ final class MarkdownOptions implements BaseModel
     }
 
     /**
-     * Scrape each result to Markdown. Adds 1 credit per result with Markdown.
+     * Scrape each result page to Markdown. Adds 1 credit per result that returns Markdown.
      */
     public function withEnabled(bool $enabled): self
     {
@@ -154,7 +154,7 @@ final class MarkdownOptions implements BaseModel
     }
 
     /**
-     * Which iframe contents to render into the Markdown. `auto` (default) inlines only iframes that hold page content, such as same-site documents, framesets, job boards, forms and embedded documents, and skips ads and widgets. `true` inlines every iframe. `false` inlines none.
+     * Which iframe contents to include in the Markdown. `auto` inlines only iframes that hold page content, such as same-site documents, framesets, job boards, forms, and embedded documents, and skips ads and widgets. `true` inlines every iframe; `false` inlines none.
      *
      * @param IncludeFramesShape $includeFrames
      */
@@ -168,7 +168,7 @@ final class MarkdownOptions implements BaseModel
     }
 
     /**
-     * Emit image references in the Markdown.
+     * Include image references in the Markdown.
      */
     public function withIncludeImages(bool $includeImages): self
     {
@@ -179,7 +179,7 @@ final class MarkdownOptions implements BaseModel
     }
 
     /**
-     * Keep hyperlinks in the Markdown.
+     * Keep link URLs in the Markdown.
      */
     public function withIncludeLinks(bool $includeLinks): self
     {
@@ -190,7 +190,7 @@ final class MarkdownOptions implements BaseModel
     }
 
     /**
-     * Maximum cache age in milliseconds for result page content. Defaults to 180 days (15552000000 ms) when Markdown is requested, or 365 days (31536000000 ms) when only highlights are requested. Explicit values override either default. Maximum: 365 days. Set to 0 to force a fresh scrape.
+     * Maximum age of a cached result, in milliseconds. `0` always fetches fresh. Defaults to 180 days (15552000000 ms) with Markdown, or 365 days (31536000000 ms) with highlights only.
      */
     public function withMaxAgeMs(?int $maxAgeMs): self
     {
@@ -201,7 +201,7 @@ final class MarkdownOptions implements BaseModel
     }
 
     /**
-     * PDF handling. `start`/`end` limit parsing to an inclusive, 1-based page range.
+     * Whether to parse PDFs and which pages to read.
      *
      * @param Pdf|PdfShape $pdf
      */
@@ -214,7 +214,7 @@ final class MarkdownOptions implements BaseModel
     }
 
     /**
-     * Truncate inline base64 image payloads to keep responses small.
+     * Shorten inline base64 image data.
      */
     public function withShortenBase64Images(bool $shortenBase64Images): self
     {
@@ -239,7 +239,7 @@ final class MarkdownOptions implements BaseModel
     }
 
     /**
-     * Strip nav, header, footer, and sidebar — keep only the primary article content.
+     * Keep only the main content, without navigation, headers, footers, or sidebars.
      */
     public function withUseMainContentOnly(bool $useMainContentOnly): self
     {
@@ -250,7 +250,7 @@ final class MarkdownOptions implements BaseModel
     }
 
     /**
-     * Extra wait after page load before rendering, in ms (0–30000). Useful for JS-heavy pages.
+     * Time to wait after each result page loads before reading it, in milliseconds. `0` waits 500 ms. Helps with JavaScript-heavy pages.
      */
     public function withWaitForMs(?int $waitForMs): self
     {

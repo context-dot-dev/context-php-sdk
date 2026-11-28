@@ -38,7 +38,7 @@ final class BatchDeleteResponse implements BaseModel
     public ?string $id;
 
     /**
-     * Always true on success.
+     * Always `true`.
      */
     #[Optional]
     public ?bool $deleted;
@@ -115,7 +115,7 @@ final class BatchDeleteResponse implements BaseModel
     }
 
     /**
-     * Always true on success.
+     * Always `true`.
      */
     public function withDeleted(bool $deleted): self
     {

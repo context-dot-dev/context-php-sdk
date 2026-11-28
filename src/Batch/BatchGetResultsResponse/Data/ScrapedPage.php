@@ -11,7 +11,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * At least one requested output succeeded. Check result.isPartial and each output success for incomplete results.
+ * A page where at least one requested format succeeded. Check `result.isPartial` and each format's `success` for incomplete results.
  *
  * @phpstan-import-type ResultShape from \ContextDev\Batch\BatchGetResultsResponse\Data\ScrapedPage\Result
  *
@@ -30,18 +30,22 @@ final class ScrapedPage implements BaseModel
     /** @use SdkModel<ScrapedPageShape> */
     use SdkModel;
 
-    /** @var 'ok' $status */
+    /**
+     * The page was scraped.
+     *
+     * @var 'ok' $status
+     */
     #[Required]
     public string $status = 'ok';
 
     /**
-     * Credits charged for this page, including OCR. Cached outputs use the same pricing as POST /web/scrape.
+     * Credits charged for this page, including OCR. Cached results are priced the same as in `POST /web/scrape`.
      */
     #[Required('credits_used')]
     public int $creditsUsed;
 
     /**
-     * The same response as POST /web/scrape, including per-format success, failure, and partial results.
+     * Scrape output, in the same shape as a `POST /web/scrape` response.
      */
     #[Required]
     public Result $result;
@@ -53,13 +57,13 @@ final class ScrapedPage implements BaseModel
     public string $url;
 
     /**
-     * Your `itemId` from submission.
+     * The `itemId` you submitted with this URL.
      */
     #[Optional('itemId')]
     public ?string $itemID;
 
     /**
-     * Caller-supplied metadata echoed from submission.
+     * The `meta` you submitted with this URL.
      *
      * @var array<string,mixed>|null $meta
      */
@@ -67,7 +71,7 @@ final class ScrapedPage implements BaseModel
     public ?array $meta;
 
     /**
-     * PDF pages recovered by OCR. Omitted when OCR did not run.
+     * Number of PDF pages read with OCR. Omitted when OCR did not run.
      */
     #[Optional('ocr_pages')]
     public ?int $ocrPages;
@@ -121,7 +125,7 @@ final class ScrapedPage implements BaseModel
     }
 
     /**
-     * Credits charged for this page, including OCR. Cached outputs use the same pricing as POST /web/scrape.
+     * Credits charged for this page, including OCR. Cached results are priced the same as in `POST /web/scrape`.
      */
     public function withCreditsUsed(int $creditsUsed): self
     {
@@ -132,7 +136,7 @@ final class ScrapedPage implements BaseModel
     }
 
     /**
-     * The same response as POST /web/scrape, including per-format success, failure, and partial results.
+     * Scrape output, in the same shape as a `POST /web/scrape` response.
      *
      * @param Result|ResultShape $result
      */
@@ -145,6 +149,8 @@ final class ScrapedPage implements BaseModel
     }
 
     /**
+     * The page was scraped.
+     *
      * @param 'ok' $status
      */
     public function withStatus(string $status): self
@@ -167,7 +173,7 @@ final class ScrapedPage implements BaseModel
     }
 
     /**
-     * Your `itemId` from submission.
+     * The `itemId` you submitted with this URL.
      */
     public function withItemID(string $itemID): self
     {
@@ -178,7 +184,7 @@ final class ScrapedPage implements BaseModel
     }
 
     /**
-     * Caller-supplied metadata echoed from submission.
+     * The `meta` you submitted with this URL.
      *
      * @param array<string,mixed> $meta
      */
@@ -191,7 +197,7 @@ final class ScrapedPage implements BaseModel
     }
 
     /**
-     * PDF pages recovered by OCR. Omitted when OCR did not run.
+     * Number of PDF pages read with OCR. Omitted when OCR did not run.
      */
     public function withOcrPages(int $ocrPages): self
     {

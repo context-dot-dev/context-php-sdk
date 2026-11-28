@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Person name. Without an email or person-profile URL, provide both first and last name plus company, education, or location.
+ * Name of the person. Without an email or profile URL, send both `first` and `last` plus `company`, `education`, or `location`.
  *
  * @phpstan-type NameShape = array{first?: string|null, last?: string|null}
  */

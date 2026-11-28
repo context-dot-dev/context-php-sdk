@@ -52,24 +52,37 @@ final class MonitorGetChangeResponse implements BaseModel
     /** @use SdkModel<MonitorGetChangeResponseShape> */
     use SdkModel;
 
+    /**
+     * Unique ID of the change.
+     */
     #[Required]
     public string $id;
 
-    /** @var value-of<ChangeDetectionType> $changeDetectionType */
+    /**
+     * Change detection type the monitor uses.
+     *
+     * @var value-of<ChangeDetectionType> $changeDetectionType
+     */
     #[Required('change_detection_type', enum: ChangeDetectionType::class)]
     public string $changeDetectionType;
 
+    /**
+     * When the change was detected.
+     */
     #[Required('detected_at')]
     public \DateTimeInterface $detectedAt;
 
     /**
-     * Always `web`. Optional.
+     * Monitor category. Always `web`.
      *
      * @var value-of<Mode> $mode
      */
     #[Required(enum: Mode::class)]
     public string $mode;
 
+    /**
+     * ID of the monitor that detected the change.
+     */
     #[Required('monitor_id')]
     public string $monitorID;
 
@@ -80,66 +93,96 @@ final class MonitorGetChangeResponse implements BaseModel
     public string $requestID;
 
     /**
-     * The run that detected this change.
+     * ID of the run that detected the change.
      */
     #[Required('run_id')]
     public string $runID;
 
+    /**
+     * Plain-language summary of what changed.
+     */
     #[Required]
     public string $summary;
 
     /**
-     * Labels for filtering monitors, their changes, and their usage.
+     * Tags the monitor had when the change was detected.
      *
      * @var list<string> $tags
      */
     #[Required(list: 'string')]
     public array $tags;
 
-    /** @var value-of<TargetType> $targetType */
+    /**
+     * Type of target the monitor watches.
+     *
+     * @var value-of<TargetType> $targetType
+     */
     #[Required('target_type', enum: TargetType::class)]
     public string $targetType;
 
+    /**
+     * Short headline for the change.
+     */
     #[Required]
     public string $title;
 
     /**
-     * The monitored URL. For search targets, the first newly reported result.
+     * Monitored URL. For search targets, the first new result.
      */
     #[Required]
     public string $url;
 
+    /**
+     * Total number of URLs added.
+     */
     #[Optional('added_url_count')]
     public ?int $addedURLCount;
 
     /**
-     * At most 500 URLs are included; the corresponding count field is always exact.
+     * URLs added to the sitemap, up to 500. `added_url_count` has the full count.
      *
      * @var list<string>|null $addedURLs
      */
     #[Optional('added_urls', list: 'string')]
     public ?array $addedURLs;
 
+    /**
+     * Excerpt of the page text after the change. Page targets only.
+     */
     #[Optional('after_text_excerpt')]
     public ?string $afterTextExcerpt;
 
+    /**
+     * Excerpt of the page text before the change. Page targets only.
+     */
     #[Optional('before_text_excerpt')]
     public ?string $beforeTextExcerpt;
 
+    /**
+     * Confidence that the change matters, from 0 to 1. Set by `semantic` detection only.
+     */
     #[Optional]
     public ?float $confidence;
 
     /**
-     * Text diff between the previous and current page baseline (page targets).
+     * Text diff of the change, for page and extract targets. Extract diffs have one section per changed page.
      */
     #[Optional]
     public ?string $diff;
 
-    /** @var list<Evidence>|null $evidence */
+    /**
+     * Before and after excerpts that support the change.
+     *
+     * @var list<Evidence>|null $evidence
+     */
     #[Optional(list: Evidence::class)]
     public ?array $evidence;
 
-    /** @var value-of<Importance>|null $importance */
+    /**
+     * How important the change is. Set by `semantic` detection only.
+     *
+     * @var value-of<Importance>|null $importance
+     */
     #[Optional(enum: Importance::class)]
     public ?string $importance;
 
@@ -149,22 +192,28 @@ final class MonitorGetChangeResponse implements BaseModel
     #[Optional('key_metadata')]
     public ?KeyMetadata $keyMetadata;
 
+    /**
+     * Total number of matched URLs.
+     */
     #[Optional('matched_url_count')]
     public ?int $matchedURLCount;
 
     /**
-     * At most 500 URLs are included; the corresponding count field is always exact.
+     * URLs where the change was found: the changed pages for page and extract targets, or the new results for search targets. Up to 500; `matched_url_count` has the full count.
      *
      * @var list<string>|null $matchedURLs
      */
     #[Optional('matched_urls', list: 'string')]
     public ?array $matchedURLs;
 
+    /**
+     * Total number of URLs removed.
+     */
     #[Optional('removed_url_count')]
     public ?int $removedURLCount;
 
     /**
-     * At most 500 URLs are included; the corresponding count field is always exact.
+     * URLs removed from the sitemap, or pages no longer found for extract targets, up to 500. `removed_url_count` has the full count.
      *
      * @var list<string>|null $removedURLs
      */
@@ -290,6 +339,9 @@ final class MonitorGetChangeResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Unique ID of the change.
+     */
     public function withID(string $id): self
     {
         $self = clone $this;
@@ -299,6 +351,8 @@ final class MonitorGetChangeResponse implements BaseModel
     }
 
     /**
+     * Change detection type the monitor uses.
+     *
      * @param ChangeDetectionType|value-of<ChangeDetectionType> $changeDetectionType
      */
     public function withChangeDetectionType(
@@ -310,6 +364,9 @@ final class MonitorGetChangeResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * When the change was detected.
+     */
     public function withDetectedAt(\DateTimeInterface $detectedAt): self
     {
         $self = clone $this;
@@ -319,7 +376,7 @@ final class MonitorGetChangeResponse implements BaseModel
     }
 
     /**
-     * Always `web`. Optional.
+     * Monitor category. Always `web`.
      *
      * @param Mode|value-of<Mode> $mode
      */
@@ -331,6 +388,9 @@ final class MonitorGetChangeResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * ID of the monitor that detected the change.
+     */
     public function withMonitorID(string $monitorID): self
     {
         $self = clone $this;
@@ -351,7 +411,7 @@ final class MonitorGetChangeResponse implements BaseModel
     }
 
     /**
-     * The run that detected this change.
+     * ID of the run that detected the change.
      */
     public function withRunID(string $runID): self
     {
@@ -361,6 +421,9 @@ final class MonitorGetChangeResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Plain-language summary of what changed.
+     */
     public function withSummary(string $summary): self
     {
         $self = clone $this;
@@ -370,7 +433,7 @@ final class MonitorGetChangeResponse implements BaseModel
     }
 
     /**
-     * Labels for filtering monitors, their changes, and their usage.
+     * Tags the monitor had when the change was detected.
      *
      * @param list<string> $tags
      */
@@ -383,6 +446,8 @@ final class MonitorGetChangeResponse implements BaseModel
     }
 
     /**
+     * Type of target the monitor watches.
+     *
      * @param TargetType|value-of<TargetType> $targetType
      */
     public function withTargetType(TargetType|string $targetType): self
@@ -393,6 +458,9 @@ final class MonitorGetChangeResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Short headline for the change.
+     */
     public function withTitle(string $title): self
     {
         $self = clone $this;
@@ -402,7 +470,7 @@ final class MonitorGetChangeResponse implements BaseModel
     }
 
     /**
-     * The monitored URL. For search targets, the first newly reported result.
+     * Monitored URL. For search targets, the first new result.
      */
     public function withURL(string $url): self
     {
@@ -412,6 +480,9 @@ final class MonitorGetChangeResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Total number of URLs added.
+     */
     public function withAddedURLCount(int $addedURLCount): self
     {
         $self = clone $this;
@@ -421,7 +492,7 @@ final class MonitorGetChangeResponse implements BaseModel
     }
 
     /**
-     * At most 500 URLs are included; the corresponding count field is always exact.
+     * URLs added to the sitemap, up to 500. `added_url_count` has the full count.
      *
      * @param list<string> $addedURLs
      */
@@ -433,6 +504,9 @@ final class MonitorGetChangeResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Excerpt of the page text after the change. Page targets only.
+     */
     public function withAfterTextExcerpt(string $afterTextExcerpt): self
     {
         $self = clone $this;
@@ -441,6 +515,9 @@ final class MonitorGetChangeResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Excerpt of the page text before the change. Page targets only.
+     */
     public function withBeforeTextExcerpt(string $beforeTextExcerpt): self
     {
         $self = clone $this;
@@ -449,6 +526,9 @@ final class MonitorGetChangeResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Confidence that the change matters, from 0 to 1. Set by `semantic` detection only.
+     */
     public function withConfidence(float $confidence): self
     {
         $self = clone $this;
@@ -458,7 +538,7 @@ final class MonitorGetChangeResponse implements BaseModel
     }
 
     /**
-     * Text diff between the previous and current page baseline (page targets).
+     * Text diff of the change, for page and extract targets. Extract diffs have one section per changed page.
      */
     public function withDiff(string $diff): self
     {
@@ -469,6 +549,8 @@ final class MonitorGetChangeResponse implements BaseModel
     }
 
     /**
+     * Before and after excerpts that support the change.
+     *
      * @param list<Evidence|EvidenceShape> $evidence
      */
     public function withEvidence(array $evidence): self
@@ -480,6 +562,8 @@ final class MonitorGetChangeResponse implements BaseModel
     }
 
     /**
+     * How important the change is. Set by `semantic` detection only.
+     *
      * @param Importance|value-of<Importance> $importance
      */
     public function withImportance(Importance|string $importance): self
@@ -503,6 +587,9 @@ final class MonitorGetChangeResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Total number of matched URLs.
+     */
     public function withMatchedURLCount(int $matchedURLCount): self
     {
         $self = clone $this;
@@ -512,7 +599,7 @@ final class MonitorGetChangeResponse implements BaseModel
     }
 
     /**
-     * At most 500 URLs are included; the corresponding count field is always exact.
+     * URLs where the change was found: the changed pages for page and extract targets, or the new results for search targets. Up to 500; `matched_url_count` has the full count.
      *
      * @param list<string> $matchedURLs
      */
@@ -524,6 +611,9 @@ final class MonitorGetChangeResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Total number of URLs removed.
+     */
     public function withRemovedURLCount(int $removedURLCount): self
     {
         $self = clone $this;
@@ -533,7 +623,7 @@ final class MonitorGetChangeResponse implements BaseModel
     }
 
     /**
-     * At most 500 URLs are included; the corresponding count field is always exact.
+     * URLs removed from the sitemap, or pages no longer found for extract targets, up to 500. `removed_url_count` has the full count.
      *
      * @param list<string> $removedURLs
      */

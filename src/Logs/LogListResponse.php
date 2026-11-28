@@ -30,7 +30,7 @@ final class LogListResponse implements BaseModel
     use SdkModel;
 
     /**
-     * Log entries, newest first.
+     * Log entries on this page, newest first.
      *
      * @var list<Data> $data
      */
@@ -38,13 +38,13 @@ final class LogListResponse implements BaseModel
     public array $data;
 
     /**
-     * Whether a next page exists.
+     * Whether more results are available after this page.
      */
     #[Required('has_more')]
     public bool $hasMore;
 
     /**
-     * Entries per page.
+     * Maximum number of log entries to return per page.
      */
     #[Required]
     public int $limit;
@@ -123,7 +123,7 @@ final class LogListResponse implements BaseModel
     }
 
     /**
-     * Log entries, newest first.
+     * Log entries on this page, newest first.
      *
      * @param list<Data|DataShape> $data
      */
@@ -136,7 +136,7 @@ final class LogListResponse implements BaseModel
     }
 
     /**
-     * Whether a next page exists.
+     * Whether more results are available after this page.
      */
     public function withHasMore(bool $hasMore): self
     {
@@ -147,7 +147,7 @@ final class LogListResponse implements BaseModel
     }
 
     /**
-     * Entries per page.
+     * Maximum number of log entries to return per page.
      */
     public function withLimit(int $limit): self
     {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Monitors\MonitorListParams;
 
 /**
- * Filter monitors by lifecycle status.
+ * Filter by monitor status.
  */
 enum Status: string
 {

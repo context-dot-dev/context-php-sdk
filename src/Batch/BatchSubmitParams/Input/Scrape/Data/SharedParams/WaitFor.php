@@ -9,7 +9,7 @@ use ContextDev\Core\Conversion\Contracts\Converter;
 use ContextDev\Core\Conversion\Contracts\ConverterSource;
 
 /**
- * Milliseconds, or a CSS selector to wait for, after actions. Defaults to 500 (2000 with frames or XML).
+ * Time to wait after actions, in milliseconds, or a CSS selector to wait for. Defaults to 500 ms, or 2000 ms when `includeFrames` is `true` or the URL ends in `.xml`.
  *
  * @phpstan-type WaitForVariants = int|string
  * @phpstan-type WaitForShape = WaitForVariants

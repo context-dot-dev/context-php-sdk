@@ -37,25 +37,25 @@ final class DeliverySummary implements BaseModel
     use SdkModel;
 
     /**
-     * Delivery ID.
+     * Unique ID of the delivery.
      */
     #[Required]
     public string $id;
 
     /**
-     * Event creation time.
+     * When the event was created.
      */
     #[Required('created_at')]
     public \DateTimeInterface $createdAt;
 
     /**
-     * Last successful delivery time, or null if never delivered.
+     * When the delivery last succeeded. `null` until it succeeds.
      */
     #[Required('delivered_at')]
     public ?\DateTimeInterface $deliveredAt;
 
     /**
-     * Webhook event type.
+     * Event that triggered the delivery.
      *
      * @var value-of<Event> $event
      */
@@ -63,19 +63,19 @@ final class DeliverySummary implements BaseModel
     public string $event;
 
     /**
-     * Latest delivery error, or null if none.
+     * Most recent delivery error. `null` when there is none.
      */
     #[Required('last_error')]
     public ?LastError $lastError;
 
     /**
-     * Next scheduled attempt, or null if none.
+     * When the next attempt is scheduled. `null` when none is scheduled.
      */
     #[Required('next_attempt_at')]
     public ?\DateTimeInterface $nextAttemptAt;
 
     /**
-     * Last time you can retry manually (7 days after the event).
+     * Last time you can retry the delivery manually, 7 days after the event.
      */
     #[Required('retry_expires_at')]
     public \DateTimeInterface $retryExpiresAt;
@@ -89,7 +89,7 @@ final class DeliverySummary implements BaseModel
     public Batch|Monitor $source;
 
     /**
-     * `pending`, `delivering`, `retrying`, `delivered`, `failed`, or `cancelled` (source or its webhook was removed).
+     * Delivery state. `pending` is waiting for an attempt, `delivering` has an attempt in progress, `retrying` is waiting for an automatic retry, `delivered` was acknowledged with a 2xx, `failed` has no automatic retries left, and `cancelled` means the source or its webhook was removed.
      *
      * @var value-of<Status> $status
      */
@@ -97,7 +97,7 @@ final class DeliverySummary implements BaseModel
     public string $status;
 
     /**
-     * Webhook destination URL.
+     * URL the webhook is sent to.
      */
     #[Required]
     public string $url;
@@ -181,7 +181,7 @@ final class DeliverySummary implements BaseModel
     }
 
     /**
-     * Delivery ID.
+     * Unique ID of the delivery.
      */
     public function withID(string $id): self
     {
@@ -192,7 +192,7 @@ final class DeliverySummary implements BaseModel
     }
 
     /**
-     * Event creation time.
+     * When the event was created.
      */
     public function withCreatedAt(\DateTimeInterface $createdAt): self
     {
@@ -203,7 +203,7 @@ final class DeliverySummary implements BaseModel
     }
 
     /**
-     * Last successful delivery time, or null if never delivered.
+     * When the delivery last succeeded. `null` until it succeeds.
      */
     public function withDeliveredAt(?\DateTimeInterface $deliveredAt): self
     {
@@ -214,7 +214,7 @@ final class DeliverySummary implements BaseModel
     }
 
     /**
-     * Webhook event type.
+     * Event that triggered the delivery.
      *
      * @param Event|value-of<Event> $event
      */
@@ -227,7 +227,7 @@ final class DeliverySummary implements BaseModel
     }
 
     /**
-     * Latest delivery error, or null if none.
+     * Most recent delivery error. `null` when there is none.
      *
      * @param LastError|LastErrorShape|null $lastError
      */
@@ -240,7 +240,7 @@ final class DeliverySummary implements BaseModel
     }
 
     /**
-     * Next scheduled attempt, or null if none.
+     * When the next attempt is scheduled. `null` when none is scheduled.
      */
     public function withNextAttemptAt(?\DateTimeInterface $nextAttemptAt): self
     {
@@ -251,7 +251,7 @@ final class DeliverySummary implements BaseModel
     }
 
     /**
-     * Last time you can retry manually (7 days after the event).
+     * Last time you can retry the delivery manually, 7 days after the event.
      */
     public function withRetryExpiresAt(\DateTimeInterface $retryExpiresAt): self
     {
@@ -275,7 +275,7 @@ final class DeliverySummary implements BaseModel
     }
 
     /**
-     * `pending`, `delivering`, `retrying`, `delivered`, `failed`, or `cancelled` (source or its webhook was removed).
+     * Delivery state. `pending` is waiting for an attempt, `delivering` has an attempt in progress, `retrying` is waiting for an automatic retry, `delivered` was acknowledged with a 2xx, `failed` has no automatic retries left, and `cancelled` means the source or its webhook was removed.
      *
      * @param Status|value-of<Status> $status
      */
@@ -288,7 +288,7 @@ final class DeliverySummary implements BaseModel
     }
 
     /**
-     * Webhook destination URL.
+     * URL the webhook is sent to.
      */
     public function withURL(string $url): self
     {

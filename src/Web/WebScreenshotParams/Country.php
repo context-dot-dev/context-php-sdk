@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Web\WebScreenshotParams;
 
 /**
- * Fetch from this country (ISO 3166-1 alpha-2).
+ * Country to fetch from, as an ISO 3166-1 alpha-2 code.
  */
 enum Country: string
 {

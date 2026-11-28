@@ -16,9 +16,15 @@ final class Error implements BaseModel
     /** @use SdkModel<ErrorShape> */
     use SdkModel;
 
+    /**
+     * Machine-readable error code, such as `fetch_failed`.
+     */
     #[Required]
     public string $code;
 
+    /**
+     * Human-readable explanation of the error.
+     */
     #[Required]
     public string $message;
 
@@ -56,6 +62,9 @@ final class Error implements BaseModel
         return $self;
     }
 
+    /**
+     * Machine-readable error code, such as `fetch_failed`.
+     */
     public function withCode(string $code): self
     {
         $self = clone $this;
@@ -64,6 +73,9 @@ final class Error implements BaseModel
         return $self;
     }
 
+    /**
+     * Human-readable explanation of the error.
+     */
     public function withMessage(string $message): self
     {
         $self = clone $this;

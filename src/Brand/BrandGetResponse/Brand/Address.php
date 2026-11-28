@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Physical address of the brand.
+ * Physical address of the brand. Omitted when unknown.
  *
  * @phpstan-type AddressShape = array{
  *   city?: string|null,
@@ -27,7 +27,7 @@ final class Address implements BaseModel
     use SdkModel;
 
     /**
-     * City name.
+     * City.
      */
     #[Optional]
     public ?string $city;
@@ -39,7 +39,7 @@ final class Address implements BaseModel
     public ?string $country;
 
     /**
-     * Country code.
+     * Country code, such as `US`.
      */
     #[Optional('country_code')]
     public ?string $countryCode;
@@ -101,7 +101,7 @@ final class Address implements BaseModel
     }
 
     /**
-     * City name.
+     * City.
      */
     public function withCity(string $city): self
     {
@@ -123,7 +123,7 @@ final class Address implements BaseModel
     }
 
     /**
-     * Country code.
+     * Country code, such as `US`.
      */
     public function withCountryCode(string $countryCode): self
     {

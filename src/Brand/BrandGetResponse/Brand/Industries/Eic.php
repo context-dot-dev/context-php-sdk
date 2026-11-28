@@ -22,7 +22,7 @@ final class Eic implements BaseModel
     use SdkModel;
 
     /**
-     * Industry classification enum.
+     * Top-level industry in the Easy Industry Classification (EIC).
      *
      * @var value-of<Industry> $industry
      */
@@ -30,7 +30,7 @@ final class Eic implements BaseModel
     public string $industry;
 
     /**
-     * Subindustry classification enum.
+     * Subindustry in the Easy Industry Classification (EIC).
      *
      * @var value-of<Subindustry> $subindustry
      */
@@ -77,7 +77,7 @@ final class Eic implements BaseModel
     }
 
     /**
-     * Industry classification enum.
+     * Top-level industry in the Easy Industry Classification (EIC).
      *
      * @param Industry|value-of<Industry> $industry
      */
@@ -90,7 +90,7 @@ final class Eic implements BaseModel
     }
 
     /**
-     * Subindustry classification enum.
+     * Subindustry in the Easy Industry Classification (EIC).
      *
      * @param Subindustry|value-of<Subindustry> $subindustry
      */

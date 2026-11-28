@@ -23,6 +23,8 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\PeopleRawContract;
 
 /**
+ * Enrich a person from identity clues, or find people with a natural-language query.
+ *
  * @phpstan-import-type CompanyShape from \ContextDev\People\PersonEnrichParams\Company
  * @phpstan-import-type EducationShape from \ContextDev\People\PersonEnrichParams\Education
  * @phpstan-import-type LocationShape from \ContextDev\People\PersonEnrichParams\Location
@@ -42,7 +44,7 @@ final class PeopleRawService implements PeopleRawContract
     /**
      * @api
      *
-     * Find a person from identity clues and return their profile with a match score. Available on all plans; free or disposable email addresses return 422.
+     * Match a person from a work email, a profile URL, or a name with company, education, or location context, and get their profile with an identity-match score from 0 to 100. The best candidate is returned even when the match is weak, so set a score threshold for your workflow. `not_found` results are free.
      *
      * @param array{
      *   company?: Company|CompanyShape,
@@ -83,7 +85,7 @@ final class PeopleRawService implements PeopleRawContract
     /**
      * @api
      *
-     * Find people with a natural-language query.
+     * Find people from a plain-language description, such as `VPs of sales at solar companies in California`. Each result includes the current role and employer, location, years of experience, skills, schools, and public profile URLs. Pages with no matches are free.
      *
      * @param array{
      *   query: string,

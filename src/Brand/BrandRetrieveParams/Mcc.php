@@ -9,7 +9,7 @@ use ContextDev\Core\Conversion\Contracts\Converter;
 use ContextDev\Core\Conversion\Contracts\ConverterSource;
 
 /**
- * Optional Merchant Category Code (MCC) to help identify the business category or industry.
+ * Merchant Category Code (MCC) from the transaction. Helps identify the type of business.
  *
  * @phpstan-type MccVariants = string|float
  * @phpstan-type MccShape = MccVariants

@@ -28,7 +28,7 @@ use ContextDev\Monitors\MonitorListResponse\Data\Webhook;
 use ContextDev\Monitors\MonitorListResponse\Data\WebhookFailure;
 
 /**
- * A web monitor. `mode` is the constant `web`; behavior is described by `target` (page/sitemap/extract/search) and `change_detection` (exact/semantic).
+ * A monitor checks a web page, sitemap, site data, or web search on a schedule and records each change it detects. `target` sets what to watch, `change_detection` how changes are judged, and `schedule` how often it runs.
  *
  * @phpstan-import-type ChangeDetectionVariants from \ContextDev\Monitors\MonitorListResponse\Data\ChangeDetection
  * @phpstan-import-type TargetVariants from \ContextDev\Monitors\MonitorListResponse\Data\Target
@@ -67,39 +67,48 @@ final class Data implements BaseModel
     /** @use SdkModel<DataShape> */
     use SdkModel;
 
+    /**
+     * Unique ID of the monitor.
+     */
     #[Required]
     public string $id;
 
     /**
-     * How changes are judged. Defaults to `semantic` for extract and search targets and page targets with `instructions`, otherwise `exact`.
+     * How changes are judged. Defaults to `semantic` for extract and search targets and for page targets with `instructions`; otherwise `exact`. Sitemap targets support only `exact`, and extract targets only `semantic`.
      *
      * @var ChangeDetectionVariants $changeDetection
      */
     #[Required('change_detection', union: ChangeDetection::class)]
     public MonitorsExactChangeDetection|MonitorsSemanticChangeDetection $changeDetection;
 
+    /**
+     * When the monitor was created.
+     */
     #[Required('created_at')]
     public \DateTimeInterface $createdAt;
 
     /**
-     * Always `web`. Optional.
+     * Monitor category. Always `web`.
      *
      * @var value-of<Mode> $mode
      */
     #[Required(enum: Mode::class)]
     public string $mode;
 
+    /**
+     * Display name of the monitor.
+     */
     #[Required]
     public string $name;
 
     /**
-     * Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
+     * Run the monitor at a fixed interval, such as every 6 hours or every 2 days. The interval must be between 10 minutes and 1 year.
      */
     #[Required]
     public Schedule $schedule;
 
     /**
-     * Current state. Failed monitors keep running; paused monitors must be resumed with `status: "active"`.
+     * `active` monitors run on schedule. `failed` monitors keep running after a failed run and return to `active` on the next success. `paused` monitors don't run until you set `status` to `active`; Context.dev also pauses monitors after repeated failures or credit shortfalls.
      *
      * @var value-of<Status> $status
      */
@@ -114,31 +123,40 @@ final class Data implements BaseModel
     #[Required(union: Target::class)]
     public MonitorsPageTarget|MonitorsSitemapTarget|MonitorsExtractTarget|MonitorsSearchTarget $target;
 
+    /**
+     * When the monitor was last updated.
+     */
     #[Required('updated_at')]
     public \DateTimeInterface $updatedAt;
 
     /**
-     * Comparison baseline, included on Retrieve. Null until capture completes or after target changes.
+     * What the next run compares against. Returned only by `GET /monitors/{monitor_id}`; `null` until the first capture finishes or after the target changes.
      *
      * @var BaselineVariants|null $baseline
      */
     #[Optional(nullable: true)]
     public MonitorsPageBaseline|MonitorsSitemapBaseline|MonitorsExtractBaseline|MonitorsSearchBaseline|null $baseline;
 
+    /**
+     * When the monitor last detected a change. `null` until it detects one.
+     */
     #[Optional('last_change_at', nullable: true)]
     public ?\DateTimeInterface $lastChangeAt;
 
     /**
-     * Error from the most recent failed run; null when the last run succeeded.
+     * Error from the most recent failed run. `null` when the last run succeeded.
      */
     #[Optional('last_error', nullable: true)]
     public ?LastError $lastError;
 
+    /**
+     * When the most recent run ended. `null` until the first run ends.
+     */
     #[Optional('last_run_at', nullable: true)]
     public ?\DateTimeInterface $lastRunAt;
 
     /**
-     * When the next scheduled run is due; null while paused.
+     * When the next scheduled run is due. `null` while paused.
      */
     #[Optional('next_run_at', nullable: true)]
     public ?\DateTimeInterface $nextRunAt;
@@ -152,7 +170,7 @@ final class Data implements BaseModel
     public ?array $policies;
 
     /**
-     * Labels for filtering monitors, their changes, and their usage.
+     * Labels for grouping monitors. Filter monitors, changes, and credit usage by tag.
      *
      * @var list<string>|null $tags
      */
@@ -160,13 +178,13 @@ final class Data implements BaseModel
     public ?array $tags;
 
     /**
-     * Webhook destination and delivery settings. Null means no webhook is configured.
+     * Webhook that receives monitor events. `null` when no webhook is configured.
      */
     #[Optional(nullable: true)]
     public ?Webhook $webhook;
 
     /**
-     * Present while webhook deliveries are failing consecutively; null when deliveries are healthy or no webhook is configured. Cleared on the next successful delivery and when the webhook URL changes.
+     * Details of failing webhook deliveries. `null` when deliveries succeed or no webhook is configured; cleared by the next successful delivery or a new webhook URL.
      */
     #[Optional('webhook_failure', nullable: true)]
     public ?WebhookFailure $webhookFailure;
@@ -271,6 +289,9 @@ final class Data implements BaseModel
         return $self;
     }
 
+    /**
+     * Unique ID of the monitor.
+     */
     public function withID(string $id): self
     {
         $self = clone $this;
@@ -280,7 +301,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * How changes are judged. Defaults to `semantic` for extract and search targets and page targets with `instructions`, otherwise `exact`.
+     * How changes are judged. Defaults to `semantic` for extract and search targets and for page targets with `instructions`; otherwise `exact`. Sitemap targets support only `exact`, and extract targets only `semantic`.
      *
      * @param ChangeDetectionShape $changeDetection
      */
@@ -293,6 +314,9 @@ final class Data implements BaseModel
         return $self;
     }
 
+    /**
+     * When the monitor was created.
+     */
     public function withCreatedAt(\DateTimeInterface $createdAt): self
     {
         $self = clone $this;
@@ -302,7 +326,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Always `web`. Optional.
+     * Monitor category. Always `web`.
      *
      * @param Mode|value-of<Mode> $mode
      */
@@ -314,6 +338,9 @@ final class Data implements BaseModel
         return $self;
     }
 
+    /**
+     * Display name of the monitor.
+     */
     public function withName(string $name): self
     {
         $self = clone $this;
@@ -323,7 +350,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
+     * Run the monitor at a fixed interval, such as every 6 hours or every 2 days. The interval must be between 10 minutes and 1 year.
      *
      * @param Schedule|ScheduleShape $schedule
      */
@@ -336,7 +363,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Current state. Failed monitors keep running; paused monitors must be resumed with `status: "active"`.
+     * `active` monitors run on schedule. `failed` monitors keep running after a failed run and return to `active` on the next success. `paused` monitors don't run until you set `status` to `active`; Context.dev also pauses monitors after repeated failures or credit shortfalls.
      *
      * @param Status|value-of<Status> $status
      */
@@ -362,6 +389,9 @@ final class Data implements BaseModel
         return $self;
     }
 
+    /**
+     * When the monitor was last updated.
+     */
     public function withUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $self = clone $this;
@@ -371,7 +401,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Comparison baseline, included on Retrieve. Null until capture completes or after target changes.
+     * What the next run compares against. Returned only by `GET /monitors/{monitor_id}`; `null` until the first capture finishes or after the target changes.
      *
      * @param BaselineShape|null $baseline
      */
@@ -384,6 +414,9 @@ final class Data implements BaseModel
         return $self;
     }
 
+    /**
+     * When the monitor last detected a change. `null` until it detects one.
+     */
     public function withLastChangeAt(?\DateTimeInterface $lastChangeAt): self
     {
         $self = clone $this;
@@ -393,7 +426,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Error from the most recent failed run; null when the last run succeeded.
+     * Error from the most recent failed run. `null` when the last run succeeded.
      *
      * @param LastError|LastErrorShape|null $lastError
      */
@@ -405,6 +438,9 @@ final class Data implements BaseModel
         return $self;
     }
 
+    /**
+     * When the most recent run ended. `null` until the first run ends.
+     */
     public function withLastRunAt(?\DateTimeInterface $lastRunAt): self
     {
         $self = clone $this;
@@ -414,7 +450,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * When the next scheduled run is due; null while paused.
+     * When the next scheduled run is due. `null` while paused.
      */
     public function withNextRunAt(?\DateTimeInterface $nextRunAt): self
     {
@@ -438,7 +474,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Labels for filtering monitors, their changes, and their usage.
+     * Labels for grouping monitors. Filter monitors, changes, and credit usage by tag.
      *
      * @param list<string> $tags
      */
@@ -451,7 +487,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Webhook destination and delivery settings. Null means no webhook is configured.
+     * Webhook that receives monitor events. `null` when no webhook is configured.
      *
      * @param Webhook|WebhookShape|null $webhook
      */
@@ -464,7 +500,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Present while webhook deliveries are failing consecutively; null when deliveries are healthy or no webhook is configured. Cleared on the next successful delivery and when the webhook URL changes.
+     * Details of failing webhook deliveries. `null` when deliveries succeed or no webhook is configured; cleared by the next successful delivery or a new webhook URL.
      *
      * @param WebhookFailure|WebhookFailureShape|null $webhookFailure
      */

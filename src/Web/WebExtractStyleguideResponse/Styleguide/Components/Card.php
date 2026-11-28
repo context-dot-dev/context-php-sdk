@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Card component style.
+ * Card style.
  *
  * @phpstan-type CardShape = array{
  *   backgroundColor: string,
@@ -32,7 +32,7 @@ final class Card implements BaseModel
     public string $backgroundColor;
 
     /**
-     * Border color as CSS hex (#RRGGBB or #RRGGBBAA when computed border-color has alpha).
+     * Border color in hex: `#RRGGBB`, or `#RRGGBBAA` when the border is translucent.
      */
     #[Required]
     public string $borderColor;
@@ -50,7 +50,7 @@ final class Card implements BaseModel
     public string $boxShadow;
 
     /**
-     * Ready-to-use CSS declaration block for this component style.
+     * Ready-to-use CSS declarations for this style.
      */
     #[Required]
     public string $css;
@@ -139,7 +139,7 @@ final class Card implements BaseModel
     }
 
     /**
-     * Border color as CSS hex (#RRGGBB or #RRGGBBAA when computed border-color has alpha).
+     * Border color in hex: `#RRGGBB`, or `#RRGGBBAA` when the border is translucent.
      */
     public function withBorderColor(string $borderColor): self
     {
@@ -182,7 +182,7 @@ final class Card implements BaseModel
     }
 
     /**
-     * Ready-to-use CSS declaration block for this component style.
+     * Ready-to-use CSS declarations for this style.
      */
     public function withCss(string $css): self
     {

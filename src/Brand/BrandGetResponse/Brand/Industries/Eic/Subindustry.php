@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Brand\BrandGetResponse\Brand\Industries\Eic;
 
 /**
- * Subindustry classification enum.
+ * Subindustry in the Easy Industry Classification (EIC).
  */
 enum Subindustry: string
 {

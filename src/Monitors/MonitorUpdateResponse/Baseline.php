@@ -13,7 +13,7 @@ use ContextDev\Monitors\MonitorUpdateResponse\Baseline\MonitorsSearchBaseline;
 use ContextDev\Monitors\MonitorUpdateResponse\Baseline\MonitorsSitemapBaseline;
 
 /**
- * Comparison baseline, included on Retrieve. Null until capture completes or after target changes.
+ * What the next run compares against. Returned only by `GET /monitors/{monitor_id}`; `null` until the first capture finishes or after the target changes.
  *
  * @phpstan-import-type MonitorsPageBaselineShape from \ContextDev\Monitors\MonitorUpdateResponse\Baseline\MonitorsPageBaseline
  * @phpstan-import-type MonitorsSitemapBaselineShape from \ContextDev\Monitors\MonitorUpdateResponse\Baseline\MonitorsSitemapBaseline

@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Passages from each result page that are relevant to the query. Pages are read with the `markdownOptions` settings.
+ * Return passages from each result page that are relevant to the query. Pages are read with the `markdownOptions` settings.
  *
  * @phpstan-type HighlightsOptionsShape = array{
  *   enabled?: bool|null, maxCharacters?: int|null
@@ -27,7 +27,7 @@ final class HighlightsOptions implements BaseModel
     public ?bool $enabled;
 
     /**
-     * Maximum combined length of passages per result.
+     * Maximum combined length of passages per result, in characters.
      */
     #[Optional]
     public ?int $maxCharacters;
@@ -66,7 +66,7 @@ final class HighlightsOptions implements BaseModel
     }
 
     /**
-     * Maximum combined length of passages per result.
+     * Maximum combined length of passages per result, in characters.
      */
     public function withMaxCharacters(int $maxCharacters): self
     {

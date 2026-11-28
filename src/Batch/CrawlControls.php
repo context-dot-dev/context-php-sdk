@@ -48,7 +48,7 @@ final class CrawlControls implements BaseModel
     use SdkModel;
 
     /**
-     * Pages the crawl skipped. Null when it skipped none.
+     * Matchers for the pages the crawl skipped. `null` when it skipped none.
      *
      * @var list<ExcludeVariants>|null $exclude
      */
@@ -56,13 +56,13 @@ final class CrawlControls implements BaseModel
     public ?array $exclude;
 
     /**
-     * Regex pattern URLs must not match to be crawled. Null when the crawl set none.
+     * Regex that excluded matching URLs from the crawl. `null` when the crawl set none.
      */
     #[Required('exclude_url_pattern')]
     public ?string $excludeURLPattern;
 
     /**
-     * Links the crawl followed. Null when it followed every link.
+     * Matchers for the links the crawl followed. `null` when it followed every link.
      *
      * @var list<FollowVariants>|null $follow
      */
@@ -70,13 +70,13 @@ final class CrawlControls implements BaseModel
     public ?array $follow;
 
     /**
-     * Whether links to subdomains were followed. Always false for a sitemap crawl.
+     * Whether links to subdomains were followed. Always `false` for a sitemap crawl.
      */
     #[Required('follow_subdomains')]
     public bool $followSubdomains;
 
     /**
-     * Languages whose pages were followed; null when all languages were.
+     * Languages whose pages were followed. `null` when all languages were.
      *
      * @var LanguagesVariants|null $languages
      */
@@ -84,19 +84,19 @@ final class CrawlControls implements BaseModel
     public array|string|null $languages;
 
     /**
-     * Link depth limit. Always 0 for a sitemap crawl, which never follows links off its URLs; null when a `start_url` crawl set no limit.
+     * Maximum link depth. Always `0` for a sitemap crawl; `null` when a `start_url` crawl set no limit.
      */
     #[Required('max_depth')]
     public ?int $maxDepth;
 
     /**
-     * The `maxUrls` submitted with the crawl. A sitemap crawl scrapes only the URLs its sitemap actually lists, up to this many, so `input.reserved` is often lower.
+     * The `maxUrls` submitted with the crawl. A sitemap crawl scrapes only the URLs its sitemap lists, up to this many, so `input.reserved` can be lower.
      */
     #[Required('max_pages')]
     public int $maxPages;
 
     /**
-     * Pages the crawl returned. Null when it returned every fetched page.
+     * Matchers for the pages the crawl returned. `null` when it returned every fetched page.
      *
      * @var list<ScrapeVariants>|null $scrape
      */
@@ -112,7 +112,7 @@ final class CrawlControls implements BaseModel
     public StartURL|Sitemap $source;
 
     /**
-     * Regex pattern URLs had to match to be crawled. Null when the crawl set none.
+     * Regex that URLs had to match to be crawled. `null` when the crawl set none.
      */
     #[Required('url_pattern')]
     public ?string $urlPattern;
@@ -197,7 +197,7 @@ final class CrawlControls implements BaseModel
     }
 
     /**
-     * Pages the crawl skipped. Null when it skipped none.
+     * Matchers for the pages the crawl skipped. `null` when it skipped none.
      *
      * @param list<ExcludeShape>|null $exclude
      */
@@ -210,7 +210,7 @@ final class CrawlControls implements BaseModel
     }
 
     /**
-     * Regex pattern URLs must not match to be crawled. Null when the crawl set none.
+     * Regex that excluded matching URLs from the crawl. `null` when the crawl set none.
      */
     public function withExcludeURLPattern(?string $excludeURLPattern): self
     {
@@ -221,7 +221,7 @@ final class CrawlControls implements BaseModel
     }
 
     /**
-     * Links the crawl followed. Null when it followed every link.
+     * Matchers for the links the crawl followed. `null` when it followed every link.
      *
      * @param list<FollowShape>|null $follow
      */
@@ -234,7 +234,7 @@ final class CrawlControls implements BaseModel
     }
 
     /**
-     * Whether links to subdomains were followed. Always false for a sitemap crawl.
+     * Whether links to subdomains were followed. Always `false` for a sitemap crawl.
      */
     public function withFollowSubdomains(bool $followSubdomains): self
     {
@@ -245,7 +245,7 @@ final class CrawlControls implements BaseModel
     }
 
     /**
-     * Languages whose pages were followed; null when all languages were.
+     * Languages whose pages were followed. `null` when all languages were.
      *
      * @param LanguagesShape|null $languages
      */
@@ -259,7 +259,7 @@ final class CrawlControls implements BaseModel
     }
 
     /**
-     * Link depth limit. Always 0 for a sitemap crawl, which never follows links off its URLs; null when a `start_url` crawl set no limit.
+     * Maximum link depth. Always `0` for a sitemap crawl; `null` when a `start_url` crawl set no limit.
      */
     public function withMaxDepth(?int $maxDepth): self
     {
@@ -270,7 +270,7 @@ final class CrawlControls implements BaseModel
     }
 
     /**
-     * The `maxUrls` submitted with the crawl. A sitemap crawl scrapes only the URLs its sitemap actually lists, up to this many, so `input.reserved` is often lower.
+     * The `maxUrls` submitted with the crawl. A sitemap crawl scrapes only the URLs its sitemap lists, up to this many, so `input.reserved` can be lower.
      */
     public function withMaxPages(int $maxPages): self
     {
@@ -281,7 +281,7 @@ final class CrawlControls implements BaseModel
     }
 
     /**
-     * Pages the crawl returned. Null when it returned every fetched page.
+     * Matchers for the pages the crawl returned. `null` when it returned every fetched page.
      *
      * @param list<ScrapeShape>|null $scrape
      */
@@ -307,7 +307,7 @@ final class CrawlControls implements BaseModel
     }
 
     /**
-     * Regex pattern URLs had to match to be crawled. Null when the crawl set none.
+     * Regex that URLs had to match to be crawled. `null` when the crawl set none.
      */
     public function withURLPattern(?string $urlPattern): self
     {

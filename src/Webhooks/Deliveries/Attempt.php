@@ -35,31 +35,31 @@ final class Attempt implements BaseModel
     public int $attempt;
 
     /**
-     * Completion time, or null while in progress.
+     * When the attempt finished. `null` while in progress.
      */
     #[Required('completed_at')]
     public ?\DateTimeInterface $completedAt;
 
     /**
-     * Attempt error, or null if none.
+     * Why the attempt failed. `null` when it did not fail.
      */
     #[Required]
     public ?Error $error;
 
     /**
-     * HTTP response status, or null if no response was received.
+     * HTTP status your endpoint returned. `null` when no response was received.
      */
     #[Required('http_status')]
     public ?int $httpStatus;
 
     /**
-     * Attempt start time.
+     * When the attempt started.
      */
     #[Required('started_at')]
     public \DateTimeInterface $startedAt;
 
     /**
-     * `initial`, `automatic` (scheduled retry), or `manual` (Retry endpoint).
+     * What started the attempt: `initial` is the first send, `automatic` is a scheduled retry, and `manual` came from `POST /webhooks/deliveries/{delivery_id}/retry`.
      *
      * @var value-of<Trigger> $trigger
      */
@@ -67,7 +67,7 @@ final class Attempt implements BaseModel
     public string $trigger;
 
     /**
-     * URL used for this attempt.
+     * URL this attempt was sent to.
      */
     #[Required]
     public string $url;
@@ -148,7 +148,7 @@ final class Attempt implements BaseModel
     }
 
     /**
-     * Completion time, or null while in progress.
+     * When the attempt finished. `null` while in progress.
      */
     public function withCompletedAt(?\DateTimeInterface $completedAt): self
     {
@@ -159,7 +159,7 @@ final class Attempt implements BaseModel
     }
 
     /**
-     * Attempt error, or null if none.
+     * Why the attempt failed. `null` when it did not fail.
      *
      * @param Error|ErrorShape|null $error
      */
@@ -172,7 +172,7 @@ final class Attempt implements BaseModel
     }
 
     /**
-     * HTTP response status, or null if no response was received.
+     * HTTP status your endpoint returned. `null` when no response was received.
      */
     public function withHTTPStatus(?int $httpStatus): self
     {
@@ -183,7 +183,7 @@ final class Attempt implements BaseModel
     }
 
     /**
-     * Attempt start time.
+     * When the attempt started.
      */
     public function withStartedAt(\DateTimeInterface $startedAt): self
     {
@@ -194,7 +194,7 @@ final class Attempt implements BaseModel
     }
 
     /**
-     * `initial`, `automatic` (scheduled retry), or `manual` (Retry endpoint).
+     * What started the attempt: `initial` is the first send, `automatic` is a scheduled retry, and `manual` came from `POST /webhooks/deliveries/{delivery_id}/retry`.
      *
      * @param Trigger|value-of<Trigger> $trigger
      */
@@ -207,7 +207,7 @@ final class Attempt implements BaseModel
     }
 
     /**
-     * URL used for this attempt.
+     * URL this attempt was sent to.
      */
     public function withURL(string $url): self
     {

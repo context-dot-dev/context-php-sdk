@@ -16,7 +16,7 @@ use ContextDev\Web\WebExtractStyleguideResponse\Styleguide\Shadows;
 use ContextDev\Web\WebExtractStyleguideResponse\Styleguide\Typography;
 
 /**
- * Comprehensive styleguide data extracted from the website.
+ * Design tokens and component styles extracted from the website.
  *
  * @phpstan-import-type ColorsShape from \ContextDev\Web\WebExtractStyleguideResponse\Styleguide\Colors
  * @phpstan-import-type ComponentsShape from \ContextDev\Web\WebExtractStyleguideResponse\Styleguide\Components
@@ -41,25 +41,25 @@ final class Styleguide implements BaseModel
     use SdkModel;
 
     /**
-     * Primary colors used on the website.
+     * Core colors used on the website.
      */
     #[Required]
     public Colors $colors;
 
     /**
-     * UI component styles.
+     * Styles for buttons and cards.
      */
     #[Required]
     public Components $components;
 
     /**
-     * Spacing system used on the website.
+     * Spacing scale used on the website, from `xs` to `xl`.
      */
     #[Required]
     public ElementSpacing $elementSpacing;
 
     /**
-     * Font assets keyed by family name as it appears in fontFamily/fontFallbacks (non-generic names only). Match font style and weight against faces to select a file URL.
+     * Font files keyed by family name, as it appears in `fontFamily` and `fontFallbacks`. Generic families are left out. Match style and weight against `faces` to pick a file.
      *
      * @var array<string,FontLink> $fontLinks
      */
@@ -67,7 +67,7 @@ final class Styleguide implements BaseModel
     public array $fontLinks;
 
     /**
-     * The primary color mode of the website design.
+     * Whether the site's design is mainly light or dark.
      *
      * @var value-of<Mode> $mode
      */
@@ -75,13 +75,13 @@ final class Styleguide implements BaseModel
     public string $mode;
 
     /**
-     * Shadow styles used on the website.
+     * Box shadow scale used on the website, from `sm` to `xl`, plus `inner`.
      */
     #[Required]
     public Shadows $shadows;
 
     /**
-     * Typography styles used on the website.
+     * Text styles for headings and body text.
      */
     #[Required]
     public Typography $typography;
@@ -156,7 +156,7 @@ final class Styleguide implements BaseModel
     }
 
     /**
-     * Primary colors used on the website.
+     * Core colors used on the website.
      *
      * @param Colors|ColorsShape $colors
      */
@@ -169,7 +169,7 @@ final class Styleguide implements BaseModel
     }
 
     /**
-     * UI component styles.
+     * Styles for buttons and cards.
      *
      * @param Components|ComponentsShape $components
      */
@@ -182,7 +182,7 @@ final class Styleguide implements BaseModel
     }
 
     /**
-     * Spacing system used on the website.
+     * Spacing scale used on the website, from `xs` to `xl`.
      *
      * @param ElementSpacing|ElementSpacingShape $elementSpacing
      */
@@ -196,7 +196,7 @@ final class Styleguide implements BaseModel
     }
 
     /**
-     * Font assets keyed by family name as it appears in fontFamily/fontFallbacks (non-generic names only). Match font style and weight against faces to select a file URL.
+     * Font files keyed by family name, as it appears in `fontFamily` and `fontFallbacks`. Generic families are left out. Match style and weight against `faces` to pick a file.
      *
      * @param array<string,FontLink|FontLinkShape> $fontLinks
      */
@@ -209,7 +209,7 @@ final class Styleguide implements BaseModel
     }
 
     /**
-     * The primary color mode of the website design.
+     * Whether the site's design is mainly light or dark.
      *
      * @param Mode|value-of<Mode> $mode
      */
@@ -222,7 +222,7 @@ final class Styleguide implements BaseModel
     }
 
     /**
-     * Shadow styles used on the website.
+     * Box shadow scale used on the website, from `sm` to `xl`, plus `inner`.
      *
      * @param Shadows|ShadowsShape $shadows
      */
@@ -235,7 +235,7 @@ final class Styleguide implements BaseModel
     }
 
     /**
-     * Typography styles used on the website.
+     * Text styles for headings and body text.
      *
      * @param Typography|TypographyShape $typography
      */

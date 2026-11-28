@@ -26,7 +26,7 @@ final class Data implements BaseModel
     use SdkModel;
 
     /**
-     * Alt text, if present.
+     * Alt text. `null` when the image has none.
      */
     #[Required]
     public ?string $alt;
@@ -37,19 +37,29 @@ final class Data implements BaseModel
     #[Required]
     public string $url;
 
-    /** @var value-of<Classification>|null $classification */
+    /**
+     * What the image shows, such as a photo, logo, or icon. Requires `classification` enrichment.
+     *
+     * @var value-of<Classification>|null $classification
+     */
     #[Optional(enum: Classification::class)]
     public ?string $classification;
 
     /**
-     * Hosted image URL, valid for 24 hours after capture. Requires `file` enrichment and ZDR disabled.
+     * Hosted copy of the image, valid for 24 hours after capture. Requires `file` enrichment; not returned with ZDR.
      */
     #[Optional('fileUrl')]
     public ?string $fileURL;
 
+    /**
+     * Image height in pixels. Requires `dimensions` enrichment.
+     */
     #[Optional]
     public ?int $height;
 
+    /**
+     * Image width in pixels. Requires `dimensions` enrichment.
+     */
     #[Optional]
     public ?int $width;
 
@@ -101,7 +111,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Alt text, if present.
+     * Alt text. `null` when the image has none.
      */
     public function withAlt(?string $alt): self
     {
@@ -123,6 +133,8 @@ final class Data implements BaseModel
     }
 
     /**
+     * What the image shows, such as a photo, logo, or icon. Requires `classification` enrichment.
+     *
      * @param Classification|value-of<Classification> $classification
      */
     public function withClassification(
@@ -135,7 +147,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Hosted image URL, valid for 24 hours after capture. Requires `file` enrichment and ZDR disabled.
+     * Hosted copy of the image, valid for 24 hours after capture. Requires `file` enrichment; not returned with ZDR.
      */
     public function withFileURL(string $fileURL): self
     {
@@ -145,6 +157,9 @@ final class Data implements BaseModel
         return $self;
     }
 
+    /**
+     * Image height in pixels. Requires `dimensions` enrichment.
+     */
     public function withHeight(int $height): self
     {
         $self = clone $this;
@@ -153,6 +168,9 @@ final class Data implements BaseModel
         return $self;
     }
 
+    /**
+     * Image width in pixels. Requires `dimensions` enrichment.
+     */
     public function withWidth(int $width): self
     {
         $self = clone $this;

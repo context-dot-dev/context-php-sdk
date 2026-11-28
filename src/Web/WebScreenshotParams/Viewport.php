@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Optional browser viewport dimensions for the screenshot. Defaults to 1920x1080.
+ * Browser viewport size in pixels.
  *
  * @phpstan-type ViewportShape = array{height?: int|null, width?: int|null}
  */

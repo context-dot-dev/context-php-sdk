@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Browser size in pixels. Omit for 1920 × 1080. When provided, missing dimensions default to 1440 × 900.
+ * Browser viewport in pixels. Defaults to 1920 × 1080. If you pass `viewport`, a missing `width` defaults to 1440 and a missing `height` to 900.
  *
  * @phpstan-type ViewportShape = array{height?: int|null, width?: int|null}
  */

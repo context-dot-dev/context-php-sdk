@@ -30,6 +30,9 @@ final class WebhookDelivery implements BaseModel
     /** @use SdkModel<WebhookDeliveryShape> */
     use SdkModel;
 
+    /**
+     * When the delivery was attempted.
+     */
     #[Required('attempted_at')]
     public \DateTimeInterface $attemptedAt;
 
@@ -37,7 +40,7 @@ final class WebhookDelivery implements BaseModel
     public ?Error $error;
 
     /**
-     * The event this delivery carried. Deliveries recorded before event selection existed report change.detected.
+     * Event this delivery carried.
      *
      * @var value-of<Event> $event
      */
@@ -45,19 +48,19 @@ final class WebhookDelivery implements BaseModel
     public string $event;
 
     /**
-     * Identifier sent in the X-Context-Id header.
+     * Event ID, sent in the `X-Context-Id` header.
      */
     #[Required('event_id')]
     public string $eventID;
 
     /**
-     * The endpoint's final HTTP response status, or null when no response was received.
+     * Final HTTP status from your endpoint. `null` when no response was received.
      */
     #[Required('http_status')]
     public ?int $httpStatus;
 
     /**
-     * Outcome of the delivery attempt. Any 2xx response counts as delivered.
+     * Outcome of the delivery: `delivered` (2xx response), `rejected` (non-2xx response), `failed` (no response), or `skipped_unsafe_url` (the URL isn't a safe public endpoint).
      *
      * @var value-of<Status> $status
      */
@@ -65,7 +68,7 @@ final class WebhookDelivery implements BaseModel
     public string $status;
 
     /**
-     * Delivery ID for status checks and retries, when available.
+     * ID for looking up or retrying this delivery, when available.
      */
     #[Optional('delivery_id')]
     public ?string $deliveryID;
@@ -134,6 +137,9 @@ final class WebhookDelivery implements BaseModel
         return $self;
     }
 
+    /**
+     * When the delivery was attempted.
+     */
     public function withAttemptedAt(\DateTimeInterface $attemptedAt): self
     {
         $self = clone $this;
@@ -154,7 +160,7 @@ final class WebhookDelivery implements BaseModel
     }
 
     /**
-     * The event this delivery carried. Deliveries recorded before event selection existed report change.detected.
+     * Event this delivery carried.
      *
      * @param Event|value-of<Event> $event
      */
@@ -167,7 +173,7 @@ final class WebhookDelivery implements BaseModel
     }
 
     /**
-     * Identifier sent in the X-Context-Id header.
+     * Event ID, sent in the `X-Context-Id` header.
      */
     public function withEventID(string $eventID): self
     {
@@ -178,7 +184,7 @@ final class WebhookDelivery implements BaseModel
     }
 
     /**
-     * The endpoint's final HTTP response status, or null when no response was received.
+     * Final HTTP status from your endpoint. `null` when no response was received.
      */
     public function withHTTPStatus(?int $httpStatus): self
     {
@@ -189,7 +195,7 @@ final class WebhookDelivery implements BaseModel
     }
 
     /**
-     * Outcome of the delivery attempt. Any 2xx response counts as delivered.
+     * Outcome of the delivery: `delivered` (2xx response), `rejected` (non-2xx response), `failed` (no response), or `skipped_unsafe_url` (the URL isn't a safe public endpoint).
      *
      * @param Status|value-of<Status> $status
      */
@@ -202,7 +208,7 @@ final class WebhookDelivery implements BaseModel
     }
 
     /**
-     * Delivery ID for status checks and retries, when available.
+     * ID for looking up or retrying this delivery, when available.
      */
     public function withDeliveryID(string $deliveryID): self
     {

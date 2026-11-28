@@ -11,7 +11,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\News\NewsSearchParams\SearchBy\NewsSearchByEntity\Entity\NewsSearchEntityByTicker\Exchange;
 
 /**
- * Identify the company by stock ticker, optionally scoped to an exchange.
+ * Identify the company by stock ticker, optionally on a specific exchange.
  *
  * @phpstan-type NewsSearchEntityByTickerShape = array{
  *   ticker: string, type: 'ticker', exchange?: null|Exchange|value-of<Exchange>
@@ -23,7 +23,7 @@ final class NewsSearchEntityByTicker implements BaseModel
     use SdkModel;
 
     /**
-     * Use `ticker` to identify a publicly traded company.
+     * Set to `ticker` to identify a publicly traded company.
      *
      * @var 'ticker' $type
      */
@@ -31,13 +31,13 @@ final class NewsSearchEntityByTicker implements BaseModel
     public string $type = 'ticker';
 
     /**
-     * Public-company ticker.
+     * Stock ticker symbol, such as `AAPL`.
      */
     #[Required]
     public string $ticker;
 
     /**
-     * Stock exchange the ticker trades on, used to disambiguate tickers listed on multiple exchanges.
+     * Exchange the ticker trades on. Use it when the same ticker is listed on more than one exchange.
      *
      * @var value-of<Exchange>|null $exchange
      */
@@ -84,7 +84,7 @@ final class NewsSearchEntityByTicker implements BaseModel
     }
 
     /**
-     * Public-company ticker.
+     * Stock ticker symbol, such as `AAPL`.
      */
     public function withTicker(string $ticker): self
     {
@@ -95,7 +95,7 @@ final class NewsSearchEntityByTicker implements BaseModel
     }
 
     /**
-     * Use `ticker` to identify a publicly traded company.
+     * Set to `ticker` to identify a publicly traded company.
      *
      * @param 'ticker' $type
      */
@@ -108,7 +108,7 @@ final class NewsSearchEntityByTicker implements BaseModel
     }
 
     /**
-     * Stock exchange the ticker trades on, used to disambiguate tickers listed on multiple exchanges.
+     * Exchange the ticker trades on. Use it when the same ticker is listed on more than one exchange.
      *
      * @param Exchange|value-of<Exchange> $exchange
      */

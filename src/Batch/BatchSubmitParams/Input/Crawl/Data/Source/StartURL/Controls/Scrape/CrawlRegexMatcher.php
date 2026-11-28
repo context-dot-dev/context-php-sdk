@@ -27,7 +27,7 @@ final class CrawlRegexMatcher implements BaseModel
     public string $kind = 'regex';
 
     /**
-     * Regex pattern for the page URL.
+     * Regular expression matched against the page URL.
      */
     #[Required]
     public string $pattern;
@@ -79,7 +79,7 @@ final class CrawlRegexMatcher implements BaseModel
     }
 
     /**
-     * Regex pattern for the page URL.
+     * Regular expression matched against the page URL.
      */
     public function withPattern(string $pattern): self
     {

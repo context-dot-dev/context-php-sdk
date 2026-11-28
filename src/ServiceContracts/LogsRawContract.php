@@ -19,7 +19,7 @@ interface LogsRawContract
     /**
      * @api
      *
-     * @param string $requestID the request ID of the logged API call
+     * @param string $requestID ID of the request, from its response's `request_id` or `X-Request-Id` header
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<LogGetResponse>

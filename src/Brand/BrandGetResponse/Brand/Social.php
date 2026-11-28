@@ -20,7 +20,7 @@ final class Social implements BaseModel
     use SdkModel;
 
     /**
-     * Type of social media platform.
+     * Social platform.
      *
      * @var value-of<Type>|null $type
      */
@@ -28,7 +28,7 @@ final class Social implements BaseModel
     public ?string $type;
 
     /**
-     * URL of the social media page.
+     * URL of the brand's profile on that platform.
      */
     #[Optional]
     public ?string $url;
@@ -58,7 +58,7 @@ final class Social implements BaseModel
     }
 
     /**
-     * Type of social media platform.
+     * Social platform.
      *
      * @param Type|value-of<Type> $type
      */
@@ -71,7 +71,7 @@ final class Social implements BaseModel
     }
 
     /**
-     * URL of the social media page.
+     * URL of the brand's profile on that platform.
      */
     public function withURL(string $url): self
     {

@@ -11,7 +11,7 @@ use ContextDev\Core\Conversion\Contracts\Converter;
 use ContextDev\Core\Conversion\Contracts\ConverterSource;
 
 /**
- * Create or reuse an authenticated browser profile. Requires a paid plan and an HTTPS target. Profiles persist session state, bypass shared caches, and cannot be combined with ZDR, custom headers, raw bytes, or prebuilt parsers.
+ * Scrape as a signed-in user. Create a profile with `type: "new"` and your credentials, then reuse it with `type: "existing"`. Requires a paid plan and an HTTPS URL. Profiles keep their session between requests, skip the cache, and cannot be combined with ZDR, custom headers, `formats.bytes`, or prebuilt parsers other than `emails`, `phone-numbers`, and `links`.
  *
  * @phpstan-import-type ExistingShape from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Profile\Existing
  * @phpstan-import-type NewShape from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\SharedParams\Profile\New_

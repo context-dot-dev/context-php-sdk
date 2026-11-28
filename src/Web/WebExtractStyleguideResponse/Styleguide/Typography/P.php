@@ -24,7 +24,7 @@ final class P implements BaseModel
     use SdkModel;
 
     /**
-     * Full ordered font list from resolved computed font-family.
+     * Full font stack from the computed `font-family`, in order.
      *
      * @var list<string> $fontFallbacks
      */
@@ -109,7 +109,7 @@ final class P implements BaseModel
     }
 
     /**
-     * Full ordered font list from resolved computed font-family.
+     * Full font stack from the computed `font-family`, in order.
      *
      * @param list<string> $fontFallbacks
      */

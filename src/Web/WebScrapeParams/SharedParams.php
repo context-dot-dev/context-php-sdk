@@ -55,7 +55,7 @@ final class SharedParams implements BaseModel
     use SdkModel;
 
     /**
-     * Browser steps run in order before capture. Requires a paid plan. Skips the cache.
+     * Browser steps to run in order before capture. Requires a paid plan. Skips the cache.
      *
      * @var list<ActionVariants>|null $actions
      */
@@ -63,7 +63,7 @@ final class SharedParams implements BaseModel
     public ?array $actions;
 
     /**
-     * Proxy country as a two-letter code, such as `US`. Case-insensitive.
+     * Country to fetch from, as an ISO 3166-1 alpha-2 code such as `US`. Case-insensitive.
      */
     #[Optional]
     public ?string $country;
@@ -97,7 +97,7 @@ final class SharedParams implements BaseModel
     public ?array $headers;
 
     /**
-     * Which iframe contents to include in HTML and text outputs. Screenshots always show visible frames. `auto` (default) inlines only iframes that hold page content, such as same-site documents, framesets, job boards, forms and embedded documents, and skips ads and widgets. `true` inlines every iframe. `false` inlines none.
+     * Which iframes to inline in HTML and text outputs. Screenshots always show visible frames. `auto` inlines only iframes that hold page content, such as same-site documents, framesets, job boards, forms, and embedded documents, and skips ads and widgets. `true` inlines every iframe; `false` inlines none.
      *
      * @var IncludeFramesVariants|null $includeFrames
      */
@@ -113,19 +113,19 @@ final class SharedParams implements BaseModel
     public ?array $includeSelectors;
 
     /**
-     * Keep only the main content. Doesn't affect `screenshot`, `bytes`, or `product`.
+     * Keep only the main content, without navigation, headers, footers, or sidebars. Does not affect `screenshot`, `bytes`, or `product`.
      */
     #[Optional]
     public ?bool $mainContentOnly;
 
     /**
-     * Document parsing options.
+     * Options for parsing documents such as PDFs.
      */
     #[Optional]
     public ?Parsers $parsers;
 
     /**
-     * Create or reuse an authenticated browser profile. Requires a paid plan and an HTTPS target. Profiles persist session state, bypass shared caches, and cannot be combined with ZDR, custom headers, raw bytes, or prebuilt parsers.
+     * Scrape as a signed-in user. Create a profile with `type: "new"` and your credentials, then reuse it with `type: "existing"`. Requires a paid plan and an HTTPS URL. Profiles keep their session between requests, skip the cache, and cannot be combined with ZDR, custom headers, `formats.bytes`, or prebuilt parsers other than `emails`, `phone-numbers`, and `links`.
      *
      * @var ProfileVariants|null $profile
      */
@@ -133,7 +133,7 @@ final class SharedParams implements BaseModel
     public Existing|New_|null $profile;
 
     /**
-     * Wait for CSS animations to finish before capture. Defaults to `true` when `screenshot` is requested.
+     * Wait for CSS animations to finish before capture. Defaults to `true` when `formats.screenshot` is `true`.
      */
     #[Optional]
     public ?bool $settleAnimations;
@@ -147,13 +147,13 @@ final class SharedParams implements BaseModel
     public ?string $theme;
 
     /**
-     * Browser size in pixels. Omit for 1920 × 1080. When provided, missing dimensions default to 1440 × 900.
+     * Browser viewport in pixels. Defaults to 1920 × 1080. If you pass `viewport`, a missing `width` defaults to 1440 and a missing `height` to 900.
      */
     #[Optional]
     public ?Viewport $viewport;
 
     /**
-     * Milliseconds, or a CSS selector to wait for, after actions. Defaults to 500 (2000 with frames or XML).
+     * Time to wait after actions, in milliseconds, or a CSS selector to wait for. Defaults to 500 ms, or 2000 ms when `includeFrames` is `true` or the URL ends in `.xml`.
      *
      * @var WaitForVariants|null $waitFor
      */
@@ -220,7 +220,7 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * Browser steps run in order before capture. Requires a paid plan. Skips the cache.
+     * Browser steps to run in order before capture. Requires a paid plan. Skips the cache.
      *
      * @param list<ActionShape> $actions
      */
@@ -233,7 +233,7 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * Proxy country as a two-letter code, such as `US`. Case-insensitive.
+     * Country to fetch from, as an ISO 3166-1 alpha-2 code such as `US`. Case-insensitive.
      */
     public function withCountry(string $country): self
     {
@@ -292,7 +292,7 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * Which iframe contents to include in HTML and text outputs. Screenshots always show visible frames. `auto` (default) inlines only iframes that hold page content, such as same-site documents, framesets, job boards, forms and embedded documents, and skips ads and widgets. `true` inlines every iframe. `false` inlines none.
+     * Which iframes to inline in HTML and text outputs. Screenshots always show visible frames. `auto` inlines only iframes that hold page content, such as same-site documents, framesets, job boards, forms, and embedded documents, and skips ads and widgets. `true` inlines every iframe; `false` inlines none.
      *
      * @param IncludeFramesShape $includeFrames
      */
@@ -319,7 +319,7 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * Keep only the main content. Doesn't affect `screenshot`, `bytes`, or `product`.
+     * Keep only the main content, without navigation, headers, footers, or sidebars. Does not affect `screenshot`, `bytes`, or `product`.
      */
     public function withMainContentOnly(bool $mainContentOnly): self
     {
@@ -330,7 +330,7 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * Document parsing options.
+     * Options for parsing documents such as PDFs.
      *
      * @param Parsers|ParsersShape $parsers
      */
@@ -343,7 +343,7 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * Create or reuse an authenticated browser profile. Requires a paid plan and an HTTPS target. Profiles persist session state, bypass shared caches, and cannot be combined with ZDR, custom headers, raw bytes, or prebuilt parsers.
+     * Scrape as a signed-in user. Create a profile with `type: "new"` and your credentials, then reuse it with `type: "existing"`. Requires a paid plan and an HTTPS URL. Profiles keep their session between requests, skip the cache, and cannot be combined with ZDR, custom headers, `formats.bytes`, or prebuilt parsers other than `emails`, `phone-numbers`, and `links`.
      *
      * @param ProfileShape $profile
      */
@@ -356,7 +356,7 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * Wait for CSS animations to finish before capture. Defaults to `true` when `screenshot` is requested.
+     * Wait for CSS animations to finish before capture. Defaults to `true` when `formats.screenshot` is `true`.
      */
     public function withSettleAnimations(bool $settleAnimations): self
     {
@@ -380,7 +380,7 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * Browser size in pixels. Omit for 1920 × 1080. When provided, missing dimensions default to 1440 × 900.
+     * Browser viewport in pixels. Defaults to 1920 × 1080. If you pass `viewport`, a missing `width` defaults to 1440 and a missing `height` to 900.
      *
      * @param Viewport|ViewportShape $viewport
      */
@@ -393,7 +393,7 @@ final class SharedParams implements BaseModel
     }
 
     /**
-     * Milliseconds, or a CSS selector to wait for, after actions. Defaults to 500 (2000 with frames or XML).
+     * Time to wait after actions, in milliseconds, or a CSS selector to wait for. Defaults to 500 ms, or 2000 ms when `includeFrames` is `true` or the URL ends in `.xml`.
      *
      * @param WaitForShape $waitFor
      */

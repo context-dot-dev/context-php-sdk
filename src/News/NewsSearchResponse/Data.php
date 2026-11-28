@@ -36,13 +36,13 @@ final class Data implements BaseModel
     use SdkModel;
 
     /**
-     * Stable unique identifier for this article. Use it to deduplicate or reference an article across requests.
+     * Unique ID of the article. It stays the same across requests, so you can use it to deduplicate.
      */
     #[Required]
     public string $id;
 
     /**
-     * Bylined authors. Empty when no byline is available.
+     * Authors named in the byline. Empty when there is no byline.
      *
      * @var list<string> $authors
      */
@@ -50,55 +50,55 @@ final class Data implements BaseModel
     public array $authors;
 
     /**
-     * Article summary or excerpt. Natural-language search descriptions include matching passages and are capped at 2,000 characters.
+     * Summary or excerpt of the article. For natural-language searches, it includes the matching passages, up to 2,000 characters.
      */
     #[Required]
     public ?string $description;
 
     /**
-     * Lead image for the article, when one is available.
+     * URL of the article's lead image. `null` when there is none.
      */
     #[Required('image_url')]
     public ?string $imageURL;
 
     /**
-     * Language the article is written in, as a lowercase ISO 639-1 code such as en. Null when unknown.
+     * Language of the article, as an ISO 639-1 code such as `en`. `null` when unknown.
      */
     #[Required]
     public ?string $language;
 
     /**
-     * How the article relates to the company you searched for. Null for natural-language searches.
+     * How the article relates to the company you searched for. `null` for natural-language searches.
      */
     #[Required]
     public ?Match_ $match;
 
     /**
-     * When the article was published, as an ISO 8601 timestamp. Null when the publisher does not state a reliable date.
+     * When the article was published. `null` when the publisher does not give a reliable date.
      */
     #[Required('published_at')]
     public ?\DateTimeInterface $publishedAt;
 
     /**
-     * The publication that published the article.
+     * Publication that published the article.
      */
     #[Required]
     public Source $source;
 
     /**
-     * Shared by articles covering the same story on the same day. Use it to group or collapse syndicated copies of one announcement across outlets.
+     * ID shared by articles that cover the same story on the same day. Use it to group syndicated copies of one announcement across outlets.
      */
     #[Required('story_id')]
     public string $storyID;
 
     /**
-     * Article headline.
+     * Headline of the article.
      */
     #[Required]
     public string $title;
 
     /**
-     * Kind of coverage. Use it to separate independent reporting (editorial) from company-issued content (press_release, regulatory_filing, advisory).
+     * Type of coverage. Use it to separate independent reporting (`editorial`) from company-issued content (`press_release`, `regulatory_filing`, `advisory`).
      *
      * @var value-of<Type> $type
      */
@@ -106,7 +106,7 @@ final class Data implements BaseModel
     public string $type;
 
     /**
-     * Link to the article on the publisher site.
+     * URL of the article on the publisher's site.
      */
     #[Required]
     public string $url;
@@ -198,7 +198,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Stable unique identifier for this article. Use it to deduplicate or reference an article across requests.
+     * Unique ID of the article. It stays the same across requests, so you can use it to deduplicate.
      */
     public function withID(string $id): self
     {
@@ -209,7 +209,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Bylined authors. Empty when no byline is available.
+     * Authors named in the byline. Empty when there is no byline.
      *
      * @param list<string> $authors
      */
@@ -222,7 +222,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Article summary or excerpt. Natural-language search descriptions include matching passages and are capped at 2,000 characters.
+     * Summary or excerpt of the article. For natural-language searches, it includes the matching passages, up to 2,000 characters.
      */
     public function withDescription(?string $description): self
     {
@@ -233,7 +233,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Lead image for the article, when one is available.
+     * URL of the article's lead image. `null` when there is none.
      */
     public function withImageURL(?string $imageURL): self
     {
@@ -244,7 +244,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Language the article is written in, as a lowercase ISO 639-1 code such as en. Null when unknown.
+     * Language of the article, as an ISO 639-1 code such as `en`. `null` when unknown.
      */
     public function withLanguage(?string $language): self
     {
@@ -255,7 +255,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * How the article relates to the company you searched for. Null for natural-language searches.
+     * How the article relates to the company you searched for. `null` for natural-language searches.
      *
      * @param Match_|MatchShape|null $match
      */
@@ -268,7 +268,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * When the article was published, as an ISO 8601 timestamp. Null when the publisher does not state a reliable date.
+     * When the article was published. `null` when the publisher does not give a reliable date.
      */
     public function withPublishedAt(?\DateTimeInterface $publishedAt): self
     {
@@ -279,7 +279,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * The publication that published the article.
+     * Publication that published the article.
      *
      * @param Source|SourceShape $source
      */
@@ -292,7 +292,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Shared by articles covering the same story on the same day. Use it to group or collapse syndicated copies of one announcement across outlets.
+     * ID shared by articles that cover the same story on the same day. Use it to group syndicated copies of one announcement across outlets.
      */
     public function withStoryID(string $storyID): self
     {
@@ -303,7 +303,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Article headline.
+     * Headline of the article.
      */
     public function withTitle(string $title): self
     {
@@ -314,7 +314,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Kind of coverage. Use it to separate independent reporting (editorial) from company-issued content (press_release, regulatory_filing, advisory).
+     * Type of coverage. Use it to separate independent reporting (`editorial`) from company-issued content (`press_release`, `regulatory_filing`, `advisory`).
      *
      * @param Type|value-of<Type> $type
      */
@@ -327,7 +327,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Link to the article on the publisher site.
+     * URL of the article on the publisher's site.
      */
     public function withURL(string $url): self
     {

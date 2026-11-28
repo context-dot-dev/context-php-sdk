@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Target company profile inferred from the landing page.
+ * Profile of the requested company, inferred from its website.
  *
  * @phpstan-type TargetShape = array{
  *   companyName: string,
@@ -24,25 +24,25 @@ final class Target implements BaseModel
     use SdkModel;
 
     /**
-     * Company or product name inferred from the landing page.
+     * Company or product name, inferred from its website.
      */
     #[Required]
     public string $companyName;
 
     /**
-     * Specific operating field, product category, or market.
+     * Product category or market the company operates in.
      */
     #[Required]
     public string $field;
 
     /**
-     * One-sentence description of what the target company sells and who it serves.
+     * One-sentence summary of what the company sells and who it serves.
      */
     #[Required]
     public string $fieldDescription;
 
     /**
-     * Resolved URL used for the landing page analysis.
+     * Website URL that was analyzed.
      */
     #[Required('websiteUrl')]
     public string $websiteURL;
@@ -94,7 +94,7 @@ final class Target implements BaseModel
     }
 
     /**
-     * Company or product name inferred from the landing page.
+     * Company or product name, inferred from its website.
      */
     public function withCompanyName(string $companyName): self
     {
@@ -105,7 +105,7 @@ final class Target implements BaseModel
     }
 
     /**
-     * Specific operating field, product category, or market.
+     * Product category or market the company operates in.
      */
     public function withField(string $field): self
     {
@@ -116,7 +116,7 @@ final class Target implements BaseModel
     }
 
     /**
-     * One-sentence description of what the target company sells and who it serves.
+     * One-sentence summary of what the company sells and who it serves.
      */
     public function withFieldDescription(string $fieldDescription): self
     {
@@ -127,7 +127,7 @@ final class Target implements BaseModel
     }
 
     /**
-     * Resolved URL used for the landing page analysis.
+     * Website URL that was analyzed.
      */
     public function withWebsiteURL(string $websiteURL): self
     {

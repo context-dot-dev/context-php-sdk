@@ -10,7 +10,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Monitors\MonitorRotateWebhookSecretResponse\Baseline\MonitorsSearchBaseline\Result;
 
 /**
- * Current baseline of a `search` monitor: the search results as last observed.
+ * Baseline for a `search` target: the results from the last capture.
  *
  * @phpstan-import-type ResultShape from \ContextDev\Monitors\MonitorRotateWebhookSecretResponse\Baseline\MonitorsSearchBaseline\Result
  *
@@ -24,13 +24,13 @@ final class MonitorsSearchBaseline implements BaseModel
     use SdkModel;
 
     /**
-     * When this baseline was last captured or replaced.
+     * When the baseline was last captured or updated.
      */
     #[Required('captured_at')]
     public \DateTimeInterface $capturedAt;
 
     /**
-     * Search results as last observed.
+     * Search results from the last capture.
      *
      * @var list<Result> $results
      */
@@ -76,7 +76,7 @@ final class MonitorsSearchBaseline implements BaseModel
     }
 
     /**
-     * When this baseline was last captured or replaced.
+     * When the baseline was last captured or updated.
      */
     public function withCapturedAt(\DateTimeInterface $capturedAt): self
     {
@@ -87,7 +87,7 @@ final class MonitorsSearchBaseline implements BaseModel
     }
 
     /**
-     * Search results as last observed.
+     * Search results from the last capture.
      *
      * @param list<Result|ResultShape> $results
      */

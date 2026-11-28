@@ -17,6 +17,8 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\ParseRawContract;
 
 /**
+ * Convert uploaded files, such as PDFs and Office documents, into Markdown.
+ *
  * @phpstan-import-type PdfShape from \ContextDev\Parse\ParseHandleParams\Pdf
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
@@ -31,7 +33,7 @@ final class ParseRawService implements ParseRawContract
     /**
      * @api
      *
-     * Convert uploaded file bytes into Markdown and optional HTML. WARC and WARC.GZ archives combine HTTP response, resource, and conversion records in archive order. Revisit and segmented records are skipped. Decoded WARC content is limited to 50 MiB.
+     * Convert a file to Markdown. Handles PDF, Word, Excel, PowerPoint, HTML, XML, CSV, JSON, YAML, source code, subtitles, images, and WARC archives. Send the raw bytes as the request body; set `ocr=true` to read scanned pages and images.
      *
      * @param string|FileParam $body Body param
      * @param array{

@@ -21,8 +21,8 @@ interface DeliveriesContract
     /**
      * @api
      *
-     * @param string $deliveryID delivery ID
-     * @param list<string> $tags Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * @param string $deliveryID ID of the delivery
+     * @param list<string> $tags Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -36,13 +36,13 @@ interface DeliveriesContract
     /**
      * @api
      *
-     * @param Type|value-of<Type> $type delivery source
+     * @param Type|value-of<Type> $type list monitor webhook deliveries
      * @param string $batchID filter by batch ID
-     * @param \DateTimeInterface $createdAfter only include events created after this ISO 8601 timestamp
-     * @param string $cursor the next_cursor from the previous response
-     * @param int $limit number of deliveries to return
+     * @param \DateTimeInterface $createdAfter only include deliveries created after this time
+     * @param string $cursor Cursor from the previous page's `next_cursor`. Omit for the first page.
+     * @param int $limit maximum number of deliveries to return per page
      * @param Status|value-of<Status> $status filter by delivery status
-     * @param list<string> $tags labels for filtering usage in the dashboard
+     * @param list<string> $tags Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      * @param string $monitorID filter by monitor ID
      * @param string $runID filter by monitor run ID
      * @param RequestOpts|null $requestOptions
@@ -65,10 +65,10 @@ interface DeliveriesContract
     /**
      * @api
      *
-     * @param string $deliveryID delivery ID
-     * @param string $cursor the next_cursor from the previous response
-     * @param int $limit number of attempts to return
-     * @param list<string> $tags Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * @param string $deliveryID ID of the delivery
+     * @param string $cursor Cursor from the previous page's `next_cursor`. Omit for the first page.
+     * @param int $limit maximum number of attempts to return per page
+     * @param list<string> $tags Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -84,10 +84,10 @@ interface DeliveriesContract
     /**
      * @api
      *
-     * @param string $deliveryID path param: Delivery ID
-     * @param bool $force Body param: Resend even if the delivery already succeeded. Defaults to false.
-     * @param list<string> $tags body param: Labels for filtering usage in the dashboard
-     * @param string $idempotencyKey header param: Unique key to prevent duplicate retry requests
+     * @param string $deliveryID path param: ID of the delivery
+     * @param bool $force body param: Resend even if the delivery already succeeded
+     * @param list<string> $tags Body param: Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
+     * @param string $idempotencyKey Header param: Unique key for this retry. Repeating the request with the same key does not send the payload again.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

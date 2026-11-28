@@ -32,7 +32,7 @@ final class ScholarSearchResponse implements BaseModel
     use SdkModel;
 
     /**
-     * Matching papers in the requested order.
+     * Papers on this page, in the requested order.
      *
      * @var list<Data> $data
      */
@@ -40,19 +40,19 @@ final class ScholarSearchResponse implements BaseModel
     public array $data;
 
     /**
-     * Whether another page is available.
+     * Whether more results are available after this page.
      */
     #[Required('has_more')]
     public bool $hasMore;
 
     /**
-     * Page summary.
+     * Summary of this page.
      */
     #[Required]
     public Meta $meta;
 
     /**
-     * Cursor for the next page, or null on the last page.
+     * Pass as `cursor` to fetch the next page. `null` on the last page.
      */
     #[Required('next_cursor')]
     public ?string $nextCursor;
@@ -126,7 +126,7 @@ final class ScholarSearchResponse implements BaseModel
     }
 
     /**
-     * Matching papers in the requested order.
+     * Papers on this page, in the requested order.
      *
      * @param list<Data|DataShape> $data
      */
@@ -139,7 +139,7 @@ final class ScholarSearchResponse implements BaseModel
     }
 
     /**
-     * Whether another page is available.
+     * Whether more results are available after this page.
      */
     public function withHasMore(bool $hasMore): self
     {
@@ -150,7 +150,7 @@ final class ScholarSearchResponse implements BaseModel
     }
 
     /**
-     * Page summary.
+     * Summary of this page.
      *
      * @param Meta|MetaShape $meta
      */
@@ -163,7 +163,7 @@ final class ScholarSearchResponse implements BaseModel
     }
 
     /**
-     * Cursor for the next page, or null on the last page.
+     * Pass as `cursor` to fetch the next page. `null` on the last page.
      */
     public function withNextCursor(?string $nextCursor): self
     {

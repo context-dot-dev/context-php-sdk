@@ -17,7 +17,7 @@ use ContextDev\Web\WebScreenshotParams\Viewport;
 use ContextDev\Web\WebScreenshotParams\Zdr;
 
 /**
- * Capture a screenshot of a website.
+ * Capture a screenshot of a website's home page, a page type such as pricing, or an exact URL. Returns the visible viewport, a scroll slice, or the full page.
  *
  * @see ContextDev\Services\WebService::screenshot()
  *
@@ -50,13 +50,13 @@ final class WebScreenshotParams implements BaseModel
     use SdkParams;
 
     /**
-     * Optional parameter for comprehensive popup cleanup. If 'true', the browser dismisses detected cookie/consent UI and clears other detected obstructive popups and overlays before capture. If 'false' or not provided, this parameter requests no cleanup; handleCookiePopup can still request cookie/consent handling independently.
+     * Dismiss cookie banners and close other popups and overlays before capture.
      */
     #[Optional]
     public ?bool $clearPopups;
 
     /**
-     * Optional parameter to choose the site's visual theme in the screenshot. Use 'light' or 'dark' when the site offers both appearances.
+     * Emulate a light or dark color scheme.
      *
      * @var value-of<ColorScheme>|null $colorScheme
      */
@@ -64,7 +64,7 @@ final class WebScreenshotParams implements BaseModel
     public ?string $colorScheme;
 
     /**
-     * Fetch from this country (ISO 3166-1 alpha-2).
+     * Country to fetch from, as an ISO 3166-1 alpha-2 code.
      *
      * @var value-of<Country>|null $country
      */
@@ -72,19 +72,19 @@ final class WebScreenshotParams implements BaseModel
     public ?string $country;
 
     /**
-     * A specific URL to screenshot directly, bypassing domain resolution (e.g., 'https://example.com/pricing'). When provided, the screenshot is taken of this exact URL. You must provide either 'domain' or 'directUrl', but not both.
+     * Exact URL to capture, such as `https://example.com/pricing`. Provide either `domain` or `directUrl`, not both.
      */
     #[Optional]
     public ?string $directURL;
 
     /**
-     * Domain name to take screenshot of (e.g., 'example.com', 'google.com'). The domain will be automatically normalized and validated. You must provide either 'domain' or 'directUrl', but not both.
+     * Domain to capture, such as `stripe.com`. Provide either `domain` or `directUrl`, not both.
      */
     #[Optional]
     public ?string $domain;
 
     /**
-     * Optional parameter to determine screenshot type. If 'true', takes a full page screenshot capturing all content. If 'false' or not provided, takes a viewport screenshot (standard browser view).
+     * Capture the full scrollable page instead of only the viewport.
      *
      * @var value-of<FullScreenshot>|null $fullScreenshot
      */
@@ -92,13 +92,13 @@ final class WebScreenshotParams implements BaseModel
     public ?string $fullScreenshot;
 
     /**
-     * Optional parameter to control cookie/consent popup handling. If 'true', we dismiss cookie banner before capture. If 'false' or not provided, captures the page without that step.
+     * Dismiss cookie consent banners before capture.
      */
     #[Optional]
     public ?bool $handleCookiePopup;
 
     /**
-     * Optional outbound HTTP headers, using the same JSON object or deep-object query format as other scrape endpoints (for example headers[Authorization]=Bearer token). Headers are scoped to the target origin during capture. For domain/page requests, discovery receives no custom headers and only pages on the resolved origin are eligible. Non-empty headers bypass screenshot caching and return an in-memory data URL; no screenshot is uploaded. Empty objects behave like omitted headers.
+     * HTTP headers to send to the target origin, such as `headers[Authorization]=Bearer token`. Requests with headers skip the cache and return the image as a data URL.
      *
      * @var array<string,string>|null $headers
      */
@@ -106,13 +106,13 @@ final class WebScreenshotParams implements BaseModel
     public ?array $headers;
 
     /**
-     * Return a cached screenshot if a prior screenshot for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always capture fresh.
+     * Maximum age of a cached result, in milliseconds. `0` always fetches fresh. Defaults to 1 day (86400000 ms). Maximum: 30 days (2592000000 ms).
      */
     #[Optional(nullable: true)]
     public ?int $maxAgeMs;
 
     /**
-     * Optional parameter to specify which page type to screenshot. If provided, the system will scrape the domain's links and use heuristics to find the most appropriate URL for the specified page type (30 supported languages). If not provided, screenshots the main domain landing page. Only applicable when using 'domain', not 'directUrl'.
+     * Capture this type of page instead of the home page. Context.dev finds it among the domain's links, in 30 languages. Only with `domain`.
      *
      * @var value-of<Page>|null $page
      */
@@ -120,13 +120,13 @@ final class WebScreenshotParams implements BaseModel
     public ?string $page;
 
     /**
-     * Optional vertical scroll offset in pixels for capturing a long page in viewport-sized chunks. When provided, the full page is captured once and the returned image is the viewport-sized slice that begins at this Y offset (e.g. request scrollOffset=0, then 1080, then 2160 to walk a 1920x1080 landing page top to bottom). The final slice may be shorter than the viewport height. Takes precedence over fullScreenshot. Max: 100000.
+     * Return the viewport-sized slice of the full page that starts this many pixels from the top. Step by the viewport height, such as `0`, `1080`, `2160`, to walk a long page. The last slice can be shorter. Overrides `fullScreenshot`.
      */
     #[Optional(nullable: true)]
     public ?int $scrollOffset;
 
     /**
-     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
      *
      * @var list<string>|null $tags
      */
@@ -140,13 +140,13 @@ final class WebScreenshotParams implements BaseModel
     public ?TimeoutOpts $timeoutOpts;
 
     /**
-     * Optional browser viewport dimensions for the screenshot. Defaults to 1920x1080.
+     * Browser viewport size in pixels.
      */
     #[Optional]
     public ?Viewport $viewport;
 
     /**
-     * Optional browser wait time in milliseconds after initial page load before taking the screenshot. Min: 0. Max: 30000 (30 seconds). Defaults to 3000 ms when omitted. When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
+     * Time to wait after the page loads before capturing, in milliseconds. `0` waits 500 ms. `timeoutOpts.milliseconds` must be at least `waitForMs` plus 10000 ms, or the request fails with `TIMEOUT_TOO_SHORT_FOR_WAIT`.
      */
     #[Optional(nullable: true)]
     public ?int $waitForMs;
@@ -220,7 +220,7 @@ final class WebScreenshotParams implements BaseModel
     }
 
     /**
-     * Optional parameter for comprehensive popup cleanup. If 'true', the browser dismisses detected cookie/consent UI and clears other detected obstructive popups and overlays before capture. If 'false' or not provided, this parameter requests no cleanup; handleCookiePopup can still request cookie/consent handling independently.
+     * Dismiss cookie banners and close other popups and overlays before capture.
      */
     public function withClearPopups(bool $clearPopups): self
     {
@@ -231,7 +231,7 @@ final class WebScreenshotParams implements BaseModel
     }
 
     /**
-     * Optional parameter to choose the site's visual theme in the screenshot. Use 'light' or 'dark' when the site offers both appearances.
+     * Emulate a light or dark color scheme.
      *
      * @param ColorScheme|value-of<ColorScheme> $colorScheme
      */
@@ -244,7 +244,7 @@ final class WebScreenshotParams implements BaseModel
     }
 
     /**
-     * Fetch from this country (ISO 3166-1 alpha-2).
+     * Country to fetch from, as an ISO 3166-1 alpha-2 code.
      *
      * @param Country|value-of<Country> $country
      */
@@ -257,7 +257,7 @@ final class WebScreenshotParams implements BaseModel
     }
 
     /**
-     * A specific URL to screenshot directly, bypassing domain resolution (e.g., 'https://example.com/pricing'). When provided, the screenshot is taken of this exact URL. You must provide either 'domain' or 'directUrl', but not both.
+     * Exact URL to capture, such as `https://example.com/pricing`. Provide either `domain` or `directUrl`, not both.
      */
     public function withDirectURL(string $directURL): self
     {
@@ -268,7 +268,7 @@ final class WebScreenshotParams implements BaseModel
     }
 
     /**
-     * Domain name to take screenshot of (e.g., 'example.com', 'google.com'). The domain will be automatically normalized and validated. You must provide either 'domain' or 'directUrl', but not both.
+     * Domain to capture, such as `stripe.com`. Provide either `domain` or `directUrl`, not both.
      */
     public function withDomain(string $domain): self
     {
@@ -279,7 +279,7 @@ final class WebScreenshotParams implements BaseModel
     }
 
     /**
-     * Optional parameter to determine screenshot type. If 'true', takes a full page screenshot capturing all content. If 'false' or not provided, takes a viewport screenshot (standard browser view).
+     * Capture the full scrollable page instead of only the viewport.
      *
      * @param FullScreenshot|value-of<FullScreenshot> $fullScreenshot
      */
@@ -293,7 +293,7 @@ final class WebScreenshotParams implements BaseModel
     }
 
     /**
-     * Optional parameter to control cookie/consent popup handling. If 'true', we dismiss cookie banner before capture. If 'false' or not provided, captures the page without that step.
+     * Dismiss cookie consent banners before capture.
      */
     public function withHandleCookiePopup(bool $handleCookiePopup): self
     {
@@ -304,7 +304,7 @@ final class WebScreenshotParams implements BaseModel
     }
 
     /**
-     * Optional outbound HTTP headers, using the same JSON object or deep-object query format as other scrape endpoints (for example headers[Authorization]=Bearer token). Headers are scoped to the target origin during capture. For domain/page requests, discovery receives no custom headers and only pages on the resolved origin are eligible. Non-empty headers bypass screenshot caching and return an in-memory data URL; no screenshot is uploaded. Empty objects behave like omitted headers.
+     * HTTP headers to send to the target origin, such as `headers[Authorization]=Bearer token`. Requests with headers skip the cache and return the image as a data URL.
      *
      * @param array<string,string> $headers
      */
@@ -317,7 +317,7 @@ final class WebScreenshotParams implements BaseModel
     }
 
     /**
-     * Return a cached screenshot if a prior screenshot for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always capture fresh.
+     * Maximum age of a cached result, in milliseconds. `0` always fetches fresh. Defaults to 1 day (86400000 ms). Maximum: 30 days (2592000000 ms).
      */
     public function withMaxAgeMs(?int $maxAgeMs): self
     {
@@ -328,7 +328,7 @@ final class WebScreenshotParams implements BaseModel
     }
 
     /**
-     * Optional parameter to specify which page type to screenshot. If provided, the system will scrape the domain's links and use heuristics to find the most appropriate URL for the specified page type (30 supported languages). If not provided, screenshots the main domain landing page. Only applicable when using 'domain', not 'directUrl'.
+     * Capture this type of page instead of the home page. Context.dev finds it among the domain's links, in 30 languages. Only with `domain`.
      *
      * @param Page|value-of<Page> $page
      */
@@ -341,7 +341,7 @@ final class WebScreenshotParams implements BaseModel
     }
 
     /**
-     * Optional vertical scroll offset in pixels for capturing a long page in viewport-sized chunks. When provided, the full page is captured once and the returned image is the viewport-sized slice that begins at this Y offset (e.g. request scrollOffset=0, then 1080, then 2160 to walk a 1920x1080 landing page top to bottom). The final slice may be shorter than the viewport height. Takes precedence over fullScreenshot. Max: 100000.
+     * Return the viewport-sized slice of the full page that starts this many pixels from the top. Step by the viewport height, such as `0`, `1080`, `2160`, to walk a long page. The last slice can be shorter. Overrides `fullScreenshot`.
      */
     public function withScrollOffset(?int $scrollOffset): self
     {
@@ -352,7 +352,7 @@ final class WebScreenshotParams implements BaseModel
     }
 
     /**
-     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
      *
      * @param list<string> $tags
      */
@@ -378,7 +378,7 @@ final class WebScreenshotParams implements BaseModel
     }
 
     /**
-     * Optional browser viewport dimensions for the screenshot. Defaults to 1920x1080.
+     * Browser viewport size in pixels.
      *
      * @param Viewport|ViewportShape $viewport
      */
@@ -391,7 +391,7 @@ final class WebScreenshotParams implements BaseModel
     }
 
     /**
-     * Optional browser wait time in milliseconds after initial page load before taking the screenshot. Min: 0. Max: 30000 (30 seconds). Defaults to 3000 ms when omitted. When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
+     * Time to wait after the page loads before capturing, in milliseconds. `0` waits 500 ms. `timeoutOpts.milliseconds` must be at least `waitForMs` plus 10000 ms, or the request fails with `TIMEOUT_TOO_SHORT_FOR_WAIT`.
      */
     public function withWaitForMs(?int $waitForMs): self
     {

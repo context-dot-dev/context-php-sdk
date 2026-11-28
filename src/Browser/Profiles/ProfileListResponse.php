@@ -29,7 +29,7 @@ final class ProfileListResponse implements BaseModel
     use SdkModel;
 
     /**
-     * Browser profiles, newest first.
+     * Browser profiles on this page, newest first.
      *
      * @var list<Data> $data
      */
@@ -37,13 +37,13 @@ final class ProfileListResponse implements BaseModel
     public array $data;
 
     /**
-     * Whether a next page exists.
+     * Whether more results are available after this page.
      */
     #[Required('has_more')]
     public bool $hasMore;
 
     /**
-     * Pass as `cursor` to fetch the next page.
+     * Pass as `cursor` to fetch the next page. `null` on the last page.
      */
     #[Required('next_cursor')]
     public ?string $nextCursor;
@@ -113,7 +113,7 @@ final class ProfileListResponse implements BaseModel
     }
 
     /**
-     * Browser profiles, newest first.
+     * Browser profiles on this page, newest first.
      *
      * @param list<Data|DataShape> $data
      */
@@ -126,7 +126,7 @@ final class ProfileListResponse implements BaseModel
     }
 
     /**
-     * Whether a next page exists.
+     * Whether more results are available after this page.
      */
     public function withHasMore(bool $hasMore): self
     {
@@ -137,7 +137,7 @@ final class ProfileListResponse implements BaseModel
     }
 
     /**
-     * Pass as `cursor` to fetch the next page.
+     * Pass as `cursor` to fetch the next page. `null` on the last page.
      */
     public function withNextCursor(?string $nextCursor): self
     {

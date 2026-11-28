@@ -10,7 +10,7 @@ use ContextDev\Core\Conversion\Contracts\ConverterSource;
 use ContextDev\Core\Conversion\ListOf;
 
 /**
- * Tags to filter by (matches batches having any of them). Pass repeated `tags` params or one comma-separated list, e.g. `tags=docs,competitor`.
+ * Comma-separated tags. Returns batches that have any of them. You can also repeat the `tags` parameter.
  *
  * @phpstan-type TagsVariants = string|list<string>
  * @phpstan-type TagsShape = TagsVariants

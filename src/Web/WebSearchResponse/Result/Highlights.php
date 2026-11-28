@@ -25,7 +25,7 @@ final class Highlights implements BaseModel
     use SdkModel;
 
     /**
-     * Per-result highlights outcome. Inspect this before reading `highlights`.
+     * Highlights outcome for this result. Check it before reading `highlights`.
      *
      * @var value-of<Code> $code
      */
@@ -33,7 +33,7 @@ final class Highlights implements BaseModel
     public string $code;
 
     /**
-     * Passages relevant to the query, in page order. Null unless highlightsOptions.enabled is true and the page was read.
+     * Passages relevant to the query, in page order. `null` unless `highlightsOptions.enabled` is `true` and the page was read.
      *
      * @var list<string>|null $highlights
      */
@@ -89,7 +89,7 @@ final class Highlights implements BaseModel
     }
 
     /**
-     * Per-result highlights outcome. Inspect this before reading `highlights`.
+     * Highlights outcome for this result. Check it before reading `highlights`.
      *
      * @param Code|value-of<Code> $code
      */
@@ -102,7 +102,7 @@ final class Highlights implements BaseModel
     }
 
     /**
-     * Passages relevant to the query, in page order. Null unless highlightsOptions.enabled is true and the page was read.
+     * Passages relevant to the query, in page order. `null` unless `highlightsOptions.enabled` is `true` and the page was read.
      *
      * @param list<string>|null $highlights
      */

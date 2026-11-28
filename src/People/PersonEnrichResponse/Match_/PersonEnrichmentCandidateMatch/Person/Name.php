@@ -9,6 +9,8 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
+ * Name of the person.
+ *
  * @phpstan-type NameShape = array{
  *   first?: string|null, full?: string|null, last?: string|null
  * }
@@ -18,12 +20,21 @@ final class Name implements BaseModel
     /** @use SdkModel<NameShape> */
     use SdkModel;
 
+    /**
+     * First or given name.
+     */
     #[Optional]
     public ?string $first;
 
+    /**
+     * Full name.
+     */
     #[Optional]
     public ?string $full;
 
+    /**
+     * Last or family name.
+     */
     #[Optional]
     public ?string $last;
 
@@ -51,6 +62,9 @@ final class Name implements BaseModel
         return $self;
     }
 
+    /**
+     * First or given name.
+     */
     public function withFirst(string $first): self
     {
         $self = clone $this;
@@ -59,6 +73,9 @@ final class Name implements BaseModel
         return $self;
     }
 
+    /**
+     * Full name.
+     */
     public function withFull(string $full): self
     {
         $self = clone $this;
@@ -67,6 +84,9 @@ final class Name implements BaseModel
         return $self;
     }
 
+    /**
+     * Last or family name.
+     */
     public function withLast(string $last): self
     {
         $self = clone $this;

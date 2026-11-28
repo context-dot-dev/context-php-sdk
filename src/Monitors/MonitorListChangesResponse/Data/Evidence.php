@@ -10,6 +10,8 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
+ * Before and after excerpts that support a change.
+ *
  * @phpstan-type EvidenceShape = array{
  *   after: string, before: string, url?: string|null
  * }
@@ -20,19 +22,19 @@ final class Evidence implements BaseModel
     use SdkModel;
 
     /**
-     * Snapshot of the content after the change.
+     * Content after the change.
      */
     #[Required]
     public string $after;
 
     /**
-     * Snapshot of the content before the change.
+     * Content before the change. Empty for new search results.
      */
     #[Required]
     public string $before;
 
     /**
-     * Optional URL the evidence relates to. Absent for whole-target diffs.
+     * Page the evidence comes from. Omitted when the evidence covers the whole target.
      */
     #[Optional]
     public ?string $url;
@@ -77,7 +79,7 @@ final class Evidence implements BaseModel
     }
 
     /**
-     * Snapshot of the content after the change.
+     * Content after the change.
      */
     public function withAfter(string $after): self
     {
@@ -88,7 +90,7 @@ final class Evidence implements BaseModel
     }
 
     /**
-     * Snapshot of the content before the change.
+     * Content before the change. Empty for new search results.
      */
     public function withBefore(string $before): self
     {
@@ -99,7 +101,7 @@ final class Evidence implements BaseModel
     }
 
     /**
-     * Optional URL the evidence relates to. Absent for whole-target diffs.
+     * Page the evidence comes from. Omitted when the evidence covers the whole target.
      */
     public function withURL(string $url): self
     {

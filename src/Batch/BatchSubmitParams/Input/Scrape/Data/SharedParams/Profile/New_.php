@@ -20,7 +20,7 @@ final class New_ implements BaseModel
     use SdkModel;
 
     /**
-     * Sign in and create a browser profile.
+     * Sign in and save a new browser profile.
      *
      * @var 'new' $type
      */
@@ -28,19 +28,19 @@ final class New_ implements BaseModel
     public string $type = 'new';
 
     /**
-     * Username or email for the target website.
+     * Username or email address for the website.
      */
     #[Required]
     public string $identifier;
 
     /**
-     * Password used to sign in. It is never stored in the profile.
+     * Password for the website. Used to sign in and never stored.
      */
     #[Required]
     public string $password;
 
     /**
-     * Optional label shown when listing profiles with `GET /org/browser/profiles`.
+     * Label for the profile, shown by `GET /org/browser/profiles`.
      */
     #[Optional]
     public ?string $description;
@@ -85,7 +85,7 @@ final class New_ implements BaseModel
     }
 
     /**
-     * Username or email for the target website.
+     * Username or email address for the website.
      */
     public function withIdentifier(string $identifier): self
     {
@@ -96,7 +96,7 @@ final class New_ implements BaseModel
     }
 
     /**
-     * Password used to sign in. It is never stored in the profile.
+     * Password for the website. Used to sign in and never stored.
      */
     public function withPassword(string $password): self
     {
@@ -107,7 +107,7 @@ final class New_ implements BaseModel
     }
 
     /**
-     * Sign in and create a browser profile.
+     * Sign in and save a new browser profile.
      *
      * @param 'new' $type
      */
@@ -120,7 +120,7 @@ final class New_ implements BaseModel
     }
 
     /**
-     * Optional label shown when listing profiles with `GET /org/browser/profiles`.
+     * Label for the profile, shown by `GET /org/browser/profiles`.
      */
     public function withDescription(string $description): self
     {

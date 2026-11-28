@@ -17,13 +17,13 @@ final class Color implements BaseModel
     use SdkModel;
 
     /**
-     * Color in hexadecimal format.
+     * Hex color code, such as `#635BFF`.
      */
     #[Optional]
     public ?string $hex;
 
     /**
-     * Name of the color.
+     * Human-readable color name.
      */
     #[Optional]
     public ?string $name;
@@ -49,7 +49,7 @@ final class Color implements BaseModel
     }
 
     /**
-     * Color in hexadecimal format.
+     * Hex color code, such as `#635BFF`.
      */
     public function withHex(string $hex): self
     {
@@ -60,7 +60,7 @@ final class Color implements BaseModel
     }
 
     /**
-     * Name of the color.
+     * Human-readable color name.
      */
     public function withName(string $name): self
     {

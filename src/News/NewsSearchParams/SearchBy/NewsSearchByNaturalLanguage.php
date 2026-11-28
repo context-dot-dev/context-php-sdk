@@ -21,7 +21,7 @@ final class NewsSearchByNaturalLanguage implements BaseModel
     use SdkModel;
 
     /**
-     * Use `natural_language` to search all news with a plain-language query.
+     * Set to `natural_language` to search all news with a plain-language query.
      *
      * @var 'natural_language' $type
      */
@@ -29,7 +29,7 @@ final class NewsSearchByNaturalLanguage implements BaseModel
     public string $type = 'natural_language';
 
     /**
-     * What to search for, in plain language, such as "chip export restrictions to China".
+     * What to search for, in plain language, such as `chip export restrictions to China`.
      */
     #[Required]
     public string $query;
@@ -68,7 +68,7 @@ final class NewsSearchByNaturalLanguage implements BaseModel
     }
 
     /**
-     * What to search for, in plain language, such as "chip export restrictions to China".
+     * What to search for, in plain language, such as `chip export restrictions to China`.
      */
     public function withQuery(string $query): self
     {
@@ -79,7 +79,7 @@ final class NewsSearchByNaturalLanguage implements BaseModel
     }
 
     /**
-     * Use `natural_language` to search all news with a plain-language query.
+     * Set to `natural_language` to search all news with a plain-language query.
      *
      * @param 'natural_language' $type
      */

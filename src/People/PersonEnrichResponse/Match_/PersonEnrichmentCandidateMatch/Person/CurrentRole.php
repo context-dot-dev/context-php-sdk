@@ -13,6 +13,8 @@ use ContextDev\People\PersonEnrichResponse\Match_\PersonEnrichmentCandidateMatch
 use ContextDev\People\PersonEnrichResponse\Match_\PersonEnrichmentCandidateMatch\Person\CurrentRole\StartDate;
 
 /**
+ * The person's current job. See `current_role_status` when it is missing.
+ *
  * @phpstan-import-type OrganizationShape from \ContextDev\People\PersonEnrichResponse\Match_\PersonEnrichmentCandidateMatch\Person\CurrentRole\Organization
  * @phpstan-import-type EndDateShape from \ContextDev\People\PersonEnrichResponse\Match_\PersonEnrichmentCandidateMatch\Person\CurrentRole\EndDate
  * @phpstan-import-type StartDateShape from \ContextDev\People\PersonEnrichResponse\Match_\PersonEnrichmentCandidateMatch\Person\CurrentRole\StartDate
@@ -32,24 +34,45 @@ final class CurrentRole implements BaseModel
     /** @use SdkModel<CurrentRoleShape> */
     use SdkModel;
 
+    /**
+     * Employer for this role.
+     */
     #[Required]
     public Organization $organization;
 
+    /**
+     * Job title.
+     */
     #[Required]
     public string $title;
 
+    /**
+     * Description of the role.
+     */
     #[Optional]
     public ?string $description;
 
+    /**
+     * When the role ended.
+     */
     #[Optional('end_date')]
     public ?EndDate $endDate;
 
+    /**
+     * Whether the person still holds this role.
+     */
     #[Optional('is_current')]
     public ?bool $isCurrent;
 
+    /**
+     * Where the role is based.
+     */
     #[Optional]
     public ?string $location;
 
+    /**
+     * When the role started.
+     */
     #[Optional('start_date')]
     public ?StartDate $startDate;
 
@@ -105,6 +128,8 @@ final class CurrentRole implements BaseModel
     }
 
     /**
+     * Employer for this role.
+     *
      * @param Organization|OrganizationShape $organization
      */
     public function withOrganization(Organization|array $organization): self
@@ -115,6 +140,9 @@ final class CurrentRole implements BaseModel
         return $self;
     }
 
+    /**
+     * Job title.
+     */
     public function withTitle(string $title): self
     {
         $self = clone $this;
@@ -123,6 +151,9 @@ final class CurrentRole implements BaseModel
         return $self;
     }
 
+    /**
+     * Description of the role.
+     */
     public function withDescription(string $description): self
     {
         $self = clone $this;
@@ -132,6 +163,8 @@ final class CurrentRole implements BaseModel
     }
 
     /**
+     * When the role ended.
+     *
      * @param EndDate|EndDateShape $endDate
      */
     public function withEndDate(EndDate|array $endDate): self
@@ -142,6 +175,9 @@ final class CurrentRole implements BaseModel
         return $self;
     }
 
+    /**
+     * Whether the person still holds this role.
+     */
     public function withIsCurrent(bool $isCurrent): self
     {
         $self = clone $this;
@@ -150,6 +186,9 @@ final class CurrentRole implements BaseModel
         return $self;
     }
 
+    /**
+     * Where the role is based.
+     */
     public function withLocation(string $location): self
     {
         $self = clone $this;
@@ -159,6 +198,8 @@ final class CurrentRole implements BaseModel
     }
 
     /**
+     * When the role started.
+     *
      * @param StartDate|StartDateShape $startDate
      */
     public function withStartDate(StartDate|array $startDate): self

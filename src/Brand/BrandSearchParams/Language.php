@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Brand\BrandSearchParams;
 
 /**
- * Only return brands with this primary language, such as english or french.
+ * Only return brands with this primary language, such as `english` or `french`.
  */
 enum Language: string
 {

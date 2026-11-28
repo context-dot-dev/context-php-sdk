@@ -27,7 +27,11 @@ final class MonitorGetCreditUsageResponse implements BaseModel
     /** @use SdkModel<MonitorGetCreditUsageResponseShape> */
     use SdkModel;
 
-    /** @var list<Data> $data */
+    /**
+     * Usage per monitor, highest first.
+     *
+     * @var list<Data> $data
+     */
     #[Required(list: Data::class)]
     public array $data;
 
@@ -38,7 +42,7 @@ final class MonitorGetCreditUsageResponse implements BaseModel
     public string $requestID;
 
     /**
-     * Sum of credits across all monitors in the window.
+     * Total credits across the monitors in `data`.
      */
     #[Required('total_credits')]
     public int $totalCredits;
@@ -99,6 +103,8 @@ final class MonitorGetCreditUsageResponse implements BaseModel
     }
 
     /**
+     * Usage per monitor, highest first.
+     *
      * @param list<Data|DataShape> $data
      */
     public function withData(array $data): self
@@ -121,7 +127,7 @@ final class MonitorGetCreditUsageResponse implements BaseModel
     }
 
     /**
-     * Sum of credits across all monitors in the window.
+     * Total credits across the monitors in `data`.
      */
     public function withTotalCredits(int $totalCredits): self
     {

@@ -11,7 +11,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Utility\UtilityPrefetchParams\TimeoutOpts\Behavior;
 
 /**
- * Request deadline and what to return when it passes.
+ * Request deadline. The request fails with 408 when it passes.
  *
  * @phpstan-type TimeoutOptsShape = array{
  *   milliseconds: int, behavior?: null|Behavior|value-of<Behavior>
@@ -29,7 +29,7 @@ final class TimeoutOpts implements BaseModel
     public int $milliseconds;
 
     /**
-     * Only "fail" is supported: return 408 at the deadline.
+     * Only `fail` is supported: the request returns 408 at the deadline.
      *
      * @var value-of<Behavior>|null $behavior
      */
@@ -87,7 +87,7 @@ final class TimeoutOpts implements BaseModel
     }
 
     /**
-     * Only "fail" is supported: return 408 at the deadline.
+     * Only `fail` is supported: the request returns 408 at the deadline.
      *
      * @param Behavior|value-of<Behavior> $behavior
      */

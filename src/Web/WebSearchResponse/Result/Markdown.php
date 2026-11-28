@@ -27,7 +27,7 @@ final class Markdown implements BaseModel
     use SdkModel;
 
     /**
-     * Per-result scrape outcome. Inspect this before reading `markdown`.
+     * Scrape outcome for this result. Check it before reading `markdown`.
      *
      * @var value-of<Code> $code
      */
@@ -35,7 +35,7 @@ final class Markdown implements BaseModel
     public string $code;
 
     /**
-     * GFM Markdown of the page. Null unless markdownOptions.enabled is true and scraping succeeded.
+     * Page content as GitHub-flavored Markdown. `null` unless `markdownOptions.enabled` is `true` and the scrape succeeded.
      */
     #[Required]
     public ?string $markdown;
@@ -99,7 +99,7 @@ final class Markdown implements BaseModel
     }
 
     /**
-     * Per-result scrape outcome. Inspect this before reading `markdown`.
+     * Scrape outcome for this result. Check it before reading `markdown`.
      *
      * @param Code|value-of<Code> $code
      */
@@ -112,7 +112,7 @@ final class Markdown implements BaseModel
     }
 
     /**
-     * GFM Markdown of the page. Null unless markdownOptions.enabled is true and scraping succeeded.
+     * Page content as GitHub-flavored Markdown. `null` unless `markdownOptions.enabled` is `true` and the scrape succeeded.
      */
     public function withMarkdown(?string $markdown): self
     {

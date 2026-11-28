@@ -14,7 +14,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Find up to 10 brands by name or domain, ordered by popularity. Optionally filter by country and primary language; both filters must match when provided together. Results include description, country, and language when available. Use the returned domain to retrieve a full brand profile.
+ * Autocomplete brand names and domains as a user types, with up to 10 brands ranked by popularity and a ready-to-use logo URL for each. Filter by country and primary language. Pass a returned `domain` to `POST /brand/retrieve` for the full brand profile.
  *
  * @see ContextDev\Services\BrandService::search()
  *
@@ -35,19 +35,19 @@ final class BrandSearchParams implements BaseModel
     use SdkParams;
 
     /**
-     * Search term, matched against the fields selected by queryBy (e.g. 'nike', 'nike.com', 'nik').
+     * Search term, matched against the fields in `queryBy`, such as `nike`, `nike.com`, or `nik`.
      */
     #[Required]
     public string $query;
 
     /**
-     * Whether the search term matches by prefix, so partial words match as they are typed (e.g. 'nik' matches Nike). Set to false to match whole words only.
+     * Match the search term as a prefix, so `nik` matches Nike while the user is still typing. Set to `false` to match whole words only.
      */
     #[Optional]
     public ?bool $autocomplete;
 
     /**
-     * Only return brands in this country, as an uppercase ISO 3166-1 alpha-2 code such as US or GB.
+     * Only return brands in this country, as an uppercase ISO 3166-1 alpha-2 code such as `US` or `GB`.
      *
      * @var value-of<Country>|null $country
      */
@@ -55,7 +55,7 @@ final class BrandSearchParams implements BaseModel
     public ?string $country;
 
     /**
-     * Only return brands with this primary language, such as english or french.
+     * Only return brands with this primary language, such as `english` or `french`.
      *
      * @var value-of<Language>|null $language
      */
@@ -63,7 +63,7 @@ final class BrandSearchParams implements BaseModel
     public ?string $language;
 
     /**
-     * Fields to match the search term against, as a comma-separated list or repeated parameter: 'name', 'domain', or both. Defaults to both.
+     * Fields to match the search term against: `name`, `domain`, or both. Send a comma-separated list or repeat the parameter.
      *
      * @var list<value-of<QueryBy>>|null $queryBy
      */
@@ -71,7 +71,7 @@ final class BrandSearchParams implements BaseModel
     public ?array $queryBy;
 
     /**
-     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
      *
      * @var list<string>|null $tags
      */
@@ -79,7 +79,7 @@ final class BrandSearchParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Maximum number of typos tolerated when matching, from 0 to 2. Defaults to 0 (no typo tolerance).
+     * Maximum number of typos to tolerate when matching. `0` requires exact spelling.
      */
     #[Optional]
     public ?int $typoTolerance;
@@ -137,7 +137,7 @@ final class BrandSearchParams implements BaseModel
     }
 
     /**
-     * Search term, matched against the fields selected by queryBy (e.g. 'nike', 'nike.com', 'nik').
+     * Search term, matched against the fields in `queryBy`, such as `nike`, `nike.com`, or `nik`.
      */
     public function withQuery(string $query): self
     {
@@ -148,7 +148,7 @@ final class BrandSearchParams implements BaseModel
     }
 
     /**
-     * Whether the search term matches by prefix, so partial words match as they are typed (e.g. 'nik' matches Nike). Set to false to match whole words only.
+     * Match the search term as a prefix, so `nik` matches Nike while the user is still typing. Set to `false` to match whole words only.
      */
     public function withAutocomplete(bool $autocomplete): self
     {
@@ -159,7 +159,7 @@ final class BrandSearchParams implements BaseModel
     }
 
     /**
-     * Only return brands in this country, as an uppercase ISO 3166-1 alpha-2 code such as US or GB.
+     * Only return brands in this country, as an uppercase ISO 3166-1 alpha-2 code such as `US` or `GB`.
      *
      * @param Country|value-of<Country> $country
      */
@@ -172,7 +172,7 @@ final class BrandSearchParams implements BaseModel
     }
 
     /**
-     * Only return brands with this primary language, such as english or french.
+     * Only return brands with this primary language, such as `english` or `french`.
      *
      * @param Language|value-of<Language> $language
      */
@@ -185,7 +185,7 @@ final class BrandSearchParams implements BaseModel
     }
 
     /**
-     * Fields to match the search term against, as a comma-separated list or repeated parameter: 'name', 'domain', or both. Defaults to both.
+     * Fields to match the search term against: `name`, `domain`, or both. Send a comma-separated list or repeat the parameter.
      *
      * @param list<QueryBy|value-of<QueryBy>> $queryBy
      */
@@ -198,7 +198,7 @@ final class BrandSearchParams implements BaseModel
     }
 
     /**
-     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
      *
      * @param list<string> $tags
      */
@@ -211,7 +211,7 @@ final class BrandSearchParams implements BaseModel
     }
 
     /**
-     * Maximum number of typos tolerated when matching, from 0 to 2. Defaults to 0 (no typo tolerance).
+     * Maximum number of typos to tolerate when matching. `0` requires exact spelling.
      */
     public function withTypoTolerance(int $typoTolerance): self
     {

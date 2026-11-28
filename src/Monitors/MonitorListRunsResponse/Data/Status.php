@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Monitors\MonitorListRunsResponse\Data;
 
 /**
- * Lifecycle status of a run. `skipped` runs never executed — see `skip_reason` (insufficient credits, monitor paused, or superseded by a concurrent run).
+ * Run status. `skipped` runs never executed; `skip_reason` says why.
  */
 enum Status: string
 {

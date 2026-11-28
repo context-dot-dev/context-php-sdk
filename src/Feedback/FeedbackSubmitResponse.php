@@ -26,13 +26,13 @@ final class FeedbackSubmitResponse implements BaseModel
     use SdkModel;
 
     /**
-     * True when feedback for this request_id was already recorded; the original feedback_id is returned.
+     * `true` when feedback for this `request_id` was already recorded. `feedback_id` is then the original ID.
      */
     #[Required('already_submitted')]
     public bool $alreadySubmitted;
 
     /**
-     * ID of the stored feedback.
+     * Unique ID of the feedback.
      */
     #[Required('feedback_id')]
     public string $feedbackID;
@@ -98,7 +98,7 @@ final class FeedbackSubmitResponse implements BaseModel
     }
 
     /**
-     * True when feedback for this request_id was already recorded; the original feedback_id is returned.
+     * `true` when feedback for this `request_id` was already recorded. `feedback_id` is then the original ID.
      */
     public function withAlreadySubmitted(bool $alreadySubmitted): self
     {
@@ -109,7 +109,7 @@ final class FeedbackSubmitResponse implements BaseModel
     }
 
     /**
-     * ID of the stored feedback.
+     * Unique ID of the feedback.
      */
     public function withFeedbackID(string $feedbackID): self
     {

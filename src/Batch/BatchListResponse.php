@@ -43,7 +43,7 @@ final class BatchListResponse implements BaseModel
     public ?array $data;
 
     /**
-     * Whether another page is available.
+     * Whether more results are available after this page.
      */
     #[Optional('has_more')]
     public ?bool $hasMore;
@@ -55,7 +55,7 @@ final class BatchListResponse implements BaseModel
     public ?KeyMetadata $keyMetadata;
 
     /**
-     * Cursor for the next page.
+     * Pass as `cursor` to fetch the next page. `null` on the last page.
      */
     #[Optional('next_cursor', nullable: true)]
     public ?string $nextCursor;
@@ -131,7 +131,7 @@ final class BatchListResponse implements BaseModel
     }
 
     /**
-     * Whether another page is available.
+     * Whether more results are available after this page.
      */
     public function withHasMore(bool $hasMore): self
     {
@@ -155,7 +155,7 @@ final class BatchListResponse implements BaseModel
     }
 
     /**
-     * Cursor for the next page.
+     * Pass as `cursor` to fetch the next page. `null` on the last page.
      */
     public function withNextCursor(?string $nextCursor): self
     {

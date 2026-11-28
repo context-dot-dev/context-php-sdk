@@ -29,7 +29,7 @@ final class NewsSearchByEntity implements BaseModel
     use SdkModel;
 
     /**
-     * Use `entity` to find news about a specific company.
+     * Set to `entity` to find news about a specific company.
      *
      * @var 'entity' $type
      */
@@ -95,7 +95,7 @@ final class NewsSearchByEntity implements BaseModel
     }
 
     /**
-     * Use `entity` to find news about a specific company.
+     * Set to `entity` to find news about a specific company.
      *
      * @param 'entity' $type
      */

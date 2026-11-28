@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Batch\BatchGetResponse;
 
 /**
- * Current state. `pending` means waiting for execution capacity or background validation. Capacity-limited batches remain pending until a slot opens. `completed`, `cancelled`, and `failed` are final.
+ * Current state. `pending` batches are being validated or are waiting for a slot under your plan's concurrent batch limit, `queued` batches are ready to start, and `running` batches are scraping. `completed`, `cancelled`, and `failed` are final.
  */
 enum Status: string
 {

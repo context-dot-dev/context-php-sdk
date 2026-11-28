@@ -10,7 +10,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\News\NewsSearchParams\SortBy\Type;
 
 /**
- * Result ordering. Defaults to newest for entity searches. Natural-language searches are always ordered by relevance.
+ * How to order results. Company searches default to `newest`; natural-language searches always use `relevance`.
  *
  * @phpstan-type SortByShape = array{type: Type|value-of<Type>}
  */
@@ -20,7 +20,7 @@ final class SortBy implements BaseModel
     use SdkModel;
 
     /**
-     * Result ordering.
+     * `newest` puts the most recently published articles first; `relevance` puts the closest matches first.
      *
      * @var value-of<Type> $type
      */
@@ -63,7 +63,7 @@ final class SortBy implements BaseModel
     }
 
     /**
-     * Result ordering.
+     * `newest` puts the most recently published articles first; `relevance` puts the closest matches first.
      *
      * @param Type|value-of<Type> $type
      */

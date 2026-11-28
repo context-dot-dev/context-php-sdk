@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Summary information about this response.
+ * Summary of this page.
  *
  * @phpstan-type MetaShape = array{count: int}
  */
@@ -19,7 +19,7 @@ final class Meta implements BaseModel
     use SdkModel;
 
     /**
-     * Number of articles in this page.
+     * Number of articles on this page.
      */
     #[Required]
     public int $count;
@@ -58,7 +58,7 @@ final class Meta implements BaseModel
     }
 
     /**
-     * Number of articles in this page.
+     * Number of articles on this page.
      */
     public function withCount(int $count): self
     {

@@ -11,7 +11,7 @@ use ContextDev\People\PersonEnrichResponse\Match_\PersonEnrichmentCandidateMatch
 use ContextDev\People\PersonEnrichResponse\Match_\PersonEnrichmentNotFoundMatch;
 
 /**
- * The highest-scoring person candidate.
+ * The best-matching person, with an identity-match score.
  *
  * @phpstan-import-type PersonEnrichmentCandidateMatchShape from \ContextDev\People\PersonEnrichResponse\Match_\PersonEnrichmentCandidateMatch
  * @phpstan-import-type PersonEnrichmentNotFoundMatchShape from \ContextDev\People\PersonEnrichResponse\Match_\PersonEnrichmentNotFoundMatch

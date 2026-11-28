@@ -33,13 +33,13 @@ final class Competitor implements BaseModel
     public string $confidence;
 
     /**
-     * Short description of the competitor.
+     * Short description of what the competitor offers.
      */
     #[Required]
     public string $description;
 
     /**
-     * Competitor's normalized official domain.
+     * Competitor's official domain, normalized.
      */
     #[Required]
     public string $domain;
@@ -59,7 +59,7 @@ final class Competitor implements BaseModel
     public array $sourceURLs;
 
     /**
-     * Competitor website URL.
+     * Competitor's website URL.
      */
     #[Required]
     public string $url;
@@ -138,7 +138,7 @@ final class Competitor implements BaseModel
     }
 
     /**
-     * Short description of the competitor.
+     * Short description of what the competitor offers.
      */
     public function withDescription(string $description): self
     {
@@ -149,7 +149,7 @@ final class Competitor implements BaseModel
     }
 
     /**
-     * Competitor's normalized official domain.
+     * Competitor's official domain, normalized.
      */
     public function withDomain(string $domain): self
     {
@@ -184,7 +184,7 @@ final class Competitor implements BaseModel
     }
 
     /**
-     * Competitor website URL.
+     * Competitor's website URL.
      */
     public function withURL(string $url): self
     {

@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Detect meaningful content changes using the target’s instructions and optional schema.
+ * Report only changes that matter, judged against the target's `instructions` and, for extract targets, its `schema`.
  *
  * @phpstan-type MonitorsSemanticChangeDetectionShape = array{
  *   type: 'semantic', confidenceThreshold?: float|null
@@ -22,7 +22,7 @@ final class MonitorsSemanticChangeDetection implements BaseModel
     use SdkModel;
 
     /**
-     * Use `semantic` to judge changes against the target instructions.
+     * Use `semantic` to report only changes that match the target's `instructions`.
      *
      * @var 'semantic' $type
      */
@@ -30,7 +30,7 @@ final class MonitorsSemanticChangeDetection implements BaseModel
     public string $type = 'semantic';
 
     /**
-     * Minimum confidence required to report a meaningful change, from 0 to 1.
+     * Minimum confidence a change needs to be reported. Higher values mean fewer, more certain alerts.
      */
     #[Optional('confidence_threshold')]
     public ?float $confidenceThreshold;
@@ -55,7 +55,7 @@ final class MonitorsSemanticChangeDetection implements BaseModel
     }
 
     /**
-     * Use `semantic` to judge changes against the target instructions.
+     * Use `semantic` to report only changes that match the target's `instructions`.
      *
      * @param 'semantic' $type
      */
@@ -68,7 +68,7 @@ final class MonitorsSemanticChangeDetection implements BaseModel
     }
 
     /**
-     * Minimum confidence required to report a meaningful change, from 0 to 1.
+     * Minimum confidence a change needs to be reported. Higher values mean fewer, more certain alerts.
      */
     public function withConfidenceThreshold(float $confidenceThreshold): self
     {

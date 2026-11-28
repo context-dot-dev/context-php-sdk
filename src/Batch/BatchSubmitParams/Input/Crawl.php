@@ -30,7 +30,7 @@ final class Crawl implements BaseModel
     public string $mode = 'crawl';
 
     /**
-     * Crawl source and output format.
+     * Where to find pages, with the formats and options to apply to each page.
      */
     #[Required]
     public Data $data;
@@ -71,7 +71,7 @@ final class Crawl implements BaseModel
     }
 
     /**
-     * Crawl source and output format.
+     * Where to find pages, with the formats and options to apply to each page.
      *
      * @param Data|DataShape $data
      */

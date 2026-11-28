@@ -22,7 +22,7 @@ use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsSitemapTarget;
 use ContextDev\Monitors\MonitorCreateParams\Webhook;
 
 /**
- * Watch a page, URL inventory, or extracted website data on a schedule. A run starts immediately to capture the baseline.
+ * Watch a web page, a sitemap, data extracted from a site, or web search results on a schedule, and get a webhook when something changes. Creating a monitor queues its baseline run right away.
  *
  * @see ContextDev\Services\MonitorsService::create()
  *
@@ -65,7 +65,7 @@ final class MonitorCreateParams implements BaseModel
     public MonitorsPageTarget|MonitorsSitemapTarget|MonitorsExtractTarget|MonitorsSearchTarget $target;
 
     /**
-     * How changes are judged. Defaults to `semantic` for extract and search targets and page targets with `instructions`, otherwise `exact`.
+     * How changes are judged. Defaults to `semantic` for extract and search targets and for page targets with `instructions`; otherwise `exact`. Sitemap targets support only `exact`, and extract targets only `semantic`.
      *
      * @var ChangeDetectionVariants|null $changeDetection
      */
@@ -73,7 +73,7 @@ final class MonitorCreateParams implements BaseModel
     public MonitorsExactChangeDetection|MonitorsSemanticChangeDetection|null $changeDetection;
 
     /**
-     * Always `web`. Optional.
+     * Monitor category. Always `web`.
      *
      * @var value-of<Mode>|null $mode
      */
@@ -81,7 +81,7 @@ final class MonitorCreateParams implements BaseModel
     public ?string $mode;
 
     /**
-     * Access policy IDs to apply to every run. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Access policy IDs to apply to every run. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @var list<string>|null $policies
      */
@@ -89,13 +89,13 @@ final class MonitorCreateParams implements BaseModel
     public ?array $policies;
 
     /**
-     * Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
+     * Run the monitor at a fixed interval, such as every 6 hours or every 2 days. The interval must be between 10 minutes and 1 year.
      */
     #[Optional]
     public ?Schedule $schedule;
 
     /**
-     * Labels for filtering monitors, their changes, and their usage.
+     * Labels for grouping monitors. Filter monitors, changes, and credit usage by tag.
      *
      * @var list<string>|null $tags
      */
@@ -103,7 +103,7 @@ final class MonitorCreateParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Webhook destination and delivery settings. Null means no webhook is configured.
+     * Webhook that receives monitor events. `null` when no webhook is configured.
      */
     #[Optional(nullable: true)]
     public ?Webhook $webhook;
@@ -191,7 +191,7 @@ final class MonitorCreateParams implements BaseModel
     }
 
     /**
-     * How changes are judged. Defaults to `semantic` for extract and search targets and page targets with `instructions`, otherwise `exact`.
+     * How changes are judged. Defaults to `semantic` for extract and search targets and for page targets with `instructions`; otherwise `exact`. Sitemap targets support only `exact`, and extract targets only `semantic`.
      *
      * @param ChangeDetectionShape $changeDetection
      */
@@ -205,7 +205,7 @@ final class MonitorCreateParams implements BaseModel
     }
 
     /**
-     * Always `web`. Optional.
+     * Monitor category. Always `web`.
      *
      * @param Mode|value-of<Mode> $mode
      */
@@ -218,7 +218,7 @@ final class MonitorCreateParams implements BaseModel
     }
 
     /**
-     * Access policy IDs to apply to every run. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Access policy IDs to apply to every run. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @param list<string> $policies
      */
@@ -231,7 +231,7 @@ final class MonitorCreateParams implements BaseModel
     }
 
     /**
-     * Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
+     * Run the monitor at a fixed interval, such as every 6 hours or every 2 days. The interval must be between 10 minutes and 1 year.
      *
      * @param Schedule|ScheduleShape $schedule
      */
@@ -244,7 +244,7 @@ final class MonitorCreateParams implements BaseModel
     }
 
     /**
-     * Labels for filtering monitors, their changes, and their usage.
+     * Labels for grouping monitors. Filter monitors, changes, and credit usage by tag.
      *
      * @param list<string> $tags
      */
@@ -257,7 +257,7 @@ final class MonitorCreateParams implements BaseModel
     }
 
     /**
-     * Webhook destination and delivery settings. Null means no webhook is configured.
+     * Webhook that receives monitor events. `null` when no webhook is configured.
      *
      * @param Webhook|WebhookShape|null $webhook
      */

@@ -12,7 +12,7 @@ use ContextDev\Core\Conversion\Contracts\Converter;
 use ContextDev\Core\Conversion\Contracts\ConverterSource;
 
 /**
- * What to capture: `viewport`, `fullPage`, one element, or a rectangle. Max 40 megapixels.
+ * What to capture: `viewport`, `fullPage`, one element, or a rectangle. Up to 40 megapixels.
  *
  * @phpstan-import-type SelectorShape from \ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\ScreenshotParams\Area\Selector
  * @phpstan-import-type UnionMember2Shape from \ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\ScreenshotParams\Area\UnionMember2

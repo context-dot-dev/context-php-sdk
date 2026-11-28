@@ -13,7 +13,7 @@ use ContextDev\Parse\ParseHandleParams\Pdf;
 use ContextDev\Parse\ParseHandleParams\Zdr;
 
 /**
- * Convert uploaded file bytes into Markdown and optional HTML. WARC and WARC.GZ archives combine HTTP response, resource, and conversion records in archive order. Revisit and segmented records are skipped. Decoded WARC content is limited to 50 MiB.
+ * Convert a file to Markdown. Handles PDF, Word, Excel, PowerPoint, HTML, XML, CSV, JSON, YAML, source code, subtitles, images, and WARC archives. Send the raw bytes as the request body; set `ocr=true` to read scanned pages and images.
  *
  * @see ContextDev\Services\ParseService::handle()
  *
@@ -40,13 +40,13 @@ final class ParseHandleParams implements BaseModel
     use SdkParams;
 
     /**
-     * Optional client identifier used for usage attribution.
+     * Client identifier for usage attribution.
      */
     #[Optional]
     public ?string $client;
 
     /**
-     * Optional file extension hint, such as pdf, docx, xlsx, pptx, html, json, csv, md, py, rtf, jpg, png, txt, warc, or warc.gz.
+     * File type hint, such as `pdf`, `docx`, `xlsx`, `pptx`, `html`, `json`, `csv`, `md`, `py`, `rtf`, `jpg`, `png`, `txt`, `warc`, or `warc.gz`. Use it when the `Content-Type` header is missing or generic.
      *
      * @var value-of<Extension>|null $extension
      */
@@ -54,43 +54,43 @@ final class ParseHandleParams implements BaseModel
     public ?string $extension;
 
     /**
-     * Include image references in Markdown output.
+     * Include image references in the Markdown.
      */
     #[Optional]
     public ?bool $includeImages;
 
     /**
-     * Preserve hyperlinks in Markdown output.
+     * Keep link URLs in the Markdown.
      */
     #[Optional]
     public ?bool $includeLinks;
 
     /**
-     * Start each PDF page in the Markdown with a `<!-- page N -->` line, where N is the original 1-based page number.
+     * Start each PDF page in the Markdown with a `<!-- page N -->` line, where `N` is the original 1-based page number.
      */
     #[Optional]
     public ?bool $includeNumberedPages;
 
     /**
-     * Read text from images and scanned PDF pages. PDF page ranges still apply.
+     * Read text from images and scanned PDF pages with OCR, within the `pdf` page range. Adds 1 credit per page read.
      */
     #[Optional]
     public ?bool $ocr;
 
     /**
-     * PDF page-range options as a JSON object, e.g. {"start": 2, "end": 5}.
+     * PDF page range as a JSON object, such as `{"start": 2, "end": 5}`.
      */
     #[Optional]
     public ?Pdf $pdf;
 
     /**
-     * Shorten base64-encoded image data in the Markdown output.
+     * Shorten inline base64 image data.
      */
     #[Optional]
     public ?bool $shortenBase64Images;
 
     /**
-     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
      *
      * @var list<string>|null $tags
      */
@@ -98,7 +98,7 @@ final class ParseHandleParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Extract only the main content from HTML-like inputs.
+     * Keep only the main content, without navigation, headers, footers, or sidebars. Applies to HTML-like inputs.
      */
     #[Optional]
     public ?bool $useMainContentOnly;
@@ -157,7 +157,7 @@ final class ParseHandleParams implements BaseModel
     }
 
     /**
-     * Optional client identifier used for usage attribution.
+     * Client identifier for usage attribution.
      */
     public function withClient(string $client): self
     {
@@ -168,7 +168,7 @@ final class ParseHandleParams implements BaseModel
     }
 
     /**
-     * Optional file extension hint, such as pdf, docx, xlsx, pptx, html, json, csv, md, py, rtf, jpg, png, txt, warc, or warc.gz.
+     * File type hint, such as `pdf`, `docx`, `xlsx`, `pptx`, `html`, `json`, `csv`, `md`, `py`, `rtf`, `jpg`, `png`, `txt`, `warc`, or `warc.gz`. Use it when the `Content-Type` header is missing or generic.
      *
      * @param Extension|value-of<Extension> $extension
      */
@@ -181,7 +181,7 @@ final class ParseHandleParams implements BaseModel
     }
 
     /**
-     * Include image references in Markdown output.
+     * Include image references in the Markdown.
      */
     public function withIncludeImages(bool $includeImages): self
     {
@@ -192,7 +192,7 @@ final class ParseHandleParams implements BaseModel
     }
 
     /**
-     * Preserve hyperlinks in Markdown output.
+     * Keep link URLs in the Markdown.
      */
     public function withIncludeLinks(bool $includeLinks): self
     {
@@ -203,7 +203,7 @@ final class ParseHandleParams implements BaseModel
     }
 
     /**
-     * Start each PDF page in the Markdown with a `<!-- page N -->` line, where N is the original 1-based page number.
+     * Start each PDF page in the Markdown with a `<!-- page N -->` line, where `N` is the original 1-based page number.
      */
     public function withIncludeNumberedPages(bool $includeNumberedPages): self
     {
@@ -214,7 +214,7 @@ final class ParseHandleParams implements BaseModel
     }
 
     /**
-     * Read text from images and scanned PDF pages. PDF page ranges still apply.
+     * Read text from images and scanned PDF pages with OCR, within the `pdf` page range. Adds 1 credit per page read.
      */
     public function withOcr(bool $ocr): self
     {
@@ -225,7 +225,7 @@ final class ParseHandleParams implements BaseModel
     }
 
     /**
-     * PDF page-range options as a JSON object, e.g. {"start": 2, "end": 5}.
+     * PDF page range as a JSON object, such as `{"start": 2, "end": 5}`.
      *
      * @param Pdf|PdfShape $pdf
      */
@@ -238,7 +238,7 @@ final class ParseHandleParams implements BaseModel
     }
 
     /**
-     * Shorten base64-encoded image data in the Markdown output.
+     * Shorten inline base64 image data.
      */
     public function withShortenBase64Images(bool $shortenBase64Images): self
     {
@@ -249,7 +249,7 @@ final class ParseHandleParams implements BaseModel
     }
 
     /**
-     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
      *
      * @param list<string> $tags
      */
@@ -262,7 +262,7 @@ final class ParseHandleParams implements BaseModel
     }
 
     /**
-     * Extract only the main content from HTML-like inputs.
+     * Keep only the main content, without navigation, headers, footers, or sidebars. Applies to HTML-like inputs.
      */
     public function withUseMainContentOnly(bool $useMainContentOnly): self
     {

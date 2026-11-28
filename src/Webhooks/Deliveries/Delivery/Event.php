@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Webhooks\Deliveries\Delivery;
 
 /**
- * Webhook event type.
+ * Event that triggered the delivery.
  */
 enum Event: string
 {

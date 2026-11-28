@@ -28,7 +28,7 @@ final class DeliveryListResponse implements BaseModel
     use SdkModel;
 
     /**
-     * Webhook deliveries.
+     * Webhook deliveries on this page.
      *
      * @var list<DeliverySummary> $data
      */
@@ -36,13 +36,13 @@ final class DeliveryListResponse implements BaseModel
     public array $data;
 
     /**
-     * Whether more deliveries are available.
+     * Whether more results are available after this page.
      */
     #[Required('has_more')]
     public bool $hasMore;
 
     /**
-     * Next page cursor, or null on the last page.
+     * Pass as `cursor` to fetch the next page. `null` on the last page.
      */
     #[Required('next_cursor')]
     public ?string $nextCursor;
@@ -112,7 +112,7 @@ final class DeliveryListResponse implements BaseModel
     }
 
     /**
-     * Webhook deliveries.
+     * Webhook deliveries on this page.
      *
      * @param list<DeliverySummary|DeliverySummaryShape> $data
      */
@@ -125,7 +125,7 @@ final class DeliveryListResponse implements BaseModel
     }
 
     /**
-     * Whether more deliveries are available.
+     * Whether more results are available after this page.
      */
     public function withHasMore(bool $hasMore): self
     {
@@ -136,7 +136,7 @@ final class DeliveryListResponse implements BaseModel
     }
 
     /**
-     * Next page cursor, or null on the last page.
+     * Pass as `cursor` to fetch the next page. `null` on the last page.
      */
     public function withNextCursor(?string $nextCursor): self
     {

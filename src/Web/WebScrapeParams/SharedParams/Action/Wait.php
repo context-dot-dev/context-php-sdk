@@ -17,7 +17,7 @@ final class Wait implements BaseModel
     use SdkModel;
 
     /**
-     * Use `wait` to pause for a fixed duration.
+     * Pause for a fixed time.
      *
      * @var 'wait' $type
      */
@@ -25,7 +25,7 @@ final class Wait implements BaseModel
     public string $type = 'wait';
 
     /**
-     * Time to pause in milliseconds before the next action.
+     * How long to pause before the next action, in milliseconds.
      */
     #[Required]
     public int $milliseconds;
@@ -64,7 +64,7 @@ final class Wait implements BaseModel
     }
 
     /**
-     * Time to pause in milliseconds before the next action.
+     * How long to pause before the next action, in milliseconds.
      */
     public function withMilliseconds(int $milliseconds): self
     {
@@ -75,7 +75,7 @@ final class Wait implements BaseModel
     }
 
     /**
-     * Use `wait` to pause for a fixed duration.
+     * Pause for a fixed time.
      *
      * @param 'wait' $type
      */

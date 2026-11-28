@@ -17,7 +17,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Retrieve logos, colors, company details, and social links using one lookup identifier. A direct URL limits extraction to that page.
+ * Look up a brand by domain, company name, work email, stock ticker, page URL, or card transaction descriptor. Returns logos, colors, backdrops, description, industries, address, stock listing, and social links. A `by_direct_url` lookup reads only that page.
  *
  * @see ContextDev\Services\BrandService::retrieve()
  *
@@ -57,37 +57,41 @@ final class BrandRetrieveParams implements BaseModel
     use SdkParams;
 
     /**
-     * Domain name to retrieve brand data for (e.g., 'stripe.com').
+     * Domain of the brand, such as `stripe.com`.
      */
     #[Required]
     public string $domain;
 
     /**
-     * Discriminator for transaction-based brand retrieval.
+     * Set to `by_transaction` to identify the merchant behind a transaction descriptor.
      *
      * @var value-of<Type> $type
      */
     #[Required(enum: Type::class)]
     public string $type;
 
-    /** @var value-of<ForceLanguage>|null $forceLanguage */
+    /**
+     * Translate the brand's `title`, `description`, and `slogan` into this language.
+     *
+     * @var value-of<ForceLanguage>|null $forceLanguage
+     */
     #[Optional('force_language', enum: ForceLanguage::class, nullable: true)]
     public ?string $forceLanguage;
 
     /**
-     * Maximum age of cached brand data in ms. Defaults to 3 months; clamped to 0–1 year. `0` refreshes.
+     * Maximum age of cached brand data, in milliseconds. `0` always fetches fresh. Defaults to 90 days (7776000000 ms). Values above 1 year (31536000000 ms) are capped at 1 year.
      */
     #[Optional]
     public ?int $maxAgeMs;
 
     /**
-     * Optional parameter to optimize the API call for maximum speed. When set to true, the API will skip time-consuming operations for faster response at the cost of less comprehensive data.
+     * Skip slower enrichment steps for a faster, less detailed response.
      */
     #[Optional]
     public ?bool $maxSpeed;
 
     /**
-     * Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @var list<string>|null $policies
      */
@@ -95,7 +99,7 @@ final class BrandRetrieveParams implements BaseModel
     public ?array $policies;
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @var list<string>|null $tags
      */
@@ -109,7 +113,7 @@ final class BrandRetrieveParams implements BaseModel
     public ?TimeoutOpts $timeoutOpts;
 
     /**
-     * `enabled` disables request logs and traces and omits request and response content from usage logs. Brand data and hosted assets may still be stored. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
+     * `enabled` turns off request logs and traces and keeps request and response content out of usage logs. Brand data and hosted assets may still be stored. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @var value-of<Zdr>|null $zdr
      */
@@ -117,7 +121,7 @@ final class BrandRetrieveParams implements BaseModel
     public ?string $zdr;
 
     /**
-     * Company name to retrieve brand data for (e.g., 'Apple Inc').
+     * Company name, such as `Apple Inc`.
      */
     #[Required]
     public string $name;
@@ -131,19 +135,19 @@ final class BrandRetrieveParams implements BaseModel
     public ?string $country;
 
     /**
-     * Email address to retrieve brand data for (e.g., 'jane@stripe.com').
+     * Work email address, such as `jane@stripe.com`. The brand is looked up from its domain.
      */
     #[Required]
     public string $email;
 
     /**
-     * Stock ticker symbol to retrieve brand data for (e.g., 'AAPL').
+     * Stock ticker symbol, such as `AAPL`.
      */
     #[Required]
     public string $ticker;
 
     /**
-     * Stock exchange code.
+     * Stock exchange code, such as `NASDAQ` or `LSE`.
      *
      * @var value-of<TickerExchange>|null $tickerExchange
      */
@@ -151,31 +155,31 @@ final class BrandRetrieveParams implements BaseModel
     public ?string $tickerExchange;
 
     /**
-     * Full http(s) URL to fetch brand data from (e.g., 'https://stripe.com/enterprise'). Only this URL is fetched — not the entire internet.
+     * Full `http` or `https` URL of the page to read, such as `https://stripe.com/enterprise`. Only this page is fetched.
      */
     #[Required('direct_url')]
     public string $directURL;
 
     /**
-     * Transaction information to identify the brand.
+     * Transaction descriptor from a card or bank statement, such as `SQ *COFFEE SHOP`.
      */
     #[Required('transaction_info')]
     public string $transactionInfo;
 
     /**
-     * Optional city name to prioritize when searching for the brand.
+     * City where the transaction took place. Brands in this city are preferred.
      */
     #[Optional]
     public ?string $city;
 
     /**
-     * When set to true, the API performs additional verification to ensure the identified brand matches the transaction with high confidence.
+     * Run extra verification so the returned brand matches the transaction with high confidence.
      */
     #[Optional('high_confidence_only')]
     public ?bool $highConfidenceOnly;
 
     /**
-     * Optional Merchant Category Code (MCC) to help identify the business category or industry.
+     * Merchant Category Code (MCC) from the transaction. Helps identify the type of business.
      *
      * @var MccVariants|null $mcc
      */
@@ -183,7 +187,7 @@ final class BrandRetrieveParams implements BaseModel
     public string|float|null $mcc;
 
     /**
-     * Optional phone number from the transaction to help verify brand match.
+     * Merchant phone number from the transaction. Helps confirm the match.
      *
      * @var PhoneVariants|null $phone
      */
@@ -290,7 +294,7 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * Domain name to retrieve brand data for (e.g., 'stripe.com').
+     * Domain of the brand, such as `stripe.com`.
      */
     public function withDomain(string $domain): self
     {
@@ -301,7 +305,7 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * Discriminator for transaction-based brand retrieval.
+     * Set to `by_transaction` to identify the merchant behind a transaction descriptor.
      *
      * @param Type|value-of<Type> $type
      */
@@ -314,6 +318,8 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
+     * Translate the brand's `title`, `description`, and `slogan` into this language.
+     *
      * @param ForceLanguage|value-of<ForceLanguage>|null $forceLanguage
      */
     public function withForceLanguage(
@@ -326,7 +332,7 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * Maximum age of cached brand data in ms. Defaults to 3 months; clamped to 0–1 year. `0` refreshes.
+     * Maximum age of cached brand data, in milliseconds. `0` always fetches fresh. Defaults to 90 days (7776000000 ms). Values above 1 year (31536000000 ms) are capped at 1 year.
      */
     public function withMaxAgeMs(int $maxAgeMs): self
     {
@@ -337,7 +343,7 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * Optional parameter to optimize the API call for maximum speed. When set to true, the API will skip time-consuming operations for faster response at the cost of less comprehensive data.
+     * Skip slower enrichment steps for a faster, less detailed response.
      */
     public function withMaxSpeed(bool $maxSpeed): self
     {
@@ -348,7 +354,7 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @param list<string> $policies
      */
@@ -361,7 +367,7 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @param list<string> $tags
      */
@@ -387,7 +393,7 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * `enabled` disables request logs and traces and omits request and response content from usage logs. Brand data and hosted assets may still be stored. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
+     * `enabled` turns off request logs and traces and keeps request and response content out of usage logs. Brand data and hosted assets may still be stored. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @param Zdr|value-of<Zdr> $zdr
      */
@@ -400,7 +406,7 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * Company name to retrieve brand data for (e.g., 'Apple Inc').
+     * Company name, such as `Apple Inc`.
      */
     public function withName(string $name): self
     {
@@ -424,7 +430,7 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * Email address to retrieve brand data for (e.g., 'jane@stripe.com').
+     * Work email address, such as `jane@stripe.com`. The brand is looked up from its domain.
      */
     public function withEmail(string $email): self
     {
@@ -435,7 +441,7 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * Stock ticker symbol to retrieve brand data for (e.g., 'AAPL').
+     * Stock ticker symbol, such as `AAPL`.
      */
     public function withTicker(string $ticker): self
     {
@@ -446,7 +452,7 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * Stock exchange code.
+     * Stock exchange code, such as `NASDAQ` or `LSE`.
      *
      * @param TickerExchange|value-of<TickerExchange> $tickerExchange
      */
@@ -460,7 +466,7 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * Full http(s) URL to fetch brand data from (e.g., 'https://stripe.com/enterprise'). Only this URL is fetched — not the entire internet.
+     * Full `http` or `https` URL of the page to read, such as `https://stripe.com/enterprise`. Only this page is fetched.
      */
     public function withDirectURL(string $directURL): self
     {
@@ -471,7 +477,7 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * Transaction information to identify the brand.
+     * Transaction descriptor from a card or bank statement, such as `SQ *COFFEE SHOP`.
      */
     public function withTransactionInfo(string $transactionInfo): self
     {
@@ -482,7 +488,7 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * Optional city name to prioritize when searching for the brand.
+     * City where the transaction took place. Brands in this city are preferred.
      */
     public function withCity(string $city): self
     {
@@ -493,7 +499,7 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * When set to true, the API performs additional verification to ensure the identified brand matches the transaction with high confidence.
+     * Run extra verification so the returned brand matches the transaction with high confidence.
      */
     public function withHighConfidenceOnly(bool $highConfidenceOnly): self
     {
@@ -504,7 +510,7 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * Optional Merchant Category Code (MCC) to help identify the business category or industry.
+     * Merchant Category Code (MCC) from the transaction. Helps identify the type of business.
      *
      * @param MccShape $mcc
      */
@@ -517,7 +523,7 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * Optional phone number from the transaction to help verify brand match.
+     * Merchant phone number from the transaction. Helps confirm the match.
      *
      * @param PhoneShape $phone
      */

@@ -24,7 +24,7 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\BatchRawContract;
 
 /**
- * Scrape many pages or crawl a site asynchronously.
+ * Scrape up to 100,000 URLs or crawl a site asynchronously.
  *
  * @phpstan-import-type TagsShape from \ContextDev\Batch\BatchListParams\Tags
  * @phpstan-import-type InputShape from \ContextDev\Batch\BatchSubmitParams\Input
@@ -42,9 +42,9 @@ final class BatchRawService implements BatchRawContract
     /**
      * @api
      *
-     * Get batch progress and result download links. Result files are deleted 180 days after the batch finishes.
+     * Retrieve a batch's status, progress, and credit usage, plus links to download its results once it finishes. Result files are deleted 180 days after the batch finishes.
      *
-     * @param string $batchID batch ID
+     * @param string $batchID ID of the batch
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<BatchGetResponse>
@@ -67,7 +67,7 @@ final class BatchRawService implements BatchRawContract
     /**
      * @api
      *
-     * List your batches, newest first, with optional filters.
+     * List your batches, newest first. Filter by status or tags, or search by batch ID, crawl source, or tag.
      *
      * @param array{
      *   cursor?: string,
@@ -110,7 +110,7 @@ final class BatchRawService implements BatchRawContract
      *
      * Permanently delete a finished batch and its results. Its webhook deliveries can no longer be retried.
      *
-     * @param string $batchID batch ID
+     * @param string $batchID ID of the batch
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<BatchDeleteResponse>
@@ -133,9 +133,9 @@ final class BatchRawService implements BatchRawContract
     /**
      * @api
      *
-     * Stop a batch from starting new pages. Pages already in progress finish before the batch becomes cancelled.
+     * Stop a batch from starting new pages. Pages already in progress finish, then the batch becomes `cancelled` and unused credits are refunded.
      *
-     * @param string $batchID batch ID
+     * @param string $batchID ID of the batch
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<BatchCancelResponse>
@@ -158,9 +158,9 @@ final class BatchRawService implements BatchRawContract
     /**
      * @api
      *
-     * Page through a finished batch’s results as JSON. Each record contains result with the same outputs and per-format errors as POST /web/scrape. Results remain available for 180 days.
+     * Page through a finished batch's results as JSON. Each record's `result` has the same outputs and per-format errors as `POST /web/scrape`. Results are kept for 180 days after the batch finishes.
      *
-     * @param string $batchID batch ID
+     * @param string $batchID ID of the batch
      * @param array{cursor?: string, limit?: int}|BatchGetResultsParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -191,7 +191,7 @@ final class BatchRawService implements BatchRawContract
     /**
      * @api
      *
-     * Scrape up to 100,000 URLs, or crawl a site, asynchronously using the same formats and scrape parameters as POST /web/scrape. Choose Markdown, HTML, screenshots, images, bytes, parsed fields, products, highlights, and JSON. Submission persists the input and returns immediately with status pending. Organizations with fewer than 10 available credits and no overage are rejected with 402 up front. Each organization can submit up to 2,500 batches per minute, independently of its polling budget. Batches wait pending when execution capacity is full. Validation, sitemap discovery, the full credit quote, and shard scheduling happen afterward. Poll the batch ID or receive a webhook when it finishes. Deferred rejections appear as status failed with a failure code and message.
+     * Scrape up to 100,000 URLs, or crawl a site, asynchronously with every Scrape Anything format and option from `POST /web/scrape`. Poll `GET /batch/{batch_id}` or pass `webhook` to be notified when the batch finishes. URLs and credits are checked after the batch is accepted, so a batch that fails those checks ends as `failed` with a `failure` code instead of returning an error.
      *
      * @param array{
      *   input: InputShape,

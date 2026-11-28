@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * How well the person matches the query. Only returned in `ultra` mode.
+ * How well the person matches the query. Returned only in `ultra` mode.
  *
  * @phpstan-type MatchShape = array{confidence: float}
  */

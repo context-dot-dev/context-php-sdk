@@ -37,14 +37,14 @@ final class ScholarService implements ScholarContract
     /**
      * @api
      *
-     * Search full-text papers from arXiv and Europe PMC. Returns up to 250 relevant papers with matching passages and full-text links.
+     * Search the full text of papers from arXiv and Europe PMC by topic or question. Each result includes the matching passage and a direct link to the full text. Page through up to 250 matches, ranked by relevance or newest first.
      *
-     * @param string $query A topic or question. Append one arxiv:, pmcid:, pmid:, or doi: ID to search within an indexed paper.
-     * @param string|null $cursor use next_cursor to fetch the next page
+     * @param string $query Topic or question to search for. Append one `arxiv:`, `pmcid:`, `pmid:`, or `doi:` ID to search within that paper, such as `protein folding pmid:34265844`, or send the ID on its own.
+     * @param string|null $cursor Cursor from the previous page's `next_cursor`. Omit for the first page.
      * @param FilterBy|FilterByShape $filterBy filter by publication date
-     * @param int $limit papers per page
-     * @param Sort|value-of<Sort> $sort Order the top 250 matches. date_desc puts newest first, with undated papers last.
-     * @param list<string> $tags labels for filtering usage in the dashboard
+     * @param int $limit maximum number of papers to return per page
+     * @param Sort|value-of<Sort> $sort `relevance` puts the closest matches first; `date_desc` puts the newest papers first, with undated papers last. Both orders apply to the top 250 matches.
+     * @param list<string> $tags Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

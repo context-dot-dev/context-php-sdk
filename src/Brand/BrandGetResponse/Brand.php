@@ -19,7 +19,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Detailed brand information.
+ * The brand's identity, visual assets, and company details.
  *
  * @phpstan-import-type AddressShape from \ContextDev\Brand\BrandGetResponse\Brand\Address
  * @phpstan-import-type BackdropShape from \ContextDev\Brand\BrandGetResponse\Brand\Backdrop
@@ -57,13 +57,13 @@ final class Brand implements BaseModel
     use SdkModel;
 
     /**
-     * Physical address of the brand.
+     * Physical address of the brand. Omitted when unknown.
      */
     #[Optional]
     public ?Address $address;
 
     /**
-     * An array of backdrop images for the brand.
+     * Backdrop images for the brand, such as social profile banners.
      *
      * @var list<Backdrop>|null $backdrops
      */
@@ -71,7 +71,7 @@ final class Brand implements BaseModel
     public ?array $backdrops;
 
     /**
-     * An array of brand colors.
+     * Brand colors from the website and logos.
      *
      * @var list<Color>|null $colors
      */
@@ -79,49 +79,49 @@ final class Brand implements BaseModel
     public ?array $colors;
 
     /**
-     * A brief description of the brand.
+     * Short description of the brand.
      */
     #[Optional]
     public ?string $description;
 
     /**
-     * The domain name of the brand.
+     * Domain of the brand.
      */
     #[Optional]
     public ?string $domain;
 
     /**
-     * Company email address.
+     * Contact email address for the company.
      */
     #[Optional]
     public ?string $email;
 
     /**
-     * Employee headcount information for the brand (will be null if unknown).
+     * Employee headcount. Omitted when unknown.
      */
     #[Optional]
     public ?Employees $employees;
 
     /**
-     * Industry classification information for the brand.
+     * Industry classification of the brand.
      */
     #[Optional]
     public ?Industries $industries;
 
     /**
-     * Indicates whether the brand content is not safe for work (NSFW).
+     * Whether the brand's content is not safe for work (NSFW).
      */
     #[Optional('is_nsfw')]
     public ?bool $isNsfw;
 
     /**
-     * Important website links for the brand.
+     * Key pages on the brand's website.
      */
     #[Optional]
     public ?Links $links;
 
     /**
-     * An array of logos associated with the brand. When a similarly shaped SVG variant exists, it is returned ahead of its raster equivalent; otherwise relevance order is preserved.
+     * Brand logos, most relevant first. An SVG is listed ahead of a raster logo of the same shape.
      *
      * @var list<Logo>|null $logos
      */
@@ -129,13 +129,13 @@ final class Brand implements BaseModel
     public ?array $logos;
 
     /**
-     * Company phone number.
+     * Contact phone number for the company.
      */
     #[Optional]
     public ?string $phone;
 
     /**
-     * Language, e.g. `english`.
+     * Lowercase language name, such as `english`.
      *
      * @var value-of<PrimaryLanguage>|null $primaryLanguage
      */
@@ -143,13 +143,13 @@ final class Brand implements BaseModel
     public ?string $primaryLanguage;
 
     /**
-     * The brand's slogan.
+     * Brand slogan or tagline.
      */
     #[Optional]
     public ?string $slogan;
 
     /**
-     * An array of social media links for the brand.
+     * Social media profiles of the brand.
      *
      * @var list<Social>|null $socials
      */
@@ -157,13 +157,13 @@ final class Brand implements BaseModel
     public ?array $socials;
 
     /**
-     * Stock market information for this brand (will be null if not a publicly traded company).
+     * Stock listing. Omitted when the company is not publicly traded.
      */
     #[Optional]
     public ?Stock $stock;
 
     /**
-     * The title or name of the brand.
+     * Brand name.
      */
     #[Optional]
     public ?string $title;
@@ -232,7 +232,7 @@ final class Brand implements BaseModel
     }
 
     /**
-     * Physical address of the brand.
+     * Physical address of the brand. Omitted when unknown.
      *
      * @param Address|AddressShape $address
      */
@@ -245,7 +245,7 @@ final class Brand implements BaseModel
     }
 
     /**
-     * An array of backdrop images for the brand.
+     * Backdrop images for the brand, such as social profile banners.
      *
      * @param list<Backdrop|BackdropShape> $backdrops
      */
@@ -258,7 +258,7 @@ final class Brand implements BaseModel
     }
 
     /**
-     * An array of brand colors.
+     * Brand colors from the website and logos.
      *
      * @param list<Color|ColorShape> $colors
      */
@@ -271,7 +271,7 @@ final class Brand implements BaseModel
     }
 
     /**
-     * A brief description of the brand.
+     * Short description of the brand.
      */
     public function withDescription(string $description): self
     {
@@ -282,7 +282,7 @@ final class Brand implements BaseModel
     }
 
     /**
-     * The domain name of the brand.
+     * Domain of the brand.
      */
     public function withDomain(string $domain): self
     {
@@ -293,7 +293,7 @@ final class Brand implements BaseModel
     }
 
     /**
-     * Company email address.
+     * Contact email address for the company.
      */
     public function withEmail(string $email): self
     {
@@ -304,7 +304,7 @@ final class Brand implements BaseModel
     }
 
     /**
-     * Employee headcount information for the brand (will be null if unknown).
+     * Employee headcount. Omitted when unknown.
      *
      * @param Employees|EmployeesShape $employees
      */
@@ -317,7 +317,7 @@ final class Brand implements BaseModel
     }
 
     /**
-     * Industry classification information for the brand.
+     * Industry classification of the brand.
      *
      * @param Industries|IndustriesShape $industries
      */
@@ -330,7 +330,7 @@ final class Brand implements BaseModel
     }
 
     /**
-     * Indicates whether the brand content is not safe for work (NSFW).
+     * Whether the brand's content is not safe for work (NSFW).
      */
     public function withIsNsfw(bool $isNsfw): self
     {
@@ -341,7 +341,7 @@ final class Brand implements BaseModel
     }
 
     /**
-     * Important website links for the brand.
+     * Key pages on the brand's website.
      *
      * @param Links|LinksShape $links
      */
@@ -354,7 +354,7 @@ final class Brand implements BaseModel
     }
 
     /**
-     * An array of logos associated with the brand. When a similarly shaped SVG variant exists, it is returned ahead of its raster equivalent; otherwise relevance order is preserved.
+     * Brand logos, most relevant first. An SVG is listed ahead of a raster logo of the same shape.
      *
      * @param list<Logo|LogoShape> $logos
      */
@@ -367,7 +367,7 @@ final class Brand implements BaseModel
     }
 
     /**
-     * Company phone number.
+     * Contact phone number for the company.
      */
     public function withPhone(string $phone): self
     {
@@ -378,7 +378,7 @@ final class Brand implements BaseModel
     }
 
     /**
-     * Language, e.g. `english`.
+     * Lowercase language name, such as `english`.
      *
      * @param PrimaryLanguage|value-of<PrimaryLanguage>|null $primaryLanguage
      */
@@ -392,7 +392,7 @@ final class Brand implements BaseModel
     }
 
     /**
-     * The brand's slogan.
+     * Brand slogan or tagline.
      */
     public function withSlogan(string $slogan): self
     {
@@ -403,7 +403,7 @@ final class Brand implements BaseModel
     }
 
     /**
-     * An array of social media links for the brand.
+     * Social media profiles of the brand.
      *
      * @param list<Social|SocialShape> $socials
      */
@@ -416,7 +416,7 @@ final class Brand implements BaseModel
     }
 
     /**
-     * Stock market information for this brand (will be null if not a publicly traded company).
+     * Stock listing. Omitted when the company is not publicly traded.
      *
      * @param Stock|StockShape $stock
      */
@@ -429,7 +429,7 @@ final class Brand implements BaseModel
     }
 
     /**
-     * The title or name of the brand.
+     * Brand name.
      */
     public function withTitle(string $title): self
     {

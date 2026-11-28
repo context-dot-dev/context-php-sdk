@@ -23,7 +23,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * The same response as POST /web/scrape, including per-format success, failure, and partial results.
+ * Scrape output, in the same shape as a `POST /web/scrape` response.
  *
  * @phpstan-import-type BytesShape from \ContextDev\Batch\BatchGetResultsResponse\Data\ScrapedPage\Result\Bytes
  * @phpstan-import-type CacheMetadataShape from \ContextDev\Batch\BatchGetResultsResponse\Data\ScrapedPage\Result\CacheMetadata
@@ -70,7 +70,7 @@ final class Result implements BaseModel
     public Bytes $bytes;
 
     /**
-     * Whether this response came from cache.
+     * Cache status of this response.
      */
     #[Required('cache_metadata')]
     public CacheMetadata $cacheMetadata;
@@ -82,13 +82,13 @@ final class Result implements BaseModel
     public Highlights $highlights;
 
     /**
-     * Rendered HTML after content filters.
+     * Rendered HTML of the page, after content filters.
      */
     #[Required]
     public HTML $html;
 
     /**
-     * Images after content filters. `[]` when none are found.
+     * Images found on the page, after content filters. `[]` when there are none.
      */
     #[Required]
     public Images $images;
@@ -100,7 +100,7 @@ final class Result implements BaseModel
     public Json $json;
 
     /**
-     * Markdown after content filters.
+     * Page content as Markdown, after content filters.
      */
     #[Required]
     public Markdown $markdown;
@@ -112,7 +112,7 @@ final class Result implements BaseModel
     public Metadata $metadata;
 
     /**
-     * Custom rules return fields after content filters; unmatched fields are null ([] for lists). The google-maps parser returns business records in data.results, google-maps-reviews returns data.reviews, and the google-play parser returns one app record as data, google-play-reviews returns data.reviews, app-store and app-store-reviews do the same for the App Store, g2-reviews returns data.reviews for a G2 product, instagram-profile and instagram-post return one record as data, instagram-feed returns data.posts, tiktok-profile and tiktok-video return one record as data, tiktok-feed returns data.videos, tiktok-comments returns data.comments, tiktok-followers, tiktok-following, and tiktok-user-search return data.users, yelp-search returns up to 20 ranked organic businesses in data.businesses, plus total and pagination, from a Yelp search URL; yelp-reviews returns up to 20 latest public reviews in data.reviews, with business details and next_offset, from a Yelp business URL; tripadvisor-reviews returns 20 reviews in data.reviews, with data.location and next_offset, from a Tripadvisor hotel, restaurant, or attraction review URL; car-rental-availability returns every vehicle with pay-now and pay-later prices in data.vehicles from an avis.com or budget.com vehicle-availability search URL; car-rental-locations returns rental branches with codes, addresses, coordinates and hours in data.locations from an avis.com or budget.com /locations?keyword= URL; emails, phone-numbers, and links return data.emails, data.phone_numbers, and data.links from the rendered page; the store, Maps, G2, Instagram, and TikTok parsers read their data directly, independently of DOM filters and other outputs.
+     * Fields extracted by `parseParams`. Custom rules return each field after content filters, with `null` when nothing matches (`[]` for `list` rules). Prebuilt parsers return the record or lists described under `parseParams.parser`.
      */
     #[Required]
     public Parsed $parsed;
@@ -124,7 +124,7 @@ final class Result implements BaseModel
     public Product $product;
 
     /**
-     * Authenticated browser profile used for this scrape, or null when no profile was requested. New and existing profile requests both return the profile ID.
+     * Browser profile used for this scrape. `null` when no profile was requested.
      */
     #[Required]
     public ?Profile $profile;
@@ -148,7 +148,7 @@ final class Result implements BaseModel
     public string $url;
 
     /**
-     * True when at least one requested output succeeds but the response has failed or incomplete outputs. Absent when all requested outputs fail.
+     * `true` when at least one requested output succeeded but others failed or are incomplete. Absent otherwise.
      */
     #[Optional]
     public ?bool $isPartial;
@@ -281,7 +281,7 @@ final class Result implements BaseModel
     }
 
     /**
-     * Whether this response came from cache.
+     * Cache status of this response.
      *
      * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      */
@@ -307,7 +307,7 @@ final class Result implements BaseModel
     }
 
     /**
-     * Rendered HTML after content filters.
+     * Rendered HTML of the page, after content filters.
      *
      * @param HTML|HTMLShape $html
      */
@@ -320,7 +320,7 @@ final class Result implements BaseModel
     }
 
     /**
-     * Images after content filters. `[]` when none are found.
+     * Images found on the page, after content filters. `[]` when there are none.
      *
      * @param Images|ImagesShape $images
      */
@@ -346,7 +346,7 @@ final class Result implements BaseModel
     }
 
     /**
-     * Markdown after content filters.
+     * Page content as Markdown, after content filters.
      *
      * @param Markdown|MarkdownShape $markdown
      */
@@ -372,7 +372,7 @@ final class Result implements BaseModel
     }
 
     /**
-     * Custom rules return fields after content filters; unmatched fields are null ([] for lists). The google-maps parser returns business records in data.results, google-maps-reviews returns data.reviews, and the google-play parser returns one app record as data, google-play-reviews returns data.reviews, app-store and app-store-reviews do the same for the App Store, g2-reviews returns data.reviews for a G2 product, instagram-profile and instagram-post return one record as data, instagram-feed returns data.posts, tiktok-profile and tiktok-video return one record as data, tiktok-feed returns data.videos, tiktok-comments returns data.comments, tiktok-followers, tiktok-following, and tiktok-user-search return data.users, yelp-search returns up to 20 ranked organic businesses in data.businesses, plus total and pagination, from a Yelp search URL; yelp-reviews returns up to 20 latest public reviews in data.reviews, with business details and next_offset, from a Yelp business URL; tripadvisor-reviews returns 20 reviews in data.reviews, with data.location and next_offset, from a Tripadvisor hotel, restaurant, or attraction review URL; car-rental-availability returns every vehicle with pay-now and pay-later prices in data.vehicles from an avis.com or budget.com vehicle-availability search URL; car-rental-locations returns rental branches with codes, addresses, coordinates and hours in data.locations from an avis.com or budget.com /locations?keyword= URL; emails, phone-numbers, and links return data.emails, data.phone_numbers, and data.links from the rendered page; the store, Maps, G2, Instagram, and TikTok parsers read their data directly, independently of DOM filters and other outputs.
+     * Fields extracted by `parseParams`. Custom rules return each field after content filters, with `null` when nothing matches (`[]` for `list` rules). Prebuilt parsers return the record or lists described under `parseParams.parser`.
      *
      * @param Parsed|ParsedShape $parsed
      */
@@ -398,7 +398,7 @@ final class Result implements BaseModel
     }
 
     /**
-     * Authenticated browser profile used for this scrape, or null when no profile was requested. New and existing profile requests both return the profile ID.
+     * Browser profile used for this scrape. `null` when no profile was requested.
      *
      * @param Profile|ProfileShape|null $profile
      */
@@ -446,7 +446,7 @@ final class Result implements BaseModel
     }
 
     /**
-     * True when at least one requested output succeeds but the response has failed or incomplete outputs. Absent when all requested outputs fail.
+     * `true` when at least one requested output succeeded but others failed or are incomplete. Absent otherwise.
      */
     public function withIsPartial(bool $isPartial): self
     {

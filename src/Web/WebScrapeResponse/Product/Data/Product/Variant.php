@@ -27,7 +27,7 @@ final class Variant implements BaseModel
     use SdkModel;
 
     /**
-     * Explicit variant attributes such as color, size, material, pattern and properties declared by page.
+     * Attributes that define this variant, such as color, size, material, or pattern, as stated on the page.
      *
      * @var array<string,string> $attributes
      */
@@ -35,24 +35,27 @@ final class Variant implements BaseModel
     public array $attributes;
 
     /**
-     * Original source image URLs explicitly attached to this variant.
+     * Image URLs the source attaches to this variant.
      *
      * @var list<string> $images
      */
     #[Required(list: 'string')]
     public array $images;
 
+    /**
+     * SKU of this variant. `null` when the source does not state one.
+     */
     #[Required]
     public ?string $sku;
 
     /**
-     * Variant or offer URL when provided by the source. May be shared by variants.
+     * URL of this variant or offer, when the source provides one. Several variants can share a URL.
      */
     #[Required]
     public ?string $url;
 
     /**
-     * Normalized stock or ordering availability of this variant.
+     * Stock or ordering availability of this variant.
      *
      * @var value-of<Availability>|null $availability
      */
@@ -63,13 +66,13 @@ final class Variant implements BaseModel
     public ?string $availability;
 
     /**
-     * Currency code for the variant price (e.g., USD, EUR) when stated with it.
+     * Currency code of `price`, such as `USD` or `EUR`, when stated.
      */
     #[Optional(nullable: true)]
     public ?string $currency;
 
     /**
-     * Price of this variant when the source states one per variant.
+     * Price of this variant, when the source states one per variant.
      */
     #[Optional(nullable: true)]
     public ?float $price;
@@ -126,7 +129,7 @@ final class Variant implements BaseModel
     }
 
     /**
-     * Explicit variant attributes such as color, size, material, pattern and properties declared by page.
+     * Attributes that define this variant, such as color, size, material, or pattern, as stated on the page.
      *
      * @param array<string,string> $attributes
      */
@@ -139,7 +142,7 @@ final class Variant implements BaseModel
     }
 
     /**
-     * Original source image URLs explicitly attached to this variant.
+     * Image URLs the source attaches to this variant.
      *
      * @param list<string> $images
      */
@@ -151,6 +154,9 @@ final class Variant implements BaseModel
         return $self;
     }
 
+    /**
+     * SKU of this variant. `null` when the source does not state one.
+     */
     public function withSKU(?string $sku): self
     {
         $self = clone $this;
@@ -160,7 +166,7 @@ final class Variant implements BaseModel
     }
 
     /**
-     * Variant or offer URL when provided by the source. May be shared by variants.
+     * URL of this variant or offer, when the source provides one. Several variants can share a URL.
      */
     public function withURL(?string $url): self
     {
@@ -171,7 +177,7 @@ final class Variant implements BaseModel
     }
 
     /**
-     * Normalized stock or ordering availability of this variant.
+     * Stock or ordering availability of this variant.
      *
      * @param Availability|value-of<Availability>|null $availability
      */
@@ -185,7 +191,7 @@ final class Variant implements BaseModel
     }
 
     /**
-     * Currency code for the variant price (e.g., USD, EUR) when stated with it.
+     * Currency code of `price`, such as `USD` or `EUR`, when stated.
      */
     public function withCurrency(?string $currency): self
     {
@@ -196,7 +202,7 @@ final class Variant implements BaseModel
     }
 
     /**
-     * Price of this variant when the source states one per variant.
+     * Price of this variant, when the source states one per variant.
      */
     public function withPrice(?float $price): self
     {

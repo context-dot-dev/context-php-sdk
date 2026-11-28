@@ -12,7 +12,7 @@ use ContextDev\Monitors\MonitorListAccountChangesParams\ChangeDetectionType;
 use ContextDev\Monitors\MonitorListAccountChangesParams\TargetType;
 
 /**
- * List full change records across your monitors, newest first.
+ * List detected changes across all your monitors, newest first. Filter by monitor, target type, detection type, tag, or time range.
  *
  * @see ContextDev\Services\MonitorsService::listAccountChanges()
  *
@@ -42,31 +42,31 @@ final class MonitorListAccountChangesParams implements BaseModel
     public ?string $changeDetectionType;
 
     /**
-     * Opaque pagination cursor from a previous response.
+     * Cursor from the previous page's `next_cursor`. Omit for the first page.
      */
     #[Optional]
     public ?string $cursor;
 
     /**
-     * Maximum number of items to return per page (1-100). Defaults to 25.
+     * Maximum number of changes to return per page. Defaults to 25.
      */
     #[Optional]
     public ?int $limit;
 
     /**
-     * Filter changes to a single monitor.
+     * Return only changes from this monitor.
      */
     #[Optional]
     public ?string $monitorID;
 
     /**
-     * Only include items at or after this ISO 8601 timestamp.
+     * Return only changes detected at or after this time.
      */
     #[Optional]
     public ?\DateTimeInterface $since;
 
     /**
-     * Filter to items that have this tag.
+     * Return only changes that have this tag.
      */
     #[Optional]
     public ?string $tag;
@@ -80,7 +80,7 @@ final class MonitorListAccountChangesParams implements BaseModel
     public ?string $targetType;
 
     /**
-     * Only include items before this ISO 8601 timestamp.
+     * Return only changes detected at or before this time.
      */
     #[Optional]
     public ?\DateTimeInterface $until;
@@ -137,7 +137,7 @@ final class MonitorListAccountChangesParams implements BaseModel
     }
 
     /**
-     * Opaque pagination cursor from a previous response.
+     * Cursor from the previous page's `next_cursor`. Omit for the first page.
      */
     public function withCursor(string $cursor): self
     {
@@ -148,7 +148,7 @@ final class MonitorListAccountChangesParams implements BaseModel
     }
 
     /**
-     * Maximum number of items to return per page (1-100). Defaults to 25.
+     * Maximum number of changes to return per page. Defaults to 25.
      */
     public function withLimit(int $limit): self
     {
@@ -159,7 +159,7 @@ final class MonitorListAccountChangesParams implements BaseModel
     }
 
     /**
-     * Filter changes to a single monitor.
+     * Return only changes from this monitor.
      */
     public function withMonitorID(string $monitorID): self
     {
@@ -170,7 +170,7 @@ final class MonitorListAccountChangesParams implements BaseModel
     }
 
     /**
-     * Only include items at or after this ISO 8601 timestamp.
+     * Return only changes detected at or after this time.
      */
     public function withSince(\DateTimeInterface $since): self
     {
@@ -181,7 +181,7 @@ final class MonitorListAccountChangesParams implements BaseModel
     }
 
     /**
-     * Filter to items that have this tag.
+     * Return only changes that have this tag.
      */
     public function withTag(string $tag): self
     {
@@ -205,7 +205,7 @@ final class MonitorListAccountChangesParams implements BaseModel
     }
 
     /**
-     * Only include items before this ISO 8601 timestamp.
+     * Return only changes detected at or before this time.
      */
     public function withUntil(\DateTimeInterface $until): self
     {

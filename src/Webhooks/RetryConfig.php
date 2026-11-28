@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Webhook retry settings. Use {} for the default schedule.
+ * Automatic retry settings. Pass `{}` for the default schedule.
  *
  * @phpstan-type RetryConfigShape = array{delaysSeconds?: list<int>|null}
  */
@@ -19,7 +19,7 @@ final class RetryConfig implements BaseModel
     use SdkModel;
 
     /**
-     * Retry delays in seconds, totaling at most 72 hours. Use [] to disable automatic retries.
+     * Delay before each automatic retry, in seconds, totaling at most 72 hours. Pass `[]` to disable automatic retries.
      *
      * @var list<int>|null $delaysSeconds
      */
@@ -48,7 +48,7 @@ final class RetryConfig implements BaseModel
     }
 
     /**
-     * Retry delays in seconds, totaling at most 72 hours. Use [] to disable automatic retries.
+     * Delay before each automatic retry, in seconds, totaling at most 72 hours. Pass `[]` to disable automatic retries.
      *
      * @param list<int> $delaysSeconds
      */

@@ -9,7 +9,7 @@ use ContextDev\Core\Conversion\Contracts\Converter;
 use ContextDev\Core\Conversion\Contracts\ConverterSource;
 
 /**
- * Optional phone number from the transaction to help verify brand match.
+ * Merchant phone number from the transaction. Helps confirm the match.
  *
  * @phpstan-type PhoneVariants = string|float
  * @phpstan-type PhoneShape = PhoneVariants

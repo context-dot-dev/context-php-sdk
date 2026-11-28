@@ -11,7 +11,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Custom rules return fields after content filters; unmatched fields are null ([] for lists). The google-maps parser returns business records in data.results, google-maps-reviews returns data.reviews, and the google-play parser returns one app record as data, google-play-reviews returns data.reviews, app-store and app-store-reviews do the same for the App Store, g2-reviews returns data.reviews for a G2 product, instagram-profile and instagram-post return one record as data, instagram-feed returns data.posts, tiktok-profile and tiktok-video return one record as data, tiktok-feed returns data.videos, tiktok-comments returns data.comments, tiktok-followers, tiktok-following, and tiktok-user-search return data.users, yelp-search returns up to 20 ranked organic businesses in data.businesses, plus total and pagination, from a Yelp search URL; yelp-reviews returns up to 20 latest public reviews in data.reviews, with business details and next_offset, from a Yelp business URL; tripadvisor-reviews returns 20 reviews in data.reviews, with data.location and next_offset, from a Tripadvisor hotel, restaurant, or attraction review URL; car-rental-availability returns every vehicle with pay-now and pay-later prices in data.vehicles from an avis.com or budget.com vehicle-availability search URL; car-rental-locations returns rental branches with codes, addresses, coordinates and hours in data.locations from an avis.com or budget.com /locations?keyword= URL; emails, phone-numbers, and links return data.emails, data.phone_numbers, and data.links from the rendered page; the store, Maps, G2, Instagram, and TikTok parsers read their data directly, independently of DOM filters and other outputs.
+ * Fields extracted by `parseParams`. Custom rules return each field after content filters, with `null` when nothing matches (`[]` for `list` rules). Prebuilt parsers return the record or lists described under `parseParams.parser`.
  *
  * @phpstan-type ParsedShape = array{
  *   data: array<string,mixed>|null,
@@ -31,17 +31,20 @@ final class Parsed implements BaseModel
     #[Required(map: 'mixed')]
     public ?array $data;
 
+    /**
+     * Whether you requested this output in `formats`.
+     */
     #[Required]
     public bool $requested;
 
     /**
-     * `true` if returned, `false` if it failed, `null` if not requested.
+     * `true` when the output succeeded, `false` when it failed, `null` when it was not requested.
      */
     #[Required]
     public ?bool $success;
 
     /**
-     * The selected prebuilt parser name, or custom when type is omitted, custom rules are used, or parsing is not requested.
+     * Prebuilt parser that ran, or `custom` for custom rules or when `parse` was not requested.
      *
      * @var value-of<Type> $type
      */
@@ -49,13 +52,13 @@ final class Parsed implements BaseModel
     public string $type;
 
     /**
-     * Why the output failed. Present only when `success` is `false`.
+     * Machine-readable error code. Present only when `success` is `false`.
      */
     #[Optional('error_code')]
     public ?string $errorCode;
 
     /**
-     * Explanation of the failure and possible next steps.
+     * Human-readable explanation of the error and how to resolve it.
      */
     #[Optional]
     public ?string $message;
@@ -119,6 +122,9 @@ final class Parsed implements BaseModel
         return $self;
     }
 
+    /**
+     * Whether you requested this output in `formats`.
+     */
     public function withRequested(bool $requested): self
     {
         $self = clone $this;
@@ -128,7 +134,7 @@ final class Parsed implements BaseModel
     }
 
     /**
-     * `true` if returned, `false` if it failed, `null` if not requested.
+     * `true` when the output succeeded, `false` when it failed, `null` when it was not requested.
      */
     public function withSuccess(?bool $success): self
     {
@@ -139,7 +145,7 @@ final class Parsed implements BaseModel
     }
 
     /**
-     * The selected prebuilt parser name, or custom when type is omitted, custom rules are used, or parsing is not requested.
+     * Prebuilt parser that ran, or `custom` for custom rules or when `parse` was not requested.
      *
      * @param Type|value-of<Type> $type
      */
@@ -152,7 +158,7 @@ final class Parsed implements BaseModel
     }
 
     /**
-     * Why the output failed. Present only when `success` is `false`.
+     * Machine-readable error code. Present only when `success` is `false`.
      */
     public function withErrorCode(string $errorCode): self
     {
@@ -163,7 +169,7 @@ final class Parsed implements BaseModel
     }
 
     /**
-     * Explanation of the failure and possible next steps.
+     * Human-readable explanation of the error and how to resolve it.
      */
     public function withMessage(string $message): self
     {

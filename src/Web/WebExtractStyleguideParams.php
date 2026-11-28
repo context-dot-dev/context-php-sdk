@@ -13,7 +13,7 @@ use ContextDev\Web\WebExtractStyleguideParams\TimeoutOpts;
 use ContextDev\Web\WebExtractStyleguideParams\Zdr;
 
 /**
- * Extract colors, typography, spacing, and component styles from a website.
+ * Extract a website's design system: colors, typography, spacing, shadows, button and card styles, and downloadable font files. Every component style includes ready-to-use CSS.
  *
  * @see ContextDev\Services\WebService::extractStyleguide()
  *
@@ -37,7 +37,7 @@ final class WebExtractStyleguideParams implements BaseModel
     use SdkParams;
 
     /**
-     * Optional browser color scheme to emulate for websites that respond to prefers-color-scheme. This value is part of the styleguide cache key.
+     * Emulate a light or dark color scheme. Each scheme is cached separately.
      *
      * @var value-of<ColorScheme>|null $colorScheme
      */
@@ -45,25 +45,25 @@ final class WebExtractStyleguideParams implements BaseModel
     public ?string $colorScheme;
 
     /**
-     * Exact URL to inspect. Provide either `domain` or `directUrl`, not both.
+     * Exact page URL to analyze. Provide either `domain` or `directUrl`, not both.
      */
     #[Optional]
     public ?string $directURL;
 
     /**
-     * Domain name to extract styleguide from (e.g., 'example.com', 'google.com'). The domain will be automatically normalized and validated. You must provide either 'domain' or 'directUrl', but not both.
+     * Domain to analyze, such as `stripe.com`. Provide either `domain` or `directUrl`, not both.
      */
     #[Optional]
     public ?string $domain;
 
     /**
-     * Maximum age of cached brand data in ms. Defaults to 3 months; clamped to 0–1 year. `0` refreshes.
+     * Maximum age of a cached result, in milliseconds. `0` always fetches fresh. Defaults to 90 days (7776000000 ms). Values above 1 year (31536000000 ms) are capped at 1 year.
      */
     #[Optional(nullable: true)]
     public ?int $maxAgeMs;
 
     /**
-     * Comma-separated access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Comma-separated access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @var list<string>|null $policies
      */
@@ -71,7 +71,7 @@ final class WebExtractStyleguideParams implements BaseModel
     public ?array $policies;
 
     /**
-     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
      *
      * @var list<string>|null $tags
      */
@@ -85,7 +85,7 @@ final class WebExtractStyleguideParams implements BaseModel
     public ?TimeoutOpts $timeoutOpts;
 
     /**
-     * `enabled` disables request logs and traces and omits request and response content from usage logs. Brand data and hosted assets may still be stored. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
+     * `enabled` turns off request logs and traces and keeps request and response content out of usage logs. Brand data and hosted assets may still be stored. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @var value-of<Zdr>|null $zdr
      */
@@ -133,7 +133,7 @@ final class WebExtractStyleguideParams implements BaseModel
     }
 
     /**
-     * Optional browser color scheme to emulate for websites that respond to prefers-color-scheme. This value is part of the styleguide cache key.
+     * Emulate a light or dark color scheme. Each scheme is cached separately.
      *
      * @param ColorScheme|value-of<ColorScheme> $colorScheme
      */
@@ -146,7 +146,7 @@ final class WebExtractStyleguideParams implements BaseModel
     }
 
     /**
-     * Exact URL to inspect. Provide either `domain` or `directUrl`, not both.
+     * Exact page URL to analyze. Provide either `domain` or `directUrl`, not both.
      */
     public function withDirectURL(string $directURL): self
     {
@@ -157,7 +157,7 @@ final class WebExtractStyleguideParams implements BaseModel
     }
 
     /**
-     * Domain name to extract styleguide from (e.g., 'example.com', 'google.com'). The domain will be automatically normalized and validated. You must provide either 'domain' or 'directUrl', but not both.
+     * Domain to analyze, such as `stripe.com`. Provide either `domain` or `directUrl`, not both.
      */
     public function withDomain(string $domain): self
     {
@@ -168,7 +168,7 @@ final class WebExtractStyleguideParams implements BaseModel
     }
 
     /**
-     * Maximum age of cached brand data in ms. Defaults to 3 months; clamped to 0–1 year. `0` refreshes.
+     * Maximum age of a cached result, in milliseconds. `0` always fetches fresh. Defaults to 90 days (7776000000 ms). Values above 1 year (31536000000 ms) are capped at 1 year.
      */
     public function withMaxAgeMs(?int $maxAgeMs): self
     {
@@ -179,7 +179,7 @@ final class WebExtractStyleguideParams implements BaseModel
     }
 
     /**
-     * Comma-separated access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Comma-separated access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @param list<string> $policies
      */
@@ -192,7 +192,7 @@ final class WebExtractStyleguideParams implements BaseModel
     }
 
     /**
-     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
      *
      * @param list<string> $tags
      */
@@ -218,7 +218,7 @@ final class WebExtractStyleguideParams implements BaseModel
     }
 
     /**
-     * `enabled` disables request logs and traces and omits request and response content from usage logs. Brand data and hosted assets may still be stored. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
+     * `enabled` turns off request logs and traces and keeps request and response content out of usage logs. Brand data and hosted assets may still be stored. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @param Zdr|value-of<Zdr> $zdr
      */

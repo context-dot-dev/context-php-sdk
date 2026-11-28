@@ -34,7 +34,7 @@ final class WebExtractCompetitorsResponse implements BaseModel
     use SdkModel;
 
     /**
-     * Direct competitors ordered by relevance and confidence.
+     * Direct competitors, ordered by relevance and confidence.
      *
      * @var list<Competitor> $competitors
      */
@@ -42,7 +42,7 @@ final class WebExtractCompetitorsResponse implements BaseModel
     public array $competitors;
 
     /**
-     * Normalized input domain.
+     * Normalized domain from the request.
      */
     #[Required]
     public string $domain;
@@ -54,7 +54,7 @@ final class WebExtractCompetitorsResponse implements BaseModel
     public string $requestID;
 
     /**
-     * Status of the response.
+     * Always `ok` on success.
      *
      * @var value-of<Status> $status
      */
@@ -62,7 +62,7 @@ final class WebExtractCompetitorsResponse implements BaseModel
     public string $status;
 
     /**
-     * Target company profile inferred from the landing page.
+     * Profile of the requested company, inferred from its website.
      */
     #[Required]
     public Target $target;
@@ -74,7 +74,7 @@ final class WebExtractCompetitorsResponse implements BaseModel
     public ?KeyMetadata $keyMetadata;
 
     /**
-     * True when the timeout ended processing and this response contains only usable results completed so far. Unfinished results are omitted.
+     * `true` when the deadline passed with `timeoutOpts.behavior` set to `return-partial`. Only results finished in time are included.
      */
     #[Optional]
     public ?bool $partial;
@@ -139,7 +139,7 @@ final class WebExtractCompetitorsResponse implements BaseModel
     }
 
     /**
-     * Direct competitors ordered by relevance and confidence.
+     * Direct competitors, ordered by relevance and confidence.
      *
      * @param list<Competitor|CompetitorShape> $competitors
      */
@@ -152,7 +152,7 @@ final class WebExtractCompetitorsResponse implements BaseModel
     }
 
     /**
-     * Normalized input domain.
+     * Normalized domain from the request.
      */
     public function withDomain(string $domain): self
     {
@@ -174,7 +174,7 @@ final class WebExtractCompetitorsResponse implements BaseModel
     }
 
     /**
-     * Status of the response.
+     * Always `ok` on success.
      *
      * @param Status|value-of<Status> $status
      */
@@ -187,7 +187,7 @@ final class WebExtractCompetitorsResponse implements BaseModel
     }
 
     /**
-     * Target company profile inferred from the landing page.
+     * Profile of the requested company, inferred from its website.
      *
      * @param Target|TargetShape $target
      */
@@ -213,7 +213,7 @@ final class WebExtractCompetitorsResponse implements BaseModel
     }
 
     /**
-     * True when the timeout ended processing and this response contains only usable results completed so far. Unfinished results are omitted.
+     * `true` when the deadline passed with `timeoutOpts.behavior` set to `return-partial`. Only results finished in time are included.
      */
     public function withPartial(bool $partial): self
     {

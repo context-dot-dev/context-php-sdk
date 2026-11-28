@@ -29,7 +29,7 @@ interface BatchContract
     /**
      * @api
      *
-     * @param string $batchID batch ID
+     * @param string $batchID ID of the batch
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -42,12 +42,12 @@ interface BatchContract
     /**
      * @api
      *
-     * @param string $cursor cursor from the previous page
-     * @param int $limit Batches per page. Defaults to 25.
-     * @param string $q free-text search term, matched against the batch id, crawl source (start URL or sitemap domain), and tags
-     * @param SearchType|value-of<SearchType> $searchType `prefix` for as-you-type prefix matching (default), `exact` for full-token matching
-     * @param Status|value-of<Status> $status filter by status
-     * @param TagsShape $tags Tags to filter by (matches batches having any of them). Pass repeated `tags` params or one comma-separated list, e.g. `tags=docs,competitor`.
+     * @param string $cursor Cursor from the previous page's `next_cursor`. Omit for the first page.
+     * @param int $limit maximum number of batches to return per page
+     * @param string $q search term matched against batch IDs, crawl sources (start URL or sitemap domain), and tags
+     * @param SearchType|value-of<SearchType> $searchType How `q` matches: `prefix` matches the start of a term, for search-as-you-type, and `exact` matches whole terms. Defaults to `prefix`.
+     * @param Status|value-of<Status> $status filter by batch status
+     * @param TagsShape $tags Comma-separated tags. Returns batches that have any of them. You can also repeat the `tags` parameter.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -65,7 +65,7 @@ interface BatchContract
     /**
      * @api
      *
-     * @param string $batchID batch ID
+     * @param string $batchID ID of the batch
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -78,7 +78,7 @@ interface BatchContract
     /**
      * @api
      *
-     * @param string $batchID batch ID
+     * @param string $batchID ID of the batch
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -91,9 +91,9 @@ interface BatchContract
     /**
      * @api
      *
-     * @param string $batchID batch ID
-     * @param string $cursor next_cursor from the previous page
-     * @param int $limit Records per page. Defaults to 25. A page can close early so its payload stays under ~8 MB; rely on next_cursor rather than counting records.
+     * @param string $batchID ID of the batch
+     * @param string $cursor Cursor from the previous page's `next_cursor`. Omit for the first page.
+     * @param int $limit Maximum number of results to return per page. A page can hold fewer to stay under about 8 MB, so page with `next_cursor` instead of counting records.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -108,11 +108,11 @@ interface BatchContract
     /**
      * @api
      *
-     * @param InputShape $input body param: Choose a URL list or a site crawl
-     * @param list<string> $policies Body param: Access policy IDs to apply to every page. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
-     * @param list<string> $tags Body param: Tags stored on the batch. Filter the batch list by them later.
-     * @param Webhook|WebhookShape $webhook Body param: Where to send the batch's final-status event. Omit `retry` for one attempt; `{}` uses the default retry schedule.
-     * @param string $idempotencyKey Header param: Unique key per submission. Retrying with the same key and body returns the original batch; a different body returns `409`.
+     * @param InputShape $input body param: What to scrape: a list of URLs (`scrape`) or a site crawl (`crawl`)
+     * @param list<string> $policies Body param: Access policy IDs to apply to every page; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
+     * @param list<string> $tags Body param: Tags to store on the batch. Filter `GET /batch/list` by them later.
+     * @param Webhook|WebhookShape $webhook Body param: Webhook to notify when the batch finishes. Omit `retry` for a single attempt, or pass `retry: {}` for the default retry schedule.
+     * @param string $idempotencyKey Header param: Unique key for this submission. Retrying with the same key and body returns the original batch instead of creating another; a different body returns `409`.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

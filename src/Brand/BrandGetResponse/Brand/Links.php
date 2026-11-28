@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Important website links for the brand.
+ * Key pages on the brand's website.
  *
  * @phpstan-type LinksShape = array{
  *   blog?: string|null,
@@ -26,37 +26,37 @@ final class Links implements BaseModel
     use SdkModel;
 
     /**
-     * URL to the brand's blog or news page.
+     * URL of the blog or newsroom. `null` when not found.
      */
     #[Optional(nullable: true)]
     public ?string $blog;
 
     /**
-     * URL to the brand's careers or job opportunities page.
+     * URL of the careers page. `null` when not found.
      */
     #[Optional(nullable: true)]
     public ?string $careers;
 
     /**
-     * URL to the brand's contact or contact us page.
+     * URL of the contact page. `null` when not found.
      */
     #[Optional(nullable: true)]
     public ?string $contact;
 
     /**
-     * URL to the brand's pricing or plans page.
+     * URL of the pricing page. `null` when not found.
      */
     #[Optional(nullable: true)]
     public ?string $pricing;
 
     /**
-     * URL to the brand's privacy policy page.
+     * URL of the privacy policy. `null` when not found.
      */
     #[Optional(nullable: true)]
     public ?string $privacy;
 
     /**
-     * URL to the brand's terms of service or terms and conditions page.
+     * URL of the terms of service. `null` when not found.
      */
     #[Optional(nullable: true)]
     public ?string $terms;
@@ -92,7 +92,7 @@ final class Links implements BaseModel
     }
 
     /**
-     * URL to the brand's blog or news page.
+     * URL of the blog or newsroom. `null` when not found.
      */
     public function withBlog(?string $blog): self
     {
@@ -103,7 +103,7 @@ final class Links implements BaseModel
     }
 
     /**
-     * URL to the brand's careers or job opportunities page.
+     * URL of the careers page. `null` when not found.
      */
     public function withCareers(?string $careers): self
     {
@@ -114,7 +114,7 @@ final class Links implements BaseModel
     }
 
     /**
-     * URL to the brand's contact or contact us page.
+     * URL of the contact page. `null` when not found.
      */
     public function withContact(?string $contact): self
     {
@@ -125,7 +125,7 @@ final class Links implements BaseModel
     }
 
     /**
-     * URL to the brand's pricing or plans page.
+     * URL of the pricing page. `null` when not found.
      */
     public function withPricing(?string $pricing): self
     {
@@ -136,7 +136,7 @@ final class Links implements BaseModel
     }
 
     /**
-     * URL to the brand's privacy policy page.
+     * URL of the privacy policy. `null` when not found.
      */
     public function withPrivacy(?string $privacy): self
     {
@@ -147,7 +147,7 @@ final class Links implements BaseModel
     }
 
     /**
-     * URL to the brand's terms of service or terms and conditions page.
+     * URL of the terms of service. `null` when not found.
      */
     public function withTerms(?string $terms): self
     {

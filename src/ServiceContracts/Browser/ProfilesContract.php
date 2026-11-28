@@ -16,8 +16,8 @@ interface ProfilesContract
     /**
      * @api
      *
-     * @param string $cursor the `next_cursor` from the previous page
-     * @param int $limit number of profiles per page
+     * @param string $cursor Cursor from the previous page's `next_cursor`. Omit for the first page.
+     * @param int $limit maximum number of profiles to return per page
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

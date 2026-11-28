@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * List the browser profiles your organization created with `/web/scrape`, newest first.
+ * List the browser profiles your organization saved through `POST /web/scrape`, newest first. Pass a profile `id` as `sharedParams.profile.profileId` to scrape as that signed-in user.
  *
  * @see ContextDev\Services\Browser\ProfilesService::list()
  *
@@ -25,13 +25,13 @@ final class ProfileListParams implements BaseModel
     use SdkParams;
 
     /**
-     * The `next_cursor` from the previous page.
+     * Cursor from the previous page's `next_cursor`. Omit for the first page.
      */
     #[Optional]
     public ?string $cursor;
 
     /**
-     * Number of profiles per page.
+     * Maximum number of profiles to return per page.
      */
     #[Optional]
     public ?int $limit;
@@ -57,7 +57,7 @@ final class ProfileListParams implements BaseModel
     }
 
     /**
-     * The `next_cursor` from the previous page.
+     * Cursor from the previous page's `next_cursor`. Omit for the first page.
      */
     public function withCursor(string $cursor): self
     {
@@ -68,7 +68,7 @@ final class ProfileListParams implements BaseModel
     }
 
     /**
-     * Number of profiles per page.
+     * Maximum number of profiles to return per page.
      */
     public function withLimit(int $limit): self
     {

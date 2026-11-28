@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Batch\BatchGetResultsResponse\Data\ScrapedPage\Result\Parsed;
 
 /**
- * The selected prebuilt parser name, or custom when type is omitted, custom rules are used, or parsing is not requested.
+ * Prebuilt parser that ran, or `custom` for custom rules or when `parse` was not requested.
  */
 enum Type: string
 {

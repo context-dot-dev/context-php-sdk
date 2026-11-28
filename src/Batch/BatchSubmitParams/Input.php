@@ -11,7 +11,7 @@ use ContextDev\Core\Conversion\Contracts\Converter;
 use ContextDev\Core\Conversion\Contracts\ConverterSource;
 
 /**
- * Choose a URL list or a site crawl.
+ * What to scrape: a list of URLs (`scrape`) or a site crawl (`crawl`).
  *
  * @phpstan-import-type ScrapeShape from \ContextDev\Batch\BatchSubmitParams\Input\Scrape
  * @phpstan-import-type CrawlShape from \ContextDev\Batch\BatchSubmitParams\Input\Crawl

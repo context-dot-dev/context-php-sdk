@@ -13,7 +13,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * List your batches, newest first, with optional filters.
+ * List your batches, newest first. Filter by status or tags, or search by batch ID, crawl source, or tag.
  *
  * @see ContextDev\Services\BatchService::list()
  *
@@ -36,25 +36,25 @@ final class BatchListParams implements BaseModel
     use SdkParams;
 
     /**
-     * Cursor from the previous page.
+     * Cursor from the previous page's `next_cursor`. Omit for the first page.
      */
     #[Optional]
     public ?string $cursor;
 
     /**
-     * Batches per page. Defaults to 25.
+     * Maximum number of batches to return per page.
      */
     #[Optional]
     public ?int $limit;
 
     /**
-     * Free-text search term, matched against the batch id, crawl source (start URL or sitemap domain), and tags.
+     * Search term matched against batch IDs, crawl sources (start URL or sitemap domain), and tags.
      */
     #[Optional]
     public ?string $q;
 
     /**
-     * `prefix` for as-you-type prefix matching (default), `exact` for full-token matching.
+     * How `q` matches: `prefix` matches the start of a term, for search-as-you-type, and `exact` matches whole terms. Defaults to `prefix`.
      *
      * @var value-of<SearchType>|null $searchType
      */
@@ -62,7 +62,7 @@ final class BatchListParams implements BaseModel
     public ?string $searchType;
 
     /**
-     * Filter by status.
+     * Filter by batch status.
      *
      * @var value-of<Status>|null $status
      */
@@ -70,7 +70,7 @@ final class BatchListParams implements BaseModel
     public ?string $status;
 
     /**
-     * Tags to filter by (matches batches having any of them). Pass repeated `tags` params or one comma-separated list, e.g. `tags=docs,competitor`.
+     * Comma-separated tags. Returns batches that have any of them. You can also repeat the `tags` parameter.
      *
      * @var TagsVariants|null $tags
      */
@@ -112,7 +112,7 @@ final class BatchListParams implements BaseModel
     }
 
     /**
-     * Cursor from the previous page.
+     * Cursor from the previous page's `next_cursor`. Omit for the first page.
      */
     public function withCursor(string $cursor): self
     {
@@ -123,7 +123,7 @@ final class BatchListParams implements BaseModel
     }
 
     /**
-     * Batches per page. Defaults to 25.
+     * Maximum number of batches to return per page.
      */
     public function withLimit(int $limit): self
     {
@@ -134,7 +134,7 @@ final class BatchListParams implements BaseModel
     }
 
     /**
-     * Free-text search term, matched against the batch id, crawl source (start URL or sitemap domain), and tags.
+     * Search term matched against batch IDs, crawl sources (start URL or sitemap domain), and tags.
      */
     public function withQ(string $q): self
     {
@@ -145,7 +145,7 @@ final class BatchListParams implements BaseModel
     }
 
     /**
-     * `prefix` for as-you-type prefix matching (default), `exact` for full-token matching.
+     * How `q` matches: `prefix` matches the start of a term, for search-as-you-type, and `exact` matches whole terms. Defaults to `prefix`.
      *
      * @param SearchType|value-of<SearchType> $searchType
      */
@@ -158,7 +158,7 @@ final class BatchListParams implements BaseModel
     }
 
     /**
-     * Filter by status.
+     * Filter by batch status.
      *
      * @param Status|value-of<Status> $status
      */
@@ -171,7 +171,7 @@ final class BatchListParams implements BaseModel
     }
 
     /**
-     * Tags to filter by (matches batches having any of them). Pass repeated `tags` params or one comma-separated list, e.g. `tags=docs,competitor`.
+     * Comma-separated tags. Returns batches that have any of them. You can also repeat the `tags` parameter.
      *
      * @param TagsShape $tags
      */

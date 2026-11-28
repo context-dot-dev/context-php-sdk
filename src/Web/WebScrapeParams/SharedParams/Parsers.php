@@ -10,7 +10,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Web\WebScrapeParams\SharedParams\Parsers\Pdf;
 
 /**
- * Document parsing options.
+ * Options for parsing documents such as PDFs.
  *
  * @phpstan-import-type PdfShape from \ContextDev\Web\WebScrapeParams\SharedParams\Parsers\Pdf
  *
@@ -22,7 +22,7 @@ final class Parsers implements BaseModel
     use SdkModel;
 
     /**
-     * PDF page range and OCR.
+     * Page range, OCR, and page markers for PDFs.
      */
     #[Optional]
     public ?Pdf $pdf;
@@ -49,7 +49,7 @@ final class Parsers implements BaseModel
     }
 
     /**
-     * PDF page range and OCR.
+     * Page range, OCR, and page markers for PDFs.
      *
      * @param Pdf|PdfShape $pdf
      */

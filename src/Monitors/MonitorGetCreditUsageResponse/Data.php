@@ -19,22 +19,25 @@ final class Data implements BaseModel
     use SdkModel;
 
     /**
-     * Credits charged to this monitor over the window.
+     * Credits charged to the monitor in the window.
      */
     #[Required]
     public int $credits;
 
+    /**
+     * ID of the monitor.
+     */
     #[Required('monitor_id')]
     public string $monitorID;
 
     /**
-     * Monitor name (falls back to the id when the monitor was deleted).
+     * Name of the monitor, or its ID if the monitor was deleted.
      */
     #[Required]
     public string $name;
 
     /**
-     * Number of billed runs over the window.
+     * Number of billed runs in the window.
      */
     #[Required]
     public int $runs;
@@ -80,7 +83,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Credits charged to this monitor over the window.
+     * Credits charged to the monitor in the window.
      */
     public function withCredits(int $credits): self
     {
@@ -90,6 +93,9 @@ final class Data implements BaseModel
         return $self;
     }
 
+    /**
+     * ID of the monitor.
+     */
     public function withMonitorID(string $monitorID): self
     {
         $self = clone $this;
@@ -99,7 +105,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Monitor name (falls back to the id when the monitor was deleted).
+     * Name of the monitor, or its ID if the monitor was deleted.
      */
     public function withName(string $name): self
     {
@@ -110,7 +116,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Number of billed runs over the window.
+     * Number of billed runs in the window.
      */
     public function withRuns(int $runs): self
     {

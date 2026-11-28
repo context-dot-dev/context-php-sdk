@@ -20,19 +20,19 @@ final class Color implements BaseModel
     use SdkModel;
 
     /**
-     * Color in hexadecimal format.
+     * Hex color code, such as `#635BFF`.
      */
     #[Optional]
     public ?string $hex;
 
     /**
-     * Name of the color.
+     * Human-readable color name.
      */
     #[Optional]
     public ?string $name;
 
     /**
-     * Where the color was observed: 'site' colors come from the website's own theme signals (rendered page colors, manifest, theme-color meta), 'logo' colors from logo image pixels.
+     * `site` colors come from the website's own theme (rendered page colors, web app manifest, `theme-color` meta tag); `logo` colors come from logo pixels.
      *
      * @var value-of<Source>|null $source
      */
@@ -66,7 +66,7 @@ final class Color implements BaseModel
     }
 
     /**
-     * Color in hexadecimal format.
+     * Hex color code, such as `#635BFF`.
      */
     public function withHex(string $hex): self
     {
@@ -77,7 +77,7 @@ final class Color implements BaseModel
     }
 
     /**
-     * Name of the color.
+     * Human-readable color name.
      */
     public function withName(string $name): self
     {
@@ -88,7 +88,7 @@ final class Color implements BaseModel
     }
 
     /**
-     * Where the color was observed: 'site' colors come from the website's own theme signals (rendered page colors, manifest, theme-color meta), 'logo' colors from logo image pixels.
+     * `site` colors come from the website's own theme (rendered page colors, web app manifest, `theme-color` meta tag); `logo` colors come from logo pixels.
      *
      * @param Source|value-of<Source> $source
      */

@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Resend the original payload using the source’s current URL and secret. Available for 7 days after the event.
+ * Resend a delivery's original payload to the source's current webhook URL, signed with its current secret. Available for 7 days after the event.
  *
  * @see ContextDev\Services\Webhooks\DeliveriesService::retry()
  *
@@ -25,13 +25,13 @@ final class DeliveryRetryParams implements BaseModel
     use SdkParams;
 
     /**
-     * Resend even if the delivery already succeeded. Defaults to false.
+     * Resend even if the delivery already succeeded.
      */
     #[Optional]
     public ?bool $force;
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @var list<string>|null $tags
      */
@@ -39,7 +39,7 @@ final class DeliveryRetryParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Unique key to prevent duplicate retry requests.
+     * Unique key for this retry. Repeating the request with the same key does not send the payload again.
      */
     #[Optional]
     public ?string $idempotencyKey;
@@ -71,7 +71,7 @@ final class DeliveryRetryParams implements BaseModel
     }
 
     /**
-     * Resend even if the delivery already succeeded. Defaults to false.
+     * Resend even if the delivery already succeeded.
      */
     public function withForce(bool $force): self
     {
@@ -82,7 +82,7 @@ final class DeliveryRetryParams implements BaseModel
     }
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @param list<string> $tags
      */
@@ -95,7 +95,7 @@ final class DeliveryRetryParams implements BaseModel
     }
 
     /**
-     * Unique key to prevent duplicate retry requests.
+     * Unique key for this retry. Repeating the request with the same key does not send the payload again.
      */
     public function withIdempotencyKey(string $idempotencyKey): self
     {

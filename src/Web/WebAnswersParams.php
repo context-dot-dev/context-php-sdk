@@ -15,7 +15,7 @@ use ContextDev\Web\WebAnswersParams\TimeoutOpts;
 use ContextDev\Web\WebAnswersParams\Zdr;
 
 /**
- * Research the web and return a sourced answer in your JSON shape. Choose `fast` for a short task or `ultra` for deeper research.
+ * Research a task across the live web and Context.dev's company and people data, and get the answer in the JSON shape you provide, with the URLs it used. `fast` (10 credits) suits short lookups; `ultra` (100 credits, the default) reads more sources for deeper research.
  *
  * @see ContextDev\Services\WebService::answers()
  *
@@ -40,19 +40,19 @@ final class WebAnswersParams implements BaseModel
     use SdkParams;
 
     /**
-     * Research task, up to 2000 characters. The agent selects company/profile lookups, web searches, or page reads. Include domains or URLs to focus the research.
+     * What to research, in plain language, up to 2000 characters. Include domains or URLs to focus the research.
      */
     #[Required]
     public string $task;
 
     /**
-     * Limits what the research may use.
+     * Limit which sites the research can search, read, and cite.
      */
     #[Optional]
     public ?Controls $controls;
 
     /**
-     * Example answer object, not JSON Schema. Up to 8 levels, 500 values, and 16000 characters; unknowns may be null.
+     * Example of the answer object to return, not a JSON Schema. Up to 8 levels deep, 500 values, and 16,000 characters. Values that cannot be found come back as `null`. Defaults to `{ "result": "" }`.
      *
      * @var array<string,mixed>|null $jsonFormat
      */
@@ -60,7 +60,7 @@ final class WebAnswersParams implements BaseModel
     public ?array $jsonFormat;
 
     /**
-     * `fast` prioritizes speed, with extra verification for people and companies; `ultra` supports deeper research (default).
+     * `fast` prioritizes speed and adds extra verification for people and companies; `ultra` searches and reads more sources for deeper research. Defaults to `ultra`.
      *
      * @var value-of<Mode>|null $mode
      */
@@ -68,7 +68,7 @@ final class WebAnswersParams implements BaseModel
     public ?string $mode;
 
     /**
-     * Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @var list<string>|null $policies
      */
@@ -76,7 +76,7 @@ final class WebAnswersParams implements BaseModel
     public ?array $policies;
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @var list<string>|null $tags
      */
@@ -155,7 +155,7 @@ final class WebAnswersParams implements BaseModel
     }
 
     /**
-     * Research task, up to 2000 characters. The agent selects company/profile lookups, web searches, or page reads. Include domains or URLs to focus the research.
+     * What to research, in plain language, up to 2000 characters. Include domains or URLs to focus the research.
      */
     public function withTask(string $task): self
     {
@@ -166,7 +166,7 @@ final class WebAnswersParams implements BaseModel
     }
 
     /**
-     * Limits what the research may use.
+     * Limit which sites the research can search, read, and cite.
      *
      * @param Controls|ControlsShape $controls
      */
@@ -179,7 +179,7 @@ final class WebAnswersParams implements BaseModel
     }
 
     /**
-     * Example answer object, not JSON Schema. Up to 8 levels, 500 values, and 16000 characters; unknowns may be null.
+     * Example of the answer object to return, not a JSON Schema. Up to 8 levels deep, 500 values, and 16,000 characters. Values that cannot be found come back as `null`. Defaults to `{ "result": "" }`.
      *
      * @param array<string,mixed> $jsonFormat
      */
@@ -192,7 +192,7 @@ final class WebAnswersParams implements BaseModel
     }
 
     /**
-     * `fast` prioritizes speed, with extra verification for people and companies; `ultra` supports deeper research (default).
+     * `fast` prioritizes speed and adds extra verification for people and companies; `ultra` searches and reads more sources for deeper research. Defaults to `ultra`.
      *
      * @param Mode|value-of<Mode> $mode
      */
@@ -205,7 +205,7 @@ final class WebAnswersParams implements BaseModel
     }
 
     /**
-     * Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @param list<string> $policies
      */
@@ -218,7 +218,7 @@ final class WebAnswersParams implements BaseModel
     }
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @param list<string> $tags
      */

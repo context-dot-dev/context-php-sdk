@@ -11,7 +11,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Limits and filters for the sitemap URLs. A sitemap batch scrapes exactly those URLs and never follows links off them, so there is no crawl depth here.
+ * Limits and filters for the sitemap URLs. Links on sitemap pages are never followed.
  *
  * @phpstan-import-type ExcludeVariants from \ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\Source\Sitemap\Controls\Exclude
  * @phpstan-import-type ScrapeVariants from \ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\Source\Sitemap\Controls\Scrape
@@ -39,7 +39,7 @@ final class Controls implements BaseModel
     public ?array $exclude;
 
     /**
-     * Path fragments that skip a sitemap URL in a crawl. Works separately from `scrape` and `exclude`. Defaults to ["/feed","/rss","/atom","/api/","/cdn-cgi/","/_next/","/__"]. Pass `[]` to keep every listed URL.
+     * Path fragments that exclude a sitemap URL. Applies in addition to `scrape` and `exclude`; pass `[]` to keep every listed URL.
      *
      * @var list<string>|null $excludePaths
      */
@@ -47,7 +47,7 @@ final class Controls implements BaseModel
     public ?array $excludePaths;
 
     /**
-     * Maximum pages to fetch. Unused reserved credits are refunded. Maximum 100000.
+     * Maximum number of pages to fetch, up to 100,000. Credits are reserved for this many pages and the unused part is refunded.
      */
     #[Optional('maxUrls')]
     public ?int $maxURLs;
@@ -104,7 +104,7 @@ final class Controls implements BaseModel
     }
 
     /**
-     * Path fragments that skip a sitemap URL in a crawl. Works separately from `scrape` and `exclude`. Defaults to ["/feed","/rss","/atom","/api/","/cdn-cgi/","/_next/","/__"]. Pass `[]` to keep every listed URL.
+     * Path fragments that exclude a sitemap URL. Applies in addition to `scrape` and `exclude`; pass `[]` to keep every listed URL.
      *
      * @param list<string> $excludePaths
      */
@@ -117,7 +117,7 @@ final class Controls implements BaseModel
     }
 
     /**
-     * Maximum pages to fetch. Unused reserved credits are refunded. Maximum 100000.
+     * Maximum number of pages to fetch, up to 100,000. Credits are reserved for this many pages and the unused part is refunded.
      */
     public function withMaxURLs(int $maxURLs): self
     {

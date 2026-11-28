@@ -10,7 +10,7 @@ use ContextDev\Core\Conversion\Contracts\ConverterSource;
 use ContextDev\Web\WebWebCrawlMdParams\IncludeFrames\UnionMember1;
 
 /**
- * Which iframe contents to render to Markdown for each crawled page. `auto` (default) inlines only iframes that hold page content, such as same-site documents, framesets, job boards, forms and embedded documents, and skips ads and widgets. `true` inlines every iframe. `false` inlines none.
+ * Which iframe contents to include in each page's Markdown. `auto` inlines only iframes that hold page content, such as same-site documents, framesets, job boards, forms, and embedded documents, and skips ads and widgets. `true` inlines every iframe; `false` inlines none.
  *
  * @phpstan-type IncludeFramesVariants = bool|value-of<UnionMember1>
  * @phpstan-type IncludeFramesShape = IncludeFramesVariants

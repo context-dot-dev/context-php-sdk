@@ -35,7 +35,7 @@ final class UtilityPrefetchResponse implements BaseModel
     public string $requestID;
 
     /**
-     * The domain that was queued for prefetching.
+     * Domain queued for prefetching.
      */
     #[Optional]
     public ?string $domain;
@@ -47,7 +47,7 @@ final class UtilityPrefetchResponse implements BaseModel
     public ?KeyMetadata $keyMetadata;
 
     /**
-     * Success message.
+     * Human-readable confirmation.
      */
     #[Optional]
     public ?string $message;
@@ -59,7 +59,7 @@ final class UtilityPrefetchResponse implements BaseModel
     public ?string $status;
 
     /**
-     * The type of prefetch that was queued, echoed from the request.
+     * Data type that was queued, from the request.
      *
      * @var value-of<Type>|null $type
      */
@@ -126,7 +126,7 @@ final class UtilityPrefetchResponse implements BaseModel
     }
 
     /**
-     * The domain that was queued for prefetching.
+     * Domain queued for prefetching.
      */
     public function withDomain(string $domain): self
     {
@@ -150,7 +150,7 @@ final class UtilityPrefetchResponse implements BaseModel
     }
 
     /**
-     * Success message.
+     * Human-readable confirmation.
      */
     public function withMessage(string $message): self
     {
@@ -172,7 +172,7 @@ final class UtilityPrefetchResponse implements BaseModel
     }
 
     /**
-     * The type of prefetch that was queued, echoed from the request.
+     * Data type that was queued, from the request.
      *
      * @param Type|value-of<Type> $type
      */

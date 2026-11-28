@@ -48,7 +48,7 @@ final class PersonSearchResponse implements BaseModel
     public ?KeyMetadata $keyMetadata;
 
     /**
-     * Pass as cursor to fetch the next page; null when there are no more results.
+     * Pass as `cursor` to fetch the next page. `null` on the last page.
      */
     #[Optional('next_cursor', nullable: true)]
     public ?string $nextCursor;
@@ -135,7 +135,7 @@ final class PersonSearchResponse implements BaseModel
     }
 
     /**
-     * Pass as cursor to fetch the next page; null when there are no more results.
+     * Pass as `cursor` to fetch the next page. `null` on the last page.
      */
     public function withNextCursor(?string $nextCursor): self
     {

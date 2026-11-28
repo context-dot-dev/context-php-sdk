@@ -14,7 +14,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Screenshot options. Requires formats.screenshot: true.
+ * Options for the `screenshot` output. Requires `formats.screenshot: true`.
  *
  * @phpstan-import-type AreaVariants from \ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\ScreenshotParams\Area
  * @phpstan-import-type AreaShape from \ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\ScreenshotParams\Area
@@ -29,7 +29,7 @@ final class ScreenshotParams implements BaseModel
     use SdkModel;
 
     /**
-     * What to capture: `viewport`, `fullPage`, one element, or a rectangle. Max 40 megapixels.
+     * What to capture: `viewport`, `fullPage`, one element, or a rectangle. Up to 40 megapixels.
      *
      * @var AreaVariants|null $area
      */
@@ -70,7 +70,7 @@ final class ScreenshotParams implements BaseModel
     }
 
     /**
-     * What to capture: `viewport`, `fullPage`, one element, or a rectangle. Max 40 megapixels.
+     * What to capture: `viewport`, `fullPage`, one element, or a rectangle. Up to 40 megapixels.
      *
      * @param AreaShape $area
      */

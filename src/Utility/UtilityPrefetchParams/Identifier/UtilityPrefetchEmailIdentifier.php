@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Prefetch by email. The domain will be extracted and validated.
+ * Prefetch by work email. Context.dev uses the email's domain.
  *
  * @phpstan-type UtilityPrefetchEmailIdentifierShape = array{email: string}
  */
@@ -19,7 +19,7 @@ final class UtilityPrefetchEmailIdentifier implements BaseModel
     use SdkModel;
 
     /**
-     * Email address to prefetch data for. The domain will be extracted from the email. Free email providers (gmail.com, yahoo.com, etc.) and disposable email addresses are not allowed.
+     * Work email whose domain to prefetch. Free email providers such as `gmail.com` and disposable addresses are rejected with 422.
      */
     #[Required]
     public string $email;
@@ -58,7 +58,7 @@ final class UtilityPrefetchEmailIdentifier implements BaseModel
     }
 
     /**
-     * Email address to prefetch data for. The domain will be extracted from the email. Free email providers (gmail.com, yahoo.com, etc.) and disposable email addresses are not allowed.
+     * Work email whose domain to prefetch. Free email providers such as `gmail.com` and disposable addresses are rejected with 422.
      */
     public function withEmail(string $email): self
     {

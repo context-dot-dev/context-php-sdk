@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Feedback\FeedbackSubmitParams;
 
 /**
- * Kind of issue.
+ * Kind of issue. Use `quality_degradation` for wrong or incomplete results and `bad_brand` for wrong or outdated brand data, such as a logo or colors.
  */
 enum Category: string
 {

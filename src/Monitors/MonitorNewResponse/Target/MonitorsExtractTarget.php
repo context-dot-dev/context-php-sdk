@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Track relevant pages selected by `schema` and `instructions`; refresh the page set periodically.
+ * Extract structured data from the most relevant pages of a site and report meaningful changes. Pages are chosen from `schema` and `instructions`, and the page set is refreshed periodically.
  *
  * @phpstan-type MonitorsExtractTargetShape = array{
  *   instructions: string,
@@ -36,25 +36,25 @@ final class MonitorsExtractTarget implements BaseModel
     public string $type = 'extract';
 
     /**
-     * Natural-language instructions guiding which pages and facts to track and which changes to report.
+     * Plain-language description of the pages and facts to track and the changes to report.
      */
     #[Required]
     public string $instructions;
 
     /**
-     * Root URL to extract structured data from.
+     * Public HTTP(S) URL where page discovery starts, usually the site home page.
      */
     #[Required]
     public string $url;
 
     /**
-     * Allow page discovery on subdomains of the target site.
+     * Also discover pages on subdomains of the site.
      */
     #[Optional('follow_subdomains')]
     public ?bool $followSubdomains;
 
     /**
-     * Optional maximum link depth from the starting URL (0 = only the starting page).
+     * Maximum link depth from `url`. `0` tracks only the starting page.
      */
     #[Optional('max_depth')]
     public ?int $maxDepth;
@@ -66,7 +66,7 @@ final class MonitorsExtractTarget implements BaseModel
     public ?int $maxPages;
 
     /**
-     * JSON Schema for page selection and the baseline snapshot. Changes return diffs and evidence.
+     * JSON Schema for the data to extract, up to 20,000 characters; it also guides which pages are tracked. Defaults to a `summary` string and a `key_points` list.
      *
      * @var array<string,mixed>|null $schema
      */
@@ -121,7 +121,7 @@ final class MonitorsExtractTarget implements BaseModel
     }
 
     /**
-     * Natural-language instructions guiding which pages and facts to track and which changes to report.
+     * Plain-language description of the pages and facts to track and the changes to report.
      */
     public function withInstructions(string $instructions): self
     {
@@ -145,7 +145,7 @@ final class MonitorsExtractTarget implements BaseModel
     }
 
     /**
-     * Root URL to extract structured data from.
+     * Public HTTP(S) URL where page discovery starts, usually the site home page.
      */
     public function withURL(string $url): self
     {
@@ -156,7 +156,7 @@ final class MonitorsExtractTarget implements BaseModel
     }
 
     /**
-     * Allow page discovery on subdomains of the target site.
+     * Also discover pages on subdomains of the site.
      */
     public function withFollowSubdomains(bool $followSubdomains): self
     {
@@ -167,7 +167,7 @@ final class MonitorsExtractTarget implements BaseModel
     }
 
     /**
-     * Optional maximum link depth from the starting URL (0 = only the starting page).
+     * Maximum link depth from `url`. `0` tracks only the starting page.
      */
     public function withMaxDepth(int $maxDepth): self
     {
@@ -189,7 +189,7 @@ final class MonitorsExtractTarget implements BaseModel
     }
 
     /**
-     * JSON Schema for page selection and the baseline snapshot. Changes return diffs and evidence.
+     * JSON Schema for the data to extract, up to 20,000 characters; it also guides which pages are tracked. Defaults to a `summary` string and a `key_points` list.
      *
      * @param array<string,mixed> $schema
      */

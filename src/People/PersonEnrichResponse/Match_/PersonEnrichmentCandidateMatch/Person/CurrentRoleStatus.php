@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\People\PersonEnrichResponse\Match_\PersonEnrichmentCandidateMatch\Person;
 
 /**
- * Whether the person's current role is known. `present` — current_role is populated. `none` — the work history explicitly shows every role has ended. `unknown` — our data sources could not confirm either way; treat a missing current_role as unverified rather than vacant.
+ * Whether the person's current role is known. `present` means `current_role` is filled in; `none` means the work history shows every role has ended; `unknown` means it could not be confirmed either way, so treat a missing `current_role` as unverified, not vacant.
  */
 enum CurrentRoleStatus: string
 {

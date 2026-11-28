@@ -16,6 +16,8 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\ParseContract;
 
 /**
+ * Convert uploaded files, such as PDFs and Office documents, into Markdown.
+ *
  * @phpstan-import-type PdfShape from \ContextDev\Parse\ParseHandleParams\Pdf
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
@@ -37,19 +39,19 @@ final class ParseService implements ParseContract
     /**
      * @api
      *
-     * Convert uploaded file bytes into Markdown and optional HTML. WARC and WARC.GZ archives combine HTTP response, resource, and conversion records in archive order. Revisit and segmented records are skipped. Decoded WARC content is limited to 50 MiB.
+     * Convert a file to Markdown. Handles PDF, Word, Excel, PowerPoint, HTML, XML, CSV, JSON, YAML, source code, subtitles, images, and WARC archives. Send the raw bytes as the request body; set `ocr=true` to read scanned pages and images.
      *
      * @param string|FileParam $body Body param
-     * @param string $client query param: Optional client identifier used for usage attribution
-     * @param Extension|value-of<Extension> $extension Query param: Optional file extension hint, such as pdf, docx, xlsx, pptx, html, json, csv, md, py, rtf, jpg, png, txt, warc, or warc.gz.
-     * @param bool $includeImages Query param: Include image references in Markdown output
-     * @param bool $includeLinks Query param: Preserve hyperlinks in Markdown output
-     * @param bool $includeNumberedPages query param: Start each PDF page in the Markdown with a `<!-- page N -->` line, where N is the original 1-based page number
-     * @param bool $ocr Query param: Read text from images and scanned PDF pages. PDF page ranges still apply.
-     * @param Pdf|PdfShape $pdf Query param: PDF page-range options as a JSON object, e.g. {"start": 2, "end": 5}.
-     * @param bool $shortenBase64Images Query param: Shorten base64-encoded image data in the Markdown output
-     * @param list<string> $tags Query param: Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
-     * @param bool $useMainContentOnly Query param: Extract only the main content from HTML-like inputs
+     * @param string $client query param: Client identifier for usage attribution
+     * @param Extension|value-of<Extension> $extension Query param: File type hint, such as `pdf`, `docx`, `xlsx`, `pptx`, `html`, `json`, `csv`, `md`, `py`, `rtf`, `jpg`, `png`, `txt`, `warc`, or `warc.gz`. Use it when the `Content-Type` header is missing or generic.
+     * @param bool $includeImages query param: Include image references in the Markdown
+     * @param bool $includeLinks query param: Keep link URLs in the Markdown
+     * @param bool $includeNumberedPages query param: Start each PDF page in the Markdown with a `<!-- page N -->` line, where `N` is the original 1-based page number
+     * @param bool $ocr Query param: Read text from images and scanned PDF pages with OCR, within the `pdf` page range. Adds 1 credit per page read.
+     * @param Pdf|PdfShape $pdf query param: PDF page range as a JSON object, such as `{"start": 2, "end": 5}`
+     * @param bool $shortenBase64Images query param: Shorten inline base64 image data
+     * @param list<string> $tags Query param: Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
+     * @param bool $useMainContentOnly Query param: Keep only the main content, without navigation, headers, footers, or sidebars. Applies to HTML-like inputs.
      * @param Zdr|value-of<Zdr> $zdr Query param: `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
      *

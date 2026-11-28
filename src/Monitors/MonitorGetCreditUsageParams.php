@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Return usage per monitor, highest first, for up to the 10,000 most recent runs in the requested window. Pass `tag` to report only the monitors that carry that tag, such as one customer’s monitors.
+ * List credits charged per monitor, highest first, from up to the 10,000 most recent runs in the time window. Pass `tag` to report on one group of monitors, such as a single customer's.
  *
  * @see ContextDev\Services\MonitorsService::getCreditUsage()
  *
@@ -27,19 +27,19 @@ final class MonitorGetCreditUsageParams implements BaseModel
     use SdkParams;
 
     /**
-     * Only include items at or after this ISO 8601 timestamp.
+     * Count only runs created at or after this time.
      */
     #[Optional]
     public ?\DateTimeInterface $since;
 
     /**
-     * Only include monitors that currently have this tag. Deleted monitors are left out.
+     * Return usage only for monitors that currently have this tag. Deleted monitors are excluded.
      */
     #[Optional]
     public ?string $tag;
 
     /**
-     * Only include items before this ISO 8601 timestamp.
+     * Count only runs created at or before this time.
      */
     #[Optional]
     public ?\DateTimeInterface $until;
@@ -69,7 +69,7 @@ final class MonitorGetCreditUsageParams implements BaseModel
     }
 
     /**
-     * Only include items at or after this ISO 8601 timestamp.
+     * Count only runs created at or after this time.
      */
     public function withSince(\DateTimeInterface $since): self
     {
@@ -80,7 +80,7 @@ final class MonitorGetCreditUsageParams implements BaseModel
     }
 
     /**
-     * Only include monitors that currently have this tag. Deleted monitors are left out.
+     * Return usage only for monitors that currently have this tag. Deleted monitors are excluded.
      */
     public function withTag(string $tag): self
     {
@@ -91,7 +91,7 @@ final class MonitorGetCreditUsageParams implements BaseModel
     }
 
     /**
-     * Only include items before this ISO 8601 timestamp.
+     * Count only runs created at or before this time.
      */
     public function withUntil(\DateTimeInterface $until): self
     {

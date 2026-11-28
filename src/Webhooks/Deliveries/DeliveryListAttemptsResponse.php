@@ -28,7 +28,7 @@ final class DeliveryListAttemptsResponse implements BaseModel
     use SdkModel;
 
     /**
-     * Delivery attempts.
+     * Delivery attempts on this page.
      *
      * @var list<Attempt> $data
      */
@@ -36,13 +36,13 @@ final class DeliveryListAttemptsResponse implements BaseModel
     public array $data;
 
     /**
-     * Whether more attempts are available.
+     * Whether more results are available after this page.
      */
     #[Required('has_more')]
     public bool $hasMore;
 
     /**
-     * Next page cursor, or null on the last page.
+     * Pass as `cursor` to fetch the next page. `null` on the last page.
      */
     #[Required('next_cursor')]
     public ?string $nextCursor;
@@ -112,7 +112,7 @@ final class DeliveryListAttemptsResponse implements BaseModel
     }
 
     /**
-     * Delivery attempts.
+     * Delivery attempts on this page.
      *
      * @param list<Attempt|AttemptShape> $data
      */
@@ -125,7 +125,7 @@ final class DeliveryListAttemptsResponse implements BaseModel
     }
 
     /**
-     * Whether more attempts are available.
+     * Whether more results are available after this page.
      */
     public function withHasMore(bool $hasMore): self
     {
@@ -136,7 +136,7 @@ final class DeliveryListAttemptsResponse implements BaseModel
     }
 
     /**
-     * Next page cursor, or null on the last page.
+     * Pass as `cursor` to fetch the next page. `null` on the last page.
      */
     public function withNextCursor(?string $nextCursor): self
     {

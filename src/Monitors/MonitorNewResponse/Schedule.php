@@ -11,7 +11,7 @@ use ContextDev\Monitors\MonitorNewResponse\Schedule\Type;
 use ContextDev\Monitors\MonitorNewResponse\Schedule\Unit;
 
 /**
- * Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
+ * Run the monitor at a fixed interval, such as every 6 hours or every 2 days. The interval must be between 10 minutes and 1 year.
  *
  * @phpstan-type ScheduleShape = array{
  *   frequency: int, type: Type|value-of<Type>, unit: Unit|value-of<Unit>
@@ -23,7 +23,7 @@ final class Schedule implements BaseModel
     use SdkModel;
 
     /**
-     * Number of units between runs. The resulting interval (frequency × unit) must be at least 10 minutes and at most 1 year (e.g. minimum 10 when unit is minutes; maximum 365 when unit is days).
+     * Number of `unit` periods between runs. The interval must be between 10 minutes and 1 year, so at least `10` with `minutes` and at most `365` with `days`.
      */
     #[Required]
     public int $frequency;
@@ -37,7 +37,7 @@ final class Schedule implements BaseModel
     public string $type;
 
     /**
-     * Time unit used with `frequency` to set the run interval.
+     * Time unit for `frequency`.
      *
      * @var value-of<Unit> $unit
      */
@@ -86,7 +86,7 @@ final class Schedule implements BaseModel
     }
 
     /**
-     * Number of units between runs. The resulting interval (frequency × unit) must be at least 10 minutes and at most 1 year (e.g. minimum 10 when unit is minutes; maximum 365 when unit is days).
+     * Number of `unit` periods between runs. The interval must be between 10 minutes and 1 year, so at least `10` with `minutes` and at most `365` with `days`.
      */
     public function withFrequency(int $frequency): self
     {
@@ -110,7 +110,7 @@ final class Schedule implements BaseModel
     }
 
     /**
-     * Time unit used with `frequency` to set the run interval.
+     * Time unit for `frequency`.
      *
      * @param Unit|value-of<Unit> $unit
      */

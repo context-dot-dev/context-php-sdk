@@ -20,25 +20,25 @@ final class Alternate implements BaseModel
     use SdkModel;
 
     /**
-     * Resolved alternate URL.
+     * Absolute URL of the alternate version.
      */
     #[Required]
     public string $href;
 
     /**
-     * Language or locale for the alternate URL, when present.
+     * Language or locale of the alternate version, when present.
      */
     #[Optional]
     public ?string $hreflang;
 
     /**
-     * Alternate resource title, when present.
+     * Title of the alternate version, when present.
      */
     #[Optional]
     public ?string $title;
 
     /**
-     * Alternate resource MIME type, when present.
+     * MIME type of the alternate version, when present.
      */
     #[Optional]
     public ?string $type;
@@ -85,7 +85,7 @@ final class Alternate implements BaseModel
     }
 
     /**
-     * Resolved alternate URL.
+     * Absolute URL of the alternate version.
      */
     public function withHref(string $href): self
     {
@@ -96,7 +96,7 @@ final class Alternate implements BaseModel
     }
 
     /**
-     * Language or locale for the alternate URL, when present.
+     * Language or locale of the alternate version, when present.
      */
     public function withHreflang(string $hreflang): self
     {
@@ -107,7 +107,7 @@ final class Alternate implements BaseModel
     }
 
     /**
-     * Alternate resource title, when present.
+     * Title of the alternate version, when present.
      */
     public function withTitle(string $title): self
     {
@@ -118,7 +118,7 @@ final class Alternate implements BaseModel
     }
 
     /**
-     * Alternate resource MIME type, when present.
+     * MIME type of the alternate version, when present.
      */
     public function withType(string $type): self
     {

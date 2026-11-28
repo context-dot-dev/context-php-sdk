@@ -23,31 +23,31 @@ final class Metadata implements BaseModel
     use SdkModel;
 
     /**
-     * Maximum crawl depth reached during the crawl.
+     * Deepest link depth reached.
      */
     #[Required]
     public int $maxCrawlDepth;
 
     /**
-     * Number of pages that failed to crawl.
+     * Number of pages that failed.
      */
     #[Required]
     public int $numFailed;
 
     /**
-     * Number of URLs skipped (PDFs when pdf.shouldParse=false, URLs not matching urlRegex, or URLs matching excludeUrlRegex).
+     * Number of URLs skipped: PDFs when `pdf.shouldParse` is `false`, URLs that do not match `urlRegex`, and URLs that match `excludeUrlRegex`.
      */
     #[Required]
     public int $numSkipped;
 
     /**
-     * Number of pages successfully crawled.
+     * Number of pages crawled successfully.
      */
     #[Required]
     public int $numSucceeded;
 
     /**
-     * Total number of URLs crawled.
+     * Number of URLs crawled.
      */
     #[Required('numUrls')]
     public int $numURLs;
@@ -106,7 +106,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Maximum crawl depth reached during the crawl.
+     * Deepest link depth reached.
      */
     public function withMaxCrawlDepth(int $maxCrawlDepth): self
     {
@@ -117,7 +117,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Number of pages that failed to crawl.
+     * Number of pages that failed.
      */
     public function withNumFailed(int $numFailed): self
     {
@@ -128,7 +128,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Number of URLs skipped (PDFs when pdf.shouldParse=false, URLs not matching urlRegex, or URLs matching excludeUrlRegex).
+     * Number of URLs skipped: PDFs when `pdf.shouldParse` is `false`, URLs that do not match `urlRegex`, and URLs that match `excludeUrlRegex`.
      */
     public function withNumSkipped(int $numSkipped): self
     {
@@ -139,7 +139,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Number of pages successfully crawled.
+     * Number of pages crawled successfully.
      */
     public function withNumSucceeded(int $numSucceeded): self
     {
@@ -150,7 +150,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Total number of URLs crawled.
+     * Number of URLs crawled.
      */
     public function withNumURLs(int $numURLs): self
     {

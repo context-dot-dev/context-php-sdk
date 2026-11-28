@@ -13,7 +13,7 @@ use ContextDev\Webhooks\Deliveries\DeliveryListParams\Status;
 use ContextDev\Webhooks\Deliveries\DeliveryListParams\Type;
 
 /**
- * List batch and monitor webhook deliveries from the last 30 days.
+ * List webhook deliveries for your batches or monitors from the last 30 days, newest first. Filter by source, status, or creation time.
  *
  * @see ContextDev\Services\Webhooks\DeliveriesService::list()
  *
@@ -36,7 +36,7 @@ final class DeliveryListParams implements BaseModel
     use SdkParams;
 
     /**
-     * Delivery source.
+     * List monitor webhook deliveries.
      *
      * @var value-of<Type> $type
      */
@@ -50,19 +50,19 @@ final class DeliveryListParams implements BaseModel
     public ?string $batchID;
 
     /**
-     * Only include events created after this ISO 8601 timestamp.
+     * Only include deliveries created after this time.
      */
     #[Optional('created_after')]
     public ?\DateTimeInterface $createdAfter;
 
     /**
-     * The next_cursor from the previous response.
+     * Cursor from the previous page's `next_cursor`. Omit for the first page.
      */
     #[Optional]
     public ?string $cursor;
 
     /**
-     * Number of deliveries to return.
+     * Maximum number of deliveries to return per page.
      */
     #[Optional]
     public ?int $limit;
@@ -76,7 +76,7 @@ final class DeliveryListParams implements BaseModel
     public ?string $status;
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @var list<string>|null $tags
      */
@@ -151,7 +151,7 @@ final class DeliveryListParams implements BaseModel
     }
 
     /**
-     * Delivery source.
+     * List monitor webhook deliveries.
      *
      * @param Type|value-of<Type> $type
      */
@@ -175,7 +175,7 @@ final class DeliveryListParams implements BaseModel
     }
 
     /**
-     * Only include events created after this ISO 8601 timestamp.
+     * Only include deliveries created after this time.
      */
     public function withCreatedAfter(\DateTimeInterface $createdAfter): self
     {
@@ -186,7 +186,7 @@ final class DeliveryListParams implements BaseModel
     }
 
     /**
-     * The next_cursor from the previous response.
+     * Cursor from the previous page's `next_cursor`. Omit for the first page.
      */
     public function withCursor(string $cursor): self
     {
@@ -197,7 +197,7 @@ final class DeliveryListParams implements BaseModel
     }
 
     /**
-     * Number of deliveries to return.
+     * Maximum number of deliveries to return per page.
      */
     public function withLimit(int $limit): self
     {
@@ -221,7 +221,7 @@ final class DeliveryListParams implements BaseModel
     }
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @param list<string> $tags
      */

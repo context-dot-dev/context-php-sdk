@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Monitors\MonitorListAccountRunsResponse\Data;
 
 /**
- * Why a skipped run never executed; null unless status is `skipped`.
+ * Why the run was skipped; `superseded` means a concurrent run took its place or the monitor was deleted. `null` unless `status` is `skipped`.
  */
 enum SkipReason: string
 {

@@ -27,7 +27,7 @@ final class WebAnswersResponse implements BaseModel
     use SdkModel;
 
     /**
-     * The answer, in the shape requested by json_format.
+     * The answer, in the shape of `json_format`.
      *
      * @var array<string,mixed> $jsonContent
      */
@@ -41,7 +41,7 @@ final class WebAnswersResponse implements BaseModel
     public string $requestID;
 
     /**
-     * URLs of the pages and company/profile records read for the answer, followed by URLs cited in json_content.
+     * URLs of the pages and company or profile records read for the answer, followed by URLs cited in `json_content`.
      *
      * @var list<string> $sources
      */
@@ -55,7 +55,7 @@ final class WebAnswersResponse implements BaseModel
     public ?KeyMetadata $keyMetadata;
 
     /**
-     * True when the answer is incomplete: the request deadline ended research, or a requested list item has no researched values.
+     * `true` when the answer is incomplete because the deadline ended research or a requested list item has no researched values.
      */
     #[Optional]
     public ?bool $partial;
@@ -111,7 +111,7 @@ final class WebAnswersResponse implements BaseModel
     }
 
     /**
-     * The answer, in the shape requested by json_format.
+     * The answer, in the shape of `json_format`.
      *
      * @param array<string,mixed> $jsonContent
      */
@@ -135,7 +135,7 @@ final class WebAnswersResponse implements BaseModel
     }
 
     /**
-     * URLs of the pages and company/profile records read for the answer, followed by URLs cited in json_content.
+     * URLs of the pages and company or profile records read for the answer, followed by URLs cited in `json_content`.
      *
      * @param list<string> $sources
      */
@@ -161,7 +161,7 @@ final class WebAnswersResponse implements BaseModel
     }
 
     /**
-     * True when the answer is incomplete: the request deadline ended research, or a requested list item has no researched values.
+     * `true` when the answer is incomplete because the deadline ended research or a requested list item has no researched values.
      */
     public function withPartial(bool $partial): self
     {

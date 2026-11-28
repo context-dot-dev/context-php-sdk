@@ -11,7 +11,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Images after content filters. `[]` when none are found.
+ * Images found on the page, after content filters. `[]` when there are none.
  *
  * @phpstan-import-type DataShape from \ContextDev\Batch\BatchGetResultsResponse\Data\FailedPage\Result\Images\Data
  *
@@ -32,23 +32,26 @@ final class Images implements BaseModel
     #[Required(list: Data::class)]
     public ?array $data;
 
+    /**
+     * Whether you requested this output in `formats`.
+     */
     #[Required]
     public bool $requested;
 
     /**
-     * `true` if returned, `false` if it failed, `null` if not requested.
+     * `true` when the output succeeded, `false` when it failed, `null` when it was not requested.
      */
     #[Required]
     public ?bool $success;
 
     /**
-     * Why the output failed. Present only when `success` is `false`.
+     * Machine-readable error code. Present only when `success` is `false`.
      */
     #[Optional('error_code')]
     public ?string $errorCode;
 
     /**
-     * Explanation of the failure and possible next steps.
+     * Human-readable explanation of the error and how to resolve it.
      */
     #[Optional]
     public ?string $message;
@@ -109,6 +112,9 @@ final class Images implements BaseModel
         return $self;
     }
 
+    /**
+     * Whether you requested this output in `formats`.
+     */
     public function withRequested(bool $requested): self
     {
         $self = clone $this;
@@ -118,7 +124,7 @@ final class Images implements BaseModel
     }
 
     /**
-     * `true` if returned, `false` if it failed, `null` if not requested.
+     * `true` when the output succeeded, `false` when it failed, `null` when it was not requested.
      */
     public function withSuccess(?bool $success): self
     {
@@ -129,7 +135,7 @@ final class Images implements BaseModel
     }
 
     /**
-     * Why the output failed. Present only when `success` is `false`.
+     * Machine-readable error code. Present only when `success` is `false`.
      */
     public function withErrorCode(string $errorCode): self
     {
@@ -140,7 +146,7 @@ final class Images implements BaseModel
     }
 
     /**
-     * Explanation of the failure and possible next steps.
+     * Human-readable explanation of the error and how to resolve it.
      */
     public function withMessage(string $message): self
     {

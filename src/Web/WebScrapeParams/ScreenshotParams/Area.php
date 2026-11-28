@@ -12,7 +12,7 @@ use ContextDev\Web\WebScrapeParams\ScreenshotParams\Area\UnionMember0;
 use ContextDev\Web\WebScrapeParams\ScreenshotParams\Area\UnionMember2;
 
 /**
- * What to capture: `viewport`, `fullPage`, one element, or a rectangle. Max 40 megapixels.
+ * What to capture: `viewport`, `fullPage`, one element, or a rectangle. Up to 40 megapixels.
  *
  * @phpstan-import-type SelectorShape from \ContextDev\Web\WebScrapeParams\ScreenshotParams\Area\Selector
  * @phpstan-import-type UnionMember2Shape from \ContextDev\Web\WebScrapeParams\ScreenshotParams\Area\UnionMember2

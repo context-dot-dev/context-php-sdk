@@ -87,14 +87,14 @@ final class WebService implements WebContract
     /**
      * @api
      *
-     * Research the web and return a sourced answer in your JSON shape. Choose `fast` for a short task or `ultra` for deeper research.
+     * Research a task across the live web and Context.dev's company and people data, and get the answer in the JSON shape you provide, with the URLs it used. `fast` (10 credits) suits short lookups; `ultra` (100 credits, the default) reads more sources for deeper research.
      *
-     * @param string $task Research task, up to 2000 characters. The agent selects company/profile lookups, web searches, or page reads. Include domains or URLs to focus the research.
-     * @param Controls|ControlsShape $controls limits what the research may use
-     * @param array<string,mixed> $jsonFormat Example answer object, not JSON Schema. Up to 8 levels, 500 values, and 16000 characters; unknowns may be null.
-     * @param Mode|value-of<Mode> $mode `fast` prioritizes speed, with extra verification for people and companies; `ultra` supports deeper research (default)
-     * @param list<string> $policies Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
-     * @param list<string> $tags labels for filtering usage in the dashboard
+     * @param string $task What to research, in plain language, up to 2000 characters. Include domains or URLs to focus the research.
+     * @param Controls|ControlsShape $controls limit which sites the research can search, read, and cite
+     * @param array<string,mixed> $jsonFormat Example of the answer object to return, not a JSON Schema. Up to 8 levels deep, 500 values, and 16,000 characters. Values that cannot be found come back as `null`. Defaults to `{ "result": "" }`.
+     * @param Mode|value-of<Mode> $mode `fast` prioritizes speed and adds extra verification for people and companies; `ultra` searches and reads more sources for deeper research. Defaults to `ultra`.
+     * @param list<string> $policies Access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
+     * @param list<string> $tags Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts request deadline and what to return when it passes
      * @param Zdr|value-of<Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
@@ -134,11 +134,11 @@ final class WebService implements WebContract
     /**
      * @api
      *
-     * Analyze a company's landing page and web search evidence to return direct competitors for the same product or market.
+     * Find a company's direct competitors from its website and web search results. Each competitor comes with a confidence level and the search results behind it.
      *
-     * @param string $domain Company domain to analyze, such as `stripe.com`. Full http(s) URLs are accepted and normalized to their domain.
-     * @param int $numCompetitors Exact number of direct competitors to return. Defaults to 5.
-     * @param list<string> $tags Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * @param string $domain Company domain, such as `stripe.com`. Full URLs are reduced to their domain.
+     * @param int $numCompetitors exact number of direct competitors to return
+     * @param list<string> $tags Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
      * @param \ContextDev\Web\WebExtractCompetitorsParams\TimeoutOpts|TimeoutOptsShape1 $timeoutOpts request deadline and what to return when it passes
      * @param \ContextDev\Web\WebExtractCompetitorsParams\Zdr|value-of<\ContextDev\Web\WebExtractCompetitorsParams\Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
@@ -172,16 +172,16 @@ final class WebService implements WebContract
     /**
      * @api
      *
-     * Extract colors, typography, spacing, and component styles from a website.
+     * Extract a website's design system: colors, typography, spacing, shadows, button and card styles, and downloadable font files. Every component style includes ready-to-use CSS.
      *
-     * @param ColorScheme|value-of<ColorScheme> $colorScheme Optional browser color scheme to emulate for websites that respond to prefers-color-scheme. This value is part of the styleguide cache key.
-     * @param string $directURL Exact URL to inspect. Provide either `domain` or `directUrl`, not both.
-     * @param string $domain Domain name to extract styleguide from (e.g., 'example.com', 'google.com'). The domain will be automatically normalized and validated. You must provide either 'domain' or 'directUrl', but not both.
-     * @param int|null $maxAgeMs Maximum age of cached brand data in ms. Defaults to 3 months; clamped to 0–1 year. `0` refreshes.
-     * @param list<string> $policies Comma-separated access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
-     * @param list<string> $tags Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * @param ColorScheme|value-of<ColorScheme> $colorScheme Emulate a light or dark color scheme. Each scheme is cached separately.
+     * @param string $directURL Exact page URL to analyze. Provide either `domain` or `directUrl`, not both.
+     * @param string $domain Domain to analyze, such as `stripe.com`. Provide either `domain` or `directUrl`, not both.
+     * @param int|null $maxAgeMs Maximum age of a cached result, in milliseconds. `0` always fetches fresh. Defaults to 90 days (7776000000 ms). Values above 1 year (31536000000 ms) are capped at 1 year.
+     * @param list<string> $policies Comma-separated access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
+     * @param list<string> $tags Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
      * @param \ContextDev\Web\WebExtractStyleguideParams\TimeoutOpts|TimeoutOptsShape2 $timeoutOpts request deadline and what to return when it passes
-     * @param \ContextDev\Web\WebExtractStyleguideParams\Zdr|value-of<\ContextDev\Web\WebExtractStyleguideParams\Zdr> $zdr `enabled` disables request logs and traces and omits request and response content from usage logs. Brand data and hosted assets may still be stored. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
+     * @param \ContextDev\Web\WebExtractStyleguideParams\Zdr|value-of<\ContextDev\Web\WebExtractStyleguideParams\Zdr> $zdr `enabled` turns off request logs and traces and keeps request and response content out of usage logs. Brand data and hosted assets may still be stored. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -219,19 +219,19 @@ final class WebService implements WebContract
     /**
      * @api
      *
-     * Discover a site's URLs, with page titles, descriptions, keywords, and language when available. Metadata can be missing on newly discovered URLs.
+     * Map up to 100,000 URLs on a domain, with titles, descriptions, keywords, and language when available. Filter with regex patterns, or rank by topic with `search` for 1 extra credit. Newly discovered URLs can lack metadata.
      *
-     * @param string $domain Domain to map, e.g. `stripe.com`.
-     * @param string $excludeURLRegex Regex pattern. URLs matching this pattern are not returned, even when they match urlRegex.
-     * @param array<string,string> $headers HTTP headers for the target origin. Non-empty headers bypass caching.
+     * @param string $domain Domain to map, such as `stripe.com`.
+     * @param string $excludeURLRegex leave out URLs matching this regex, even when they match `urlRegex`
+     * @param array<string,string> $headers HTTP headers to send to the target site. Requests with headers skip the cache.
      * @param bool $includeSubdomains include URLs on subdomains
      * @param int $maxLinks maximum number of URLs to return
-     * @param list<string> $policies Comma-separated access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * @param list<string> $policies Comma-separated access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      * @param string $search filter URLs by a topic or phrase, most relevant first
      * @param string $sitemapURL Fetch this sitemap instead of discovering sitemaps. Must belong to the domain or a subdomain.
-     * @param list<string> $tags Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * @param list<string> $tags Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
      * @param \ContextDev\Web\WebMapURLsParams\TimeoutOpts|TimeoutOptsShape3 $timeoutOpts request deadline and what to return when it passes
-     * @param string $urlRegex Regex pattern. Only URLs matching this pattern are returned and counted against maxLinks.
+     * @param string $urlRegex Only return URLs matching this regex. Only matches count toward `maxLinks`.
      * @param \ContextDev\Web\WebMapURLsParams\Zdr|value-of<\ContextDev\Web\WebMapURLsParams\Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
      *
@@ -278,23 +278,23 @@ final class WebService implements WebContract
     /**
      * @api
      *
-     * Scrape anything from a URL on the internet. Returns the outputs you enable in formats. Handles PDFs, DOCX, PPT, XLSX, and 40 other file formats.
+     * Turn any URL into Markdown, HTML, a screenshot, images, raw bytes, parsed fields, product data, highlights, or schema-matched JSON in one request. Choose the outputs in `formats`; each one succeeds or fails on its own. Handles PDF, Word, Excel, PowerPoint, and 40 other file formats.
      *
      * @param Formats|FormatsShape $formats Outputs to return. Set at least one to `true`.
      * @param string $url public HTTP or HTTPS URL to scrape
-     * @param HighlightsParams|HighlightsParamsShape $highlightsParams Requires `formats.highlights: true`; required when it is set.
-     * @param ImageParams|ImageParamsShape $imageParams Image options. Requires formats.images: true.
-     * @param JsonParams|JsonParamsShape $jsonParams Requires `formats.json: true`; required when it is set.
-     * @param MarkdownParams|MarkdownParamsShape $markdownParams Markdown options. Requires `formats.markdown`.
-     * @param int $maxAgeMs Maximum age of a cached output, in milliseconds. `0` fetches fresh. Defaults to 3 days (259200000 ms). Maximum: 1 year (31536000000 ms).
-     * @param ParseParamsShape $parseParams Requires `formats.parse: true`; required when it is set.
-     * @param list<string> $policies Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
-     * @param ProductParams|ProductParamsShape $productParams Product options. Requires formats.product: true.
-     * @param ScreenshotParams|ScreenshotParamsShape $screenshotParams Screenshot options. Requires formats.screenshot: true.
+     * @param HighlightsParams|HighlightsParamsShape $highlightsParams Query for the `highlights` output. Required when `formats.highlights` is `true`, and allowed only then.
+     * @param ImageParams|ImageParamsShape $imageParams Options for the `images` output. Requires `formats.images: true`.
+     * @param JsonParams|JsonParamsShape $jsonParams Schema and instructions for the `json` output. Required when `formats.json` is `true`, and allowed only then.
+     * @param MarkdownParams|MarkdownParamsShape $markdownParams Options for the `markdown` output. Requires `formats.markdown: true`.
+     * @param int $maxAgeMs Maximum age of a cached result, in milliseconds. `0` always fetches fresh. Defaults to 3 days (259200000 ms). Maximum: 1 year (31536000000 ms).
+     * @param ParseParamsShape $parseParams Custom rules or a prebuilt parser for the `parsed` output. Required when `formats.parse` is `true`, and allowed only then.
+     * @param list<string> $policies Access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
+     * @param ProductParams|ProductParamsShape $productParams Options for the `product` output. Requires `formats.product: true`.
+     * @param ScreenshotParams|ScreenshotParamsShape $screenshotParams Options for the `screenshot` output. Requires `formats.screenshot: true`.
      * @param SharedParams|SharedParamsShape $sharedParams browser and content settings shared by all outputs
-     * @param list<string> $tags labels for filtering usage in the dashboard
+     * @param list<string> $tags Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      * @param \ContextDev\Web\WebScrapeParams\TimeoutOpts|TimeoutOptsShape4 $timeoutOpts request deadline and what to return when it passes
-     * @param \ContextDev\Web\WebScrapeParams\Zdr|value-of<\ContextDev\Web\WebScrapeParams\Zdr> $zdr `enabled` turns on zero data retention. Your organization must have ZDR enabled.
+     * @param \ContextDev\Web\WebScrapeParams\Zdr|value-of<\ContextDev\Web\WebScrapeParams\Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -346,23 +346,23 @@ final class WebService implements WebContract
     /**
      * @api
      *
-     * Capture a screenshot of a website.
+     * Capture a screenshot of a website's home page, a page type such as pricing, or an exact URL. Returns the visible viewport, a scroll slice, or the full page.
      *
-     * @param bool $clearPopups Optional parameter for comprehensive popup cleanup. If 'true', the browser dismisses detected cookie/consent UI and clears other detected obstructive popups and overlays before capture. If 'false' or not provided, this parameter requests no cleanup; handleCookiePopup can still request cookie/consent handling independently.
-     * @param \ContextDev\Web\WebScreenshotParams\ColorScheme|value-of<\ContextDev\Web\WebScreenshotParams\ColorScheme> $colorScheme Optional parameter to choose the site's visual theme in the screenshot. Use 'light' or 'dark' when the site offers both appearances.
-     * @param Country|value-of<Country> $country fetch from this country (ISO 3166-1 alpha-2)
-     * @param string $directURL A specific URL to screenshot directly, bypassing domain resolution (e.g., 'https://example.com/pricing'). When provided, the screenshot is taken of this exact URL. You must provide either 'domain' or 'directUrl', but not both.
-     * @param string $domain Domain name to take screenshot of (e.g., 'example.com', 'google.com'). The domain will be automatically normalized and validated. You must provide either 'domain' or 'directUrl', but not both.
-     * @param FullScreenshot|value-of<FullScreenshot> $fullScreenshot Optional parameter to determine screenshot type. If 'true', takes a full page screenshot capturing all content. If 'false' or not provided, takes a viewport screenshot (standard browser view).
-     * @param bool $handleCookiePopup Optional parameter to control cookie/consent popup handling. If 'true', we dismiss cookie banner before capture. If 'false' or not provided, captures the page without that step.
-     * @param array<string,string> $headers Optional outbound HTTP headers, using the same JSON object or deep-object query format as other scrape endpoints (for example headers[Authorization]=Bearer token). Headers are scoped to the target origin during capture. For domain/page requests, discovery receives no custom headers and only pages on the resolved origin are eligible. Non-empty headers bypass screenshot caching and return an in-memory data URL; no screenshot is uploaded. Empty objects behave like omitted headers.
-     * @param int|null $maxAgeMs Return a cached screenshot if a prior screenshot for the same parameters exists and is younger than this many milliseconds. Defaults to 1 day (86400000 ms) when omitted. Max is 30 days (2592000000 ms). Set to 0 to always capture fresh.
-     * @param Page|value-of<Page> $page Optional parameter to specify which page type to screenshot. If provided, the system will scrape the domain's links and use heuristics to find the most appropriate URL for the specified page type (30 supported languages). If not provided, screenshots the main domain landing page. Only applicable when using 'domain', not 'directUrl'.
-     * @param int|null $scrollOffset Optional vertical scroll offset in pixels for capturing a long page in viewport-sized chunks. When provided, the full page is captured once and the returned image is the viewport-sized slice that begins at this Y offset (e.g. request scrollOffset=0, then 1080, then 2160 to walk a 1920x1080 landing page top to bottom). The final slice may be shorter than the viewport height. Takes precedence over fullScreenshot. Max: 100000.
-     * @param list<string> $tags Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * @param bool $clearPopups dismiss cookie banners and close other popups and overlays before capture
+     * @param \ContextDev\Web\WebScreenshotParams\ColorScheme|value-of<\ContextDev\Web\WebScreenshotParams\ColorScheme> $colorScheme emulate a light or dark color scheme
+     * @param Country|value-of<Country> $country country to fetch from, as an ISO 3166-1 alpha-2 code
+     * @param string $directURL Exact URL to capture, such as `https://example.com/pricing`. Provide either `domain` or `directUrl`, not both.
+     * @param string $domain Domain to capture, such as `stripe.com`. Provide either `domain` or `directUrl`, not both.
+     * @param FullScreenshot|value-of<FullScreenshot> $fullScreenshot capture the full scrollable page instead of only the viewport
+     * @param bool $handleCookiePopup dismiss cookie consent banners before capture
+     * @param array<string,string> $headers HTTP headers to send to the target origin, such as `headers[Authorization]=Bearer token`. Requests with headers skip the cache and return the image as a data URL.
+     * @param int|null $maxAgeMs Maximum age of a cached result, in milliseconds. `0` always fetches fresh. Defaults to 1 day (86400000 ms). Maximum: 30 days (2592000000 ms).
+     * @param Page|value-of<Page> $page Capture this type of page instead of the home page. Context.dev finds it among the domain's links, in 30 languages. Only with `domain`.
+     * @param int|null $scrollOffset Return the viewport-sized slice of the full page that starts this many pixels from the top. Step by the viewport height, such as `0`, `1080`, `2160`, to walk a long page. The last slice can be shorter. Overrides `fullScreenshot`.
+     * @param list<string> $tags Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
      * @param \ContextDev\Web\WebScreenshotParams\TimeoutOpts|TimeoutOptsShape5 $timeoutOpts request deadline and what to return when it passes
-     * @param Viewport|ViewportShape $viewport Optional browser viewport dimensions for the screenshot. Defaults to 1920x1080.
-     * @param int|null $waitForMs Optional browser wait time in milliseconds after initial page load before taking the screenshot. Min: 0. Max: 30000 (30 seconds). Defaults to 3000 ms when omitted. When combined with timeoutOpts, timeoutOpts.milliseconds must be at least waitForMs + 10000 ms; a shorter deadline is rejected with 400 TIMEOUT_TOO_SHORT_FOR_WAIT.
+     * @param Viewport|ViewportShape $viewport browser viewport size in pixels
+     * @param int|null $waitForMs Time to wait after the page loads before capturing, in milliseconds. `0` waits 500 ms. `timeoutOpts.milliseconds` must be at least `waitForMs` plus 10000 ms, or the request fails with `TIMEOUT_TOO_SHORT_FOR_WAIT`.
      * @param \ContextDev\Web\WebScreenshotParams\Zdr|value-of<\ContextDev\Web\WebScreenshotParams\Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
      *
@@ -417,20 +417,20 @@ final class WebService implements WebContract
     /**
      * @api
      *
-     * Search the web and optionally return page content or relevant passages with each result.
+     * Search the web and get ranked results, with optional page Markdown or query-relevant passages for each one. Supports search operators and filters for domain, freshness, country, and language.
      *
-     * @param string $query Search query. Accepts natural language as well as Google-style search operators such as `site:`, `-site:`, `inurl:`, `intitle:`, quoted phrases, and `OR`.
-     * @param \ContextDev\Web\WebSearchParams\Country|value-of<\ContextDev\Web\WebSearchParams\Country> $country Two-letter ISO 3166-1 alpha-2 country code to localize results to a specific country (maps to Google's `gl` parameter). Example: "us", "gb", "de".
+     * @param string $query Search query. Accepts natural language and search operators such as `site:`, `-site:`, `inurl:`, `intitle:`, quoted phrases, and `OR`.
+     * @param \ContextDev\Web\WebSearchParams\Country|value-of<\ContextDev\Web\WebSearchParams\Country> $country localize results to this country, as an ISO 3166-1 alpha-2 code such as `us` or `de`
      * @param int|null $descriptionMaxCharacters maximum length of each result's `description`, in characters
-     * @param list<string> $excludeDomains Blocklist — drop results from these domains. Up to 100 domains. Example: ["pinterest.com", "reddit.com"].
+     * @param list<string> $excludeDomains Leave out results from these domains, such as `pinterest.com`.
      * @param Freshness|value-of<Freshness> $freshness restrict results to content published within this window
-     * @param HighlightsOptions|HighlightsOptionsShape|null $highlightsOptions Passages from each result page that are relevant to the query. Pages are read with the `markdownOptions` settings.
-     * @param list<string> $includeDomains Allowlist — only return results from these domains. Up to 100 domains. Example: ["arxiv.org", "github.com"].
-     * @param LanguagesShape $languages Languages to return results in, as BCP 47 language codes such as `en` or `de`, or "all" for any language. Defaults to "all". Example: ["en", "de"].
-     * @param MarkdownOptions|MarkdownOptionsShape|null $markdownOptions Inline Markdown scraping for each result. Set `enabled: true` to activate.
-     * @param int $numResults Number of results to request and return (1–100). Defaults to 10.
-     * @param list<string> $policies Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
-     * @param list<string> $tags labels for filtering usage in the dashboard
+     * @param HighlightsOptions|HighlightsOptionsShape|null $highlightsOptions Return passages from each result page that are relevant to the query. Pages are read with the `markdownOptions` settings.
+     * @param list<string> $includeDomains Only return results from these domains, such as `arxiv.org`.
+     * @param LanguagesShape $languages languages to return results in, as BCP 47 codes such as `en` or `de`, or `all` for any language
+     * @param MarkdownOptions|MarkdownOptionsShape|null $markdownOptions Scrape each result page to Markdown. Set `enabled` to `true` to turn it on.
+     * @param int $numResults number of results to return
+     * @param list<string> $policies Access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
+     * @param list<string> $tags Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      * @param \ContextDev\Web\WebSearchParams\TimeoutOpts|TimeoutOptsShape6 $timeoutOpts request deadline and what to return when it passes
      * @param \ContextDev\Web\WebSearchParams\Zdr|value-of<\ContextDev\Web\WebSearchParams\Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
@@ -482,31 +482,31 @@ final class WebService implements WebContract
     /**
      * @api
      *
-     * Crawl a website and return page content as Markdown. Use a batch for crawls beyond 500 pages.
+     * Crawl up to 500 pages from a start URL and get each page back as Markdown with metadata. Control scope with depth limits, regex patterns, and subdomain rules. For larger crawls, use a batch.
      *
      * @param string $url start URL, including `http://` or `https://`
-     * @param \ContextDev\Web\WebWebCrawlMdParams\Country|value-of<\ContextDev\Web\WebWebCrawlMdParams\Country> $country fetch from this country (ISO 3166-1 alpha-2)
-     * @param list<string>|null $excludeSelectors Remove matching elements after inclusions. Exclusions take precedence.
-     * @param string $excludeURLRegex Regex pattern. URLs matching this pattern are never followed or scraped, even when they match urlRegex. The starting URL is always scraped.
-     * @param bool $followSubdomains When true, follow links on subdomains of the starting URL's domain (e.g. docs.example.com when starting from example.com). www and apex are always treated as equivalent.
-     * @param IncludeFramesShape $includeFrames Which iframe contents to render to Markdown for each crawled page. `auto` (default) inlines only iframes that hold page content, such as same-site documents, framesets, job boards, forms and embedded documents, and skips ads and widgets. `true` inlines every iframe. `false` inlines none.
-     * @param bool $includeImages include image references in the Markdown output (`html-conversion` only)
-     * @param bool $includeLinks preserve hyperlinks in the Markdown output (`html-conversion` only)
-     * @param list<string>|null $includeSelectors keep matching HTML subtrees before converting each page to Markdown
-     * @param int|null $maxAgeMs Maximum cache age in milliseconds. Defaults to 1 day; `0` fetches fresh.
-     * @param int $maxDepth Maximum link depth from the starting URL (0 = only the starting page)
-     * @param int $maxPages maximum pages to crawl
-     * @param Pdf|PdfShape $pdf PDF handling. `start`/`end` limit parsing to an inclusive, 1-based page range.
-     * @param list<string> $policies Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * @param \ContextDev\Web\WebWebCrawlMdParams\Country|value-of<\ContextDev\Web\WebWebCrawlMdParams\Country> $country country to fetch from, as an ISO 3166-1 alpha-2 code
+     * @param list<string>|null $excludeSelectors Remove elements matching these CSS selectors. Overrides `includeSelectors`.
+     * @param string $excludeURLRegex Never follow or scrape URLs matching this regex, even when they match `urlRegex`. The start URL is always scraped.
+     * @param bool $followSubdomains Follow links to subdomains of the start URL's domain, such as `docs.example.com` from `example.com`. `www` and the apex domain always count as the same site.
+     * @param IncludeFramesShape $includeFrames Which iframe contents to include in each page's Markdown. `auto` inlines only iframes that hold page content, such as same-site documents, framesets, job boards, forms, and embedded documents, and skips ads and widgets. `true` inlines every iframe; `false` inlines none.
+     * @param bool $includeImages include image references in the Markdown (`html-conversion` only)
+     * @param bool $includeLinks keep link URLs in the Markdown (`html-conversion` only)
+     * @param list<string>|null $includeSelectors keep only elements matching these CSS selectors
+     * @param int|null $maxAgeMs Maximum age of a cached result, in milliseconds. `0` always fetches fresh. Defaults to 1 day (86400000 ms). Maximum: 30 days (2592000000 ms).
+     * @param int $maxDepth Maximum link depth from the start URL. `0` crawls only the start URL. Omit for no depth limit.
+     * @param int $maxPages maximum number of pages to crawl
+     * @param Pdf|PdfShape $pdf whether to parse PDFs and which pages to read
+     * @param list<string> $policies Access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      * @param bool $settleAnimations wait briefly for CSS animations and transitions to settle before reading each page
-     * @param bool $shortenBase64Images truncate base64-encoded image data in the Markdown output (`html-conversion` only)
+     * @param bool $shortenBase64Images shorten inline base64 image data (`html-conversion` only)
      * @param list<SourcePreference|value-of<SourcePreference>> $sourcePreference markdown sources in order of preference: `html-conversion` converts the page HTML, `markdown-direct` uses Markdown the site publishes
-     * @param int $stopAfterMs Soft crawl deadline in milliseconds. Returns pages collected before the next deadline check.
-     * @param list<string> $tags labels for filtering usage in the dashboard
+     * @param int $stopAfterMs Soft time budget for the crawl, in milliseconds. When it runs out, the crawl returns the pages collected so far. Larger values are capped at 110 seconds.
+     * @param list<string> $tags Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      * @param \ContextDev\Web\WebWebCrawlMdParams\TimeoutOpts|TimeoutOptsShape7 $timeoutOpts request deadline and what to return when it passes
-     * @param string $urlRegex Regex pattern. Only URLs matching this pattern will be followed and scraped. An automatic prefix scope in the form ^<starting URL> follows a redirect of the starting page.
-     * @param bool $useMainContentOnly Extract only the main content, stripping headers, footers, sidebars, and navigation
-     * @param int|null $waitForMs Browser wait time in milliseconds after initial page load for each crawled page. Defaults to 3500 (3.5 seconds). Min: 0. Max: 30000 (30 seconds).
+     * @param string $urlRegex Only follow and scrape URLs matching this regex. A prefix pattern of the form `^<start URL>` also follows a redirect of the start page.
+     * @param bool $useMainContentOnly keep only the main content, without navigation, headers, footers, or sidebars
+     * @param int|null $waitForMs Time to wait after each page loads before reading it, in milliseconds. `0` waits 500 ms. `timeoutOpts.milliseconds` must be at least `waitForMs` plus 10000 ms, or the request fails with `TIMEOUT_TOO_SHORT_FOR_WAIT`.
      * @param \ContextDev\Web\WebWebCrawlMdParams\Zdr|value-of<\ContextDev\Web\WebWebCrawlMdParams\Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
      *

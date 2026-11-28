@@ -209,7 +209,7 @@ interface MonitorsRawContract
     /**
      * @api
      *
-     * @param string $changeID ID of the detected change
+     * @param string $changeID ID of the change
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<MonitorGetChangeResponse>
@@ -224,7 +224,7 @@ interface MonitorsRawContract
     /**
      * @api
      *
-     * @param string $runID ID of the monitor run
+     * @param string $runID ID of the run
      * @param array<string,mixed>|MonitorRetrieveRunParams $params
      * @param RequestOpts|null $requestOptions
      *

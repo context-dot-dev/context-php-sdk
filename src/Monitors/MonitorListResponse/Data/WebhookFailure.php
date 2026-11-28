@@ -10,7 +10,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Monitors\MonitorListResponse\Data\WebhookFailure\LastStatus;
 
 /**
- * Present while webhook deliveries are failing consecutively; null when deliveries are healthy or no webhook is configured. Cleared on the next successful delivery and when the webhook URL changes.
+ * Details of failing webhook deliveries. `null` when deliveries succeed or no webhook is configured; cleared by the next successful delivery or a new webhook URL.
  *
  * @phpstan-type WebhookFailureShape = array{
  *   consecutiveFailures: int,
@@ -25,22 +25,25 @@ final class WebhookFailure implements BaseModel
     use SdkModel;
 
     /**
-     * Number of consecutive delivery attempts that did not succeed.
+     * Number of failed delivery attempts in a row.
      */
     #[Required('consecutive_failures')]
     public int $consecutiveFailures;
 
+    /**
+     * When the most recent delivery failed.
+     */
     #[Required('last_failed_at')]
     public \DateTimeInterface $lastFailedAt;
 
     /**
-     * Human-readable description of the most recent failure.
+     * Human-readable explanation of the most recent failure.
      */
     #[Required('last_message')]
     public string $lastMessage;
 
     /**
-     * Outcome of the most recent failed delivery. rejected means a non-2xx response; failed means no HTTP response was received; skipped_unsafe_url means the URL failed the public-endpoint safety check.
+     * Outcome of the most recent failed delivery: `rejected` (non-2xx response), `failed` (no response), or `skipped_unsafe_url` (the URL isn't a safe public endpoint).
      *
      * @var value-of<LastStatus> $lastStatus
      */
@@ -96,7 +99,7 @@ final class WebhookFailure implements BaseModel
     }
 
     /**
-     * Number of consecutive delivery attempts that did not succeed.
+     * Number of failed delivery attempts in a row.
      */
     public function withConsecutiveFailures(int $consecutiveFailures): self
     {
@@ -106,6 +109,9 @@ final class WebhookFailure implements BaseModel
         return $self;
     }
 
+    /**
+     * When the most recent delivery failed.
+     */
     public function withLastFailedAt(\DateTimeInterface $lastFailedAt): self
     {
         $self = clone $this;
@@ -115,7 +121,7 @@ final class WebhookFailure implements BaseModel
     }
 
     /**
-     * Human-readable description of the most recent failure.
+     * Human-readable explanation of the most recent failure.
      */
     public function withLastMessage(string $lastMessage): self
     {
@@ -126,7 +132,7 @@ final class WebhookFailure implements BaseModel
     }
 
     /**
-     * Outcome of the most recent failed delivery. rejected means a non-2xx response; failed means no HTTP response was received; skipped_unsafe_url means the URL failed the public-endpoint safety check.
+     * Outcome of the most recent failed delivery: `rejected` (non-2xx response), `failed` (no response), or `skipped_unsafe_url` (the URL isn't a safe public endpoint).
      *
      * @param LastStatus|value-of<LastStatus> $lastStatus
      */

@@ -23,13 +23,13 @@ interface NewsContract
     /**
      * @api
      *
-     * @param SearchByShape $searchBy what to search for: a specific company, or a natural-language query across all news
-     * @param string|null $cursor opaque next_cursor from the previous response, or null for the first page
-     * @param FilterBy|FilterByShape $filterBy Optional result filters. Use at most one of sourceDomain, sourceCountry, articleLanguage, or articleType. A date range may accompany that category; date.from must not exceed date.to.
-     * @param int $limit Maximum results to return. Defaults to 10.
-     * @param list<string> $policies Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
-     * @param SortBy|SortByShape $sortBy Result ordering. Defaults to newest for entity searches. Natural-language searches are always ordered by relevance.
-     * @param list<string> $tags labels for filtering usage in the dashboard
+     * @param SearchByShape $searchBy what to search for: news about a specific company, or a natural-language query across all news
+     * @param string|null $cursor Cursor from the previous page's `next_cursor`. Omit for the first page.
+     * @param FilterBy|FilterByShape $filterBy Filters for the results. Use at most one of `sourceDomain`, `sourceCountry`, `articleLanguage`, or `articleType`, optionally combined with `date`.
+     * @param int $limit maximum number of articles to return per page
+     * @param list<string> $policies Access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
+     * @param SortBy|SortByShape $sortBy How to order results. Company searches default to `newest`; natural-language searches always use `relevance`.
+     * @param list<string> $tags Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

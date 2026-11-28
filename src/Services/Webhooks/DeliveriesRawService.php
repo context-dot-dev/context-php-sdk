@@ -37,9 +37,9 @@ final class DeliveriesRawService implements DeliveriesRawContract
     /**
      * @api
      *
-     * Retrieve a webhook delivery’s status and original payload.
+     * Retrieve a webhook delivery's status, retry settings, and most recent attempt.
      *
-     * @param string $deliveryID delivery ID
+     * @param string $deliveryID ID of the delivery
      * @param array{tags?: list<string>}|DeliveryRetrieveParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -70,7 +70,7 @@ final class DeliveriesRawService implements DeliveriesRawContract
     /**
      * @api
      *
-     * List batch and monitor webhook deliveries from the last 30 days.
+     * List webhook deliveries for your batches or monitors from the last 30 days, newest first. Filter by source, status, or creation time.
      *
      * @param array{
      *   type: Type|value-of<Type>,
@@ -111,9 +111,9 @@ final class DeliveriesRawService implements DeliveriesRawContract
     /**
      * @api
      *
-     * List a delivery’s attempts, newest first.
+     * List a webhook delivery's attempts, newest first.
      *
-     * @param string $deliveryID delivery ID
+     * @param string $deliveryID ID of the delivery
      * @param array{
      *   cursor?: string, limit?: int, tags?: list<string>
      * }|DeliveryListAttemptsParams $params
@@ -146,9 +146,9 @@ final class DeliveriesRawService implements DeliveriesRawContract
     /**
      * @api
      *
-     * Resend the original payload using the source’s current URL and secret. Available for 7 days after the event.
+     * Resend a delivery's original payload to the source's current webhook URL, signed with its current secret. Available for 7 days after the event.
      *
-     * @param string $deliveryID path param: Delivery ID
+     * @param string $deliveryID path param: ID of the delivery
      * @param array{
      *   force?: bool, tags?: list<string>, idempotencyKey?: string
      * }|DeliveryRetryParams $params

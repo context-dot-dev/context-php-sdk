@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Batch\BatchListResponse\Data;
 
 /**
- * `scrape` (URL list) or `crawl`.
+ * `scrape` for a URL list, `crawl` for a site crawl.
  */
 enum Mode: string
 {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Web\WebScreenshotResponse;
 
 /**
- * Type of screenshot that was captured.
+ * Whether the image covers the viewport or the full page.
  */
 enum ScreenshotType: string
 {

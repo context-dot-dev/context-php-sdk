@@ -30,7 +30,7 @@ final class Scroll implements BaseModel
     use SdkModel;
 
     /**
-     * Use `scroll` to move through the page or a container.
+     * Scroll the page or a container.
      *
      * @var 'scroll' $type
      */
@@ -38,7 +38,7 @@ final class Scroll implements BaseModel
     public string $type = 'scroll';
 
     /**
-     * Distance per scroll: pixels, one `viewport`, or `max` to reach the end.
+     * Distance per scroll step: a number of pixels, one `viewport`, or `max` to reach the end.
      *
      * @var AmountVariants|null $amount
      */
@@ -60,7 +60,7 @@ final class Scroll implements BaseModel
     public ?int $maxScrolls;
 
     /**
-     * Scroll this container. Omit to scroll the page.
+     * CSS selector of the container to scroll. Omit to scroll the page.
      */
     #[Optional]
     public ?string $selector;
@@ -95,7 +95,7 @@ final class Scroll implements BaseModel
     }
 
     /**
-     * Use `scroll` to move through the page or a container.
+     * Scroll the page or a container.
      *
      * @param 'scroll' $type
      */
@@ -108,7 +108,7 @@ final class Scroll implements BaseModel
     }
 
     /**
-     * Distance per scroll: pixels, one `viewport`, or `max` to reach the end.
+     * Distance per scroll step: a number of pixels, one `viewport`, or `max` to reach the end.
      *
      * @param AmountShape $amount
      */
@@ -145,7 +145,7 @@ final class Scroll implements BaseModel
     }
 
     /**
-     * Scroll this container. Omit to scroll the page.
+     * CSS selector of the container to scroll. Omit to scroll the page.
      */
     public function withSelector(string $selector): self
     {

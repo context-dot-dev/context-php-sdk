@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Search the web on every run and report results not seen before, listed in the change’s `matched_urls` and `evidence`. Semantic detection reports only results describing a new development that matches `instructions`; exact detection reports every new result.
+ * Search the web on every run and report results not seen before, listed in the change's `matched_urls` and `evidence`. `semantic` detection reports only results about a new development that matches `instructions`; `exact` detection reports every new result.
  *
  * @phpstan-type MonitorsSearchTargetShape = array{
  *   query: string, type: 'search', instructions?: string|null
@@ -22,7 +22,7 @@ final class MonitorsSearchTarget implements BaseModel
     use SdkModel;
 
     /**
-     * Use `search` to watch the whole web for new results about a topic.
+     * Use `search` to watch the web for new results about a topic.
      *
      * @var 'search' $type
      */
@@ -30,13 +30,13 @@ final class MonitorsSearchTarget implements BaseModel
     public string $type = 'search';
 
     /**
-     * Web search query to run on every check. Supports operators such as `site:`, `-site:`, and quoted phrases.
+     * Web search query to run on every check. Supports `site:`, `-site:`, and quoted phrases.
      */
     #[Required]
     public string $query;
 
     /**
-     * Plain-language description of which new results matter. Defaults to the query.
+     * Plain-language description of the new results that matter. Defaults to `query`. Not allowed with `exact` detection.
      */
     #[Optional]
     public ?string $instructions;
@@ -79,7 +79,7 @@ final class MonitorsSearchTarget implements BaseModel
     }
 
     /**
-     * Web search query to run on every check. Supports operators such as `site:`, `-site:`, and quoted phrases.
+     * Web search query to run on every check. Supports `site:`, `-site:`, and quoted phrases.
      */
     public function withQuery(string $query): self
     {
@@ -90,7 +90,7 @@ final class MonitorsSearchTarget implements BaseModel
     }
 
     /**
-     * Use `search` to watch the whole web for new results about a topic.
+     * Use `search` to watch the web for new results about a topic.
      *
      * @param 'search' $type
      */
@@ -103,7 +103,7 @@ final class MonitorsSearchTarget implements BaseModel
     }
 
     /**
-     * Plain-language description of which new results matter. Defaults to the query.
+     * Plain-language description of the new results that matter. Defaults to `query`. Not allowed with `exact` detection.
      */
     public function withInstructions(string $instructions): self
     {

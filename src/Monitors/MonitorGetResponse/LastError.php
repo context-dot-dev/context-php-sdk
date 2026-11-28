@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Error from the most recent failed run; null when the last run succeeded.
+ * Error from the most recent failed run. `null` when the last run succeeded.
  *
  * @phpstan-type LastErrorShape = array{code: string, message: string}
  */
@@ -18,9 +18,15 @@ final class LastError implements BaseModel
     /** @use SdkModel<LastErrorShape> */
     use SdkModel;
 
+    /**
+     * Machine-readable error code, such as `fetch_failed`.
+     */
     #[Required]
     public string $code;
 
+    /**
+     * Human-readable explanation of the error.
+     */
     #[Required]
     public string $message;
 
@@ -58,6 +64,9 @@ final class LastError implements BaseModel
         return $self;
     }
 
+    /**
+     * Machine-readable error code, such as `fetch_failed`.
+     */
     public function withCode(string $code): self
     {
         $self = clone $this;
@@ -66,6 +75,9 @@ final class LastError implements BaseModel
         return $self;
     }
 
+    /**
+     * Human-readable explanation of the error.
+     */
     public function withMessage(string $message): self
     {
         $self = clone $this;

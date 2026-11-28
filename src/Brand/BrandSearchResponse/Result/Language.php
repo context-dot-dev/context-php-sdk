@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Brand\BrandSearchResponse\Result;
 
 /**
- * The brand's primary language, when available.
+ * Primary language of the brand. Omitted when unknown.
  */
 enum Language: string
 {

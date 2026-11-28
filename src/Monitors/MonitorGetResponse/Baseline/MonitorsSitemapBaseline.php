@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Current baseline of a `sitemap` monitor: the normalized URL set as last observed.
+ * Baseline for a `sitemap` target: the normalized set of URLs from the last capture.
  *
  * @phpstan-type MonitorsSitemapBaselineShape = array{
  *   capturedAt: \DateTimeInterface, urlCount: int, urls: list<string>
@@ -21,7 +21,7 @@ final class MonitorsSitemapBaseline implements BaseModel
     use SdkModel;
 
     /**
-     * When this baseline was last captured or replaced.
+     * When the baseline was last captured or updated.
      */
     #[Required('captured_at')]
     public \DateTimeInterface $capturedAt;
@@ -33,7 +33,7 @@ final class MonitorsSitemapBaseline implements BaseModel
     public int $urlCount;
 
     /**
-     * The sitemap URLs as last observed (sorted, normalized).
+     * Normalized sitemap URLs from the last capture, sorted.
      *
      * @var list<string> $urls
      */
@@ -84,7 +84,7 @@ final class MonitorsSitemapBaseline implements BaseModel
     }
 
     /**
-     * When this baseline was last captured or replaced.
+     * When the baseline was last captured or updated.
      */
     public function withCapturedAt(\DateTimeInterface $capturedAt): self
     {
@@ -106,7 +106,7 @@ final class MonitorsSitemapBaseline implements BaseModel
     }
 
     /**
-     * The sitemap URLs as last observed (sorted, normalized).
+     * Normalized sitemap URLs from the last capture, sorted.
      *
      * @param list<string> $urls
      */

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Monitors\MonitorUpdateResponse;
 
 /**
- * Always `web`. Optional.
+ * Monitor category. Always `web`.
  */
 enum Mode: string
 {

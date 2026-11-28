@@ -20,19 +20,19 @@ final class Monitor implements BaseModel
     use SdkModel;
 
     /**
-     * Monitor ID.
+     * ID of the monitor.
      */
     #[Required('monitor_id')]
     public string $monitorID;
 
     /**
-     * Monitor run ID.
+     * ID of the monitor run.
      */
     #[Required('run_id')]
     public string $runID;
 
     /**
-     * Which deliveries to list: `batch` or `monitor`.
+     * The event came from a monitor run.
      *
      * @var value-of<Type> $type
      */
@@ -80,7 +80,7 @@ final class Monitor implements BaseModel
     }
 
     /**
-     * Monitor ID.
+     * ID of the monitor.
      */
     public function withMonitorID(string $monitorID): self
     {
@@ -91,7 +91,7 @@ final class Monitor implements BaseModel
     }
 
     /**
-     * Monitor run ID.
+     * ID of the monitor run.
      */
     public function withRunID(string $runID): self
     {
@@ -102,7 +102,7 @@ final class Monitor implements BaseModel
     }
 
     /**
-     * Which deliveries to list: `batch` or `monitor`.
+     * The event came from a monitor run.
      *
      * @param Type|value-of<Type> $type
      */

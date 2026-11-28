@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\ParseParams\UnionMember1;
 
 /**
- * google-maps-reviews only. Order of data.reviews. newest, relevant, highest, and lowest follow Google; oldest returns the earliest reviews first, which Google itself does not offer.
+ * Order of `data.reviews` for `google-maps-reviews`. `newest`, `relevant`, `highest`, and `lowest` use the same orders as Google Maps; `oldest` returns the earliest reviews first.
  */
 enum Sort: string
 {

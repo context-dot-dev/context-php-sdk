@@ -28,23 +28,26 @@ final class Screenshot implements BaseModel
     #[Required]
     public ?string $data;
 
+    /**
+     * Whether you requested this output in `formats`.
+     */
     #[Required]
     public bool $requested;
 
     /**
-     * `true` if returned, `false` if it failed, `null` if not requested.
+     * `true` when the output succeeded, `false` when it failed, `null` when it was not requested.
      */
     #[Required]
     public ?bool $success;
 
     /**
-     * Why the output failed. Present only when `success` is `false`.
+     * Machine-readable error code. Present only when `success` is `false`.
      */
     #[Optional('error_code')]
     public ?string $errorCode;
 
     /**
-     * Explanation of the failure and possible next steps.
+     * Human-readable explanation of the error and how to resolve it.
      */
     #[Optional]
     public ?string $message;
@@ -100,6 +103,9 @@ final class Screenshot implements BaseModel
         return $self;
     }
 
+    /**
+     * Whether you requested this output in `formats`.
+     */
     public function withRequested(bool $requested): self
     {
         $self = clone $this;
@@ -109,7 +115,7 @@ final class Screenshot implements BaseModel
     }
 
     /**
-     * `true` if returned, `false` if it failed, `null` if not requested.
+     * `true` when the output succeeded, `false` when it failed, `null` when it was not requested.
      */
     public function withSuccess(?bool $success): self
     {
@@ -120,7 +126,7 @@ final class Screenshot implements BaseModel
     }
 
     /**
-     * Why the output failed. Present only when `success` is `false`.
+     * Machine-readable error code. Present only when `success` is `false`.
      */
     public function withErrorCode(string $errorCode): self
     {
@@ -131,7 +137,7 @@ final class Screenshot implements BaseModel
     }
 
     /**
-     * Explanation of the failure and possible next steps.
+     * Human-readable explanation of the error and how to resolve it.
      */
     public function withMessage(string $message): self
     {

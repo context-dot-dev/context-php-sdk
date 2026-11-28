@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * List full change records for a monitor, newest first.
+ * List a monitor's detected changes, newest first. Each change includes its full diff and evidence.
  *
  * @see ContextDev\Services\MonitorsService::listChanges()
  *
@@ -29,31 +29,31 @@ final class MonitorListChangesParams implements BaseModel
     use SdkParams;
 
     /**
-     * Opaque pagination cursor from a previous response.
+     * Cursor from the previous page's `next_cursor`. Omit for the first page.
      */
     #[Optional]
     public ?string $cursor;
 
     /**
-     * Maximum number of items to return per page (1-100). Defaults to 25.
+     * Maximum number of changes to return per page. Defaults to 25.
      */
     #[Optional]
     public ?int $limit;
 
     /**
-     * Only include items at or after this ISO 8601 timestamp.
+     * Return only changes detected at or after this time.
      */
     #[Optional]
     public ?\DateTimeInterface $since;
 
     /**
-     * Filter to items that have this tag.
+     * Return only changes that have this tag.
      */
     #[Optional]
     public ?string $tag;
 
     /**
-     * Only include items before this ISO 8601 timestamp.
+     * Return only changes detected at or before this time.
      */
     #[Optional]
     public ?\DateTimeInterface $until;
@@ -87,7 +87,7 @@ final class MonitorListChangesParams implements BaseModel
     }
 
     /**
-     * Opaque pagination cursor from a previous response.
+     * Cursor from the previous page's `next_cursor`. Omit for the first page.
      */
     public function withCursor(string $cursor): self
     {
@@ -98,7 +98,7 @@ final class MonitorListChangesParams implements BaseModel
     }
 
     /**
-     * Maximum number of items to return per page (1-100). Defaults to 25.
+     * Maximum number of changes to return per page. Defaults to 25.
      */
     public function withLimit(int $limit): self
     {
@@ -109,7 +109,7 @@ final class MonitorListChangesParams implements BaseModel
     }
 
     /**
-     * Only include items at or after this ISO 8601 timestamp.
+     * Return only changes detected at or after this time.
      */
     public function withSince(\DateTimeInterface $since): self
     {
@@ -120,7 +120,7 @@ final class MonitorListChangesParams implements BaseModel
     }
 
     /**
-     * Filter to items that have this tag.
+     * Return only changes that have this tag.
      */
     public function withTag(string $tag): self
     {
@@ -131,7 +131,7 @@ final class MonitorListChangesParams implements BaseModel
     }
 
     /**
-     * Only include items before this ISO 8601 timestamp.
+     * Return only changes detected at or before this time.
      */
     public function withUntil(\DateTimeInterface $until): self
     {

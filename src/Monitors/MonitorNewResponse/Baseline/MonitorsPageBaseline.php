@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Current baseline of a `page` monitor: the visible page text as last observed.
+ * Baseline for a `page` target: the page's visible text from the last capture.
  *
  * @phpstan-type MonitorsPageBaselineShape = array{
  *   capturedAt: \DateTimeInterface, text: string
@@ -21,13 +21,13 @@ final class MonitorsPageBaseline implements BaseModel
     use SdkModel;
 
     /**
-     * When this baseline was last captured or replaced.
+     * When the baseline was last captured or updated.
      */
     #[Required('captured_at')]
     public \DateTimeInterface $capturedAt;
 
     /**
-     * The page's visible text as last observed.
+     * Visible page text from the last capture.
      */
     #[Required]
     public string $text;
@@ -69,7 +69,7 @@ final class MonitorsPageBaseline implements BaseModel
     }
 
     /**
-     * When this baseline was last captured or replaced.
+     * When the baseline was last captured or updated.
      */
     public function withCapturedAt(\DateTimeInterface $capturedAt): self
     {
@@ -80,7 +80,7 @@ final class MonitorsPageBaseline implements BaseModel
     }
 
     /**
-     * The page's visible text as last observed.
+     * Visible page text from the last capture.
      */
     public function withText(string $text): self
     {

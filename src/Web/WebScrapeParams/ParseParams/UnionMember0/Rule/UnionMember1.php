@@ -31,7 +31,7 @@ final class UnionMember1 implements BaseModel
     public string $selector;
 
     /**
-     * Return text, HTML, an attribute such as `@href`, or nested field rules. Defaults to text.
+     * What to return: `text`, `html`, an attribute such as `@href`, or nested field rules. Defaults to `text`.
      *
      * @var OutputVariants|null $output
      */
@@ -100,7 +100,7 @@ final class UnionMember1 implements BaseModel
     }
 
     /**
-     * Return text, HTML, an attribute such as `@href`, or nested field rules. Defaults to text.
+     * What to return: `text`, `html`, an attribute such as `@href`, or nested field rules. Defaults to `text`.
      *
      * @param OutputShape $output
      */

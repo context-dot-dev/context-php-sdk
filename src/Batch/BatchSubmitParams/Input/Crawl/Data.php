@@ -25,7 +25,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Use the same formats and parameters as POST /web/scrape, replacing url with source. Options apply to every page.
+ * The same formats and options as `POST /web/scrape`, with `source` in place of `url`. Options apply to every page.
  *
  * @phpstan-import-type SourceVariants from \ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\Source
  * @phpstan-import-type ParseParamsVariants from \ContextDev\Batch\BatchSubmitParams\Input\Crawl\Data\ParseParams
@@ -78,37 +78,37 @@ final class Data implements BaseModel
     public StartURL|Sitemap $source;
 
     /**
-     * Requires `formats.highlights: true`; required when it is set.
+     * Query for the `highlights` output. Required when `formats.highlights` is `true`, and allowed only then.
      */
     #[Optional]
     public ?HighlightsParams $highlightsParams;
 
     /**
-     * Image options. Requires formats.images: true.
+     * Options for the `images` output. Requires `formats.images: true`.
      */
     #[Optional]
     public ?ImageParams $imageParams;
 
     /**
-     * Requires `formats.json: true`; required when it is set.
+     * Schema and instructions for the `json` output. Required when `formats.json` is `true`, and allowed only then.
      */
     #[Optional]
     public ?JsonParams $jsonParams;
 
     /**
-     * Markdown options. Requires `formats.markdown`.
+     * Options for the `markdown` output. Requires `formats.markdown: true`.
      */
     #[Optional]
     public ?MarkdownParams $markdownParams;
 
     /**
-     * Maximum age of a cached output, in milliseconds. `0` fetches fresh. Defaults to 3 days (259200000 ms). Maximum: 1 year (31536000000 ms).
+     * Maximum age of a cached result, in milliseconds. `0` always fetches fresh. Defaults to 3 days (259200000 ms). Maximum: 1 year (31536000000 ms).
      */
     #[Optional]
     public ?int $maxAgeMs;
 
     /**
-     * Requires `formats.parse: true`; required when it is set.
+     * Custom rules or a prebuilt parser for the `parsed` output. Required when `formats.parse` is `true`, and allowed only then.
      *
      * @var ParseParamsVariants|null $parseParams
      */
@@ -116,13 +116,13 @@ final class Data implements BaseModel
     public UnionMember0|UnionMember1|null $parseParams;
 
     /**
-     * Product options. Requires formats.product: true.
+     * Options for the `product` output. Requires `formats.product: true`.
      */
     #[Optional]
     public ?ProductParams $productParams;
 
     /**
-     * Screenshot options. Requires formats.screenshot: true.
+     * Options for the `screenshot` output. Requires `formats.screenshot: true`.
      */
     #[Optional]
     public ?ScreenshotParams $screenshotParams;
@@ -134,7 +134,7 @@ final class Data implements BaseModel
     public ?SharedParams $sharedParams;
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @var list<string>|null $tags
      */
@@ -142,13 +142,13 @@ final class Data implements BaseModel
     public ?array $tags;
 
     /**
-     * Deadline for each page, using the same behavior and defaults as POST /web/scrape.
+     * Time limit for each page, with the same behavior and defaults as in `POST /web/scrape`.
      */
     #[Optional]
     public ?TimeoutOpts $timeoutOpts;
 
     /**
-     * Batches persist their results. Only disabled is supported; enabled returns ZDR_NOT_SUPPORTED.
+     * Zero data retention is not available for batches, because batches store their results. Sending `enabled` returns `ZDR_NOT_SUPPORTED`.
      *
      * @var value-of<Zdr>|null $zdr
      */
@@ -257,7 +257,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Requires `formats.highlights: true`; required when it is set.
+     * Query for the `highlights` output. Required when `formats.highlights` is `true`, and allowed only then.
      *
      * @param HighlightsParams|HighlightsParamsShape $highlightsParams
      */
@@ -271,7 +271,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Image options. Requires formats.images: true.
+     * Options for the `images` output. Requires `formats.images: true`.
      *
      * @param ImageParams|ImageParamsShape $imageParams
      */
@@ -284,7 +284,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Requires `formats.json: true`; required when it is set.
+     * Schema and instructions for the `json` output. Required when `formats.json` is `true`, and allowed only then.
      *
      * @param JsonParams|JsonParamsShape $jsonParams
      */
@@ -297,7 +297,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Markdown options. Requires `formats.markdown`.
+     * Options for the `markdown` output. Requires `formats.markdown: true`.
      *
      * @param MarkdownParams|MarkdownParamsShape $markdownParams
      */
@@ -311,7 +311,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Maximum age of a cached output, in milliseconds. `0` fetches fresh. Defaults to 3 days (259200000 ms). Maximum: 1 year (31536000000 ms).
+     * Maximum age of a cached result, in milliseconds. `0` always fetches fresh. Defaults to 3 days (259200000 ms). Maximum: 1 year (31536000000 ms).
      */
     public function withMaxAgeMs(int $maxAgeMs): self
     {
@@ -322,7 +322,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Requires `formats.parse: true`; required when it is set.
+     * Custom rules or a prebuilt parser for the `parsed` output. Required when `formats.parse` is `true`, and allowed only then.
      *
      * @param ParseParamsShape $parseParams
      */
@@ -336,7 +336,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Product options. Requires formats.product: true.
+     * Options for the `product` output. Requires `formats.product: true`.
      *
      * @param ProductParams|ProductParamsShape $productParams
      */
@@ -349,7 +349,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Screenshot options. Requires formats.screenshot: true.
+     * Options for the `screenshot` output. Requires `formats.screenshot: true`.
      *
      * @param ScreenshotParams|ScreenshotParamsShape $screenshotParams
      */
@@ -376,7 +376,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @param list<string> $tags
      */
@@ -389,7 +389,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Deadline for each page, using the same behavior and defaults as POST /web/scrape.
+     * Time limit for each page, with the same behavior and defaults as in `POST /web/scrape`.
      *
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */
@@ -402,7 +402,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Batches persist their results. Only disabled is supported; enabled returns ZDR_NOT_SUPPORTED.
+     * Zero data retention is not available for batches, because batches store their results. Sending `enabled` returns `ZDR_NOT_SUPPORTED`.
      *
      * @param Zdr|value-of<Zdr> $zdr
      */

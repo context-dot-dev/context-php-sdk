@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * A page to scrape, with optional data for matching results.
+ * A page to scrape, with optional `itemId` and `meta` to match it to its result.
  *
  * @phpstan-type URLShape = array{
  *   url: string, itemID?: string|null, meta?: array<string,mixed>|null
@@ -22,7 +22,7 @@ final class URL implements BaseModel
     use SdkModel;
 
     /**
-     * Page URL to scrape.
+     * URL of the page.
      */
     #[Required]
     public string $url;
@@ -34,7 +34,7 @@ final class URL implements BaseModel
     public ?string $itemID;
 
     /**
-     * Custom JSON returned unchanged with this page result.
+     * Custom JSON returned unchanged with this page's result.
      *
      * @var array<string,mixed>|null $meta
      */
@@ -83,7 +83,7 @@ final class URL implements BaseModel
     }
 
     /**
-     * Page URL to scrape.
+     * URL of the page.
      */
     public function withURL(string $url): self
     {
@@ -105,7 +105,7 @@ final class URL implements BaseModel
     }
 
     /**
-     * Custom JSON returned unchanged with this page result.
+     * Custom JSON returned unchanged with this page's result.
      *
      * @param array<string,mixed> $meta
      */

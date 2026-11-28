@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * List your organization’s request logs with filters and pagination. Logs also include batch settlements and monitor runs.
+ * List your organization's API requests, newest first. Filter by time, endpoint, API key, status, error code, tags, or text. Includes batch settlements and monitor runs.
  *
  * @see ContextDev\Services\LogsService::list()
  *
@@ -41,25 +41,25 @@ final class LogListParams implements BaseModel
     public ?string $errorCode;
 
     /**
-     * Only include requests that returned a 4xx or 5xx status.
+     * Return only requests that failed with a 4xx or 5xx status.
      */
     #[Optional]
     public ?bool $errorsOnly;
 
     /**
-     * Only include requests at or after this ISO 8601 timestamp. Defaults to 24 hours before `to`.
+     * Return requests at or after this time. Defaults to 24 hours before `to`.
      */
     #[Optional]
     public ?\DateTimeInterface $from;
 
     /**
-     * Filter by the API key that made the request.
+     * Filter by the ID of the API key that made the request.
      */
     #[Optional]
     public ?string $keyID;
 
     /**
-     * Number of log entries per page.
+     * Maximum number of log entries to return per page.
      */
     #[Optional]
     public ?int $limit;
@@ -71,13 +71,13 @@ final class LogListParams implements BaseModel
     public ?int $page;
 
     /**
-     * Filter by endpoint path, with or without the /v1 prefix.
+     * Filter by endpoint path, with or without the `/v1` prefix.
      */
     #[Optional]
     public ?string $path;
 
     /**
-     * Case-insensitive substring match against the request query and body, e.g. a domain.
+     * Case-insensitive text to find in the request query or body, such as a domain.
      */
     #[Optional]
     public ?string $search;
@@ -89,13 +89,13 @@ final class LogListParams implements BaseModel
     public ?int $statusCode;
 
     /**
-     * Comma-separated request tags. Matches requests carrying any of them. Up to 20 tags, each 1-50 characters.
+     * Comma-separated tags. Returns log entries that have any of them. Up to 20 tags of 1 to 50 characters each.
      */
     #[Optional]
     public ?string $tags;
 
     /**
-     * Only include requests at or before this ISO 8601 timestamp. Defaults to now.
+     * Return requests at or before this time. Defaults to now.
      */
     #[Optional]
     public ?\DateTimeInterface $to;
@@ -152,7 +152,7 @@ final class LogListParams implements BaseModel
     }
 
     /**
-     * Only include requests that returned a 4xx or 5xx status.
+     * Return only requests that failed with a 4xx or 5xx status.
      */
     public function withErrorsOnly(bool $errorsOnly): self
     {
@@ -163,7 +163,7 @@ final class LogListParams implements BaseModel
     }
 
     /**
-     * Only include requests at or after this ISO 8601 timestamp. Defaults to 24 hours before `to`.
+     * Return requests at or after this time. Defaults to 24 hours before `to`.
      */
     public function withFrom(\DateTimeInterface $from): self
     {
@@ -174,7 +174,7 @@ final class LogListParams implements BaseModel
     }
 
     /**
-     * Filter by the API key that made the request.
+     * Filter by the ID of the API key that made the request.
      */
     public function withKeyID(string $keyID): self
     {
@@ -185,7 +185,7 @@ final class LogListParams implements BaseModel
     }
 
     /**
-     * Number of log entries per page.
+     * Maximum number of log entries to return per page.
      */
     public function withLimit(int $limit): self
     {
@@ -207,7 +207,7 @@ final class LogListParams implements BaseModel
     }
 
     /**
-     * Filter by endpoint path, with or without the /v1 prefix.
+     * Filter by endpoint path, with or without the `/v1` prefix.
      */
     public function withPath(string $path): self
     {
@@ -218,7 +218,7 @@ final class LogListParams implements BaseModel
     }
 
     /**
-     * Case-insensitive substring match against the request query and body, e.g. a domain.
+     * Case-insensitive text to find in the request query or body, such as a domain.
      */
     public function withSearch(string $search): self
     {
@@ -240,7 +240,7 @@ final class LogListParams implements BaseModel
     }
 
     /**
-     * Comma-separated request tags. Matches requests carrying any of them. Up to 20 tags, each 1-50 characters.
+     * Comma-separated tags. Returns log entries that have any of them. Up to 20 tags of 1 to 50 characters each.
      */
     public function withTags(string $tags): self
     {
@@ -251,7 +251,7 @@ final class LogListParams implements BaseModel
     }
 
     /**
-     * Only include requests at or before this ISO 8601 timestamp. Defaults to now.
+     * Return requests at or before this time. Defaults to now.
      */
     public function withTo(\DateTimeInterface $to): self
     {

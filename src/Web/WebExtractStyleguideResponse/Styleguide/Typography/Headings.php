@@ -13,7 +13,7 @@ use ContextDev\Web\WebExtractStyleguideResponse\Styleguide\Typography\Headings\H
 use ContextDev\Web\WebExtractStyleguideResponse\Styleguide\Typography\Headings\H4;
 
 /**
- * Heading styles.
+ * Styles for `h1` through `h4` headings.
  *
  * @phpstan-import-type H1Shape from \ContextDev\Web\WebExtractStyleguideResponse\Styleguide\Typography\Headings\H1
  * @phpstan-import-type H2Shape from \ContextDev\Web\WebExtractStyleguideResponse\Styleguide\Typography\Headings\H2

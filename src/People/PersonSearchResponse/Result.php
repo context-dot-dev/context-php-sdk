@@ -13,7 +13,7 @@ use ContextDev\People\PersonSearchResponse\Result\Match_;
 use ContextDev\People\PersonSearchResponse\Result\Role;
 
 /**
- * A person matching your search; unavailable details are null or empty lists.
+ * A person who matches your search. Unknown details are `null` or empty lists.
  *
  * @phpstan-import-type LocationShape from \ContextDev\People\PersonSearchResponse\Result\Location
  * @phpstan-import-type RoleShape from \ContextDev\People\PersonSearchResponse\Result\Role
@@ -44,7 +44,7 @@ final class Result implements BaseModel
     public ?string $description;
 
     /**
-     * Whether the person is currently a founder or co-founder.
+     * Whether the person is currently a founder or co-founder. `null` when unknown.
      */
     #[Required('is_founder')]
     public ?bool $isFounder;
@@ -62,7 +62,7 @@ final class Result implements BaseModel
     public ?string $name;
 
     /**
-     * Public professional profile URLs.
+     * Public professional profile URLs. Send one to `POST /people/enrich` as `social_urls` for the full profile.
      *
      * @var list<string> $profiles
      */
@@ -70,7 +70,7 @@ final class Result implements BaseModel
     public array $profiles;
 
     /**
-     * The person’s current role.
+     * The person's current role.
      */
     #[Required]
     public Role $role;
@@ -92,13 +92,13 @@ final class Result implements BaseModel
     public array $skills;
 
     /**
-     * Years of professional experience.
+     * Years of professional experience. `null` when unknown.
      */
     #[Required('years_of_experience')]
     public ?int $yearsOfExperience;
 
     /**
-     * How well the person matches the query. Only returned in `ultra` mode.
+     * How well the person matches the query. Returned only in `ultra` mode.
      */
     #[Optional]
     public ?Match_ $match;
@@ -194,7 +194,7 @@ final class Result implements BaseModel
     }
 
     /**
-     * Whether the person is currently a founder or co-founder.
+     * Whether the person is currently a founder or co-founder. `null` when unknown.
      */
     public function withIsFounder(?bool $isFounder): self
     {
@@ -229,7 +229,7 @@ final class Result implements BaseModel
     }
 
     /**
-     * Public professional profile URLs.
+     * Public professional profile URLs. Send one to `POST /people/enrich` as `social_urls` for the full profile.
      *
      * @param list<string> $profiles
      */
@@ -242,7 +242,7 @@ final class Result implements BaseModel
     }
 
     /**
-     * The person’s current role.
+     * The person's current role.
      *
      * @param Role|RoleShape $role
      */
@@ -281,7 +281,7 @@ final class Result implements BaseModel
     }
 
     /**
-     * Years of professional experience.
+     * Years of professional experience. `null` when unknown.
      */
     public function withYearsOfExperience(?int $yearsOfExperience): self
     {
@@ -292,7 +292,7 @@ final class Result implements BaseModel
     }
 
     /**
-     * How well the person matches the query. Only returned in `ultra` mode.
+     * How well the person matches the query. Returned only in `ultra` mode.
      *
      * @param Match_|MatchShape $match
      */

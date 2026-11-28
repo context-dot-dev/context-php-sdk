@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * List a delivery’s attempts, newest first.
+ * List a webhook delivery's attempts, newest first.
  *
  * @see ContextDev\Services\Webhooks\DeliveriesService::listAttempts()
  *
@@ -25,19 +25,19 @@ final class DeliveryListAttemptsParams implements BaseModel
     use SdkParams;
 
     /**
-     * The next_cursor from the previous response.
+     * Cursor from the previous page's `next_cursor`. Omit for the first page.
      */
     #[Optional]
     public ?string $cursor;
 
     /**
-     * Number of attempts to return.
+     * Maximum number of attempts to return per page.
      */
     #[Optional]
     public ?int $limit;
 
     /**
-     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
      *
      * @var list<string>|null $tags
      */
@@ -71,7 +71,7 @@ final class DeliveryListAttemptsParams implements BaseModel
     }
 
     /**
-     * The next_cursor from the previous response.
+     * Cursor from the previous page's `next_cursor`. Omit for the first page.
      */
     public function withCursor(string $cursor): self
     {
@@ -82,7 +82,7 @@ final class DeliveryListAttemptsParams implements BaseModel
     }
 
     /**
-     * Number of attempts to return.
+     * Maximum number of attempts to return per page.
      */
     public function withLimit(int $limit): self
     {
@@ -93,7 +93,7 @@ final class DeliveryListAttemptsParams implements BaseModel
     }
 
     /**
-     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
      *
      * @param list<string> $tags
      */

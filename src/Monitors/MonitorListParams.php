@@ -15,7 +15,7 @@ use ContextDev\Monitors\MonitorListParams\Status;
 use ContextDev\Monitors\MonitorListParams\TargetType;
 
 /**
- * List your monitors with optional search and filters.
+ * List your monitors, newest first. Search by name, URL, or instructions, and filter by status, target type, detection type, or tags.
  *
  * @see ContextDev\Services\MonitorsService::list()
  *
@@ -46,25 +46,25 @@ final class MonitorListParams implements BaseModel
     public ?string $changeDetectionType;
 
     /**
-     * Opaque pagination cursor from a previous response.
+     * Cursor from the previous page's `next_cursor`. Omit for the first page.
      */
     #[Optional]
     public ?string $cursor;
 
     /**
-     * Maximum number of items to return per page (1-100). Defaults to 25.
+     * Maximum number of monitors to return per page. Defaults to 25.
      */
     #[Optional]
     public ?int $limit;
 
     /**
-     * Free-text search term, matched against the fields named in `search_by`.
+     * Text to search for in the fields listed in `search_by`.
      */
     #[Optional]
     public ?string $q;
 
     /**
-     * Fields to search with `q`. Defaults to all fields; page, extract, and search targets can have instructions, and `url` matches a search target’s query.
+     * Comma-separated fields to search with `q`. Defaults to all fields. For search targets, `url` matches the target's `query`.
      *
      * @var list<value-of<SearchBy>>|null $searchBy
      */
@@ -72,7 +72,7 @@ final class MonitorListParams implements BaseModel
     public ?array $searchBy;
 
     /**
-     * `prefix` for as-you-type prefix matching (default), `exact` for full-token matching.
+     * How `q` matches. `prefix` matches the start of words and tolerates one typo, for search as you type; `exact` matches whole words only. Defaults to `prefix`.
      *
      * @var value-of<SearchType>|null $searchType
      */
@@ -80,7 +80,7 @@ final class MonitorListParams implements BaseModel
     public ?string $searchType;
 
     /**
-     * Filter monitors by lifecycle status.
+     * Filter by monitor status.
      *
      * @var value-of<Status>|null $status
      */
@@ -88,7 +88,7 @@ final class MonitorListParams implements BaseModel
     public ?string $status;
 
     /**
-     * Comma-separated list of tags to filter by (matches monitors having any of them).
+     * Comma-separated tags. Returns monitors that have any of them.
      *
      * @var list<string>|null $tags
      */
@@ -161,7 +161,7 @@ final class MonitorListParams implements BaseModel
     }
 
     /**
-     * Opaque pagination cursor from a previous response.
+     * Cursor from the previous page's `next_cursor`. Omit for the first page.
      */
     public function withCursor(string $cursor): self
     {
@@ -172,7 +172,7 @@ final class MonitorListParams implements BaseModel
     }
 
     /**
-     * Maximum number of items to return per page (1-100). Defaults to 25.
+     * Maximum number of monitors to return per page. Defaults to 25.
      */
     public function withLimit(int $limit): self
     {
@@ -183,7 +183,7 @@ final class MonitorListParams implements BaseModel
     }
 
     /**
-     * Free-text search term, matched against the fields named in `search_by`.
+     * Text to search for in the fields listed in `search_by`.
      */
     public function withQ(string $q): self
     {
@@ -194,7 +194,7 @@ final class MonitorListParams implements BaseModel
     }
 
     /**
-     * Fields to search with `q`. Defaults to all fields; page, extract, and search targets can have instructions, and `url` matches a search target’s query.
+     * Comma-separated fields to search with `q`. Defaults to all fields. For search targets, `url` matches the target's `query`.
      *
      * @param list<SearchBy|value-of<SearchBy>>|null $searchBy
      */
@@ -207,7 +207,7 @@ final class MonitorListParams implements BaseModel
     }
 
     /**
-     * `prefix` for as-you-type prefix matching (default), `exact` for full-token matching.
+     * How `q` matches. `prefix` matches the start of words and tolerates one typo, for search as you type; `exact` matches whole words only. Defaults to `prefix`.
      *
      * @param SearchType|value-of<SearchType> $searchType
      */
@@ -220,7 +220,7 @@ final class MonitorListParams implements BaseModel
     }
 
     /**
-     * Filter monitors by lifecycle status.
+     * Filter by monitor status.
      *
      * @param Status|value-of<Status> $status
      */
@@ -233,7 +233,7 @@ final class MonitorListParams implements BaseModel
     }
 
     /**
-     * Comma-separated list of tags to filter by (matches monitors having any of them).
+     * Comma-separated tags. Returns monitors that have any of them.
      *
      * @param list<string>|null $tags
      */

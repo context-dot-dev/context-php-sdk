@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Monitors\MonitorListAccountRunsResponse\Data;
 
 /**
- * A baseline run follows creation or a target or detection change.
+ * `baseline` runs capture a fresh baseline after creation or a target or detection change. `scheduled` runs, including on-demand ones, check for changes.
  */
 enum RunType: string
 {

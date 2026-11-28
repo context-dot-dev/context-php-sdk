@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Retrieve the status, timing, and results of one monitor run.
+ * Retrieve a run's status, timing, credit charge, and webhook deliveries. If the run found a change, `change_id` points to it.
  *
  * @see ContextDev\Services\MonitorsService::retrieveRun()
  *

@@ -30,7 +30,7 @@ final class Logo implements BaseModel
     use SdkModel;
 
     /**
-     * Array of colors in the logo.
+     * Colors in the logo.
      *
      * @var list<Color>|null $colors
      */
@@ -38,7 +38,7 @@ final class Logo implements BaseModel
     public ?array $colors;
 
     /**
-     * Indicates when this logo is best used: 'light' = best for light mode, 'dark' = best for dark mode, 'has_opaque_background' = can be used for either as image has its own background.
+     * `light` works best in light mode, `dark` works best in dark mode, and `has_opaque_background` works in either because the image has its own background.
      *
      * @var value-of<Mode>|null $mode
      */
@@ -46,13 +46,13 @@ final class Logo implements BaseModel
     public ?string $mode;
 
     /**
-     * Resolution of the logo image.
+     * Size of the logo image.
      */
     #[Optional]
     public ?Resolution $resolution;
 
     /**
-     * Type of the logo based on resolution (e.g., 'icon', 'logo').
+     * Whether the image is an `icon` or a full `logo`, based on its dimensions.
      *
      * @var value-of<Type>|null $type
      */
@@ -60,7 +60,7 @@ final class Logo implements BaseModel
     public ?string $type;
 
     /**
-     * Hosted logo URL.
+     * URL of the hosted logo image.
      */
     #[Optional]
     public ?string $url;
@@ -99,7 +99,7 @@ final class Logo implements BaseModel
     }
 
     /**
-     * Array of colors in the logo.
+     * Colors in the logo.
      *
      * @param list<Color|ColorShape> $colors
      */
@@ -112,7 +112,7 @@ final class Logo implements BaseModel
     }
 
     /**
-     * Indicates when this logo is best used: 'light' = best for light mode, 'dark' = best for dark mode, 'has_opaque_background' = can be used for either as image has its own background.
+     * `light` works best in light mode, `dark` works best in dark mode, and `has_opaque_background` works in either because the image has its own background.
      *
      * @param Mode|value-of<Mode> $mode
      */
@@ -125,7 +125,7 @@ final class Logo implements BaseModel
     }
 
     /**
-     * Resolution of the logo image.
+     * Size of the logo image.
      *
      * @param Resolution|ResolutionShape $resolution
      */
@@ -138,7 +138,7 @@ final class Logo implements BaseModel
     }
 
     /**
-     * Type of the logo based on resolution (e.g., 'icon', 'logo').
+     * Whether the image is an `icon` or a full `logo`, based on its dimensions.
      *
      * @param Type|value-of<Type> $type
      */
@@ -151,7 +151,7 @@ final class Logo implements BaseModel
     }
 
     /**
-     * Hosted logo URL.
+     * URL of the hosted logo image.
      */
     public function withURL(string $url): self
     {

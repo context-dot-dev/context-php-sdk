@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Brand\BrandGetResponse\Brand\Employees;
 
 /**
- * Employee count range for the brand (e.g. '11 to 50').
+ * Headcount range, such as `11 to 50`.
  */
 enum Range: string
 {

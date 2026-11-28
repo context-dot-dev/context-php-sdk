@@ -12,7 +12,7 @@ use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsPageTarget\Action\Web
 use ContextDev\Monitors\MonitorCreateParams\Target\MonitorsPageTarget\Action\WebScrapeWaitAction;
 
 /**
- * Browser action discriminated by `do`. Each variant exposes only its applicable fields.
+ * One browser action. `do` selects the type: `wait`, `perform`, or `scroll`.
  *
  * @phpstan-import-type WebScrapeWaitActionShape from \ContextDev\Monitors\MonitorCreateParams\Target\MonitorsPageTarget\Action\WebScrapeWaitAction
  * @phpstan-import-type WebScrapePerformActionShape from \ContextDev\Monitors\MonitorCreateParams\Target\MonitorsPageTarget\Action\WebScrapePerformAction

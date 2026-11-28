@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Parse\ParseHandleResponse;
 
 /**
- * Detected content type used for parsing.
+ * File type the input was parsed as.
  */
 enum Type: string
 {

@@ -25,7 +25,7 @@ final class UnionMember0 implements BaseModel
     use SdkModel;
 
     /**
-     * Field names mapped to CSS selectors (`h1`, `a@href`) or rule objects. Max 100 fields, 5 levels.
+     * Output field names mapped to a CSS selector (such as `h1` or `a@href`) or a rule object. Up to 100 fields, nested up to 5 levels.
      *
      * @var array<string,RuleVariants> $rules
      */
@@ -33,7 +33,7 @@ final class UnionMember0 implements BaseModel
     public array $rules;
 
     /**
-     * Extract fields using custom CSS rules. This is the default when type is omitted.
+     * Extract fields with custom CSS rules. The default when `type` is omitted.
      *
      * @var value-of<Type>|null $type
      */
@@ -79,7 +79,7 @@ final class UnionMember0 implements BaseModel
     }
 
     /**
-     * Field names mapped to CSS selectors (`h1`, `a@href`) or rule objects. Max 100 fields, 5 levels.
+     * Output field names mapped to a CSS selector (such as `h1` or `a@href`) or a rule object. Up to 100 fields, nested up to 5 levels.
      *
      * @param array<string,RuleShape> $rules
      */
@@ -92,7 +92,7 @@ final class UnionMember0 implements BaseModel
     }
 
     /**
-     * Extract fields using custom CSS rules. This is the default when type is omitted.
+     * Extract fields with custom CSS rules. The default when `type` is omitted.
      *
      * @param Type|value-of<Type> $type
      */

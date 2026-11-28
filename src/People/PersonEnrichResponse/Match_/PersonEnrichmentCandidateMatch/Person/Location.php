@@ -9,6 +9,8 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
+ * Where the person is based.
+ *
  * @phpstan-type LocationShape = array{
  *   city?: string|null,
  *   country?: string|null,
@@ -22,18 +24,33 @@ final class Location implements BaseModel
     /** @use SdkModel<LocationShape> */
     use SdkModel;
 
+    /**
+     * City.
+     */
     #[Optional]
     public ?string $city;
 
+    /**
+     * Country name.
+     */
     #[Optional]
     public ?string $country;
 
+    /**
+     * ISO 3166-1 alpha-2 country code.
+     */
     #[Optional('country_code')]
     public ?string $countryCode;
 
+    /**
+     * Location as a single display string.
+     */
     #[Optional]
     public ?string $display;
 
+    /**
+     * State, province, or region.
+     */
     #[Optional]
     public ?string $region;
 
@@ -65,6 +82,9 @@ final class Location implements BaseModel
         return $self;
     }
 
+    /**
+     * City.
+     */
     public function withCity(string $city): self
     {
         $self = clone $this;
@@ -73,6 +93,9 @@ final class Location implements BaseModel
         return $self;
     }
 
+    /**
+     * Country name.
+     */
     public function withCountry(string $country): self
     {
         $self = clone $this;
@@ -81,6 +104,9 @@ final class Location implements BaseModel
         return $self;
     }
 
+    /**
+     * ISO 3166-1 alpha-2 country code.
+     */
     public function withCountryCode(string $countryCode): self
     {
         $self = clone $this;
@@ -89,6 +115,9 @@ final class Location implements BaseModel
         return $self;
     }
 
+    /**
+     * Location as a single display string.
+     */
     public function withDisplay(string $display): self
     {
         $self = clone $this;
@@ -97,6 +126,9 @@ final class Location implements BaseModel
         return $self;
     }
 
+    /**
+     * State, province, or region.
+     */
     public function withRegion(string $region): self
     {
         $self = clone $this;

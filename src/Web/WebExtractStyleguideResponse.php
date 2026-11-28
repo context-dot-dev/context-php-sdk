@@ -35,7 +35,7 @@ final class WebExtractStyleguideResponse implements BaseModel
     use SdkModel;
 
     /**
-     * Whether this response came from cache.
+     * Cache status of this response.
      */
     #[Required('cache_metadata')]
     public CacheMetadata $cacheMetadata;
@@ -47,13 +47,13 @@ final class WebExtractStyleguideResponse implements BaseModel
     public string $requestID;
 
     /**
-     * HTTP status code.
+     * HTTP status code, repeated in the body.
      */
     #[Optional]
     public ?int $code;
 
     /**
-     * The normalized domain that was processed.
+     * Normalized domain that was analyzed.
      */
     #[Optional]
     public ?string $domain;
@@ -79,7 +79,7 @@ final class WebExtractStyleguideResponse implements BaseModel
     public ?string $status;
 
     /**
-     * Comprehensive styleguide data extracted from the website.
+     * Design tokens and component styles extracted from the website.
      */
     #[Optional]
     public ?Styleguide $styleguide;
@@ -139,7 +139,7 @@ final class WebExtractStyleguideResponse implements BaseModel
     }
 
     /**
-     * Whether this response came from cache.
+     * Cache status of this response.
      *
      * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      */
@@ -163,7 +163,7 @@ final class WebExtractStyleguideResponse implements BaseModel
     }
 
     /**
-     * HTTP status code.
+     * HTTP status code, repeated in the body.
      */
     public function withCode(int $code): self
     {
@@ -174,7 +174,7 @@ final class WebExtractStyleguideResponse implements BaseModel
     }
 
     /**
-     * The normalized domain that was processed.
+     * Normalized domain that was analyzed.
      */
     public function withDomain(string $domain): self
     {
@@ -222,7 +222,7 @@ final class WebExtractStyleguideResponse implements BaseModel
     }
 
     /**
-     * Comprehensive styleguide data extracted from the website.
+     * Design tokens and component styles extracted from the website.
      *
      * @param Styleguide|StyleguideShape $styleguide
      */

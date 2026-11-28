@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Web\WebScrapeParams;
 
 /**
- * `enabled` turns on zero data retention. Your organization must have ZDR enabled.
+ * `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
  */
 enum Zdr: string
 {

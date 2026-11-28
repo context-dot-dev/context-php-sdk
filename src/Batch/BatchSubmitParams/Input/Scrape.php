@@ -30,7 +30,7 @@ final class Scrape implements BaseModel
     public string $mode = 'scrape';
 
     /**
-     * Pages to scrape and their output format.
+     * URLs to scrape, with the formats and options to apply to each page.
      */
     #[Required]
     public Data $data;
@@ -71,7 +71,7 @@ final class Scrape implements BaseModel
     }
 
     /**
-     * Pages to scrape and their output format.
+     * URLs to scrape, with the formats and options to apply to each page.
      *
      * @param Data|DataShape $data
      */

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Batch\BatchListParams;
 
 /**
- * Filter by status.
+ * Filter by batch status.
  */
 enum Status: string
 {

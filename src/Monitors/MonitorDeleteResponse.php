@@ -25,9 +25,15 @@ final class MonitorDeleteResponse implements BaseModel
     /** @use SdkModel<MonitorDeleteResponseShape> */
     use SdkModel;
 
+    /**
+     * ID of the deleted monitor.
+     */
     #[Required]
     public string $id;
 
+    /**
+     * Whether the monitor was deleted.
+     */
     #[Required]
     public bool $deleted;
 
@@ -86,6 +92,9 @@ final class MonitorDeleteResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * ID of the deleted monitor.
+     */
     public function withID(string $id): self
     {
         $self = clone $this;
@@ -94,6 +103,9 @@ final class MonitorDeleteResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Whether the monitor was deleted.
+     */
     public function withDeleted(bool $deleted): self
     {
         $self = clone $this;

@@ -27,24 +27,28 @@ final class FontLink implements BaseModel
     /** @use SdkModel<FontLinkShape> */
     use SdkModel;
 
-    /** @var value-of<Type> $type */
+    /**
+     * `google` for Google Fonts, `custom` for any other font source.
+     *
+     * @var value-of<Type> $type
+     */
     #[Required(enum: Type::class)]
     public string $type;
 
     /**
-     * Google Fonts category when type is google (e.g. sans-serif, serif, monospace, display, handwriting). Omitted for custom fonts when unknown.
+     * Google Fonts category, such as `sans-serif`, `serif`, `monospace`, `display`, or `handwriting`. Omitted for custom fonts when unknown.
      */
     #[Optional]
     public ?string $category;
 
     /**
-     * Human-readable family name. For custom fonts, derived from the fontLinks key; for Google fonts, the canonical Google Fonts family name.
+     * Human-readable family name: the `fontLinks` key for custom fonts, or the official Google Fonts name for Google fonts.
      */
     #[Optional]
     public ?string $displayName;
 
     /**
-     * Discovered font faces, including style, weight, and distinct Unicode subsets.
+     * Font faces found for this family, one per style, weight, and Unicode subset.
      *
      * @var list<Face>|null $faces
      */
@@ -109,6 +113,8 @@ final class FontLink implements BaseModel
     }
 
     /**
+     * `google` for Google Fonts, `custom` for any other font source.
+     *
      * @param Type|value-of<Type> $type
      */
     public function withType(Type|string $type): self
@@ -120,7 +126,7 @@ final class FontLink implements BaseModel
     }
 
     /**
-     * Google Fonts category when type is google (e.g. sans-serif, serif, monospace, display, handwriting). Omitted for custom fonts when unknown.
+     * Google Fonts category, such as `sans-serif`, `serif`, `monospace`, `display`, or `handwriting`. Omitted for custom fonts when unknown.
      */
     public function withCategory(string $category): self
     {
@@ -131,7 +137,7 @@ final class FontLink implements BaseModel
     }
 
     /**
-     * Human-readable family name. For custom fonts, derived from the fontLinks key; for Google fonts, the canonical Google Fonts family name.
+     * Human-readable family name: the `fontLinks` key for custom fonts, or the official Google Fonts name for Google fonts.
      */
     public function withDisplayName(string $displayName): self
     {
@@ -142,7 +148,7 @@ final class FontLink implements BaseModel
     }
 
     /**
-     * Discovered font faces, including style, weight, and distinct Unicode subsets.
+     * Font faces found for this family, one per style, weight, and Unicode subset.
      *
      * @param list<Face|FaceShape> $faces
      */

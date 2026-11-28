@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Shadow styles used on the website.
+ * Box shadow scale used on the website, from `sm` to `xl`, plus `inner`.
  *
  * @phpstan-type ShadowsShape = array{
  *   inner: string, lg: string, md: string, sm: string, xl: string

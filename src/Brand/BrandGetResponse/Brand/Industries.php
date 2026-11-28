@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Industry classification information for the brand.
+ * Industry classification of the brand.
  *
  * @phpstan-import-type EicShape from \ContextDev\Brand\BrandGetResponse\Brand\Industries\Eic
  *
@@ -22,7 +22,7 @@ final class Industries implements BaseModel
     use SdkModel;
 
     /**
-     * Easy Industry Classification - array of industry and subindustry pairs.
+     * Industry and subindustry pairs from Context.dev's Easy Industry Classification (EIC).
      *
      * @var list<Eic>|null $eic
      */
@@ -51,7 +51,7 @@ final class Industries implements BaseModel
     }
 
     /**
-     * Easy Industry Classification - array of industry and subindustry pairs.
+     * Industry and subindustry pairs from Context.dev's Easy Industry Classification (EIC).
      *
      * @param list<Eic|EicShape> $eic
      */

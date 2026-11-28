@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Published-at window in epoch milliseconds. from must be before or equal to to.
+ * Publish date range, in epoch milliseconds. `from` must not be later than `to`.
  *
  * @phpstan-type DateShape = array{from?: int|null, to?: int|null}
  */
@@ -19,13 +19,13 @@ final class Date implements BaseModel
     use SdkModel;
 
     /**
-     * Inclusive start of the published-at window, in epoch milliseconds.
+     * Inclusive start of the publish date range, in epoch milliseconds.
      */
     #[Optional]
     public ?int $from;
 
     /**
-     * Inclusive end of the published-at window, in epoch milliseconds.
+     * Inclusive end of the publish date range, in epoch milliseconds.
      */
     #[Optional]
     public ?int $to;
@@ -51,7 +51,7 @@ final class Date implements BaseModel
     }
 
     /**
-     * Inclusive start of the published-at window, in epoch milliseconds.
+     * Inclusive start of the publish date range, in epoch milliseconds.
      */
     public function withFrom(int $from): self
     {
@@ -62,7 +62,7 @@ final class Date implements BaseModel
     }
 
     /**
-     * Inclusive end of the published-at window, in epoch milliseconds.
+     * Inclusive end of the publish date range, in epoch milliseconds.
      */
     public function withTo(int $to): self
     {

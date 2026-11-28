@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Limits what the research may use.
+ * Limit which sites the research can search, read, and cite.
  *
  * @phpstan-type ControlsShape = array{
  *   excludeSources?: list<string>|null, sources?: list<string>|null
@@ -21,7 +21,7 @@ final class Controls implements BaseModel
     use SdkModel;
 
     /**
-     * Never search, read or cite these sites, sections or pages. Same format as `sources`. Up to 100 entries.
+     * Never search, read, or cite these sites, sections, or pages. Same format as `sources`.
      *
      * @var list<string>|null $excludeSources
      */
@@ -29,7 +29,7 @@ final class Controls implements BaseModel
     public ?array $excludeSources;
 
     /**
-     * Only search, read and cite these sites, sections or pages. Each entry is a URL prefix: "example.com" covers the site and its subdomains, "example.com/docs" covers that section, and "example.com/docs/setup.html" is one page. Up to 20 entries.
+     * Only search, read, and cite these sites, sections, or pages. Each entry is a URL prefix: `example.com` covers the site and its subdomains, `example.com/docs` covers that section, and `example.com/docs/setup.html` is one page.
      *
      * @var list<string>|null $sources
      */
@@ -62,7 +62,7 @@ final class Controls implements BaseModel
     }
 
     /**
-     * Never search, read or cite these sites, sections or pages. Same format as `sources`. Up to 100 entries.
+     * Never search, read, or cite these sites, sections, or pages. Same format as `sources`.
      *
      * @param list<string> $excludeSources
      */
@@ -75,7 +75,7 @@ final class Controls implements BaseModel
     }
 
     /**
-     * Only search, read and cite these sites, sections or pages. Each entry is a URL prefix: "example.com" covers the site and its subdomains, "example.com/docs" covers that section, and "example.com/docs/setup.html" is one page. Up to 20 entries.
+     * Only search, read, and cite these sites, sections, or pages. Each entry is a URL prefix: `example.com` covers the site and its subdomains, `example.com/docs` covers that section, and `example.com/docs/setup.html` is one page.
      *
      * @param list<string> $sources
      */

@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Current baseline of an `extract` monitor: the pages it tracks and the structured data as last extracted.
+ * Baseline for an `extract` target: the tracked pages and the data last extracted from them.
  *
  * @phpstan-type MonitorsExtractBaselineShape = array{
  *   capturedAt: \DateTimeInterface, data: mixed, urlsAnalyzed: list<string>
@@ -21,19 +21,19 @@ final class MonitorsExtractBaseline implements BaseModel
     use SdkModel;
 
     /**
-     * When this baseline was last captured or replaced.
+     * When the baseline was last captured or updated.
      */
     #[Required('captured_at')]
     public \DateTimeInterface $capturedAt;
 
     /**
-     * Latest structured snapshot matching the extraction schema, refreshed at most daily; `null` before capture.
+     * Latest extracted data, matching the target's `schema`. Refreshed at most once a day; `null` before the first capture.
      */
     #[Required]
     public mixed $data;
 
     /**
-     * The page URLs the monitor tracks and analyzes for changes.
+     * Pages the monitor tracks for changes.
      *
      * @var list<string> $urlsAnalyzed
      */
@@ -84,7 +84,7 @@ final class MonitorsExtractBaseline implements BaseModel
     }
 
     /**
-     * When this baseline was last captured or replaced.
+     * When the baseline was last captured or updated.
      */
     public function withCapturedAt(\DateTimeInterface $capturedAt): self
     {
@@ -95,7 +95,7 @@ final class MonitorsExtractBaseline implements BaseModel
     }
 
     /**
-     * Latest structured snapshot matching the extraction schema, refreshed at most daily; `null` before capture.
+     * Latest extracted data, matching the target's `schema`. Refreshed at most once a day; `null` before the first capture.
      */
     public function withData(mixed $data): self
     {
@@ -106,7 +106,7 @@ final class MonitorsExtractBaseline implements BaseModel
     }
 
     /**
-     * The page URLs the monitor tracks and analyzes for changes.
+     * Pages the monitor tracks for changes.
      *
      * @param list<string> $urlsAnalyzed
      */

@@ -26,13 +26,13 @@ final class Data implements BaseModel
     use SdkModel;
 
     /**
-     * Stable paper identifier.
+     * Unique ID of the paper.
      */
     #[Required]
     public string $id;
 
     /**
-     * Format of the linked full text. jats is XML.
+     * Format of the full text at `full_text_url`. `jats` is JATS XML.
      *
      * @var value-of<FullTextFormat> $fullTextFormat
      */
@@ -40,31 +40,31 @@ final class Data implements BaseModel
     public string $fullTextFormat;
 
     /**
-     * Direct link to the full text.
+     * Direct URL of the full text.
      */
     #[Required('full_text_url')]
     public string $fullTextURL;
 
     /**
-     * Publication time in ISO 8601, or null when unknown.
+     * When the paper was published. `null` when unknown.
      */
     #[Required('published_at')]
     public ?\DateTimeInterface $publishedAt;
 
     /**
-     * Matching passage, or opening passage for an ID-only query.
+     * Passage that matches the query, or the opening passage when the query is only a paper ID.
      */
     #[Required]
     public string $snippet;
 
     /**
-     * Paper title.
+     * Title of the paper.
      */
     #[Required]
     public string $title;
 
     /**
-     * Paper landing page.
+     * URL of the paper's landing page.
      */
     #[Required]
     public string $url;
@@ -133,7 +133,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Stable paper identifier.
+     * Unique ID of the paper.
      */
     public function withID(string $id): self
     {
@@ -144,7 +144,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Format of the linked full text. jats is XML.
+     * Format of the full text at `full_text_url`. `jats` is JATS XML.
      *
      * @param FullTextFormat|value-of<FullTextFormat> $fullTextFormat
      */
@@ -158,7 +158,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Direct link to the full text.
+     * Direct URL of the full text.
      */
     public function withFullTextURL(string $fullTextURL): self
     {
@@ -169,7 +169,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Publication time in ISO 8601, or null when unknown.
+     * When the paper was published. `null` when unknown.
      */
     public function withPublishedAt(?\DateTimeInterface $publishedAt): self
     {
@@ -180,7 +180,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Matching passage, or opening passage for an ID-only query.
+     * Passage that matches the query, or the opening passage when the query is only a paper ID.
      */
     public function withSnippet(string $snippet): self
     {
@@ -191,7 +191,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Paper title.
+     * Title of the paper.
      */
     public function withTitle(string $title): self
     {
@@ -202,7 +202,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Paper landing page.
+     * URL of the paper's landing page.
      */
     public function withURL(string $url): self
     {

@@ -12,7 +12,7 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\Browser\ProfilesContract;
 
 /**
- * See the authenticated browser profiles your organization created.
+ * List the authenticated browser profiles your organization created.
  *
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
@@ -34,10 +34,10 @@ final class ProfilesService implements ProfilesContract
     /**
      * @api
      *
-     * List the browser profiles your organization created with `/web/scrape`, newest first.
+     * List the browser profiles your organization saved through `POST /web/scrape`, newest first. Pass a profile `id` as `sharedParams.profile.profileId` to scrape as that signed-in user.
      *
-     * @param string $cursor the `next_cursor` from the previous page
-     * @param int $limit number of profiles per page
+     * @param string $cursor Cursor from the previous page's `next_cursor`. Omit for the first page.
+     * @param int $limit maximum number of profiles to return per page
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

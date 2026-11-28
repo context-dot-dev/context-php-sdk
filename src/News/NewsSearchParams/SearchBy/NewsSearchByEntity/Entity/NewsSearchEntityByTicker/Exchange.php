@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\News\NewsSearchParams\SearchBy\NewsSearchByEntity\Entity\NewsSearchEntityByTicker;
 
 /**
- * Stock exchange the ticker trades on, used to disambiguate tickers listed on multiple exchanges.
+ * Exchange the ticker trades on. Use it when the same ticker is listed on more than one exchange.
  */
 enum Exchange: string
 {

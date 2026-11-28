@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Monitors\MonitorRotateWebhookSecretResponse\Target\MonitorsPageTarget\Action\WebScrapeScrollAction;
 
 /**
- * Direction to scroll. Defaults to down.
+ * Direction to scroll.
  */
 enum Direction: string
 {

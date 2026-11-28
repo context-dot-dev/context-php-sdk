@@ -12,7 +12,7 @@ use ContextDev\Web\WebExtractStyleguideResponse\Styleguide\Components\Button;
 use ContextDev\Web\WebExtractStyleguideResponse\Styleguide\Components\Card;
 
 /**
- * UI component styles.
+ * Styles for buttons and cards.
  *
  * @phpstan-import-type ButtonShape from \ContextDev\Web\WebExtractStyleguideResponse\Styleguide\Components\Button
  * @phpstan-import-type CardShape from \ContextDev\Web\WebExtractStyleguideResponse\Styleguide\Components\Card
@@ -27,13 +27,13 @@ final class Components implements BaseModel
     use SdkModel;
 
     /**
-     * Button component styles.
+     * Primary, secondary, and link button styles.
      */
     #[Required]
     public Button $button;
 
     /**
-     * Card component style.
+     * Card style.
      */
     #[Optional]
     public ?Card $card;
@@ -79,7 +79,7 @@ final class Components implements BaseModel
     }
 
     /**
-     * Button component styles.
+     * Primary, secondary, and link button styles.
      *
      * @param Button|ButtonShape $button
      */
@@ -92,7 +92,7 @@ final class Components implements BaseModel
     }
 
     /**
-     * Card component style.
+     * Card style.
      *
      * @param Card|CardShape $card
      */

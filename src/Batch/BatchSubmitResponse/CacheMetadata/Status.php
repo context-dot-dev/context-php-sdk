@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Batch\BatchSubmitResponse\CacheMetadata;
 
 /**
- * Whether the response was served from cache, required fresh work, or honored zero-data-retention cache bypass.
+ * `hit` when served from cache, `miss` when fetched fresh, `zdr` when zero data retention bypassed the cache.
  */
 enum Status: string
 {

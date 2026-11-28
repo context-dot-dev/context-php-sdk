@@ -24,31 +24,31 @@ final class Face implements BaseModel
     use SdkModel;
 
     /**
-     * CSS font-style descriptor: normal, italic, or oblique, including an optional oblique angle or angle range (e.g. oblique 10deg 20deg).
+     * CSS `font-style` descriptor: `normal`, `italic`, or `oblique`, with an optional angle or angle range such as `oblique 10deg 20deg`.
      */
     #[Required]
     public string $style;
 
     /**
-     * Preferred font file URL or inline font data URL.
+     * URL of the font file, or an inline data URL.
      */
     #[Required]
     public string $url;
 
     /**
-     * CSS font-weight descriptor. A variable font file can have a range such as "300 500", covering intermediate weights without separate files.
+     * CSS `font-weight` descriptor. A variable font can have a range such as `300 500`, which covers every weight in between with one file.
      */
     #[Required]
     public string $weight;
 
     /**
-     * CSS unicode-range descriptor.
+     * CSS `unicode-range` descriptor.
      */
     #[Optional]
     public ?string $unicodeRange;
 
     /**
-     * CSS font-width or font-stretch descriptor.
+     * CSS `font-width` or `font-stretch` descriptor.
      */
     #[Optional]
     public ?string $width;
@@ -97,7 +97,7 @@ final class Face implements BaseModel
     }
 
     /**
-     * CSS font-style descriptor: normal, italic, or oblique, including an optional oblique angle or angle range (e.g. oblique 10deg 20deg).
+     * CSS `font-style` descriptor: `normal`, `italic`, or `oblique`, with an optional angle or angle range such as `oblique 10deg 20deg`.
      */
     public function withStyle(string $style): self
     {
@@ -108,7 +108,7 @@ final class Face implements BaseModel
     }
 
     /**
-     * Preferred font file URL or inline font data URL.
+     * URL of the font file, or an inline data URL.
      */
     public function withURL(string $url): self
     {
@@ -119,7 +119,7 @@ final class Face implements BaseModel
     }
 
     /**
-     * CSS font-weight descriptor. A variable font file can have a range such as "300 500", covering intermediate weights without separate files.
+     * CSS `font-weight` descriptor. A variable font can have a range such as `300 500`, which covers every weight in between with one file.
      */
     public function withWeight(string $weight): self
     {
@@ -130,7 +130,7 @@ final class Face implements BaseModel
     }
 
     /**
-     * CSS unicode-range descriptor.
+     * CSS `unicode-range` descriptor.
      */
     public function withUnicodeRange(string $unicodeRange): self
     {
@@ -141,7 +141,7 @@ final class Face implements BaseModel
     }
 
     /**
-     * CSS font-width or font-stretch descriptor.
+     * CSS `font-width` or `font-stretch` descriptor.
      */
     public function withWidth(string $width): self
     {

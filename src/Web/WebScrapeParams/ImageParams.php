@@ -11,7 +11,7 @@ use ContextDev\Web\WebScrapeParams\ImageParams\Dedupe;
 use ContextDev\Web\WebScrapeParams\ImageParams\Enrich;
 
 /**
- * Image options. Requires formats.images: true.
+ * Options for the `images` output. Requires `formats.images: true`.
  *
  * @phpstan-type ImageParamsShape = array{
  *   dedupe?: null|Dedupe|value-of<Dedupe>,
@@ -24,7 +24,7 @@ final class ImageParams implements BaseModel
     use SdkModel;
 
     /**
-     * Set `visual` to drop visual duplicates, keeping the largest copy.
+     * Set to `visual` to drop visually duplicate images, keeping the largest copy.
      *
      * @var value-of<Dedupe>|null $dedupe
      */
@@ -32,7 +32,7 @@ final class ImageParams implements BaseModel
     public ?string $dedupe;
 
     /**
-     * Extra data per image: `dimensions`, `classification`, or a hosted `file` URL.
+     * Extra data to add to each image: `dimensions` adds `width` and `height`, `classification` adds `classification`, and `file` adds a hosted `fileUrl`.
      *
      * @var list<value-of<Enrich>>|null $enrich
      */
@@ -65,7 +65,7 @@ final class ImageParams implements BaseModel
     }
 
     /**
-     * Set `visual` to drop visual duplicates, keeping the largest copy.
+     * Set to `visual` to drop visually duplicate images, keeping the largest copy.
      *
      * @param Dedupe|value-of<Dedupe> $dedupe
      */
@@ -78,7 +78,7 @@ final class ImageParams implements BaseModel
     }
 
     /**
-     * Extra data per image: `dimensions`, `classification`, or a hosted `file` URL.
+     * Extra data to add to each image: `dimensions` adds `width` and `height`, `classification` adds `classification`, and `file` adds a hosted `fileUrl`.
      *
      * @param list<Enrich|value-of<Enrich>> $enrich
      */

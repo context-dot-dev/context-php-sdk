@@ -33,7 +33,7 @@ final class BrandSearchResponse implements BaseModel
     public string $requestID;
 
     /**
-     * Up to 10 matching brands, name matches first, then domain matches, most popular first within each group. Empty when nothing matches.
+     * Up to 10 matching brands: name matches first, then domain matches, each group ordered by popularity. Empty when nothing matches.
      *
      * @var list<Result> $results
      */
@@ -100,7 +100,7 @@ final class BrandSearchResponse implements BaseModel
     }
 
     /**
-     * Up to 10 matching brands, name matches first, then domain matches, most popular first within each group. Empty when nothing matches.
+     * Up to 10 matching brands: name matches first, then domain matches, each group ordered by popularity. Empty when nothing matches.
      *
      * @param list<Result|ResultShape> $results
      */

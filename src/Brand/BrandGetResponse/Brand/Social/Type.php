@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Brand\BrandGetResponse\Brand\Social;
 
 /**
- * Type of social media platform.
+ * Social platform.
  */
 enum Type: string
 {

@@ -10,7 +10,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\People\PersonEnrichResponse\Match_\PersonEnrichmentCandidateMatch\Person;
 
 /**
- * The highest-scoring person candidate.
+ * The best-matching person, with an identity-match score.
  *
  * @phpstan-import-type PersonShape from \ContextDev\People\PersonEnrichResponse\Match_\PersonEnrichmentCandidateMatch\Person
  *
@@ -23,13 +23,23 @@ final class PersonEnrichmentCandidateMatch implements BaseModel
     /** @use SdkModel<PersonEnrichmentCandidateMatchShape> */
     use SdkModel;
 
-    /** @var 'candidate' $status */
+    /**
+     * Always `candidate` for a match.
+     *
+     * @var 'candidate' $status
+     */
     #[Required]
     public string $status = 'candidate';
 
+    /**
+     * Profile of the matched person.
+     */
     #[Required]
     public Person $person;
 
+    /**
+     * Identity-match score from 0 to 100. Higher is a stronger match; weak candidates are still returned.
+     */
     #[Required]
     public int $score;
 
@@ -70,6 +80,8 @@ final class PersonEnrichmentCandidateMatch implements BaseModel
     }
 
     /**
+     * Profile of the matched person.
+     *
      * @param Person|PersonShape $person
      */
     public function withPerson(Person|array $person): self
@@ -80,6 +92,9 @@ final class PersonEnrichmentCandidateMatch implements BaseModel
         return $self;
     }
 
+    /**
+     * Identity-match score from 0 to 100. Higher is a stronger match; weak candidates are still returned.
+     */
     public function withScore(int $score): self
     {
         $self = clone $this;
@@ -89,6 +104,8 @@ final class PersonEnrichmentCandidateMatch implements BaseModel
     }
 
     /**
+     * Always `candidate` for a match.
+     *
      * @param 'candidate' $status
      */
     public function withStatus(string $status): self

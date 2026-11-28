@@ -12,7 +12,7 @@ use ContextDev\Web\WebExtractStyleguideResponse\Styleguide\Typography\Headings;
 use ContextDev\Web\WebExtractStyleguideResponse\Styleguide\Typography\P;
 
 /**
- * Typography styles used on the website.
+ * Text styles for headings and body text.
  *
  * @phpstan-import-type HeadingsShape from \ContextDev\Web\WebExtractStyleguideResponse\Styleguide\Typography\Headings
  * @phpstan-import-type PShape from \ContextDev\Web\WebExtractStyleguideResponse\Styleguide\Typography\P
@@ -27,7 +27,7 @@ final class Typography implements BaseModel
     use SdkModel;
 
     /**
-     * Heading styles.
+     * Styles for `h1` through `h4` headings.
      */
     #[Required]
     public Headings $headings;
@@ -76,7 +76,7 @@ final class Typography implements BaseModel
     }
 
     /**
-     * Heading styles.
+     * Styles for `h1` through `h4` headings.
      *
      * @param Headings|HeadingsShape $headings
      */

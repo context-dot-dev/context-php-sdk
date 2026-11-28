@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Web\WebExtractCompetitorsResponse;
 
 /**
- * Status of the response.
+ * Always `ok` on success.
  */
 enum Status: string
 {

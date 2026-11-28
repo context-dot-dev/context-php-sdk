@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Pages attempted so far. Use `status` to check completion.
+ * Page counts so far. Check `status` to know when the batch is done.
  *
  * @phpstan-type ProgressShape = array{failed: int, pending: int, succeeded: int}
  */
@@ -25,7 +25,7 @@ final class Progress implements BaseModel
     public int $failed;
 
     /**
-     * Accepted pages not yet attempted. Unused crawl capacity is excluded after completion.
+     * Accepted pages not yet attempted. A link-following crawl reports `0` once it finishes, since its unused page budget is not counted.
      */
     #[Required]
     public int $pending;
@@ -83,7 +83,7 @@ final class Progress implements BaseModel
     }
 
     /**
-     * Accepted pages not yet attempted. Unused crawl capacity is excluded after completion.
+     * Accepted pages not yet attempted. A link-following crawl reports `0` once it finishes, since its unused page budget is not counted.
      */
     public function withPending(int $pending): self
     {

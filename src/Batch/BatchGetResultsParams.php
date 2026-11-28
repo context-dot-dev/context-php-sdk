@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Page through a finished batch’s results as JSON. Each record contains result with the same outputs and per-format errors as POST /web/scrape. Results remain available for 180 days.
+ * Page through a finished batch's results as JSON. Each record's `result` has the same outputs and per-format errors as `POST /web/scrape`. Results are kept for 180 days after the batch finishes.
  *
  * @see ContextDev\Services\BatchService::getResults()
  *
@@ -25,13 +25,13 @@ final class BatchGetResultsParams implements BaseModel
     use SdkParams;
 
     /**
-     * next_cursor from the previous page.
+     * Cursor from the previous page's `next_cursor`. Omit for the first page.
      */
     #[Optional]
     public ?string $cursor;
 
     /**
-     * Records per page. Defaults to 25. A page can close early so its payload stays under ~8 MB; rely on next_cursor rather than counting records.
+     * Maximum number of results to return per page. A page can hold fewer to stay under about 8 MB, so page with `next_cursor` instead of counting records.
      */
     #[Optional]
     public ?int $limit;
@@ -57,7 +57,7 @@ final class BatchGetResultsParams implements BaseModel
     }
 
     /**
-     * next_cursor from the previous page.
+     * Cursor from the previous page's `next_cursor`. Omit for the first page.
      */
     public function withCursor(string $cursor): self
     {
@@ -68,7 +68,7 @@ final class BatchGetResultsParams implements BaseModel
     }
 
     /**
-     * Records per page. Defaults to 25. A page can close early so its payload stays under ~8 MB; rely on next_cursor rather than counting records.
+     * Maximum number of results to return per page. A page can hold fewer to stay under about 8 MB, so page with `next_cursor` instead of counting records.
      */
     public function withLimit(int $limit): self
     {

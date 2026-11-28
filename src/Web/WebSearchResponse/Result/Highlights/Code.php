@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Web\WebSearchResponse\Result\Highlights;
 
 /**
- * Per-result highlights outcome. Inspect this before reading `highlights`.
+ * Highlights outcome for this result. Check it before reading `highlights`.
  */
 enum Code: string
 {

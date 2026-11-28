@@ -19,7 +19,7 @@ use ContextDev\Web\WebSearchParams\TimeoutOpts;
 use ContextDev\Web\WebSearchParams\Zdr;
 
 /**
- * Search the web and optionally return page content or relevant passages with each result.
+ * Search the web and get ranked results, with optional page Markdown or query-relevant passages for each one. Supports search operators and filters for domain, freshness, country, and language.
  *
  * @see ContextDev\Services\WebService::search()
  *
@@ -53,13 +53,13 @@ final class WebSearchParams implements BaseModel
     use SdkParams;
 
     /**
-     * Search query. Accepts natural language as well as Google-style search operators such as `site:`, `-site:`, `inurl:`, `intitle:`, quoted phrases, and `OR`.
+     * Search query. Accepts natural language and search operators such as `site:`, `-site:`, `inurl:`, `intitle:`, quoted phrases, and `OR`.
      */
     #[Required]
     public string $query;
 
     /**
-     * Two-letter ISO 3166-1 alpha-2 country code to localize results to a specific country (maps to Google's `gl` parameter). Example: "us", "gb", "de".
+     * Localize results to this country, as an ISO 3166-1 alpha-2 code such as `us` or `de`.
      *
      * @var value-of<Country>|null $country
      */
@@ -73,7 +73,7 @@ final class WebSearchParams implements BaseModel
     public ?int $descriptionMaxCharacters;
 
     /**
-     * Blocklist — drop results from these domains. Up to 100 domains. Example: ["pinterest.com", "reddit.com"].
+     * Leave out results from these domains, such as `pinterest.com`.
      *
      * @var list<string>|null $excludeDomains
      */
@@ -89,13 +89,13 @@ final class WebSearchParams implements BaseModel
     public ?string $freshness;
 
     /**
-     * Passages from each result page that are relevant to the query. Pages are read with the `markdownOptions` settings.
+     * Return passages from each result page that are relevant to the query. Pages are read with the `markdownOptions` settings.
      */
     #[Optional(nullable: true)]
     public ?HighlightsOptions $highlightsOptions;
 
     /**
-     * Allowlist — only return results from these domains. Up to 100 domains. Example: ["arxiv.org", "github.com"].
+     * Only return results from these domains, such as `arxiv.org`.
      *
      * @var list<string>|null $includeDomains
      */
@@ -103,7 +103,7 @@ final class WebSearchParams implements BaseModel
     public ?array $includeDomains;
 
     /**
-     * Languages to return results in, as BCP 47 language codes such as `en` or `de`, or "all" for any language. Defaults to "all". Example: ["en", "de"].
+     * Languages to return results in, as BCP 47 codes such as `en` or `de`, or `all` for any language.
      *
      * @var LanguagesVariants|null $languages
      */
@@ -111,19 +111,19 @@ final class WebSearchParams implements BaseModel
     public array|string|null $languages;
 
     /**
-     * Inline Markdown scraping for each result. Set `enabled: true` to activate.
+     * Scrape each result page to Markdown. Set `enabled` to `true` to turn it on.
      */
     #[Optional(nullable: true)]
     public ?MarkdownOptions $markdownOptions;
 
     /**
-     * Number of results to request and return (1–100). Defaults to 10.
+     * Number of results to return.
      */
     #[Optional]
     public ?int $numResults;
 
     /**
-     * Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @var list<string>|null $policies
      */
@@ -131,7 +131,7 @@ final class WebSearchParams implements BaseModel
     public ?array $policies;
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @var list<string>|null $tags
      */
@@ -226,7 +226,7 @@ final class WebSearchParams implements BaseModel
     }
 
     /**
-     * Search query. Accepts natural language as well as Google-style search operators such as `site:`, `-site:`, `inurl:`, `intitle:`, quoted phrases, and `OR`.
+     * Search query. Accepts natural language and search operators such as `site:`, `-site:`, `inurl:`, `intitle:`, quoted phrases, and `OR`.
      */
     public function withQuery(string $query): self
     {
@@ -237,7 +237,7 @@ final class WebSearchParams implements BaseModel
     }
 
     /**
-     * Two-letter ISO 3166-1 alpha-2 country code to localize results to a specific country (maps to Google's `gl` parameter). Example: "us", "gb", "de".
+     * Localize results to this country, as an ISO 3166-1 alpha-2 code such as `us` or `de`.
      *
      * @param Country|value-of<Country> $country
      */
@@ -262,7 +262,7 @@ final class WebSearchParams implements BaseModel
     }
 
     /**
-     * Blocklist — drop results from these domains. Up to 100 domains. Example: ["pinterest.com", "reddit.com"].
+     * Leave out results from these domains, such as `pinterest.com`.
      *
      * @param list<string> $excludeDomains
      */
@@ -288,7 +288,7 @@ final class WebSearchParams implements BaseModel
     }
 
     /**
-     * Passages from each result page that are relevant to the query. Pages are read with the `markdownOptions` settings.
+     * Return passages from each result page that are relevant to the query. Pages are read with the `markdownOptions` settings.
      *
      * @param HighlightsOptions|HighlightsOptionsShape|null $highlightsOptions
      */
@@ -302,7 +302,7 @@ final class WebSearchParams implements BaseModel
     }
 
     /**
-     * Allowlist — only return results from these domains. Up to 100 domains. Example: ["arxiv.org", "github.com"].
+     * Only return results from these domains, such as `arxiv.org`.
      *
      * @param list<string> $includeDomains
      */
@@ -315,7 +315,7 @@ final class WebSearchParams implements BaseModel
     }
 
     /**
-     * Languages to return results in, as BCP 47 language codes such as `en` or `de`, or "all" for any language. Defaults to "all". Example: ["en", "de"].
+     * Languages to return results in, as BCP 47 codes such as `en` or `de`, or `all` for any language.
      *
      * @param LanguagesShape $languages
      */
@@ -328,7 +328,7 @@ final class WebSearchParams implements BaseModel
     }
 
     /**
-     * Inline Markdown scraping for each result. Set `enabled: true` to activate.
+     * Scrape each result page to Markdown. Set `enabled` to `true` to turn it on.
      *
      * @param MarkdownOptions|MarkdownOptionsShape|null $markdownOptions
      */
@@ -342,7 +342,7 @@ final class WebSearchParams implements BaseModel
     }
 
     /**
-     * Number of results to request and return (1–100). Defaults to 10.
+     * Number of results to return.
      */
     public function withNumResults(int $numResults): self
     {
@@ -353,7 +353,7 @@ final class WebSearchParams implements BaseModel
     }
 
     /**
-     * Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @param list<string> $policies
      */
@@ -366,7 +366,7 @@ final class WebSearchParams implements BaseModel
     }
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @param list<string> $tags
      */

@@ -21,7 +21,7 @@ final class NewsSearchEntityByDomain implements BaseModel
     use SdkModel;
 
     /**
-     * Use `domain` to identify the company by website domain.
+     * Set to `domain` to identify the company by website domain.
      *
      * @var 'domain' $type
      */
@@ -29,7 +29,7 @@ final class NewsSearchEntityByDomain implements BaseModel
     public string $type = 'domain';
 
     /**
-     * Company website domain, such as apple.com.
+     * Company website domain, such as `apple.com`.
      */
     #[Required]
     public string $domain;
@@ -68,7 +68,7 @@ final class NewsSearchEntityByDomain implements BaseModel
     }
 
     /**
-     * Company website domain, such as apple.com.
+     * Company website domain, such as `apple.com`.
      */
     public function withDomain(string $domain): self
     {
@@ -79,7 +79,7 @@ final class NewsSearchEntityByDomain implements BaseModel
     }
 
     /**
-     * Use `domain` to identify the company by website domain.
+     * Set to `domain` to identify the company by website domain.
      *
      * @param 'domain' $type
      */

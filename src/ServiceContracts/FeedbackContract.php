@@ -17,11 +17,11 @@ interface FeedbackContract
     /**
      * @api
      *
-     * @param Category|value-of<Category> $category kind of issue
-     * @param string $note what went wrong and what you expected instead
-     * @param string $requestID the request_id of the API call the feedback is about, from its response body or X-Request-Id header
-     * @param list<string> $tags labels for filtering usage in the dashboard
-     * @param string $url the page the feedback is about, such as one page of a crawl or a docs page
+     * @param Category|value-of<Category> $category Kind of issue. Use `quality_degradation` for wrong or incomplete results and `bad_brand` for wrong or outdated brand data, such as a logo or colors.
+     * @param string $note What went wrong and what you expected instead. Leave out API keys and personal data.
+     * @param string $requestID ID of the API call the feedback is about, from its `request_id` or `X-Request-Id` header. Send this, `url`, or both.
+     * @param list<string> $tags Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
+     * @param string $url URL the feedback is about, such as one page of a crawl or a docs page. Send this, `request_id`, or both.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

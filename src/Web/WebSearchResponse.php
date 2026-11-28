@@ -32,13 +32,13 @@ final class WebSearchResponse implements BaseModel
     use SdkModel;
 
     /**
-     * Whether this response came from cache.
+     * Cache status of this response.
      */
     #[Required('cache_metadata')]
     public CacheMetadata $cacheMetadata;
 
     /**
-     * Echo of the original query (useful when fanout was enabled).
+     * The query you sent.
      */
     #[Required]
     public string $query;
@@ -60,7 +60,7 @@ final class WebSearchResponse implements BaseModel
     public ?KeyMetadata $keyMetadata;
 
     /**
-     * True when timeoutOpts.behavior=return-partial returned the usable results collected before the deadline. Partial collections are not cached as complete results.
+     * `true` when the deadline passed with `timeoutOpts.behavior` set to `return-partial`. Only results finished in time are included. Partial results are not cached.
      */
     #[Optional]
     public ?bool $partial;
@@ -121,7 +121,7 @@ final class WebSearchResponse implements BaseModel
     }
 
     /**
-     * Whether this response came from cache.
+     * Cache status of this response.
      *
      * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      */
@@ -134,7 +134,7 @@ final class WebSearchResponse implements BaseModel
     }
 
     /**
-     * Echo of the original query (useful when fanout was enabled).
+     * The query you sent.
      */
     public function withQuery(string $query): self
     {
@@ -180,7 +180,7 @@ final class WebSearchResponse implements BaseModel
     }
 
     /**
-     * True when timeoutOpts.behavior=return-partial returned the usable results collected before the deadline. Partial collections are not cached as complete results.
+     * `true` when the deadline passed with `timeoutOpts.behavior` set to `return-partial`. Only results finished in time are included. Partial results are not cached.
      */
     public function withPartial(bool $partial): self
     {

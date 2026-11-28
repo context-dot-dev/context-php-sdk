@@ -18,6 +18,8 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\IndustryRawContract;
 
 /**
+ * Extract structured data, competitors, styleguides, and fonts from any website.
+ *
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Industry\IndustryRetrieveNaicsParams\TimeoutOpts
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Industry\IndustryRetrieveSicParams\TimeoutOpts as TimeoutOptsShape1
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions

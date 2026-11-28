@@ -16,7 +16,7 @@ use ContextDev\People\PersonEnrichParams\TimeoutOpts;
 use ContextDev\People\PersonEnrichParams\Zdr;
 
 /**
- * Find a person from identity clues and return their profile with a match score. Available on all plans; free or disposable email addresses return 422.
+ * Match a person from a work email, a profile URL, or a name with company, education, or location context, and get their profile with an identity-match score from 0 to 100. The best candidate is returned even when the match is weak, so set a score threshold for your workflow. `not_found` results are free.
  *
  * @see ContextDev\Services\PeopleService::enrich()
  *
@@ -45,7 +45,7 @@ final class PersonEnrichParams implements BaseModel
     use SdkParams;
 
     /**
-     * Company context to help identify the person. Provide a name or domain.
+     * Company associated with the person. Send a `name`, a `domain`, or both.
      */
     #[Optional]
     public ?Company $company;
@@ -59,25 +59,25 @@ final class PersonEnrichParams implements BaseModel
     public ?array $education;
 
     /**
-     * Email address of the person to find.
+     * Work email address of the person. Free and disposable email providers return 422.
      */
     #[Optional]
     public ?string $email;
 
     /**
-     * Location context to help identify the person. Provide a city, region, or country.
+     * Location associated with the person. Send at least one of `city`, `region`, or `country`.
      */
     #[Optional]
     public ?Location $location;
 
     /**
-     * Person name. Without an email or person-profile URL, provide both first and last name plus company, education, or location.
+     * Name of the person. Without an email or profile URL, send both `first` and `last` plus `company`, `education`, or `location`.
      */
     #[Optional]
     public ?Name $name;
 
     /**
-     * Public profile URLs for the person. A person-profile URL can identify the person without a name.
+     * Public profile URLs for the person. A person-profile URL is enough to identify them without a name.
      *
      * @var list<string>|null $socialURLs
      */
@@ -85,7 +85,7 @@ final class PersonEnrichParams implements BaseModel
     public ?array $socialURLs;
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @var list<string>|null $tags
      */
@@ -152,7 +152,7 @@ final class PersonEnrichParams implements BaseModel
     }
 
     /**
-     * Company context to help identify the person. Provide a name or domain.
+     * Company associated with the person. Send a `name`, a `domain`, or both.
      *
      * @param Company|CompanyShape $company
      */
@@ -178,7 +178,7 @@ final class PersonEnrichParams implements BaseModel
     }
 
     /**
-     * Email address of the person to find.
+     * Work email address of the person. Free and disposable email providers return 422.
      */
     public function withEmail(string $email): self
     {
@@ -189,7 +189,7 @@ final class PersonEnrichParams implements BaseModel
     }
 
     /**
-     * Location context to help identify the person. Provide a city, region, or country.
+     * Location associated with the person. Send at least one of `city`, `region`, or `country`.
      *
      * @param Location|LocationShape $location
      */
@@ -202,7 +202,7 @@ final class PersonEnrichParams implements BaseModel
     }
 
     /**
-     * Person name. Without an email or person-profile URL, provide both first and last name plus company, education, or location.
+     * Name of the person. Without an email or profile URL, send both `first` and `last` plus `company`, `education`, or `location`.
      *
      * @param Name|NameShape $name
      */
@@ -215,7 +215,7 @@ final class PersonEnrichParams implements BaseModel
     }
 
     /**
-     * Public profile URLs for the person. A person-profile URL can identify the person without a name.
+     * Public profile URLs for the person. A person-profile URL is enough to identify them without a name.
      *
      * @param list<string> $socialURLs
      */
@@ -228,7 +228,7 @@ final class PersonEnrichParams implements BaseModel
     }
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @param list<string> $tags
      */

@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * A failure of the batch as a whole, distinct from the per-page failures in `page_errors`.
+ * Why the batch as a whole failed. Individual page failures are counted in `page_errors`.
  *
  * @phpstan-type FailureShape = array{code: string, message: string}
  */
@@ -19,13 +19,13 @@ final class Failure implements BaseModel
     use SdkModel;
 
     /**
-     * Why the batch itself stopped.
+     * Machine-readable failure code, such as `stalled` or `USAGE_EXCEEDED`.
      */
     #[Required]
     public string $code;
 
     /**
-     * Human-readable explanation.
+     * Human-readable explanation of the failure.
      */
     #[Required]
     public string $message;
@@ -65,7 +65,7 @@ final class Failure implements BaseModel
     }
 
     /**
-     * Why the batch itself stopped.
+     * Machine-readable failure code, such as `stalled` or `USAGE_EXCEEDED`.
      */
     public function withCode(string $code): self
     {
@@ -76,7 +76,7 @@ final class Failure implements BaseModel
     }
 
     /**
-     * Human-readable explanation.
+     * Human-readable explanation of the failure.
      */
     public function withMessage(string $message): self
     {

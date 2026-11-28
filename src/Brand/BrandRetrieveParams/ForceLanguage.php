@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace ContextDev\Brand\BrandRetrieveParams;
 
+/**
+ * Translate the brand's `title`, `description`, and `slogan` into this language.
+ */
 enum ForceLanguage: string
 {
     case AFRIKAANS = 'afrikaans';

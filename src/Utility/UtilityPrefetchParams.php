@@ -15,7 +15,7 @@ use ContextDev\Utility\UtilityPrefetchParams\TimeoutOpts;
 use ContextDev\Utility\UtilityPrefetchParams\Type;
 
 /**
- * Queue brand or styleguide data so a later lookup can return sooner.
+ * Start fetching a domain's brand or styleguide data in the background so a later lookup returns faster. Accepts a domain or a work email.
  *
  * @see ContextDev\Services\UtilityService::prefetch()
  *
@@ -38,7 +38,7 @@ final class UtilityPrefetchParams implements BaseModel
     use SdkParams;
 
     /**
-     * Identifier of the target to prefetch. Provide exactly one of domain or email.
+     * Domain or work email to prefetch. Provide exactly one.
      *
      * @var IdentifierVariants $identifier
      */
@@ -54,7 +54,7 @@ final class UtilityPrefetchParams implements BaseModel
     public string $type;
 
     /**
-     * Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @var list<string>|null $policies
      */
@@ -62,7 +62,7 @@ final class UtilityPrefetchParams implements BaseModel
     public ?array $policies;
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @var list<string>|null $tags
      */
@@ -70,7 +70,7 @@ final class UtilityPrefetchParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Request deadline and what to return when it passes.
+     * Request deadline. The request fails with 408 when it passes.
      */
     #[Optional]
     public ?TimeoutOpts $timeoutOpts;
@@ -125,7 +125,7 @@ final class UtilityPrefetchParams implements BaseModel
     }
 
     /**
-     * Identifier of the target to prefetch. Provide exactly one of domain or email.
+     * Domain or work email to prefetch. Provide exactly one.
      *
      * @param IdentifierShape $identifier
      */
@@ -152,7 +152,7 @@ final class UtilityPrefetchParams implements BaseModel
     }
 
     /**
-     * Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @param list<string> $policies
      */
@@ -165,7 +165,7 @@ final class UtilityPrefetchParams implements BaseModel
     }
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @param list<string> $tags
      */
@@ -178,7 +178,7 @@ final class UtilityPrefetchParams implements BaseModel
     }
 
     /**
-     * Request deadline and what to return when it passes.
+     * Request deadline. The request fails with 408 when it passes.
      *
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts
      */

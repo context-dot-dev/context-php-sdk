@@ -10,6 +10,8 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
+ * When the role ended.
+ *
  * @phpstan-type EndDateShape = array{year: int, day?: int|null, month?: int|null}
  */
 final class EndDate implements BaseModel
@@ -17,12 +19,21 @@ final class EndDate implements BaseModel
     /** @use SdkModel<EndDateShape> */
     use SdkModel;
 
+    /**
+     * Four-digit year.
+     */
     #[Required]
     public int $year;
 
+    /**
+     * Day of the month. Omitted when unknown.
+     */
     #[Optional]
     public ?int $day;
 
+    /**
+     * Month. Omitted when unknown.
+     */
     #[Optional]
     public ?int $month;
 
@@ -65,6 +76,9 @@ final class EndDate implements BaseModel
         return $self;
     }
 
+    /**
+     * Four-digit year.
+     */
     public function withYear(int $year): self
     {
         $self = clone $this;
@@ -73,6 +87,9 @@ final class EndDate implements BaseModel
         return $self;
     }
 
+    /**
+     * Day of the month. Omitted when unknown.
+     */
     public function withDay(int $day): self
     {
         $self = clone $this;
@@ -81,6 +98,9 @@ final class EndDate implements BaseModel
         return $self;
     }
 
+    /**
+     * Month. Omitted when unknown.
+     */
     public function withMonth(int $month): self
     {
         $self = clone $this;

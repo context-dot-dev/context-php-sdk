@@ -17,7 +17,7 @@ final class WaitFor implements BaseModel
     use SdkModel;
 
     /**
-     * Use `waitFor` to wait for a matching element.
+     * Wait for an element matching `selector`.
      *
      * @var 'waitFor' $type
      */
@@ -75,7 +75,7 @@ final class WaitFor implements BaseModel
     }
 
     /**
-     * Use `waitFor` to wait for a matching element.
+     * Wait for an element matching `selector`.
      *
      * @param 'waitFor' $type
      */

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Brand\BrandRetrieveParams;
 
 /**
- * Stock exchange code.
+ * Stock exchange code, such as `NASDAQ` or `LSE`.
  */
 enum TickerExchange: string
 {

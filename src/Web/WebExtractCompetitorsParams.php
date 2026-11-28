@@ -13,7 +13,7 @@ use ContextDev\Web\WebExtractCompetitorsParams\TimeoutOpts;
 use ContextDev\Web\WebExtractCompetitorsParams\Zdr;
 
 /**
- * Analyze a company's landing page and web search evidence to return direct competitors for the same product or market.
+ * Find a company's direct competitors from its website and web search results. Each competitor comes with a confidence level and the search results behind it.
  *
  * @see ContextDev\Services\WebService::extractCompetitors()
  *
@@ -34,19 +34,19 @@ final class WebExtractCompetitorsParams implements BaseModel
     use SdkParams;
 
     /**
-     * Company domain to analyze, such as `stripe.com`. Full http(s) URLs are accepted and normalized to their domain.
+     * Company domain, such as `stripe.com`. Full URLs are reduced to their domain.
      */
     #[Required]
     public string $domain;
 
     /**
-     * Exact number of direct competitors to return. Defaults to 5.
+     * Exact number of direct competitors to return.
      */
     #[Optional]
     public ?int $numCompetitors;
 
     /**
-     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
      *
      * @var list<string>|null $tags
      */
@@ -115,7 +115,7 @@ final class WebExtractCompetitorsParams implements BaseModel
     }
 
     /**
-     * Company domain to analyze, such as `stripe.com`. Full http(s) URLs are accepted and normalized to their domain.
+     * Company domain, such as `stripe.com`. Full URLs are reduced to their domain.
      */
     public function withDomain(string $domain): self
     {
@@ -126,7 +126,7 @@ final class WebExtractCompetitorsParams implements BaseModel
     }
 
     /**
-     * Exact number of direct competitors to return. Defaults to 5.
+     * Exact number of direct competitors to return.
      */
     public function withNumCompetitors(int $numCompetitors): self
     {
@@ -137,7 +137,7 @@ final class WebExtractCompetitorsParams implements BaseModel
     }
 
     /**
-     * Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
      *
      * @param list<string> $tags
      */

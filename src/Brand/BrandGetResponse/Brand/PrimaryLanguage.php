@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Brand\BrandGetResponse\Brand;
 
 /**
- * Language, e.g. `english`.
+ * Lowercase language name, such as `english`.
  */
 enum PrimaryLanguage: string
 {

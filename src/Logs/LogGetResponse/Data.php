@@ -42,55 +42,55 @@ final class Data implements BaseModel
     public int $creditsUsed;
 
     /**
-     * The `error_code` from the response, or null on success.
+     * The response's `error_code`. `null` on success.
      */
     #[Required('error_code')]
     public ?string $errorCode;
 
     /**
-     * What was sent with the request.
+     * Input retained from the request.
      */
     #[Required]
     public Input $input;
 
     /**
-     * ID of the API key that made the request.
+     * ID of the API key that made the request. Can be `null` for `MONITOR` and `BATCH` entries.
      */
     #[Required('key_id')]
     public ?string $keyID;
 
     /**
-     * Server-side processing time in milliseconds.
+     * Server-side processing time, in milliseconds.
      */
     #[Required('latency_ms')]
     public float $latencyMs;
 
     /**
-     * HTTP method, or `MONITOR` / `BATCH` for monitor-run and batch-settlement entries.
+     * HTTP method, or `MONITOR` for a monitor run and `BATCH` for a batch settlement.
      */
     #[Required]
     public string $method;
 
     /**
-     * Endpoint path as called.
+     * Endpoint path that was called.
      */
     #[Required]
     public string $path;
 
     /**
-     * Request ID of the logged API call.
+     * ID of the logged request.
      */
     #[Required('request_id')]
     public string $requestID;
 
     /**
-     * HTTP status code returned.
+     * HTTP status code of the response.
      */
     #[Required('status_code')]
     public int $statusCode;
 
     /**
-     * Request tags supplied by the caller.
+     * Tags sent with the request.
      *
      * @var list<string> $tags
      */
@@ -104,19 +104,19 @@ final class Data implements BaseModel
     public \DateTimeInterface $timestamp;
 
     /**
-     * User-Agent header of the request.
+     * The request's `User-Agent` header.
      */
     #[Required('user_agent')]
     public ?string $userAgent;
 
     /**
-     * Whether the request was made under zero data retention.
+     * Whether the request used zero data retention (ZDR).
      */
     #[Required]
     public bool $zdr;
 
     /**
-     * The retained JSON response with credentials redacted, or null when unavailable.
+     * Retained JSON response with credentials redacted. `null` when unavailable, such as under ZDR.
      */
     #[Optional]
     public mixed $response;
@@ -224,7 +224,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * The `error_code` from the response, or null on success.
+     * The response's `error_code`. `null` on success.
      */
     public function withErrorCode(?string $errorCode): self
     {
@@ -235,7 +235,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * What was sent with the request.
+     * Input retained from the request.
      *
      * @param Input|InputShape $input
      */
@@ -248,7 +248,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * ID of the API key that made the request.
+     * ID of the API key that made the request. Can be `null` for `MONITOR` and `BATCH` entries.
      */
     public function withKeyID(?string $keyID): self
     {
@@ -259,7 +259,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Server-side processing time in milliseconds.
+     * Server-side processing time, in milliseconds.
      */
     public function withLatencyMs(float $latencyMs): self
     {
@@ -270,7 +270,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * HTTP method, or `MONITOR` / `BATCH` for monitor-run and batch-settlement entries.
+     * HTTP method, or `MONITOR` for a monitor run and `BATCH` for a batch settlement.
      */
     public function withMethod(string $method): self
     {
@@ -281,7 +281,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Endpoint path as called.
+     * Endpoint path that was called.
      */
     public function withPath(string $path): self
     {
@@ -292,7 +292,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Request ID of the logged API call.
+     * ID of the logged request.
      */
     public function withRequestID(string $requestID): self
     {
@@ -303,7 +303,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * HTTP status code returned.
+     * HTTP status code of the response.
      */
     public function withStatusCode(int $statusCode): self
     {
@@ -314,7 +314,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Request tags supplied by the caller.
+     * Tags sent with the request.
      *
      * @param list<string> $tags
      */
@@ -338,7 +338,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * User-Agent header of the request.
+     * The request's `User-Agent` header.
      */
     public function withUserAgent(?string $userAgent): self
     {
@@ -349,7 +349,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * Whether the request was made under zero data retention.
+     * Whether the request used zero data retention (ZDR).
      */
     public function withZdr(bool $zdr): self
     {
@@ -360,7 +360,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * The retained JSON response with credentials redacted, or null when unavailable.
+     * Retained JSON response with credentials redacted. `null` when unavailable, such as under ZDR.
      */
     public function withResponse(mixed $response): self
     {

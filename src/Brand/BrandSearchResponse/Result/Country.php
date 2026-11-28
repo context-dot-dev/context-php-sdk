@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Brand\BrandSearchResponse\Result;
 
 /**
- * The brand's country, when available, as an uppercase ISO 3166-1 alpha-2 code.
+ * Country of the brand, as an uppercase ISO 3166-1 alpha-2 code. Omitted when unknown.
  */
 enum Country: string
 {

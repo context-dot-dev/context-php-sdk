@@ -13,7 +13,7 @@ use ContextDev\Monitors\MonitorNewResponse\Target\MonitorsPageTarget\Action\WebS
 use ContextDev\Monitors\MonitorNewResponse\Target\MonitorsPageTarget\Action\WebScrapeScrollAction\Direction;
 
 /**
- * Scroll the page or a selected scrollable container, waiting adaptively for content and dimensions to settle after each iteration.
+ * Scroll the page or a scrollable container. Waits for new content to settle after each scroll.
  *
  * @phpstan-import-type AmountVariants from \ContextDev\Monitors\MonitorNewResponse\Target\MonitorsPageTarget\Action\WebScrapeScrollAction\Amount
  * @phpstan-import-type AmountShape from \ContextDev\Monitors\MonitorNewResponse\Target\MonitorsPageTarget\Action\WebScrapeScrollAction\Amount
@@ -40,7 +40,7 @@ final class WebScrapeScrollAction implements BaseModel
     public string $do = 'scroll';
 
     /**
-     * Pixels per scroll, one visible viewport, or the current scroll boundary. Defaults to viewport.
+     * Distance per scroll: pixels, one `viewport`, or `max` to reach the end.
      *
      * @var AmountVariants|null $amount
      */
@@ -48,13 +48,13 @@ final class WebScrapeScrollAction implements BaseModel
     public int|string|null $amount;
 
     /**
-     * CSS selector for the first matching scroll container. Defaults to the page.
+     * Scroll the first container matching this CSS selector. Omit to scroll the page.
      */
     #[Optional]
     public ?string $container;
 
     /**
-     * Direction to scroll. Defaults to down.
+     * Direction to scroll.
      *
      * @var value-of<Direction>|null $direction
      */
@@ -62,7 +62,7 @@ final class WebScrapeScrollAction implements BaseModel
     public ?string $direction;
 
     /**
-     * Maximum scroll iterations. Stops early when scrolling and scrollable extent stop changing. Defaults to 1.
+     * Maximum number of scroll steps. Stops early when the page stops changing.
      */
     #[Optional]
     public ?int $maxScrolls;
@@ -110,7 +110,7 @@ final class WebScrapeScrollAction implements BaseModel
     }
 
     /**
-     * Pixels per scroll, one visible viewport, or the current scroll boundary. Defaults to viewport.
+     * Distance per scroll: pixels, one `viewport`, or `max` to reach the end.
      *
      * @param AmountShape $amount
      */
@@ -123,7 +123,7 @@ final class WebScrapeScrollAction implements BaseModel
     }
 
     /**
-     * CSS selector for the first matching scroll container. Defaults to the page.
+     * Scroll the first container matching this CSS selector. Omit to scroll the page.
      */
     public function withContainer(string $container): self
     {
@@ -134,7 +134,7 @@ final class WebScrapeScrollAction implements BaseModel
     }
 
     /**
-     * Direction to scroll. Defaults to down.
+     * Direction to scroll.
      *
      * @param Direction|value-of<Direction> $direction
      */
@@ -147,7 +147,7 @@ final class WebScrapeScrollAction implements BaseModel
     }
 
     /**
-     * Maximum scroll iterations. Stops early when scrolling and scrollable extent stop changing. Defaults to 1.
+     * Maximum number of scroll steps. Stops early when the page stops changing.
      */
     public function withMaxScrolls(int $maxScrolls): self
     {

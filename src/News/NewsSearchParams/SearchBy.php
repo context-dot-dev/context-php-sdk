@@ -11,7 +11,7 @@ use ContextDev\News\NewsSearchParams\SearchBy\NewsSearchByEntity;
 use ContextDev\News\NewsSearchParams\SearchBy\NewsSearchByNaturalLanguage;
 
 /**
- * What to search for: a specific company, or a natural-language query across all news.
+ * What to search for: news about a specific company, or a natural-language query across all news.
  *
  * @phpstan-import-type NewsSearchByNaturalLanguageShape from \ContextDev\News\NewsSearchParams\SearchBy\NewsSearchByNaturalLanguage
  * @phpstan-import-type NewsSearchByEntityShape from \ContextDev\News\NewsSearchParams\SearchBy\NewsSearchByEntity

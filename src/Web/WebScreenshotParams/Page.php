@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Web\WebScreenshotParams;
 
 /**
- * Optional parameter to specify which page type to screenshot. If provided, the system will scrape the domain's links and use heuristics to find the most appropriate URL for the specified page type (30 supported languages). If not provided, screenshots the main domain landing page. Only applicable when using 'domain', not 'directUrl'.
+ * Capture this type of page instead of the home page. Context.dev finds it among the domain's links, in 30 languages. Only with `domain`.
  */
 enum Page: string
 {

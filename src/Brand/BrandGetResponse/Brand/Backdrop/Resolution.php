@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Resolution of the backdrop image.
+ * Size of the backdrop image.
  *
  * @phpstan-type ResolutionShape = array{
  *   aspectRatio?: float|null, height?: int|null, width?: int|null
@@ -21,19 +21,19 @@ final class Resolution implements BaseModel
     use SdkModel;
 
     /**
-     * Aspect ratio of the image (width/height).
+     * Aspect ratio, as width divided by height.
      */
     #[Optional('aspect_ratio')]
     public ?float $aspectRatio;
 
     /**
-     * Height of the image in pixels.
+     * Height, in pixels.
      */
     #[Optional]
     public ?int $height;
 
     /**
-     * Width of the image in pixels.
+     * Width, in pixels.
      */
     #[Optional]
     public ?int $width;
@@ -63,7 +63,7 @@ final class Resolution implements BaseModel
     }
 
     /**
-     * Aspect ratio of the image (width/height).
+     * Aspect ratio, as width divided by height.
      */
     public function withAspectRatio(float $aspectRatio): self
     {
@@ -74,7 +74,7 @@ final class Resolution implements BaseModel
     }
 
     /**
-     * Height of the image in pixels.
+     * Height, in pixels.
      */
     public function withHeight(int $height): self
     {
@@ -85,7 +85,7 @@ final class Resolution implements BaseModel
     }
 
     /**
-     * Width of the image in pixels.
+     * Width, in pixels.
      */
     public function withWidth(int $width): self
     {

@@ -63,7 +63,7 @@ final class Controls implements BaseModel
     public ?bool $followSubdomains;
 
     /**
-     * Only follow pages in these languages, or `same_as_start_url`; all languages when omitted.
+     * Only follow pages in these languages, or pass `same_as_start_url` to match the start page. Follows all languages when omitted.
      *
      * @var LanguagesVariants|null $languages
      */
@@ -71,13 +71,13 @@ final class Controls implements BaseModel
     public array|string|null $languages;
 
     /**
-     * Maximum link depth. Source pages are depth 0. No limit when omitted.
+     * Maximum link depth, where the start page is depth `0`. No limit when omitted.
      */
     #[Optional]
     public ?int $maxDepth;
 
     /**
-     * Maximum pages to fetch. Unused reserved credits are refunded. Maximum 100000.
+     * Maximum number of pages to fetch, up to 100,000. Credits are reserved for this many pages and the unused part is refunded.
      */
     #[Optional('maxUrls')]
     public ?int $maxURLs;
@@ -165,7 +165,7 @@ final class Controls implements BaseModel
     }
 
     /**
-     * Only follow pages in these languages, or `same_as_start_url`; all languages when omitted.
+     * Only follow pages in these languages, or pass `same_as_start_url` to match the start page. Follows all languages when omitted.
      *
      * @param LanguagesShape $languages
      */
@@ -178,7 +178,7 @@ final class Controls implements BaseModel
     }
 
     /**
-     * Maximum link depth. Source pages are depth 0. No limit when omitted.
+     * Maximum link depth, where the start page is depth `0`. No limit when omitted.
      */
     public function withMaxDepth(int $maxDepth): self
     {
@@ -189,7 +189,7 @@ final class Controls implements BaseModel
     }
 
     /**
-     * Maximum pages to fetch. Unused reserved credits are refunded. Maximum 100000.
+     * Maximum number of pages to fetch, up to 100,000. Credits are reserved for this many pages and the unused part is refunded.
      */
     public function withMaxURLs(int $maxURLs): self
     {

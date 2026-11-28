@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Result download links; null until the batch finishes. Files are deleted 180 days after the batch finishes.
+ * Links to download the results. `null` until the batch finishes; the files are deleted 180 days after that.
  *
  * @phpstan-import-type FileShape from \ContextDev\Batch\BatchGetResponse\Results\File
  *
@@ -24,13 +24,13 @@ final class Results implements BaseModel
     use SdkModel;
 
     /**
-     * When these links expire (24 hours after this response).
+     * When these links expire, 24 hours after this response. Retrieve the batch again for fresh links.
      */
     #[Required('expires_at')]
     public string $expiresAt;
 
     /**
-     * Result files. Order is not guaranteed.
+     * Result files, in no particular order.
      *
      * @var list<File> $files
      */
@@ -74,7 +74,7 @@ final class Results implements BaseModel
     }
 
     /**
-     * When these links expire (24 hours after this response).
+     * When these links expire, 24 hours after this response. Retrieve the batch again for fresh links.
      */
     public function withExpiresAt(string $expiresAt): self
     {
@@ -85,7 +85,7 @@ final class Results implements BaseModel
     }
 
     /**
-     * Result files. Order is not guaranteed.
+     * Result files, in no particular order.
      *
      * @param list<File|FileShape> $files
      */

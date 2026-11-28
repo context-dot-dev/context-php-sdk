@@ -34,7 +34,7 @@ final class WebWebCrawlMdResponse implements BaseModel
     use SdkModel;
 
     /**
-     * Whether this response came from cache.
+     * Cache status of this response.
      */
     #[Required('cache_metadata')]
     public CacheMetadata $cacheMetadata;
@@ -59,7 +59,7 @@ final class WebWebCrawlMdResponse implements BaseModel
     public ?KeyMetadata $keyMetadata;
 
     /**
-     * True when timeoutOpts.behavior=return-partial returned the usable results collected before the deadline. Partial collections are not cached as complete results.
+     * `true` when the deadline passed with `timeoutOpts.behavior` set to `return-partial`. Only results finished in time are included. Partial results are not cached.
      */
     #[Optional]
     public ?bool $partial;
@@ -121,7 +121,7 @@ final class WebWebCrawlMdResponse implements BaseModel
     }
 
     /**
-     * Whether this response came from cache.
+     * Cache status of this response.
      *
      * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      */
@@ -180,7 +180,7 @@ final class WebWebCrawlMdResponse implements BaseModel
     }
 
     /**
-     * True when timeoutOpts.behavior=return-partial returned the usable results collected before the deadline. Partial collections are not cached as complete results.
+     * `true` when the deadline passed with `timeoutOpts.behavior` set to `return-partial`. Only results finished in time are included. Partial results are not cached.
      */
     public function withPartial(bool $partial): self
     {

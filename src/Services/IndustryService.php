@@ -16,6 +16,8 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\IndustryContract;
 
 /**
+ * Extract structured data, competitors, styleguides, and fonts from any website.
+ *
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Industry\IndustryRetrieveNaicsParams\TimeoutOpts
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Industry\IndustryRetrieveSicParams\TimeoutOpts as TimeoutOptsShape1
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
@@ -45,7 +47,7 @@ final class IndustryService implements IndustryContract
      * @param string $input Brand domain or title to retrieve NAICS code for. If a valid domain is provided, it will be used for classification, otherwise, we will search for the brand using the provided title.
      * @param int $maxResults Maximum number of NAICS codes to return. Must be between 1 and 10. Defaults to 5.
      * @param int $minResults Minimum number of NAICS codes to return. Must be at least 1. Defaults to 1.
-     * @param list<string> $tags Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * @param list<string> $tags Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts request deadline and what to return when it passes
      * @param Zdr|value-of<Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param RequestOpts|null $requestOptions
@@ -88,7 +90,7 @@ final class IndustryService implements IndustryContract
      * @param string $input Brand domain or title to retrieve SIC code for. If a valid domain is provided, it will be used for classification, otherwise, we will search for the brand using the provided title.
      * @param int $maxResults Maximum number of SIC codes to return. Must be between 1 and 10. Defaults to 5.
      * @param int $minResults Minimum number of SIC codes to return. Must be at least 1. Defaults to 1.
-     * @param list<string> $tags Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
+     * @param list<string> $tags Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
      * @param \ContextDev\Industry\IndustryRetrieveSicParams\TimeoutOpts|TimeoutOptsShape1 $timeoutOpts request deadline and what to return when it passes
      * @param Type|value-of<Type> $type SIC dataset: `original_sic` (1987) or `latest_sec` (current SEC list)
      * @param \ContextDev\Industry\IndustryRetrieveSicParams\Zdr|value-of<\ContextDev\Industry\IndustryRetrieveSicParams\Zdr> $zdr `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.

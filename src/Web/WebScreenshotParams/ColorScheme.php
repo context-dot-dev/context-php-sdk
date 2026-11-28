@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Web\WebScreenshotParams;
 
 /**
- * Optional parameter to choose the site's visual theme in the screenshot. Use 'light' or 'dark' when the site offers both appearances.
+ * Emulate a light or dark color scheme.
  */
 enum ColorScheme: string
 {

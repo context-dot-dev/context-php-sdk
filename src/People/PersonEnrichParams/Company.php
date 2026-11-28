@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Company context to help identify the person. Provide a name or domain.
+ * Company associated with the person. Send a `name`, a `domain`, or both.
  *
  * @phpstan-type CompanyShape = array{domain?: string|null, name?: string|null}
  */

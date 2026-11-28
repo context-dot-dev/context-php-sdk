@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Scholar\ScholarSearchResponse\Data;
 
 /**
- * Format of the linked full text. jats is XML.
+ * Format of the full text at `full_text_url`. `jats` is JATS XML.
  */
 enum FullTextFormat: string
 {

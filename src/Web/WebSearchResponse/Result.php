@@ -30,7 +30,7 @@ final class Result implements BaseModel
     use SdkModel;
 
     /**
-     * Snippet excerpt from the page. Empty string when the search provider does not supply a snippet.
+     * Snippet from the page. Empty string when no snippet is available.
      */
     #[Required]
     public string $description;
@@ -48,7 +48,7 @@ final class Result implements BaseModel
     public Markdown $markdown;
 
     /**
-     * Relevance to the original query.
+     * How relevant the result is to the query.
      *
      * @var value-of<Relevance> $relevance
      */
@@ -129,7 +129,7 @@ final class Result implements BaseModel
     }
 
     /**
-     * Snippet excerpt from the page. Empty string when the search provider does not supply a snippet.
+     * Snippet from the page. Empty string when no snippet is available.
      */
     public function withDescription(string $description): self
     {
@@ -166,7 +166,7 @@ final class Result implements BaseModel
     }
 
     /**
-     * Relevance to the original query.
+     * How relevant the result is to the query.
      *
      * @param Relevance|value-of<Relevance> $relevance
      */

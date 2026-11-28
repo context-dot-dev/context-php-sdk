@@ -12,7 +12,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Feedback\FeedbackSubmitParams\Category;
 
 /**
- * Report an API issue or documentation mismatch, including request IDs when available.
+ * Report a bug, docs mismatch, or wrong result to the Context.dev team. Send `request_id`, `url`, or both. Any API key can submit, and a repeat report for the same `request_id` returns the original feedback.
  *
  * @see ContextDev\Services\FeedbackService::submit()
  *
@@ -31,7 +31,7 @@ final class FeedbackSubmitParams implements BaseModel
     use SdkParams;
 
     /**
-     * Kind of issue.
+     * Kind of issue. Use `quality_degradation` for wrong or incomplete results and `bad_brand` for wrong or outdated brand data, such as a logo or colors.
      *
      * @var value-of<Category> $category
      */
@@ -39,19 +39,19 @@ final class FeedbackSubmitParams implements BaseModel
     public string $category;
 
     /**
-     * What went wrong and what you expected instead.
+     * What went wrong and what you expected instead. Leave out API keys and personal data.
      */
     #[Required]
     public string $note;
 
     /**
-     * The request_id of the API call the feedback is about, from its response body or X-Request-Id header.
+     * ID of the API call the feedback is about, from its `request_id` or `X-Request-Id` header. Send this, `url`, or both.
      */
     #[Optional('request_id')]
     public ?string $requestID;
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @var list<string>|null $tags
      */
@@ -59,7 +59,7 @@ final class FeedbackSubmitParams implements BaseModel
     public ?array $tags;
 
     /**
-     * The page the feedback is about, such as one page of a crawl or a docs page.
+     * URL the feedback is about, such as one page of a crawl or a docs page. Send this, `request_id`, or both.
      */
     #[Optional]
     public ?string $url;
@@ -111,7 +111,7 @@ final class FeedbackSubmitParams implements BaseModel
     }
 
     /**
-     * Kind of issue.
+     * Kind of issue. Use `quality_degradation` for wrong or incomplete results and `bad_brand` for wrong or outdated brand data, such as a logo or colors.
      *
      * @param Category|value-of<Category> $category
      */
@@ -124,7 +124,7 @@ final class FeedbackSubmitParams implements BaseModel
     }
 
     /**
-     * What went wrong and what you expected instead.
+     * What went wrong and what you expected instead. Leave out API keys and personal data.
      */
     public function withNote(string $note): self
     {
@@ -135,7 +135,7 @@ final class FeedbackSubmitParams implements BaseModel
     }
 
     /**
-     * The request_id of the API call the feedback is about, from its response body or X-Request-Id header.
+     * ID of the API call the feedback is about, from its `request_id` or `X-Request-Id` header. Send this, `url`, or both.
      */
     public function withRequestID(string $requestID): self
     {
@@ -146,7 +146,7 @@ final class FeedbackSubmitParams implements BaseModel
     }
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @param list<string> $tags
      */
@@ -159,7 +159,7 @@ final class FeedbackSubmitParams implements BaseModel
     }
 
     /**
-     * The page the feedback is about, such as one page of a crawl or a docs page.
+     * URL the feedback is about, such as one page of a crawl or a docs page. Send this, `request_id`, or both.
      */
     public function withURL(string $url): self
     {

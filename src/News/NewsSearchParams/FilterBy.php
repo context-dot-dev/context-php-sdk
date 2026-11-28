@@ -13,7 +13,7 @@ use ContextDev\News\NewsSearchParams\FilterBy\Date;
 use ContextDev\News\NewsSearchParams\FilterBy\SourceCountry;
 
 /**
- * Optional result filters. Use at most one of sourceDomain, sourceCountry, articleLanguage, or articleType. A date range may accompany that category; date.from must not exceed date.to.
+ * Filters for the results. Use at most one of `sourceDomain`, `sourceCountry`, `articleLanguage`, or `articleType`, optionally combined with `date`.
  *
  * @phpstan-import-type DateShape from \ContextDev\News\NewsSearchParams\FilterBy\Date
  *
@@ -31,7 +31,7 @@ final class FilterBy implements BaseModel
     use SdkModel;
 
     /**
-     * Article languages to include. Up to 3.
+     * Only return articles in these languages, as ISO 639 codes such as `en`.
      *
      * @var list<value-of<ArticleLanguage>>|null $articleLanguage
      */
@@ -39,7 +39,7 @@ final class FilterBy implements BaseModel
     public ?array $articleLanguage;
 
     /**
-     * Article types to include. Up to 3.
+     * Only return these types of coverage, such as `press_release`.
      *
      * @var list<value-of<ArticleType>>|null $articleType
      */
@@ -47,13 +47,13 @@ final class FilterBy implements BaseModel
     public ?array $articleType;
 
     /**
-     * Published-at window in epoch milliseconds. from must be before or equal to to.
+     * Publish date range, in epoch milliseconds. `from` must not be later than `to`.
      */
     #[Optional]
     public ?Date $date;
 
     /**
-     * Publisher countries to include, as lowercase ISO 3166-1 alpha-2 codes. Up to 3.
+     * Only return articles from publishers in these countries, as ISO 3166-1 alpha-2 codes such as `us`.
      *
      * @var list<value-of<SourceCountry>>|null $sourceCountry
      */
@@ -61,7 +61,7 @@ final class FilterBy implements BaseModel
     public ?array $sourceCountry;
 
     /**
-     * Publisher domains to include. Up to 3.
+     * Only return articles from these publisher domains, such as `reuters.com`.
      *
      * @var list<string>|null $sourceDomain
      */
@@ -103,7 +103,7 @@ final class FilterBy implements BaseModel
     }
 
     /**
-     * Article languages to include. Up to 3.
+     * Only return articles in these languages, as ISO 639 codes such as `en`.
      *
      * @param list<ArticleLanguage|value-of<ArticleLanguage>> $articleLanguage
      */
@@ -116,7 +116,7 @@ final class FilterBy implements BaseModel
     }
 
     /**
-     * Article types to include. Up to 3.
+     * Only return these types of coverage, such as `press_release`.
      *
      * @param list<ArticleType|value-of<ArticleType>> $articleType
      */
@@ -129,7 +129,7 @@ final class FilterBy implements BaseModel
     }
 
     /**
-     * Published-at window in epoch milliseconds. from must be before or equal to to.
+     * Publish date range, in epoch milliseconds. `from` must not be later than `to`.
      *
      * @param Date|DateShape $date
      */
@@ -142,7 +142,7 @@ final class FilterBy implements BaseModel
     }
 
     /**
-     * Publisher countries to include, as lowercase ISO 3166-1 alpha-2 codes. Up to 3.
+     * Only return articles from publishers in these countries, as ISO 3166-1 alpha-2 codes such as `us`.
      *
      * @param list<SourceCountry|value-of<SourceCountry>> $sourceCountry
      */
@@ -155,7 +155,7 @@ final class FilterBy implements BaseModel
     }
 
     /**
-     * Publisher domains to include. Up to 3.
+     * Only return articles from these publisher domains, such as `reuters.com`.
      *
      * @param list<string> $sourceDomain
      */

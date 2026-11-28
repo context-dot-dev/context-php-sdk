@@ -28,26 +28,26 @@ interface BrandContract
     /**
      * @api
      *
-     * @param string $domain Domain name to retrieve brand data for (e.g., 'stripe.com').
-     * @param Type|value-of<Type> $type discriminator for transaction-based brand retrieval
-     * @param string $name Company name to retrieve brand data for (e.g., 'Apple Inc').
-     * @param string $email Email address to retrieve brand data for (e.g., 'jane@stripe.com').
-     * @param string $ticker Stock ticker symbol to retrieve brand data for (e.g., 'AAPL').
-     * @param string $directURL Full http(s) URL to fetch brand data from (e.g., 'https://stripe.com/enterprise'). Only this URL is fetched — not the entire internet.
-     * @param string $transactionInfo transaction information to identify the brand
-     * @param ForceLanguage|value-of<ForceLanguage>|null $forceLanguage
-     * @param int $maxAgeMs Maximum age of cached brand data in ms. Defaults to 3 months; clamped to 0–1 year. `0` refreshes.
-     * @param bool $maxSpeed Optional parameter to optimize the API call for maximum speed. When set to true, the API will skip time-consuming operations for faster response at the cost of less comprehensive data.
-     * @param list<string> $policies Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
-     * @param list<string> $tags labels for filtering usage in the dashboard
+     * @param string $domain Domain of the brand, such as `stripe.com`.
+     * @param Type|value-of<Type> $type set to `by_transaction` to identify the merchant behind a transaction descriptor
+     * @param string $name company name, such as `Apple Inc`
+     * @param string $email Work email address, such as `jane@stripe.com`. The brand is looked up from its domain.
+     * @param string $ticker stock ticker symbol, such as `AAPL`
+     * @param string $directURL Full `http` or `https` URL of the page to read, such as `https://stripe.com/enterprise`. Only this page is fetched.
+     * @param string $transactionInfo transaction descriptor from a card or bank statement, such as `SQ *COFFEE SHOP`
+     * @param ForceLanguage|value-of<ForceLanguage>|null $forceLanguage translate the brand's `title`, `description`, and `slogan` into this language
+     * @param int $maxAgeMs Maximum age of cached brand data, in milliseconds. `0` always fetches fresh. Defaults to 90 days (7776000000 ms). Values above 1 year (31536000000 ms) are capped at 1 year.
+     * @param bool $maxSpeed skip slower enrichment steps for a faster, less detailed response
+     * @param list<string> $policies Access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
+     * @param list<string> $tags Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts request deadline and what to return when it passes
-     * @param Zdr|value-of<Zdr> $zdr `enabled` disables request logs and traces and omits request and response content from usage logs. Brand data and hosted assets may still be stored. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
+     * @param Zdr|value-of<Zdr> $zdr `enabled` turns off request logs and traces and keeps request and response content out of usage logs. Brand data and hosted assets may still be stored. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      * @param Country|value-of<Country> $country lowercase ISO 3166-1 alpha-2 country code, such as `us`
-     * @param TickerExchange|value-of<TickerExchange> $tickerExchange stock exchange code
-     * @param string $city optional city name to prioritize when searching for the brand
-     * @param bool $highConfidenceOnly when set to true, the API performs additional verification to ensure the identified brand matches the transaction with high confidence
-     * @param MccShape $mcc optional Merchant Category Code (MCC) to help identify the business category or industry
-     * @param PhoneShape $phone optional phone number from the transaction to help verify brand match
+     * @param TickerExchange|value-of<TickerExchange> $tickerExchange stock exchange code, such as `NASDAQ` or `LSE`
+     * @param string $city City where the transaction took place. Brands in this city are preferred.
+     * @param bool $highConfidenceOnly run extra verification so the returned brand matches the transaction with high confidence
+     * @param MccShape $mcc Merchant Category Code (MCC) from the transaction. Helps identify the type of business.
+     * @param PhoneShape $phone Merchant phone number from the transaction. Helps confirm the match.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -79,13 +79,13 @@ interface BrandContract
     /**
      * @api
      *
-     * @param string $query Search term, matched against the fields selected by queryBy (e.g. 'nike', 'nike.com', 'nik').
-     * @param bool $autocomplete Whether the search term matches by prefix, so partial words match as they are typed (e.g. 'nik' matches Nike). Set to false to match whole words only.
-     * @param \ContextDev\Brand\BrandSearchParams\Country|value-of<\ContextDev\Brand\BrandSearchParams\Country> $country only return brands in this country, as an uppercase ISO 3166-1 alpha-2 code such as US or GB
-     * @param Language|value-of<Language> $language only return brands with this primary language, such as english or french
-     * @param list<QueryBy|value-of<QueryBy>> $queryBy Fields to match the search term against, as a comma-separated list or repeated parameter: 'name', 'domain', or both. Defaults to both.
-     * @param list<string> $tags Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
-     * @param int $typoTolerance Maximum number of typos tolerated when matching, from 0 to 2. Defaults to 0 (no typo tolerance).
+     * @param string $query Search term, matched against the fields in `queryBy`, such as `nike`, `nike.com`, or `nik`.
+     * @param bool $autocomplete Match the search term as a prefix, so `nik` matches Nike while the user is still typing. Set to `false` to match whole words only.
+     * @param \ContextDev\Brand\BrandSearchParams\Country|value-of<\ContextDev\Brand\BrandSearchParams\Country> $country only return brands in this country, as an uppercase ISO 3166-1 alpha-2 code such as `US` or `GB`
+     * @param Language|value-of<Language> $language only return brands with this primary language, such as `english` or `french`
+     * @param list<QueryBy|value-of<QueryBy>> $queryBy Fields to match the search term against: `name`, `domain`, or both. Send a comma-separated list or repeat the parameter.
+     * @param list<string> $tags Comma-separated labels for this request, such as `production,team-alpha`. Filter usage and request logs by them.
+     * @param int $typoTolerance Maximum number of typos to tolerate when matching. `0` requires exact spelling.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

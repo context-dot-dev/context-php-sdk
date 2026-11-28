@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Web\WebAnswersParams;
 
 /**
- * `fast` prioritizes speed, with extra verification for people and companies; `ultra` supports deeper research (default).
+ * `fast` prioritizes speed and adds extra verification for people and companies; `ultra` searches and reads more sources for deeper research. Defaults to `ultra`.
  */
 enum Mode: string
 {

@@ -17,7 +17,7 @@ final class Heading implements BaseModel
     use SdkModel;
 
     /**
-     * Heading level, 1–6 (from h1–h6).
+     * Heading level, from 1 (`h1`) to 6 (`h6`).
      */
     #[Required]
     public int $level;
@@ -63,7 +63,7 @@ final class Heading implements BaseModel
     }
 
     /**
-     * Heading level, 1–6 (from h1–h6).
+     * Heading level, from 1 (`h1`) to 6 (`h6`).
      */
     public function withLevel(int $level): self
     {

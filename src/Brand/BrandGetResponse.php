@@ -33,19 +33,19 @@ final class BrandGetResponse implements BaseModel
     use SdkModel;
 
     /**
-     * Detailed brand information.
+     * The brand's identity, visual assets, and company details.
      */
     #[Required]
     public Brand $brand;
 
     /**
-     * Whether this response came from cache.
+     * Cache status of this response.
      */
     #[Required('cache_metadata')]
     public CacheMetadata $cacheMetadata;
 
     /**
-     * HTTP status code.
+     * HTTP status code. Always `200` on success.
      */
     #[Required]
     public int $code;
@@ -69,7 +69,7 @@ final class BrandGetResponse implements BaseModel
     public ?KeyMetadata $keyMetadata;
 
     /**
-     * True when the timeout ended processing and this response contains the usable data completed so far. Unfinished fields are omitted.
+     * `true` when the `timeoutOpts` deadline ended processing early. The response holds the data completed so far; unfinished fields are omitted.
      */
     #[Optional]
     public ?bool $partial;
@@ -133,7 +133,7 @@ final class BrandGetResponse implements BaseModel
     }
 
     /**
-     * Detailed brand information.
+     * The brand's identity, visual assets, and company details.
      *
      * @param Brand|BrandShape $brand
      */
@@ -146,7 +146,7 @@ final class BrandGetResponse implements BaseModel
     }
 
     /**
-     * Whether this response came from cache.
+     * Cache status of this response.
      *
      * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      */
@@ -159,7 +159,7 @@ final class BrandGetResponse implements BaseModel
     }
 
     /**
-     * HTTP status code.
+     * HTTP status code. Always `200` on success.
      */
     public function withCode(int $code): self
     {
@@ -205,7 +205,7 @@ final class BrandGetResponse implements BaseModel
     }
 
     /**
-     * True when the timeout ended processing and this response contains the usable data completed so far. Unfinished fields are omitted.
+     * `true` when the `timeoutOpts` deadline ended processing early. The response holds the data completed so far; unfinished fields are omitted.
      */
     public function withPartial(bool $partial): self
     {

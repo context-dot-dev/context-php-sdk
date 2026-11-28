@@ -13,7 +13,7 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\Browser\ProfilesRawContract;
 
 /**
- * See the authenticated browser profiles your organization created.
+ * List the authenticated browser profiles your organization created.
  *
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
@@ -28,7 +28,7 @@ final class ProfilesRawService implements ProfilesRawContract
     /**
      * @api
      *
-     * List the browser profiles your organization created with `/web/scrape`, newest first.
+     * List the browser profiles your organization saved through `POST /web/scrape`, newest first. Pass a profile `id` as `sharedParams.profile.profileId` to scrape as that signed-in user.
      *
      * @param array{cursor?: string, limit?: int}|ProfileListParams $params
      * @param RequestOpts|null $requestOptions

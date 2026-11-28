@@ -28,7 +28,7 @@ final class Data implements BaseModel
     public bool $isProductPage;
 
     /**
-     * The extracted product, or null when the page is not a product detail page.
+     * The extracted product. `null` when the page is not a product detail page.
      */
     #[Required]
     public ?Product $product;
@@ -83,7 +83,7 @@ final class Data implements BaseModel
     }
 
     /**
-     * The extracted product, or null when the page is not a product detail page.
+     * The extracted product. `null` when the page is not a product detail page.
      *
      * @param Product|ProductShape|null $product
      */

@@ -18,13 +18,13 @@ final class Batch implements BaseModel
     use SdkModel;
 
     /**
-     * Batch ID.
+     * ID of the batch.
      */
     #[Required('batch_id')]
     public string $batchID;
 
     /**
-     * Which deliveries to list: `batch` or `monitor`.
+     * The event came from a batch.
      *
      * @var value-of<Type> $type
      */
@@ -68,7 +68,7 @@ final class Batch implements BaseModel
     }
 
     /**
-     * Batch ID.
+     * ID of the batch.
      */
     public function withBatchID(string $batchID): self
     {
@@ -79,7 +79,7 @@ final class Batch implements BaseModel
     }
 
     /**
-     * Which deliveries to list: `batch` or `monitor`.
+     * The event came from a batch.
      *
      * @param Type|value-of<Type> $type
      */

@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Identify the company by International Securities Identification Number.
+ * Identify the company by International Securities Identification Number (ISIN).
  *
  * @phpstan-type NewsSearchEntityByIsinShape = array{isin: string, type: 'isin'}
  */
@@ -19,7 +19,7 @@ final class NewsSearchEntityByIsin implements BaseModel
     use SdkModel;
 
     /**
-     * Use `isin` to identify the company by its securities identifier.
+     * Set to `isin` to identify the company by its International Securities Identification Number.
      *
      * @var 'isin' $type
      */
@@ -27,7 +27,7 @@ final class NewsSearchEntityByIsin implements BaseModel
     public string $type = 'isin';
 
     /**
-     * International Securities Identification Number.
+     * International Securities Identification Number, such as `US0378331005`.
      */
     #[Required]
     public string $isin;
@@ -66,7 +66,7 @@ final class NewsSearchEntityByIsin implements BaseModel
     }
 
     /**
-     * International Securities Identification Number.
+     * International Securities Identification Number, such as `US0378331005`.
      */
     public function withIsin(string $isin): self
     {
@@ -77,7 +77,7 @@ final class NewsSearchEntityByIsin implements BaseModel
     }
 
     /**
-     * Use `isin` to identify the company by its securities identifier.
+     * Set to `isin` to identify the company by its International Securities Identification Number.
      *
      * @param 'isin' $type
      */

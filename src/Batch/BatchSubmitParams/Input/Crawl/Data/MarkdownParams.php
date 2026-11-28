@@ -11,7 +11,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Markdown options. Requires `formats.markdown`.
+ * Options for the `markdown` output. Requires `formats.markdown: true`.
  *
  * @phpstan-type MarkdownParamsShape = array{
  *   includeImages?: bool|null,
@@ -26,7 +26,7 @@ final class MarkdownParams implements BaseModel
     use SdkModel;
 
     /**
-     * Include images in the Markdown (`html-conversion` only).
+     * Include image references in the Markdown (`html-conversion` only).
      */
     #[Optional]
     public ?bool $includeImages;
@@ -38,7 +38,7 @@ final class MarkdownParams implements BaseModel
     public ?bool $includeLinks;
 
     /**
-     * How base64 images appear when `includeImages` is set (`html-conversion` only).
+     * How to write base64 images when `includeImages` is `true`: `placeholder` shortens the data, `preserve` keeps it in full (`html-conversion` only).
      *
      * @var value-of<InlineImages>|null $inlineImages
      */
@@ -83,7 +83,7 @@ final class MarkdownParams implements BaseModel
     }
 
     /**
-     * Include images in the Markdown (`html-conversion` only).
+     * Include image references in the Markdown (`html-conversion` only).
      */
     public function withIncludeImages(bool $includeImages): self
     {
@@ -105,7 +105,7 @@ final class MarkdownParams implements BaseModel
     }
 
     /**
-     * How base64 images appear when `includeImages` is set (`html-conversion` only).
+     * How to write base64 images when `includeImages` is `true`: `placeholder` shortens the data, `preserve` keeps it in full (`html-conversion` only).
      *
      * @param InlineImages|value-of<InlineImages> $inlineImages
      */

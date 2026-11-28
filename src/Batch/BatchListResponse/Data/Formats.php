@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Outputs requested for each page. Matches input.data.formats on submission.
+ * Formats requested for each page, as submitted in `input.data.formats`.
  *
  * @phpstan-type FormatsShape = array{
  *   bytes?: bool|null,
@@ -29,55 +29,55 @@ final class Formats implements BaseModel
     use SdkModel;
 
     /**
-     * The original HTTP response body.
+     * Return the original HTTP response body.
      */
     #[Optional]
     public ?bool $bytes;
 
     /**
-     * Markdown excerpts relevant to `highlightsParams.query`.
+     * Return Markdown excerpts relevant to `highlightsParams.query`.
      */
     #[Optional]
     public ?bool $highlights;
 
     /**
-     * Rendered HTML.
+     * Return the rendered HTML.
      */
     #[Optional]
     public ?bool $html;
 
     /**
-     * Images found on the page.
+     * Return the images found on the page.
      */
     #[Optional]
     public ?bool $images;
 
     /**
-     * An object matching `jsonParams.schema`, extracted from the page text and its embedded data (JSON-LD, meta tags, framework state).
+     * Return an object matching `jsonParams.schema`, extracted from the page text and embedded data such as JSON-LD, meta tags, and framework state.
      */
     #[Optional]
     public ?bool $json;
 
     /**
-     * Page content or video transcript as Markdown.
+     * Return the page content, or a video transcript, as Markdown.
      */
     #[Optional]
     public ?bool $markdown;
 
     /**
-     * Fields extracted with custom rules or a prebuilt parser, returned as `parsed`.
+     * Return fields extracted with custom rules or a prebuilt parser, as `parsed`.
      */
     #[Optional]
     public ?bool $parse;
 
     /**
-     * Product details such as name, price, and availability.
+     * Return product details such as name, price, and availability.
      */
     #[Optional]
     public ?bool $product;
 
     /**
-     * A screenshot of the page.
+     * Return a screenshot of the page.
      */
     #[Optional]
     public ?bool $screenshot;
@@ -119,7 +119,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * The original HTTP response body.
+     * Return the original HTTP response body.
      */
     public function withBytes(bool $bytes): self
     {
@@ -130,7 +130,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * Markdown excerpts relevant to `highlightsParams.query`.
+     * Return Markdown excerpts relevant to `highlightsParams.query`.
      */
     public function withHighlights(bool $highlights): self
     {
@@ -141,7 +141,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * Rendered HTML.
+     * Return the rendered HTML.
      */
     public function withHTML(bool $html): self
     {
@@ -152,7 +152,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * Images found on the page.
+     * Return the images found on the page.
      */
     public function withImages(bool $images): self
     {
@@ -163,7 +163,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * An object matching `jsonParams.schema`, extracted from the page text and its embedded data (JSON-LD, meta tags, framework state).
+     * Return an object matching `jsonParams.schema`, extracted from the page text and embedded data such as JSON-LD, meta tags, and framework state.
      */
     public function withJson(bool $json): self
     {
@@ -174,7 +174,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * Page content or video transcript as Markdown.
+     * Return the page content, or a video transcript, as Markdown.
      */
     public function withMarkdown(bool $markdown): self
     {
@@ -185,7 +185,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * Fields extracted with custom rules or a prebuilt parser, returned as `parsed`.
+     * Return fields extracted with custom rules or a prebuilt parser, as `parsed`.
      */
     public function withParse(bool $parse): self
     {
@@ -196,7 +196,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * Product details such as name, price, and availability.
+     * Return product details such as name, price, and availability.
      */
     public function withProduct(bool $product): self
     {
@@ -207,7 +207,7 @@ final class Formats implements BaseModel
     }
 
     /**
-     * A screenshot of the page.
+     * Return a screenshot of the page.
      */
     public function withScreenshot(bool $screenshot): self
     {

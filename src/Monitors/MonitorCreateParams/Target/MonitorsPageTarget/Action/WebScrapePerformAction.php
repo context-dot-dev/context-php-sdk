@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Resolve and perform one natural-language browser action.
+ * Perform one browser instruction written in plain language.
  *
  * @phpstan-type WebScrapePerformActionShape = array{action: string, do: 'perform'}
  */

@@ -16,6 +16,8 @@ use ContextDev\Utility\UtilityPrefetchParams\Type;
 use ContextDev\Utility\UtilityPrefetchResponse;
 
 /**
+ * Prefetch brand and styleguide data so later lookups return sooner.
+ *
  * @phpstan-import-type IdentifierShape from \ContextDev\Utility\UtilityPrefetchParams\Identifier
  * @phpstan-import-type TimeoutOptsShape from \ContextDev\Utility\UtilityPrefetchParams\TimeoutOpts
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
@@ -38,13 +40,13 @@ final class UtilityService implements UtilityContract
     /**
      * @api
      *
-     * Queue brand or styleguide data so a later lookup can return sooner.
+     * Start fetching a domain's brand or styleguide data in the background so a later lookup returns faster. Accepts a domain or a work email.
      *
-     * @param IdentifierShape $identifier Identifier of the target to prefetch. Provide exactly one of domain or email.
+     * @param IdentifierShape $identifier Domain or work email to prefetch. Provide exactly one.
      * @param Type|value-of<Type> $type data to prefetch
-     * @param list<string> $policies Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
-     * @param list<string> $tags labels for filtering usage in the dashboard
-     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts request deadline and what to return when it passes
+     * @param list<string> $policies Access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
+     * @param list<string> $tags Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
+     * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts Request deadline. The request fails with 408 when it passes.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

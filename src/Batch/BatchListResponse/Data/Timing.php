@@ -9,6 +9,8 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
+ * When the batch was created, started, and finished.
+ *
  * @phpstan-type TimingShape = array{
  *   completedAt: string|null, createdAt: string, startedAt: string|null
  * }
@@ -19,7 +21,7 @@ final class Timing implements BaseModel
     use SdkModel;
 
     /**
-     * When processing finished. Null while active.
+     * When the batch reached a final status. `null` until then.
      */
     #[Required('completed_at')]
     public ?string $completedAt;
@@ -31,7 +33,7 @@ final class Timing implements BaseModel
     public string $createdAt;
 
     /**
-     * When processing started. Null while queued.
+     * When scraping started. `null` until the batch is `running`.
      */
     #[Required('started_at')]
     public ?string $startedAt;
@@ -75,7 +77,7 @@ final class Timing implements BaseModel
     }
 
     /**
-     * When processing finished. Null while active.
+     * When the batch reached a final status. `null` until then.
      */
     public function withCompletedAt(?string $completedAt): self
     {
@@ -97,7 +99,7 @@ final class Timing implements BaseModel
     }
 
     /**
-     * When processing started. Null while queued.
+     * When scraping started. `null` until the batch is `running`.
      */
     public function withStartedAt(?string $startedAt): self
     {

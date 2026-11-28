@@ -40,7 +40,7 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\MonitorsContract;
 
 /**
- * Watch websites for exact or meaningful changes.
+ * Watch websites on a schedule for exact or meaningful changes.
  *
  * @phpstan-import-type TargetShape from \ContextDev\Monitors\MonitorCreateParams\Target
  * @phpstan-import-type ChangeDetectionShape from \ContextDev\Monitors\MonitorCreateParams\ChangeDetection
@@ -70,16 +70,16 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Watch a page, URL inventory, or extracted website data on a schedule. A run starts immediately to capture the baseline.
+     * Watch a web page, a sitemap, data extracted from a site, or web search results on a schedule, and get a webhook when something changes. Creating a monitor queues its baseline run right away.
      *
      * @param string $name display name for the monitor
      * @param TargetShape $target what to watch: a page, a sitemap, data extracted from a site, or web search results
-     * @param ChangeDetectionShape $changeDetection How changes are judged. Defaults to `semantic` for extract and search targets and page targets with `instructions`, otherwise `exact`.
-     * @param Mode|value-of<Mode> $mode Always `web`. Optional.
-     * @param list<string> $policies Access policy IDs to apply to every run. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
-     * @param Schedule|ScheduleShape $schedule Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
-     * @param list<string> $tags labels for filtering monitors, their changes, and their usage
-     * @param Webhook|WebhookShape|null $webhook Webhook destination and delivery settings. Null means no webhook is configured.
+     * @param ChangeDetectionShape $changeDetection How changes are judged. Defaults to `semantic` for extract and search targets and for page targets with `instructions`; otherwise `exact`. Sitemap targets support only `exact`, and extract targets only `semantic`.
+     * @param Mode|value-of<Mode> $mode Monitor category. Always `web`.
+     * @param list<string> $policies Access policy IDs to apply to every run. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
+     * @param Schedule|ScheduleShape $schedule Run the monitor at a fixed interval, such as every 6 hours or every 2 days. The interval must be between 10 minutes and 1 year.
+     * @param list<string> $tags Labels for grouping monitors. Filter monitors, changes, and credit usage by tag.
+     * @param Webhook|WebhookShape|null $webhook Webhook that receives monitor events. `null` when no webhook is configured.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -117,7 +117,7 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Retrieve a monitor’s configuration and current state.
+     * Retrieve a monitor's configuration, status, and current baseline.
      *
      * @param string $monitorID ID of the monitor
      * @param RequestOpts|null $requestOptions
@@ -137,17 +137,17 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Update a monitor. Changing its target or change detection replaces the baseline and queues a new baseline run.
+     * Change a monitor's settings, or pause and resume it. Changing the target or change detection replaces the baseline and queues a new baseline run.
      *
      * @param string $monitorID ID of the monitor
-     * @param ChangeDetectionShape1 $changeDetection How changes are judged. Defaults to `semantic` for extract and search targets and page targets with `instructions`, otherwise `exact`.
+     * @param ChangeDetectionShape1 $changeDetection How changes are judged. Defaults to `semantic` for extract and search targets and for page targets with `instructions`; otherwise `exact`. Sitemap targets support only `exact`, and extract targets only `semantic`.
      * @param string $name display name for the monitor
-     * @param list<string> $policies Access policy IDs to apply to every run. Send an empty list to remove them. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
-     * @param \ContextDev\Monitors\MonitorUpdateParams\Schedule|ScheduleShape1 $schedule Run the monitor on a fixed interval defined by a frequency and a unit, e.g. every 6 hours or every 2 days. The total interval (frequency × unit) must be between 10 minutes and 1 year.
-     * @param Status|value-of<Status> $status set `paused` to stop scheduled runs or `active` to resume them
-     * @param list<string> $tags labels for filtering monitors, their changes, and their usage
+     * @param list<string> $policies Access policy IDs to apply to every run, or an empty list to remove them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
+     * @param \ContextDev\Monitors\MonitorUpdateParams\Schedule|ScheduleShape1 $schedule Run the monitor at a fixed interval, such as every 6 hours or every 2 days. The interval must be between 10 minutes and 1 year.
+     * @param Status|value-of<Status> $status Set `paused` to stop scheduled runs or `active` to resume them. A resumed monitor runs promptly instead of waiting a full interval.
+     * @param list<string> $tags Labels for grouping monitors. Filter monitors, changes, and credit usage by tag.
      * @param TargetShape1 $target what to watch: a page, a sitemap, data extracted from a site, or web search results
-     * @param \ContextDev\Monitors\MonitorUpdateParams\Webhook|WebhookShape1|null $webhook Set to null to remove the webhook. Changing `url` issues a new secret.
+     * @param \ContextDev\Monitors\MonitorUpdateParams\Webhook|WebhookShape1|null $webhook Set to `null` to remove the webhook. Changing `url` generates a new secret.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -186,16 +186,16 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * List your monitors with optional search and filters.
+     * List your monitors, newest first. Search by name, URL, or instructions, and filter by status, target type, detection type, or tags.
      *
      * @param ChangeDetectionType|value-of<ChangeDetectionType> $changeDetectionType filter by change detection type
-     * @param string $cursor opaque pagination cursor from a previous response
-     * @param int $limit Maximum number of items to return per page (1-100). Defaults to 25.
-     * @param string $q free-text search term, matched against the fields named in `search_by`
-     * @param list<SearchBy|value-of<SearchBy>>|null $searchBy Fields to search with `q`. Defaults to all fields; page, extract, and search targets can have instructions, and `url` matches a search target’s query.
-     * @param SearchType|value-of<SearchType> $searchType `prefix` for as-you-type prefix matching (default), `exact` for full-token matching
-     * @param \ContextDev\Monitors\MonitorListParams\Status|value-of<\ContextDev\Monitors\MonitorListParams\Status> $status filter monitors by lifecycle status
-     * @param list<string>|null $tags comma-separated list of tags to filter by (matches monitors having any of them)
+     * @param string $cursor Cursor from the previous page's `next_cursor`. Omit for the first page.
+     * @param int $limit Maximum number of monitors to return per page. Defaults to 25.
+     * @param string $q text to search for in the fields listed in `search_by`
+     * @param list<SearchBy|value-of<SearchBy>>|null $searchBy Comma-separated fields to search with `q`. Defaults to all fields. For search targets, `url` matches the target's `query`.
+     * @param SearchType|value-of<SearchType> $searchType How `q` matches. `prefix` matches the start of words and tolerates one typo, for search as you type; `exact` matches whole words only. Defaults to `prefix`.
+     * @param \ContextDev\Monitors\MonitorListParams\Status|value-of<\ContextDev\Monitors\MonitorListParams\Status> $status filter by monitor status
+     * @param list<string>|null $tags Comma-separated tags. Returns monitors that have any of them.
      * @param TargetType|value-of<TargetType> $targetType filter by target type
      * @param RequestOpts|null $requestOptions
      *
@@ -236,7 +236,7 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Delete a monitor and stop future runs and webhook retries.
+     * Delete a monitor along with its runs, changes, and baseline. Future runs and pending webhook retries stop.
      *
      * @param string $monitorID ID of the monitor
      * @param RequestOpts|null $requestOptions
@@ -256,11 +256,11 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Return usage per monitor, highest first, for up to the 10,000 most recent runs in the requested window. Pass `tag` to report only the monitors that carry that tag, such as one customer’s monitors.
+     * List credits charged per monitor, highest first, from up to the 10,000 most recent runs in the time window. Pass `tag` to report on one group of monitors, such as a single customer's.
      *
-     * @param \DateTimeInterface $since only include items at or after this ISO 8601 timestamp
-     * @param string $tag Only include monitors that currently have this tag. Deleted monitors are left out.
-     * @param \DateTimeInterface $until only include items before this ISO 8601 timestamp
+     * @param \DateTimeInterface $since count only runs created at or after this time
+     * @param string $tag Return usage only for monitors that currently have this tag. Deleted monitors are excluded.
+     * @param \DateTimeInterface $until count only runs created at or before this time
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -284,7 +284,7 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Retrieve your organization’s monitor allowance and usage.
+     * Retrieve how many monitors your organization has and how many your plan allows.
      *
      * @param RequestOpts|null $requestOptions
      *
@@ -302,16 +302,16 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * List full change records across your monitors, newest first.
+     * List detected changes across all your monitors, newest first. Filter by monitor, target type, detection type, tag, or time range.
      *
      * @param \ContextDev\Monitors\MonitorListAccountChangesParams\ChangeDetectionType|value-of<\ContextDev\Monitors\MonitorListAccountChangesParams\ChangeDetectionType> $changeDetectionType filter by change detection type
-     * @param string $cursor opaque pagination cursor from a previous response
-     * @param int $limit Maximum number of items to return per page (1-100). Defaults to 25.
-     * @param string $monitorID filter changes to a single monitor
-     * @param \DateTimeInterface $since only include items at or after this ISO 8601 timestamp
-     * @param string $tag filter to items that have this tag
+     * @param string $cursor Cursor from the previous page's `next_cursor`. Omit for the first page.
+     * @param int $limit Maximum number of changes to return per page. Defaults to 25.
+     * @param string $monitorID return only changes from this monitor
+     * @param \DateTimeInterface $since return only changes detected at or after this time
+     * @param string $tag return only changes that have this tag
      * @param \ContextDev\Monitors\MonitorListAccountChangesParams\TargetType|value-of<\ContextDev\Monitors\MonitorListAccountChangesParams\TargetType> $targetType filter by target type
-     * @param \DateTimeInterface $until only include items before this ISO 8601 timestamp
+     * @param \DateTimeInterface $until return only changes detected at or before this time
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -349,11 +349,11 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * List runs across your monitors, newest first.
+     * List runs across all your monitors, newest first.
      *
-     * @param string $cursor opaque pagination cursor from a previous response
-     * @param int $limit Maximum number of items to return per page (1-100). Defaults to 25.
-     * @param \ContextDev\Monitors\MonitorListAccountRunsParams\Status|value-of<\ContextDev\Monitors\MonitorListAccountRunsParams\Status> $status filter runs by lifecycle status
+     * @param string $cursor Cursor from the previous page's `next_cursor`. Omit for the first page.
+     * @param int $limit Maximum number of runs to return per page. Defaults to 25.
+     * @param \ContextDev\Monitors\MonitorListAccountRunsParams\Status|value-of<\ContextDev\Monitors\MonitorListAccountRunsParams\Status> $status filter by run status
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -377,14 +377,14 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * List full change records for a monitor, newest first.
+     * List a monitor's detected changes, newest first. Each change includes its full diff and evidence.
      *
      * @param string $monitorID ID of the monitor
-     * @param string $cursor opaque pagination cursor from a previous response
-     * @param int $limit Maximum number of items to return per page (1-100). Defaults to 25.
-     * @param \DateTimeInterface $since only include items at or after this ISO 8601 timestamp
-     * @param string $tag filter to items that have this tag
-     * @param \DateTimeInterface $until only include items before this ISO 8601 timestamp
+     * @param string $cursor Cursor from the previous page's `next_cursor`. Omit for the first page.
+     * @param int $limit Maximum number of changes to return per page. Defaults to 25.
+     * @param \DateTimeInterface $since return only changes detected at or after this time
+     * @param string $tag return only changes that have this tag
+     * @param \DateTimeInterface $until return only changes detected at or before this time
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -417,12 +417,12 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * List a monitor’s runs, newest first.
+     * List a monitor's runs, newest first.
      *
      * @param string $monitorID ID of the monitor
-     * @param string $cursor opaque pagination cursor from a previous response
-     * @param int $limit Maximum number of items to return per page (1-100). Defaults to 25.
-     * @param \ContextDev\Monitors\MonitorListRunsParams\Status|value-of<\ContextDev\Monitors\MonitorListRunsParams\Status> $status filter runs by lifecycle status
+     * @param string $cursor Cursor from the previous page's `next_cursor`. Omit for the first page.
+     * @param int $limit Maximum number of runs to return per page. Defaults to 25.
+     * @param \ContextDev\Monitors\MonitorListRunsParams\Status|value-of<\ContextDev\Monitors\MonitorListRunsParams\Status> $status filter by run status
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -447,9 +447,9 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Retrieve a detected change, including its diff and available evidence.
+     * Retrieve a detected change with its summary, diff, URLs, and evidence.
      *
-     * @param string $changeID ID of the detected change
+     * @param string $changeID ID of the change
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -467,9 +467,9 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Retrieve the status, timing, and results of one monitor run.
+     * Retrieve a run's status, timing, credit charge, and webhook deliveries. If the run found a change, `change_id` points to it.
      *
-     * @param string $runID ID of the monitor run
+     * @param string $runID ID of the run
      * @param string $monitorID ID of the monitor
      * @param RequestOpts|null $requestOptions
      *
@@ -491,7 +491,7 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Generate and return a new signing secret. It takes effect immediately for all subsequent delivery attempts.
+     * Replace the monitor's webhook signing secret. The new secret signs every delivery attempt from now on, including retries.
      *
      * @param string $monitorID ID of the monitor
      * @param RequestOpts|null $requestOptions
@@ -511,7 +511,7 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Queue a run without changing the regular schedule. Paused monitors return 409.
+     * Queue a run now without changing the monitor's schedule. Returns the run ID to poll. Paused monitors return `409`.
      *
      * @param string $monitorID ID of the monitor
      * @param RequestOpts|null $requestOptions

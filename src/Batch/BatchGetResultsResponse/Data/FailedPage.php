@@ -11,7 +11,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * A page the batch could not fetch.
+ * A page that could not be scraped.
  *
  * @phpstan-import-type ResultShape from \ContextDev\Batch\BatchGetResultsResponse\Data\FailedPage\Result
  *
@@ -41,13 +41,13 @@ final class FailedPage implements BaseModel
     public string $status = 'error';
 
     /**
-     * Why the page failed.
+     * Machine-readable error code, such as `NOT_FOUND`.
      */
     #[Required('error_code')]
     public string $errorCode;
 
     /**
-     * Human-readable failure detail.
+     * Human-readable explanation of the error.
      */
     #[Required]
     public string $message;
@@ -59,19 +59,19 @@ final class FailedPage implements BaseModel
     public string $url;
 
     /**
-     * Credits charged for this page, including OCR. Cached outputs use the same pricing as POST /web/scrape.
+     * Credits charged for this page, including OCR. Cached results are priced the same as in `POST /web/scrape`.
      */
     #[Optional('credits_used')]
     public ?int $creditsUsed;
 
     /**
-     * Your `itemId` from submission.
+     * The `itemId` you submitted with this URL.
      */
     #[Optional('itemId')]
     public ?string $itemID;
 
     /**
-     * Caller-supplied metadata echoed from submission.
+     * The `meta` you submitted with this URL.
      *
      * @var array<string,mixed>|null $meta
      */
@@ -79,13 +79,13 @@ final class FailedPage implements BaseModel
     public ?array $meta;
 
     /**
-     * PDF pages recovered by OCR. Omitted when OCR did not run.
+     * Number of PDF pages read with OCR. Omitted when OCR did not run.
      */
     #[Optional('ocr_pages')]
     public ?int $ocrPages;
 
     /**
-     * Per-format failures when scraping returned a structured response. Omitted for errors that prevent scraping.
+     * Per-format errors, when the scrape returned a response. Omitted when the page could not be scraped at all.
      */
     #[Optional]
     public ?Result $result;
@@ -143,7 +143,7 @@ final class FailedPage implements BaseModel
     }
 
     /**
-     * Why the page failed.
+     * Machine-readable error code, such as `NOT_FOUND`.
      */
     public function withErrorCode(string $errorCode): self
     {
@@ -154,7 +154,7 @@ final class FailedPage implements BaseModel
     }
 
     /**
-     * Human-readable failure detail.
+     * Human-readable explanation of the error.
      */
     public function withMessage(string $message): self
     {
@@ -189,7 +189,7 @@ final class FailedPage implements BaseModel
     }
 
     /**
-     * Credits charged for this page, including OCR. Cached outputs use the same pricing as POST /web/scrape.
+     * Credits charged for this page, including OCR. Cached results are priced the same as in `POST /web/scrape`.
      */
     public function withCreditsUsed(int $creditsUsed): self
     {
@@ -200,7 +200,7 @@ final class FailedPage implements BaseModel
     }
 
     /**
-     * Your `itemId` from submission.
+     * The `itemId` you submitted with this URL.
      */
     public function withItemID(string $itemID): self
     {
@@ -211,7 +211,7 @@ final class FailedPage implements BaseModel
     }
 
     /**
-     * Caller-supplied metadata echoed from submission.
+     * The `meta` you submitted with this URL.
      *
      * @param array<string,mixed> $meta
      */
@@ -224,7 +224,7 @@ final class FailedPage implements BaseModel
     }
 
     /**
-     * PDF pages recovered by OCR. Omitted when OCR did not run.
+     * Number of PDF pages read with OCR. Omitted when OCR did not run.
      */
     public function withOcrPages(int $ocrPages): self
     {
@@ -235,7 +235,7 @@ final class FailedPage implements BaseModel
     }
 
     /**
-     * Per-format failures when scraping returned a structured response. Omitted for errors that prevent scraping.
+     * Per-format errors, when the scrape returned a response. Omitted when the page could not be scraped at all.
      *
      * @param Result|ResultShape $result
      */

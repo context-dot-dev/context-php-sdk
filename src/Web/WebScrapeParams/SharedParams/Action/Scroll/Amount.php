@@ -10,7 +10,7 @@ use ContextDev\Core\Conversion\Contracts\ConverterSource;
 use ContextDev\Web\WebScrapeParams\SharedParams\Action\Scroll\Amount\UnionMember1;
 
 /**
- * Distance per scroll: pixels, one `viewport`, or `max` to reach the end.
+ * Distance per scroll step: a number of pixels, one `viewport`, or `max` to reach the end.
  *
  * @phpstan-type AmountVariants = int|value-of<UnionMember1>
  * @phpstan-type AmountShape = AmountVariants

@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Batch credit usage and settlement.
+ * Credits reserved, refunded, and charged for the batch.
  *
  * @phpstan-type CreditsShape = array{
  *   net: int, ocrCharged: int, refunded: int, reserved: int
@@ -27,19 +27,19 @@ final class Credits implements BaseModel
     public int $net;
 
     /**
-     * OCR usage charged when the batch settles.
+     * Credits charged for OCR when the batch finishes.
      */
     #[Required('ocr_charged')]
     public int $ocrCharged;
 
     /**
-     * Credits returned for unsuccessful pages when the batch settles.
+     * Credits returned when the batch finishes, such as for failed or unattempted pages.
      */
     #[Required]
     public int $refunded;
 
     /**
-     * Credits held by background preparation before scraping starts. Zero while pending.
+     * Credits reserved before scraping starts. `0` while `pending`.
      */
     #[Required]
     public int $reserved;
@@ -100,7 +100,7 @@ final class Credits implements BaseModel
     }
 
     /**
-     * OCR usage charged when the batch settles.
+     * Credits charged for OCR when the batch finishes.
      */
     public function withOcrCharged(int $ocrCharged): self
     {
@@ -111,7 +111,7 @@ final class Credits implements BaseModel
     }
 
     /**
-     * Credits returned for unsuccessful pages when the batch settles.
+     * Credits returned when the batch finishes, such as for failed or unattempted pages.
      */
     public function withRefunded(int $refunded): self
     {
@@ -122,7 +122,7 @@ final class Credits implements BaseModel
     }
 
     /**
-     * Credits held by background preparation before scraping starts. Zero while pending.
+     * Credits reserved before scraping starts. `0` while `pending`.
      */
     public function withReserved(int $reserved): self
     {

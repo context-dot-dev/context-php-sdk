@@ -28,19 +28,19 @@ final class MonitorGetLimitsResponse implements BaseModel
     use SdkModel;
 
     /**
-     * Most monitors you can have: your plan's allowance or a custom limit.
+     * Maximum number of monitors your organization can have, from your plan or a custom limit.
      */
     #[Required('monitors_limit')]
     public int $monitorsLimit;
 
     /**
-     * Number of monitors the account currently has.
+     * Number of monitors your organization has.
      */
     #[Required('monitors_used')]
     public int $monitorsUsed;
 
     /**
-     * `starter` means Developer; `pro` means Pro or Growth; `scale` means Scale or Enterprise.
+     * Your plan tier. `free` is Free, `starter` is Developer, `pro` is Pro or Growth, and `scale` is Scale or Enterprise.
      *
      * @var value-of<Plan> $plan
      */
@@ -112,7 +112,7 @@ final class MonitorGetLimitsResponse implements BaseModel
     }
 
     /**
-     * Most monitors you can have: your plan's allowance or a custom limit.
+     * Maximum number of monitors your organization can have, from your plan or a custom limit.
      */
     public function withMonitorsLimit(int $monitorsLimit): self
     {
@@ -123,7 +123,7 @@ final class MonitorGetLimitsResponse implements BaseModel
     }
 
     /**
-     * Number of monitors the account currently has.
+     * Number of monitors your organization has.
      */
     public function withMonitorsUsed(int $monitorsUsed): self
     {
@@ -134,7 +134,7 @@ final class MonitorGetLimitsResponse implements BaseModel
     }
 
     /**
-     * `starter` means Developer; `pro` means Pro or Growth; `scale` means Scale or Enterprise.
+     * Your plan tier. `free` is Free, `starter` is Developer, `pro` is Pro or Growth, and `scale` is Scale or Enterprise.
      *
      * @param Plan|value-of<Plan> $plan
      */

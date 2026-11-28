@@ -15,7 +15,7 @@ use ContextDev\Core\Concerns\SdkParams;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Scrape up to 100,000 URLs, or crawl a site, asynchronously using the same formats and scrape parameters as POST /web/scrape. Choose Markdown, HTML, screenshots, images, bytes, parsed fields, products, highlights, and JSON. Submission persists the input and returns immediately with status pending. Organizations with fewer than 10 available credits and no overage are rejected with 402 up front. Each organization can submit up to 2,500 batches per minute, independently of its polling budget. Batches wait pending when execution capacity is full. Validation, sitemap discovery, the full credit quote, and shard scheduling happen afterward. Poll the batch ID or receive a webhook when it finishes. Deferred rejections appear as status failed with a failure code and message.
+ * Scrape up to 100,000 URLs, or crawl a site, asynchronously with every Scrape Anything format and option from `POST /web/scrape`. Poll `GET /batch/{batch_id}` or pass `webhook` to be notified when the batch finishes. URLs and credits are checked after the batch is accepted, so a batch that fails those checks ends as `failed` with a `failure` code instead of returning an error.
  *
  * @see ContextDev\Services\BatchService::submit()
  *
@@ -38,7 +38,7 @@ final class BatchSubmitParams implements BaseModel
     use SdkParams;
 
     /**
-     * Choose a URL list or a site crawl.
+     * What to scrape: a list of URLs (`scrape`) or a site crawl (`crawl`).
      *
      * @var InputVariants $input
      */
@@ -46,7 +46,7 @@ final class BatchSubmitParams implements BaseModel
     public Scrape|Crawl $input;
 
     /**
-     * Access policy IDs to apply to every page. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Access policy IDs to apply to every page; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @var list<string>|null $policies
      */
@@ -54,7 +54,7 @@ final class BatchSubmitParams implements BaseModel
     public ?array $policies;
 
     /**
-     * Tags stored on the batch. Filter the batch list by them later.
+     * Tags to store on the batch. Filter `GET /batch/list` by them later.
      *
      * @var list<string>|null $tags
      */
@@ -62,13 +62,13 @@ final class BatchSubmitParams implements BaseModel
     public ?array $tags;
 
     /**
-     * Where to send the batch's final-status event. Omit `retry` for one attempt; `{}` uses the default retry schedule.
+     * Webhook to notify when the batch finishes. Omit `retry` for a single attempt, or pass `retry: {}` for the default retry schedule.
      */
     #[Optional]
     public ?Webhook $webhook;
 
     /**
-     * Unique key per submission. Retrying with the same key and body returns the original batch; a different body returns `409`.
+     * Unique key for this submission. Retrying with the same key and body returns the original batch instead of creating another; a different body returns `409`.
      */
     #[Optional]
     public ?string $idempotencyKey;
@@ -122,7 +122,7 @@ final class BatchSubmitParams implements BaseModel
     }
 
     /**
-     * Choose a URL list or a site crawl.
+     * What to scrape: a list of URLs (`scrape`) or a site crawl (`crawl`).
      *
      * @param InputShape $input
      */
@@ -135,7 +135,7 @@ final class BatchSubmitParams implements BaseModel
     }
 
     /**
-     * Access policy IDs to apply to every page. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Access policy IDs to apply to every page; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @param list<string> $policies
      */
@@ -148,7 +148,7 @@ final class BatchSubmitParams implements BaseModel
     }
 
     /**
-     * Tags stored on the batch. Filter the batch list by them later.
+     * Tags to store on the batch. Filter `GET /batch/list` by them later.
      *
      * @param list<string> $tags
      */
@@ -161,7 +161,7 @@ final class BatchSubmitParams implements BaseModel
     }
 
     /**
-     * Where to send the batch's final-status event. Omit `retry` for one attempt; `{}` uses the default retry schedule.
+     * Webhook to notify when the batch finishes. Omit `retry` for a single attempt, or pass `retry: {}` for the default retry schedule.
      *
      * @param Webhook|WebhookShape $webhook
      */
@@ -174,7 +174,7 @@ final class BatchSubmitParams implements BaseModel
     }
 
     /**
-     * Unique key per submission. Retrying with the same key and body returns the original batch; a different body returns `409`.
+     * Unique key for this submission. Retrying with the same key and body returns the original batch instead of creating another; a different body returns `409`.
      */
     public function withIdempotencyKey(string $idempotencyKey): self
     {

@@ -22,7 +22,7 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\BatchContract;
 
 /**
- * Scrape many pages or crawl a site asynchronously.
+ * Scrape up to 100,000 URLs or crawl a site asynchronously.
  *
  * @phpstan-import-type TagsShape from \ContextDev\Batch\BatchListParams\Tags
  * @phpstan-import-type InputShape from \ContextDev\Batch\BatchSubmitParams\Input
@@ -47,9 +47,9 @@ final class BatchService implements BatchContract
     /**
      * @api
      *
-     * Get batch progress and result download links. Result files are deleted 180 days after the batch finishes.
+     * Retrieve a batch's status, progress, and credit usage, plus links to download its results once it finishes. Result files are deleted 180 days after the batch finishes.
      *
-     * @param string $batchID batch ID
+     * @param string $batchID ID of the batch
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -67,14 +67,14 @@ final class BatchService implements BatchContract
     /**
      * @api
      *
-     * List your batches, newest first, with optional filters.
+     * List your batches, newest first. Filter by status or tags, or search by batch ID, crawl source, or tag.
      *
-     * @param string $cursor cursor from the previous page
-     * @param int $limit Batches per page. Defaults to 25.
-     * @param string $q free-text search term, matched against the batch id, crawl source (start URL or sitemap domain), and tags
-     * @param SearchType|value-of<SearchType> $searchType `prefix` for as-you-type prefix matching (default), `exact` for full-token matching
-     * @param Status|value-of<Status> $status filter by status
-     * @param TagsShape $tags Tags to filter by (matches batches having any of them). Pass repeated `tags` params or one comma-separated list, e.g. `tags=docs,competitor`.
+     * @param string $cursor Cursor from the previous page's `next_cursor`. Omit for the first page.
+     * @param int $limit maximum number of batches to return per page
+     * @param string $q search term matched against batch IDs, crawl sources (start URL or sitemap domain), and tags
+     * @param SearchType|value-of<SearchType> $searchType How `q` matches: `prefix` matches the start of a term, for search-as-you-type, and `exact` matches whole terms. Defaults to `prefix`.
+     * @param Status|value-of<Status> $status filter by batch status
+     * @param TagsShape $tags Comma-separated tags. Returns batches that have any of them. You can also repeat the `tags` parameter.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -110,7 +110,7 @@ final class BatchService implements BatchContract
      *
      * Permanently delete a finished batch and its results. Its webhook deliveries can no longer be retried.
      *
-     * @param string $batchID batch ID
+     * @param string $batchID ID of the batch
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -128,9 +128,9 @@ final class BatchService implements BatchContract
     /**
      * @api
      *
-     * Stop a batch from starting new pages. Pages already in progress finish before the batch becomes cancelled.
+     * Stop a batch from starting new pages. Pages already in progress finish, then the batch becomes `cancelled` and unused credits are refunded.
      *
-     * @param string $batchID batch ID
+     * @param string $batchID ID of the batch
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -148,11 +148,11 @@ final class BatchService implements BatchContract
     /**
      * @api
      *
-     * Page through a finished batch’s results as JSON. Each record contains result with the same outputs and per-format errors as POST /web/scrape. Results remain available for 180 days.
+     * Page through a finished batch's results as JSON. Each record's `result` has the same outputs and per-format errors as `POST /web/scrape`. Results are kept for 180 days after the batch finishes.
      *
-     * @param string $batchID batch ID
-     * @param string $cursor next_cursor from the previous page
-     * @param int $limit Records per page. Defaults to 25. A page can close early so its payload stays under ~8 MB; rely on next_cursor rather than counting records.
+     * @param string $batchID ID of the batch
+     * @param string $cursor Cursor from the previous page's `next_cursor`. Omit for the first page.
+     * @param int $limit Maximum number of results to return per page. A page can hold fewer to stay under about 8 MB, so page with `next_cursor` instead of counting records.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -174,13 +174,13 @@ final class BatchService implements BatchContract
     /**
      * @api
      *
-     * Scrape up to 100,000 URLs, or crawl a site, asynchronously using the same formats and scrape parameters as POST /web/scrape. Choose Markdown, HTML, screenshots, images, bytes, parsed fields, products, highlights, and JSON. Submission persists the input and returns immediately with status pending. Organizations with fewer than 10 available credits and no overage are rejected with 402 up front. Each organization can submit up to 2,500 batches per minute, independently of its polling budget. Batches wait pending when execution capacity is full. Validation, sitemap discovery, the full credit quote, and shard scheduling happen afterward. Poll the batch ID or receive a webhook when it finishes. Deferred rejections appear as status failed with a failure code and message.
+     * Scrape up to 100,000 URLs, or crawl a site, asynchronously with every Scrape Anything format and option from `POST /web/scrape`. Poll `GET /batch/{batch_id}` or pass `webhook` to be notified when the batch finishes. URLs and credits are checked after the batch is accepted, so a batch that fails those checks ends as `failed` with a `failure` code instead of returning an error.
      *
-     * @param InputShape $input body param: Choose a URL list or a site crawl
-     * @param list<string> $policies Body param: Access policy IDs to apply to every page. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
-     * @param list<string> $tags Body param: Tags stored on the batch. Filter the batch list by them later.
-     * @param Webhook|WebhookShape $webhook Body param: Where to send the batch's final-status event. Omit `retry` for one attempt; `{}` uses the default retry schedule.
-     * @param string $idempotencyKey Header param: Unique key per submission. Retrying with the same key and body returns the original batch; a different body returns `409`.
+     * @param InputShape $input body param: What to scrape: a list of URLs (`scrape`) or a site crawl (`crawl`)
+     * @param list<string> $policies Body param: Access policy IDs to apply to every page; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
+     * @param list<string> $tags Body param: Tags to store on the batch. Filter `GET /batch/list` by them later.
+     * @param Webhook|WebhookShape $webhook Body param: Webhook to notify when the batch finishes. Omit `retry` for a single attempt, or pass `retry: {}` for the default retry schedule.
+     * @param string $idempotencyKey Header param: Unique key for this submission. Retrying with the same key and body returns the original batch instead of creating another; a different body returns `409`.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

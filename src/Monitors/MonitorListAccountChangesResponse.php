@@ -28,13 +28,23 @@ final class MonitorListAccountChangesResponse implements BaseModel
     /** @use SdkModel<MonitorListAccountChangesResponseShape> */
     use SdkModel;
 
-    /** @var list<Data> $data */
+    /**
+     * Changes on this page.
+     *
+     * @var list<Data> $data
+     */
     #[Required(list: Data::class)]
     public array $data;
 
+    /**
+     * Whether more results are available after this page.
+     */
     #[Required('has_more')]
     public bool $hasMore;
 
+    /**
+     * Pass as `cursor` to fetch the next page. `null` on the last page.
+     */
     #[Required('next_cursor')]
     public ?string $nextCursor;
 
@@ -103,6 +113,8 @@ final class MonitorListAccountChangesResponse implements BaseModel
     }
 
     /**
+     * Changes on this page.
+     *
      * @param list<Data|DataShape> $data
      */
     public function withData(array $data): self
@@ -113,6 +125,9 @@ final class MonitorListAccountChangesResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Whether more results are available after this page.
+     */
     public function withHasMore(bool $hasMore): self
     {
         $self = clone $this;
@@ -121,6 +136,9 @@ final class MonitorListAccountChangesResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Pass as `cursor` to fetch the next page. `null` on the last page.
+     */
     public function withNextCursor(?string $nextCursor): self
     {
         $self = clone $this;

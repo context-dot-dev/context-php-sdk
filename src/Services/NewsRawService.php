@@ -15,7 +15,7 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\NewsRawContract;
 
 /**
- * Search live and historical news about a company.
+ * Search live and historical news by company or with a natural-language query.
  *
  * @phpstan-import-type SearchByShape from \ContextDev\News\NewsSearchParams\SearchBy
  * @phpstan-import-type FilterByShape from \ContextDev\News\NewsSearchParams\FilterBy
@@ -33,7 +33,7 @@ final class NewsRawService implements NewsRawContract
     /**
      * @api
      *
-     * Find news about a company by name, domain, ticker, or ISIN, or search all news with a natural-language query. Filter articles and continue through results with a cursor.
+     * Find news about a company by name, domain, ticker, or ISIN, or search all news with a natural-language query. Each article includes its publisher, type of coverage, and, for company searches, whether the company is the main subject. Narrow results by publisher, country, language, article type, or publish date.
      *
      * @param array{
      *   searchBy: SearchByShape,

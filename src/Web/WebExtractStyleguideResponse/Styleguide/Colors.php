@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Primary colors used on the website.
+ * Core colors used on the website.
  *
  * @phpstan-type ColorsShape = array{
  *   accent: string, background: string, text: string
@@ -21,19 +21,19 @@ final class Colors implements BaseModel
     use SdkModel;
 
     /**
-     * Accent color (hex format).
+     * Accent color, in hex.
      */
     #[Required]
     public string $accent;
 
     /**
-     * Background color (hex format).
+     * Background color, in hex.
      */
     #[Required]
     public string $background;
 
     /**
-     * Text color (hex format).
+     * Text color, in hex.
      */
     #[Required]
     public string $text;
@@ -77,7 +77,7 @@ final class Colors implements BaseModel
     }
 
     /**
-     * Accent color (hex format).
+     * Accent color, in hex.
      */
     public function withAccent(string $accent): self
     {
@@ -88,7 +88,7 @@ final class Colors implements BaseModel
     }
 
     /**
-     * Background color (hex format).
+     * Background color, in hex.
      */
     public function withBackground(string $background): self
     {
@@ -99,7 +99,7 @@ final class Colors implements BaseModel
     }
 
     /**
-     * Text color (hex format).
+     * Text color, in hex.
      */
     public function withText(string $text): self
     {

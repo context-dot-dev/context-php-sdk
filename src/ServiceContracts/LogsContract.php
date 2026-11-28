@@ -17,7 +17,7 @@ interface LogsContract
     /**
      * @api
      *
-     * @param string $requestID the request ID of the logged API call
+     * @param string $requestID ID of the request, from its response's `request_id` or `X-Request-Id` header
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -31,16 +31,16 @@ interface LogsContract
      * @api
      *
      * @param string $errorCode filter by the `error_code` returned in the response
-     * @param bool $errorsOnly only include requests that returned a 4xx or 5xx status
-     * @param \DateTimeInterface $from Only include requests at or after this ISO 8601 timestamp. Defaults to 24 hours before `to`.
-     * @param string $keyID filter by the API key that made the request
-     * @param int $limit number of log entries per page
+     * @param bool $errorsOnly return only requests that failed with a 4xx or 5xx status
+     * @param \DateTimeInterface $from Return requests at or after this time. Defaults to 24 hours before `to`.
+     * @param string $keyID filter by the ID of the API key that made the request
+     * @param int $limit maximum number of log entries to return per page
      * @param int $page page number, starting at 1
-     * @param string $path filter by endpoint path, with or without the /v1 prefix
-     * @param string $search Case-insensitive substring match against the request query and body, e.g. a domain.
+     * @param string $path filter by endpoint path, with or without the `/v1` prefix
+     * @param string $search case-insensitive text to find in the request query or body, such as a domain
      * @param int $statusCode filter by exact HTTP status code
-     * @param string $tags Comma-separated request tags. Matches requests carrying any of them. Up to 20 tags, each 1-50 characters.
-     * @param \DateTimeInterface $to Only include requests at or before this ISO 8601 timestamp. Defaults to now.
+     * @param string $tags Comma-separated tags. Returns log entries that have any of them. Up to 20 tags of 1 to 50 characters each.
+     * @param \DateTimeInterface $to Return requests at or before this time. Defaults to now.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

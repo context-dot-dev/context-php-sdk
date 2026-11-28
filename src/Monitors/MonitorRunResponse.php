@@ -26,9 +26,15 @@ final class MonitorRunResponse implements BaseModel
     /** @use SdkModel<MonitorRunResponseShape> */
     use SdkModel;
 
+    /**
+     * ID of the monitor.
+     */
     #[Required('monitor_id')]
     public string $monitorID;
 
+    /**
+     * Whether the run was queued.
+     */
     #[Required]
     public bool $queued;
 
@@ -39,7 +45,7 @@ final class MonitorRunResponse implements BaseModel
     public string $requestID;
 
     /**
-     * ID of the queued run; pass it to Retrieve a monitor run.
+     * ID of the queued run. Poll it with `GET /monitors/{monitor_id}/runs/{run_id}`.
      */
     #[Required('run_id')]
     public string $runID;
@@ -101,6 +107,9 @@ final class MonitorRunResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * ID of the monitor.
+     */
     public function withMonitorID(string $monitorID): self
     {
         $self = clone $this;
@@ -109,6 +118,9 @@ final class MonitorRunResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Whether the run was queued.
+     */
     public function withQueued(bool $queued): self
     {
         $self = clone $this;
@@ -129,7 +141,7 @@ final class MonitorRunResponse implements BaseModel
     }
 
     /**
-     * ID of the queued run; pass it to Retrieve a monitor run.
+     * ID of the queued run. Poll it with `GET /monitors/{monitor_id}/runs/{run_id}`.
      */
     public function withRunID(string $runID): self
     {

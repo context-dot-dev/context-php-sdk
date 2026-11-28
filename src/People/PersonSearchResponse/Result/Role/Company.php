@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Current employer, when known.
+ * Current employer. `null` when unknown.
  *
  * @phpstan-type CompanyShape = array{domain: string|null, name: string|null}
  */
@@ -19,7 +19,7 @@ final class Company implements BaseModel
     use SdkModel;
 
     /**
-     * The company’s website domain.
+     * Website domain of the company.
      */
     #[Required]
     public ?string $domain;
@@ -65,7 +65,7 @@ final class Company implements BaseModel
     }
 
     /**
-     * The company’s website domain.
+     * Website domain of the company.
      */
     public function withDomain(?string $domain): self
     {

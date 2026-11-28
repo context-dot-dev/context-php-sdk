@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Brand\BrandSearchParams;
 
 /**
- * Only return brands in this country, as an uppercase ISO 3166-1 alpha-2 code such as US or GB.
+ * Only return brands in this country, as an uppercase ISO 3166-1 alpha-2 code such as `US` or `GB`.
  */
 enum Country: string
 {

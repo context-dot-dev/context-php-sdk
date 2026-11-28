@@ -29,7 +29,7 @@ final class TimeoutOpts implements BaseModel
     public int $milliseconds;
 
     /**
-     * "fail" returns 408 at the deadline. "return-partial" returns available results; inspect the response’s partial flag.
+     * `fail` returns 408 at the deadline. `return-partial` returns the results collected so far and marks the response as partial.
      *
      * @var value-of<Behavior>|null $behavior
      */
@@ -87,7 +87,7 @@ final class TimeoutOpts implements BaseModel
     }
 
     /**
-     * "fail" returns 408 at the deadline. "return-partial" returns available results; inspect the response’s partial flag.
+     * `fail` returns 408 at the deadline. `return-partial` returns the results collected so far and marks the response as partial.
      *
      * @param Behavior|value-of<Behavior> $behavior
      */

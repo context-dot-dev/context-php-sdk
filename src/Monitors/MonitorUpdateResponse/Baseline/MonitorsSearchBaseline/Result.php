@@ -28,14 +28,20 @@ final class Result implements BaseModel
     public string $description;
 
     /**
-     * When the result was published, when known.
+     * When the result was published. `null` when unknown.
      */
     #[Required('published_at')]
     public ?\DateTimeInterface $publishedAt;
 
+    /**
+     * Title of the result.
+     */
     #[Required]
     public string $title;
 
+    /**
+     * URL of the result.
+     */
     #[Required]
     public string $url;
 
@@ -95,7 +101,7 @@ final class Result implements BaseModel
     }
 
     /**
-     * When the result was published, when known.
+     * When the result was published. `null` when unknown.
      */
     public function withPublishedAt(?\DateTimeInterface $publishedAt): self
     {
@@ -105,6 +111,9 @@ final class Result implements BaseModel
         return $self;
     }
 
+    /**
+     * Title of the result.
+     */
     public function withTitle(string $title): self
     {
         $self = clone $this;
@@ -113,6 +122,9 @@ final class Result implements BaseModel
         return $self;
     }
 
+    /**
+     * URL of the result.
+     */
     public function withURL(string $url): self
     {
         $self = clone $this;

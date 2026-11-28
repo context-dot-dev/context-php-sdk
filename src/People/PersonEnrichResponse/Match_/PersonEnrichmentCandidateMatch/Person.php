@@ -16,6 +16,8 @@ use ContextDev\People\PersonEnrichResponse\Match_\PersonEnrichmentCandidateMatch
 use ContextDev\People\PersonEnrichResponse\Match_\PersonEnrichmentCandidateMatch\Person\Name;
 
 /**
+ * Profile of the matched person.
+ *
  * @phpstan-import-type EducationShape from \ContextDev\People\PersonEnrichResponse\Match_\PersonEnrichmentCandidateMatch\Person\Education
  * @phpstan-import-type ExperienceShape from \ContextDev\People\PersonEnrichResponse\Match_\PersonEnrichmentCandidateMatch\Person\Experience
  * @phpstan-import-type CurrentRoleShape from \ContextDev\People\PersonEnrichResponse\Match_\PersonEnrichmentCandidateMatch\Person\CurrentRole
@@ -45,60 +47,98 @@ final class Person implements BaseModel
     use SdkModel;
 
     /**
-     * Whether the person's current role is known. `present` — current_role is populated. `none` — the work history explicitly shows every role has ended. `unknown` — our data sources could not confirm either way; treat a missing current_role as unverified rather than vacant.
+     * Whether the person's current role is known. `present` means `current_role` is filled in; `none` means the work history shows every role has ended; `unknown` means it could not be confirmed either way, so treat a missing `current_role` as unverified, not vacant.
      *
      * @var value-of<CurrentRoleStatus> $currentRoleStatus
      */
     #[Required('current_role_status', enum: CurrentRoleStatus::class)]
     public string $currentRoleStatus;
 
-    /** @var list<Education> $education */
+    /**
+     * Education history.
+     *
+     * @var list<Education> $education
+     */
     #[Required(list: Education::class)]
     public array $education;
 
-    /** @var list<Experience> $experience */
+    /**
+     * Work history. Each entry has the same fields as `current_role`.
+     *
+     * @var list<Experience> $experience
+     */
     #[Required(list: Experience::class)]
     public array $experience;
 
-    /** @var list<string> $skills */
+    /**
+     * Professional skills.
+     *
+     * @var list<string> $skills
+     */
     #[Required(list: 'string')]
     public array $skills;
 
-    /** @var list<string> $socialURLs */
+    /**
+     * Public profile URLs for the person.
+     *
+     * @var list<string> $socialURLs
+     */
     #[Required('social_urls', list: 'string')]
     public array $socialURLs;
 
-    /** @var list<string> $websiteURLs */
+    /**
+     * Other websites associated with the person.
+     *
+     * @var list<string> $websiteURLs
+     */
     #[Required('website_urls', list: 'string')]
     public array $websiteURLs;
 
+    /**
+     * URL of the hosted profile picture. Omitted with zero data retention.
+     */
     #[Optional('avatar_url')]
     public ?string $avatarURL;
 
+    /**
+     * Short bio from the person's profile.
+     */
     #[Optional]
     public ?string $bio;
 
     /**
-     * When we last refreshed this profile from our data sources (ISO 8601).
+     * When Context.dev last refreshed the profile from its sources, as an ISO 8601 timestamp.
      */
     #[Optional('checked_at')]
     public ?string $checkedAt;
 
+    /**
+     * The person's current job. See `current_role_status` when it is missing.
+     */
     #[Optional('current_role')]
     public ?CurrentRole $currentRole;
 
+    /**
+     * Email address of the person.
+     */
     #[Optional]
     public ?string $email;
 
     /**
-     * When the underlying profile data last changed in our data sources (ISO 8601). Omitted when unknown.
+     * When the profile data last changed at its sources, as an ISO 8601 timestamp. Omitted when unknown.
      */
     #[Optional('last_updated')]
     public ?string $lastUpdated;
 
+    /**
+     * Where the person is based.
+     */
     #[Optional]
     public ?Location $location;
 
+    /**
+     * Name of the person.
+     */
     #[Optional]
     public ?Name $name;
 
@@ -187,7 +227,7 @@ final class Person implements BaseModel
     }
 
     /**
-     * Whether the person's current role is known. `present` — current_role is populated. `none` — the work history explicitly shows every role has ended. `unknown` — our data sources could not confirm either way; treat a missing current_role as unverified rather than vacant.
+     * Whether the person's current role is known. `present` means `current_role` is filled in; `none` means the work history shows every role has ended; `unknown` means it could not be confirmed either way, so treat a missing `current_role` as unverified, not vacant.
      *
      * @param CurrentRoleStatus|value-of<CurrentRoleStatus> $currentRoleStatus
      */
@@ -201,6 +241,8 @@ final class Person implements BaseModel
     }
 
     /**
+     * Education history.
+     *
      * @param list<Education|EducationShape> $education
      */
     public function withEducation(array $education): self
@@ -212,6 +254,8 @@ final class Person implements BaseModel
     }
 
     /**
+     * Work history. Each entry has the same fields as `current_role`.
+     *
      * @param list<Experience|ExperienceShape> $experience
      */
     public function withExperience(array $experience): self
@@ -223,6 +267,8 @@ final class Person implements BaseModel
     }
 
     /**
+     * Professional skills.
+     *
      * @param list<string> $skills
      */
     public function withSkills(array $skills): self
@@ -234,6 +280,8 @@ final class Person implements BaseModel
     }
 
     /**
+     * Public profile URLs for the person.
+     *
      * @param list<string> $socialURLs
      */
     public function withSocialURLs(array $socialURLs): self
@@ -245,6 +293,8 @@ final class Person implements BaseModel
     }
 
     /**
+     * Other websites associated with the person.
+     *
      * @param list<string> $websiteURLs
      */
     public function withWebsiteURLs(array $websiteURLs): self
@@ -255,6 +305,9 @@ final class Person implements BaseModel
         return $self;
     }
 
+    /**
+     * URL of the hosted profile picture. Omitted with zero data retention.
+     */
     public function withAvatarURL(string $avatarURL): self
     {
         $self = clone $this;
@@ -263,6 +316,9 @@ final class Person implements BaseModel
         return $self;
     }
 
+    /**
+     * Short bio from the person's profile.
+     */
     public function withBio(string $bio): self
     {
         $self = clone $this;
@@ -272,7 +328,7 @@ final class Person implements BaseModel
     }
 
     /**
-     * When we last refreshed this profile from our data sources (ISO 8601).
+     * When Context.dev last refreshed the profile from its sources, as an ISO 8601 timestamp.
      */
     public function withCheckedAt(string $checkedAt): self
     {
@@ -283,6 +339,8 @@ final class Person implements BaseModel
     }
 
     /**
+     * The person's current job. See `current_role_status` when it is missing.
+     *
      * @param CurrentRole|CurrentRoleShape $currentRole
      */
     public function withCurrentRole(CurrentRole|array $currentRole): self
@@ -293,6 +351,9 @@ final class Person implements BaseModel
         return $self;
     }
 
+    /**
+     * Email address of the person.
+     */
     public function withEmail(string $email): self
     {
         $self = clone $this;
@@ -302,7 +363,7 @@ final class Person implements BaseModel
     }
 
     /**
-     * When the underlying profile data last changed in our data sources (ISO 8601). Omitted when unknown.
+     * When the profile data last changed at its sources, as an ISO 8601 timestamp. Omitted when unknown.
      */
     public function withLastUpdated(string $lastUpdated): self
     {
@@ -313,6 +374,8 @@ final class Person implements BaseModel
     }
 
     /**
+     * Where the person is based.
+     *
      * @param Location|LocationShape $location
      */
     public function withLocation(Location|array $location): self
@@ -324,6 +387,8 @@ final class Person implements BaseModel
     }
 
     /**
+     * Name of the person.
+     *
      * @param Name|NameShape $name
      */
     public function withName(Name|array $name): self

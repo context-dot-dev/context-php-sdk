@@ -39,7 +39,7 @@ final class Sitemap implements BaseModel
     public string $domain;
 
     /**
-     * Limits and filters for the sitemap URLs. A sitemap batch scrapes exactly those URLs and never follows links off them, so there is no crawl depth here.
+     * Limits and filters for the sitemap URLs. Links on sitemap pages are never followed.
      */
     #[Optional]
     public ?Controls $controls;
@@ -108,7 +108,7 @@ final class Sitemap implements BaseModel
     }
 
     /**
-     * Limits and filters for the sitemap URLs. A sitemap batch scrapes exactly those URLs and never follows links off them, so there is no crawl depth here.
+     * Limits and filters for the sitemap URLs. Links on sitemap pages are never followed.
      *
      * @param Controls|ControlsShape $controls
      */

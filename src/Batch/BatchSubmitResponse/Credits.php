@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Credits are reserved after background validation, before scraping starts.
+ * Credits reserved for the batch.
  *
  * @phpstan-type CreditsShape = array{reserved: int}
  */
@@ -19,7 +19,7 @@ final class Credits implements BaseModel
     use SdkModel;
 
     /**
-     * Credits reserved by background preparation. Zero while pending.
+     * Credits reserved after validation, before scraping starts. `0` while `pending`.
      */
     #[Required]
     public int $reserved;
@@ -58,7 +58,7 @@ final class Credits implements BaseModel
     }
 
     /**
-     * Credits reserved by background preparation. Zero while pending.
+     * Credits reserved after validation, before scraping starts. `0` while `pending`.
      */
     public function withReserved(int $reserved): self
     {

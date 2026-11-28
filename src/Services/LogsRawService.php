@@ -15,7 +15,7 @@ use ContextDev\RequestOptions;
 use ContextDev\ServiceContracts\LogsRawContract;
 
 /**
- * Read your organization's API request logs.
+ * Inspect your organization's API requests, including retained inputs and responses.
  *
  * @phpstan-import-type RequestOpts from \ContextDev\RequestOptions
  */
@@ -30,9 +30,9 @@ final class LogsRawService implements LogsRawContract
     /**
      * @api
      *
-     * Retrieve a request’s metadata, retained input, and response. An entry becomes retrievable a few seconds after its request completes, so a 404 NOT_FOUND for a request that just finished means ingestion has not caught up yet; retry after a few seconds.
+     * Retrieve a request's metadata, retained input, and response. A request that just finished can return 404 `NOT_FOUND` for a few seconds, so retry shortly.
      *
-     * @param string $requestID the request ID of the logged API call
+     * @param string $requestID ID of the request, from its response's `request_id` or `X-Request-Id` header
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<LogGetResponse>
@@ -55,7 +55,7 @@ final class LogsRawService implements LogsRawContract
     /**
      * @api
      *
-     * List your organization’s request logs with filters and pagination. Logs also include batch settlements and monitor runs.
+     * List your organization's API requests, newest first. Filter by time, endpoint, API key, status, error code, tags, or text. Includes batch settlements and monitor runs.
      *
      * @param array{
      *   errorCode?: string,

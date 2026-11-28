@@ -25,7 +25,7 @@ final class StartURL implements BaseModel
     use SdkModel;
 
     /**
-     * Start from one page.
+     * Follow links from one URL.
      *
      * @var 'start_url' $type
      */
@@ -33,7 +33,7 @@ final class StartURL implements BaseModel
     public string $type = 'start_url';
 
     /**
-     * Page where crawling begins. A URL without a scheme is read as https://.
+     * Page where crawling begins. A URL without a scheme is treated as `https://`.
      */
     #[Required]
     public string $url;
@@ -84,7 +84,7 @@ final class StartURL implements BaseModel
     }
 
     /**
-     * Start from one page.
+     * Follow links from one URL.
      *
      * @param 'start_url' $type
      */
@@ -97,7 +97,7 @@ final class StartURL implements BaseModel
     }
 
     /**
-     * Page where crawling begins. A URL without a scheme is read as https://.
+     * Page where crawling begins. A URL without a scheme is treated as `https://`.
      */
     public function withURL(string $url): self
     {

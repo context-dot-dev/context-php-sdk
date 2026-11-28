@@ -11,7 +11,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Monitors\MonitorListRunsParams\Status;
 
 /**
- * List a monitor’s runs, newest first.
+ * List a monitor's runs, newest first.
  *
  * @see ContextDev\Services\MonitorsService::listRuns()
  *
@@ -26,19 +26,19 @@ final class MonitorListRunsParams implements BaseModel
     use SdkParams;
 
     /**
-     * Opaque pagination cursor from a previous response.
+     * Cursor from the previous page's `next_cursor`. Omit for the first page.
      */
     #[Optional]
     public ?string $cursor;
 
     /**
-     * Maximum number of items to return per page (1-100). Defaults to 25.
+     * Maximum number of runs to return per page. Defaults to 25.
      */
     #[Optional]
     public ?int $limit;
 
     /**
-     * Filter runs by lifecycle status.
+     * Filter by run status.
      *
      * @var value-of<Status>|null $status
      */
@@ -72,7 +72,7 @@ final class MonitorListRunsParams implements BaseModel
     }
 
     /**
-     * Opaque pagination cursor from a previous response.
+     * Cursor from the previous page's `next_cursor`. Omit for the first page.
      */
     public function withCursor(string $cursor): self
     {
@@ -83,7 +83,7 @@ final class MonitorListRunsParams implements BaseModel
     }
 
     /**
-     * Maximum number of items to return per page (1-100). Defaults to 25.
+     * Maximum number of runs to return per page. Defaults to 25.
      */
     public function withLimit(int $limit): self
     {
@@ -94,7 +94,7 @@ final class MonitorListRunsParams implements BaseModel
     }
 
     /**
-     * Filter runs by lifecycle status.
+     * Filter by run status.
      *
      * @param Status|value-of<Status> $status
      */

@@ -32,7 +32,7 @@ final class NewsSearchResponse implements BaseModel
     use SdkModel;
 
     /**
-     * Articles matching the search, in the requested order.
+     * Articles on this page, in the requested order.
      *
      * @var list<Data> $data
      */
@@ -40,19 +40,19 @@ final class NewsSearchResponse implements BaseModel
     public array $data;
 
     /**
-     * True when more results are available beyond this page.
+     * Whether more results are available after this page.
      */
     #[Required('has_more')]
     public bool $hasMore;
 
     /**
-     * Summary information about this response.
+     * Summary of this page.
      */
     #[Required]
     public Meta $meta;
 
     /**
-     * Pass as cursor in the next request to fetch the following page. Null when there are no more results.
+     * Pass as `cursor` to fetch the next page. `null` on the last page.
      */
     #[Required('next_cursor')]
     public ?string $nextCursor;
@@ -126,7 +126,7 @@ final class NewsSearchResponse implements BaseModel
     }
 
     /**
-     * Articles matching the search, in the requested order.
+     * Articles on this page, in the requested order.
      *
      * @param list<Data|DataShape> $data
      */
@@ -139,7 +139,7 @@ final class NewsSearchResponse implements BaseModel
     }
 
     /**
-     * True when more results are available beyond this page.
+     * Whether more results are available after this page.
      */
     public function withHasMore(bool $hasMore): self
     {
@@ -150,7 +150,7 @@ final class NewsSearchResponse implements BaseModel
     }
 
     /**
-     * Summary information about this response.
+     * Summary of this page.
      *
      * @param Meta|MetaShape $meta
      */
@@ -163,7 +163,7 @@ final class NewsSearchResponse implements BaseModel
     }
 
     /**
-     * Pass as cursor in the next request to fetch the following page. Null when there are no more results.
+     * Pass as `cursor` to fetch the next page. `null` on the last page.
      */
     public function withNextCursor(?string $nextCursor): self
     {

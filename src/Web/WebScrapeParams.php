@@ -23,7 +23,7 @@ use ContextDev\Web\WebScrapeParams\TimeoutOpts;
 use ContextDev\Web\WebScrapeParams\Zdr;
 
 /**
- * Scrape anything from a URL on the internet. Returns the outputs you enable in formats. Handles PDFs, DOCX, PPT, XLSX, and 40 other file formats.
+ * Turn any URL into Markdown, HTML, a screenshot, images, raw bytes, parsed fields, product data, highlights, or schema-matched JSON in one request. Choose the outputs in `formats`; each one succeeds or fails on its own. Handles PDF, Word, Excel, PowerPoint, and 40 other file formats.
  *
  * @see ContextDev\Services\WebService::scrape()
  *
@@ -76,37 +76,37 @@ final class WebScrapeParams implements BaseModel
     public string $url;
 
     /**
-     * Requires `formats.highlights: true`; required when it is set.
+     * Query for the `highlights` output. Required when `formats.highlights` is `true`, and allowed only then.
      */
     #[Optional]
     public ?HighlightsParams $highlightsParams;
 
     /**
-     * Image options. Requires formats.images: true.
+     * Options for the `images` output. Requires `formats.images: true`.
      */
     #[Optional]
     public ?ImageParams $imageParams;
 
     /**
-     * Requires `formats.json: true`; required when it is set.
+     * Schema and instructions for the `json` output. Required when `formats.json` is `true`, and allowed only then.
      */
     #[Optional]
     public ?JsonParams $jsonParams;
 
     /**
-     * Markdown options. Requires `formats.markdown`.
+     * Options for the `markdown` output. Requires `formats.markdown: true`.
      */
     #[Optional]
     public ?MarkdownParams $markdownParams;
 
     /**
-     * Maximum age of a cached output, in milliseconds. `0` fetches fresh. Defaults to 3 days (259200000 ms). Maximum: 1 year (31536000000 ms).
+     * Maximum age of a cached result, in milliseconds. `0` always fetches fresh. Defaults to 3 days (259200000 ms). Maximum: 1 year (31536000000 ms).
      */
     #[Optional]
     public ?int $maxAgeMs;
 
     /**
-     * Requires `formats.parse: true`; required when it is set.
+     * Custom rules or a prebuilt parser for the `parsed` output. Required when `formats.parse` is `true`, and allowed only then.
      *
      * @var ParseParamsVariants|null $parseParams
      */
@@ -114,7 +114,7 @@ final class WebScrapeParams implements BaseModel
     public UnionMember0|UnionMember1|null $parseParams;
 
     /**
-     * Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @var list<string>|null $policies
      */
@@ -122,13 +122,13 @@ final class WebScrapeParams implements BaseModel
     public ?array $policies;
 
     /**
-     * Product options. Requires formats.product: true.
+     * Options for the `product` output. Requires `formats.product: true`.
      */
     #[Optional]
     public ?ProductParams $productParams;
 
     /**
-     * Screenshot options. Requires formats.screenshot: true.
+     * Options for the `screenshot` output. Requires `formats.screenshot: true`.
      */
     #[Optional]
     public ?ScreenshotParams $screenshotParams;
@@ -140,7 +140,7 @@ final class WebScrapeParams implements BaseModel
     public ?SharedParams $sharedParams;
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @var list<string>|null $tags
      */
@@ -154,7 +154,7 @@ final class WebScrapeParams implements BaseModel
     public ?TimeoutOpts $timeoutOpts;
 
     /**
-     * `enabled` turns on zero data retention. Your organization must have ZDR enabled.
+     * `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @var value-of<Zdr>|null $zdr
      */
@@ -263,7 +263,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Requires `formats.highlights: true`; required when it is set.
+     * Query for the `highlights` output. Required when `formats.highlights` is `true`, and allowed only then.
      *
      * @param HighlightsParams|HighlightsParamsShape $highlightsParams
      */
@@ -277,7 +277,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Image options. Requires formats.images: true.
+     * Options for the `images` output. Requires `formats.images: true`.
      *
      * @param ImageParams|ImageParamsShape $imageParams
      */
@@ -290,7 +290,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Requires `formats.json: true`; required when it is set.
+     * Schema and instructions for the `json` output. Required when `formats.json` is `true`, and allowed only then.
      *
      * @param JsonParams|JsonParamsShape $jsonParams
      */
@@ -303,7 +303,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Markdown options. Requires `formats.markdown`.
+     * Options for the `markdown` output. Requires `formats.markdown: true`.
      *
      * @param MarkdownParams|MarkdownParamsShape $markdownParams
      */
@@ -317,7 +317,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Maximum age of a cached output, in milliseconds. `0` fetches fresh. Defaults to 3 days (259200000 ms). Maximum: 1 year (31536000000 ms).
+     * Maximum age of a cached result, in milliseconds. `0` always fetches fresh. Defaults to 3 days (259200000 ms). Maximum: 1 year (31536000000 ms).
      */
     public function withMaxAgeMs(int $maxAgeMs): self
     {
@@ -328,7 +328,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Requires `formats.parse: true`; required when it is set.
+     * Custom rules or a prebuilt parser for the `parsed` output. Required when `formats.parse` is `true`, and allowed only then.
      *
      * @param ParseParamsShape $parseParams
      */
@@ -342,7 +342,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @param list<string> $policies
      */
@@ -355,7 +355,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Product options. Requires formats.product: true.
+     * Options for the `product` output. Requires `formats.product: true`.
      *
      * @param ProductParams|ProductParamsShape $productParams
      */
@@ -368,7 +368,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Screenshot options. Requires formats.screenshot: true.
+     * Options for the `screenshot` output. Requires `formats.screenshot: true`.
      *
      * @param ScreenshotParams|ScreenshotParamsShape $screenshotParams
      */
@@ -395,7 +395,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @param list<string> $tags
      */
@@ -421,7 +421,7 @@ final class WebScrapeParams implements BaseModel
     }
 
     /**
-     * `enabled` turns on zero data retention. Your organization must have ZDR enabled.
+     * `enabled` turns on zero data retention. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
      *
      * @param Zdr|value-of<Zdr> $zdr
      */

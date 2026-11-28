@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Brand\BrandGetResponse\Brand\Industries\Eic;
 
 /**
- * Industry classification enum.
+ * Top-level industry in the Easy Industry Classification (EIC).
  */
 enum Industry: string
 {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Web\WebSearchParams;
 
 /**
- * Two-letter ISO 3166-1 alpha-2 country code to localize results to a specific country (maps to Google's `gl` parameter). Example: "us", "gb", "de".
+ * Localize results to this country, as an ISO 3166-1 alpha-2 code such as `us` or `de`.
  */
 enum Country: string
 {

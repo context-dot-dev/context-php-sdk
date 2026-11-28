@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Brand\BrandRetrieveParams;
 
 /**
- * Discriminator for transaction-based brand retrieval.
+ * Set to `by_transaction` to identify the merchant behind a transaction descriptor.
  */
 enum Type: string
 {

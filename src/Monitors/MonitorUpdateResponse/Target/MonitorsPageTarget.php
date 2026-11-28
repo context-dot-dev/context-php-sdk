@@ -11,7 +11,7 @@ use ContextDev\Core\Contracts\BaseModel;
 use ContextDev\Monitors\MonitorUpdateResponse\Target\MonitorsPageTarget\Action;
 
 /**
- * Watch a single web page. Exact detection reports visible-text diffs; semantic detection judges confirmed stable diffs against `instructions`.
+ * Watch one web page. `exact` detection reports any change to the visible text; `semantic` detection reports only confirmed changes that match `instructions`.
  *
  * @phpstan-import-type ActionVariants from \ContextDev\Monitors\MonitorUpdateResponse\Target\MonitorsPageTarget\Action
  * @phpstan-import-type ActionShape from \ContextDev\Monitors\MonitorUpdateResponse\Target\MonitorsPageTarget\Action
@@ -40,13 +40,13 @@ final class MonitorsPageTarget implements BaseModel
     public string $type = 'page';
 
     /**
-     * Public HTTP(S) page URL to monitor.
+     * Public HTTP(S) URL of the page to watch.
      */
     #[Required]
     public string $url;
 
     /**
-     * Optional browser actions executed in array order after the page loads, before content is captured, on every run. Requires a paid plan. Maximum: 5 actions. Changes create a new baseline.
+     * Browser actions to run in order after the page loads and before each capture. Requires a paid plan. Changing it resets the baseline.
      *
      * @var list<ActionVariants>|null $actions
      */
@@ -54,7 +54,7 @@ final class MonitorsPageTarget implements BaseModel
     public ?array $actions;
 
     /**
-     * Remove matching regions after inclusions. Changes create a new baseline.
+     * CSS selectors for regions to ignore, applied after `include_selectors`. Changing it resets the baseline.
      *
      * @var list<string>|null $excludeSelectors
      */
@@ -62,7 +62,7 @@ final class MonitorsPageTarget implements BaseModel
     public ?array $excludeSelectors;
 
     /**
-     * Monitor these CSS-selected regions. Empty or omitted uses main content. Changes create a new baseline.
+     * CSS selectors for the regions to watch. Omit or leave empty to watch the main content. Changing it resets the baseline.
      *
      * @var list<string>|null $includeSelectors
      */
@@ -70,13 +70,13 @@ final class MonitorsPageTarget implements BaseModel
     public ?array $includeSelectors;
 
     /**
-     * Plain-language goal describing which page changes matter. When provided without change_detection, semantic detection is inferred.
+     * Plain-language description of the changes that matter. Requires `semantic` detection, which is selected when `change_detection` is omitted.
      */
     #[Optional]
     public ?string $instructions;
 
     /**
-     * Normalize whitespace before comparing or analyzing text.
+     * Collapse whitespace before comparing text, so spacing-only edits are not reported.
      */
     #[Optional('normalize_whitespace')]
     public ?bool $normalizeWhitespace;
@@ -144,7 +144,7 @@ final class MonitorsPageTarget implements BaseModel
     }
 
     /**
-     * Public HTTP(S) page URL to monitor.
+     * Public HTTP(S) URL of the page to watch.
      */
     public function withURL(string $url): self
     {
@@ -155,7 +155,7 @@ final class MonitorsPageTarget implements BaseModel
     }
 
     /**
-     * Optional browser actions executed in array order after the page loads, before content is captured, on every run. Requires a paid plan. Maximum: 5 actions. Changes create a new baseline.
+     * Browser actions to run in order after the page loads and before each capture. Requires a paid plan. Changing it resets the baseline.
      *
      * @param list<ActionShape>|null $actions
      */
@@ -168,7 +168,7 @@ final class MonitorsPageTarget implements BaseModel
     }
 
     /**
-     * Remove matching regions after inclusions. Changes create a new baseline.
+     * CSS selectors for regions to ignore, applied after `include_selectors`. Changing it resets the baseline.
      *
      * @param list<string> $excludeSelectors
      */
@@ -181,7 +181,7 @@ final class MonitorsPageTarget implements BaseModel
     }
 
     /**
-     * Monitor these CSS-selected regions. Empty or omitted uses main content. Changes create a new baseline.
+     * CSS selectors for the regions to watch. Omit or leave empty to watch the main content. Changing it resets the baseline.
      *
      * @param list<string> $includeSelectors
      */
@@ -194,7 +194,7 @@ final class MonitorsPageTarget implements BaseModel
     }
 
     /**
-     * Plain-language goal describing which page changes matter. When provided without change_detection, semantic detection is inferred.
+     * Plain-language description of the changes that matter. Requires `semantic` detection, which is selected when `change_detection` is omitted.
      */
     public function withInstructions(string $instructions): self
     {
@@ -205,7 +205,7 @@ final class MonitorsPageTarget implements BaseModel
     }
 
     /**
-     * Normalize whitespace before comparing or analyzing text.
+     * Collapse whitespace before comparing text, so spacing-only edits are not reported.
      */
     public function withNormalizeWhitespace(bool $normalizeWhitespace): self
     {

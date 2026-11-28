@@ -29,6 +29,9 @@ final class WebMapURLsResponse implements BaseModel
     /** @use SdkModel<WebMapURLsResponseShape> */
     use SdkModel;
 
+    /**
+     * Normalized domain that was mapped.
+     */
     #[Required]
     public string $domain;
 
@@ -38,10 +41,17 @@ final class WebMapURLsResponse implements BaseModel
     #[Required('request_id')]
     public string $requestID;
 
+    /**
+     * Always `true` on success.
+     */
     #[Required]
     public bool $success;
 
-    /** @var list<URL> $urls */
+    /**
+     * URLs found on the domain, with page metadata when available.
+     *
+     * @var list<URL> $urls
+     */
     #[Required(list: URL::class)]
     public array $urls;
 
@@ -51,6 +61,9 @@ final class WebMapURLsResponse implements BaseModel
     #[Optional('key_metadata')]
     public ?KeyMetadata $keyMetadata;
 
+    /**
+     * `true` when the deadline passed with `timeoutOpts.behavior` set to `return-partial`. Only results finished in time are included.
+     */
     #[Optional]
     public ?bool $partial;
 
@@ -106,6 +119,9 @@ final class WebMapURLsResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Normalized domain that was mapped.
+     */
     public function withDomain(string $domain): self
     {
         $self = clone $this;
@@ -125,6 +141,9 @@ final class WebMapURLsResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Always `true` on success.
+     */
     public function withSuccess(bool $success): self
     {
         $self = clone $this;
@@ -134,6 +153,8 @@ final class WebMapURLsResponse implements BaseModel
     }
 
     /**
+     * URLs found on the domain, with page metadata when available.
+     *
      * @param list<URL|URLShape> $urls
      */
     public function withURLs(array $urls): self
@@ -157,6 +178,9 @@ final class WebMapURLsResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * `true` when the deadline passed with `timeoutOpts.behavior` set to `return-partial`. Only results finished in time are included.
+     */
     public function withPartial(bool $partial): self
     {
         $self = clone $this;

@@ -48,13 +48,13 @@ final class BatchSubmitResponse implements BaseModel
     use SdkModel;
 
     /**
-     * Batch ID. Poll GET /batch/{batch_id} with it.
+     * Unique ID of the batch. Pass it to `GET /batch/{batch_id}` to track progress.
      */
     #[Required]
     public string $id;
 
     /**
-     * Whether this response came from cache.
+     * Cache status of this response.
      */
     #[Required('cache_metadata')]
     public CacheMetadata $cacheMetadata;
@@ -72,25 +72,25 @@ final class BatchSubmitResponse implements BaseModel
     public string $createdAt;
 
     /**
-     * Credits are reserved after background validation, before scraping starts.
+     * Credits reserved for the batch.
      */
     #[Required]
     public Credits $credits;
 
     /**
-     * Outputs requested for each page. Matches input.data.formats on submission.
+     * Formats requested for each page, as submitted in `input.data.formats`.
      */
     #[Required]
     public Formats $formats;
 
     /**
-     * What the submission accepted.
+     * Page counts from your submission.
      */
     #[Required]
     public Intake $input;
 
     /**
-     * Rejected URLs (first 100).
+     * URLs rejected from your list, up to the first 100.
      *
      * @var list<InvalidURL> $invalidURLs
      */
@@ -98,7 +98,7 @@ final class BatchSubmitResponse implements BaseModel
     public array $invalidURLs;
 
     /**
-     * How pages will be selected.
+     * `scrape` for a URL list, `crawl` for a site crawl.
      *
      * @var value-of<Mode> $mode
      */
@@ -112,7 +112,7 @@ final class BatchSubmitResponse implements BaseModel
     public string $requestID;
 
     /**
-     * Current state. `pending` means waiting for execution capacity or background validation. Capacity-limited batches remain pending until a slot opens. `completed`, `cancelled`, and `failed` are final.
+     * Current state. `pending` batches are being validated or are waiting for a slot under your plan's concurrent batch limit, `queued` batches are ready to start, and `running` batches are scraping. `completed`, `cancelled`, and `failed` are final.
      *
      * @var value-of<Status> $status
      */
@@ -120,7 +120,7 @@ final class BatchSubmitResponse implements BaseModel
     public string $status;
 
     /**
-     * Tags stored on the batch.
+     * Tags set when the batch was submitted.
      *
      * @var list<string> $tags
      */
@@ -134,7 +134,7 @@ final class BatchSubmitResponse implements BaseModel
     public ?KeyMetadata $keyMetadata;
 
     /**
-     * Secret for verifying `X-Context-Signature`. Only submit returns it, so store it.
+     * Secret for verifying `X-Context-Signature` on this batch's webhooks. Returned only here and only when you set a webhook, so store it.
      */
     #[Optional('webhook_secret')]
     public ?string $webhookSecret;
@@ -237,7 +237,7 @@ final class BatchSubmitResponse implements BaseModel
     }
 
     /**
-     * Batch ID. Poll GET /batch/{batch_id} with it.
+     * Unique ID of the batch. Pass it to `GET /batch/{batch_id}` to track progress.
      */
     public function withID(string $id): self
     {
@@ -248,7 +248,7 @@ final class BatchSubmitResponse implements BaseModel
     }
 
     /**
-     * Whether this response came from cache.
+     * Cache status of this response.
      *
      * @param CacheMetadata|CacheMetadataShape $cacheMetadata
      */
@@ -285,7 +285,7 @@ final class BatchSubmitResponse implements BaseModel
     }
 
     /**
-     * Credits are reserved after background validation, before scraping starts.
+     * Credits reserved for the batch.
      *
      * @param Credits|CreditsShape $credits
      */
@@ -298,7 +298,7 @@ final class BatchSubmitResponse implements BaseModel
     }
 
     /**
-     * Outputs requested for each page. Matches input.data.formats on submission.
+     * Formats requested for each page, as submitted in `input.data.formats`.
      *
      * @param Formats|FormatsShape $formats
      */
@@ -311,7 +311,7 @@ final class BatchSubmitResponse implements BaseModel
     }
 
     /**
-     * What the submission accepted.
+     * Page counts from your submission.
      *
      * @param Intake|IntakeShape $input
      */
@@ -324,7 +324,7 @@ final class BatchSubmitResponse implements BaseModel
     }
 
     /**
-     * Rejected URLs (first 100).
+     * URLs rejected from your list, up to the first 100.
      *
      * @param list<InvalidURL|InvalidURLShape> $invalidURLs
      */
@@ -337,7 +337,7 @@ final class BatchSubmitResponse implements BaseModel
     }
 
     /**
-     * How pages will be selected.
+     * `scrape` for a URL list, `crawl` for a site crawl.
      *
      * @param Mode|value-of<Mode> $mode
      */
@@ -361,7 +361,7 @@ final class BatchSubmitResponse implements BaseModel
     }
 
     /**
-     * Current state. `pending` means waiting for execution capacity or background validation. Capacity-limited batches remain pending until a slot opens. `completed`, `cancelled`, and `failed` are final.
+     * Current state. `pending` batches are being validated or are waiting for a slot under your plan's concurrent batch limit, `queued` batches are ready to start, and `running` batches are scraping. `completed`, `cancelled`, and `failed` are final.
      *
      * @param Status|value-of<Status> $status
      */
@@ -374,7 +374,7 @@ final class BatchSubmitResponse implements BaseModel
     }
 
     /**
-     * Tags stored on the batch.
+     * Tags set when the batch was submitted.
      *
      * @param list<string> $tags
      */
@@ -400,7 +400,7 @@ final class BatchSubmitResponse implements BaseModel
     }
 
     /**
-     * Secret for verifying `X-Context-Signature`. Only submit returns it, so store it.
+     * Secret for verifying `X-Context-Signature` on this batch's webhooks. Returned only here and only when you set a webhook, so store it.
      */
     public function withWebhookSecret(string $webhookSecret): self
     {

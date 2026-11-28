@@ -27,25 +27,25 @@ final class Result implements BaseModel
     use SdkModel;
 
     /**
-     * The brand's domain.
+     * Domain of the brand.
      */
     #[Required]
     public string $domain;
 
     /**
-     * Logo link URL that serves the brand's logo, generated per request for the calling organization.
+     * Logo Link URL that serves the brand's logo with your organization's client ID. Use it directly as an image source.
      */
     #[Required]
     public string $logo;
 
     /**
-     * The brand's name. Empty string when unknown.
+     * Name of the brand. Empty string when unknown.
      */
     #[Required]
     public string $name;
 
     /**
-     * The brand's country, when available, as an uppercase ISO 3166-1 alpha-2 code.
+     * Country of the brand, as an uppercase ISO 3166-1 alpha-2 code. Omitted when unknown.
      *
      * @var value-of<Country>|null $country
      */
@@ -53,13 +53,13 @@ final class Result implements BaseModel
     public ?string $country;
 
     /**
-     * The brand's description, when available.
+     * Short description of the brand. Omitted when unknown.
      */
     #[Optional]
     public ?string $description;
 
     /**
-     * The brand's primary language, when available.
+     * Primary language of the brand. Omitted when unknown.
      *
      * @var value-of<Language>|null $language
      */
@@ -115,7 +115,7 @@ final class Result implements BaseModel
     }
 
     /**
-     * The brand's domain.
+     * Domain of the brand.
      */
     public function withDomain(string $domain): self
     {
@@ -126,7 +126,7 @@ final class Result implements BaseModel
     }
 
     /**
-     * Logo link URL that serves the brand's logo, generated per request for the calling organization.
+     * Logo Link URL that serves the brand's logo with your organization's client ID. Use it directly as an image source.
      */
     public function withLogo(string $logo): self
     {
@@ -137,7 +137,7 @@ final class Result implements BaseModel
     }
 
     /**
-     * The brand's name. Empty string when unknown.
+     * Name of the brand. Empty string when unknown.
      */
     public function withName(string $name): self
     {
@@ -148,7 +148,7 @@ final class Result implements BaseModel
     }
 
     /**
-     * The brand's country, when available, as an uppercase ISO 3166-1 alpha-2 code.
+     * Country of the brand, as an uppercase ISO 3166-1 alpha-2 code. Omitted when unknown.
      *
      * @param Country|value-of<Country> $country
      */
@@ -161,7 +161,7 @@ final class Result implements BaseModel
     }
 
     /**
-     * The brand's description, when available.
+     * Short description of the brand. Omitted when unknown.
      */
     public function withDescription(string $description): self
     {
@@ -172,7 +172,7 @@ final class Result implements BaseModel
     }
 
     /**
-     * The brand's primary language, when available.
+     * Primary language of the brand. Omitted when unknown.
      *
      * @param Language|value-of<Language> $language
      */

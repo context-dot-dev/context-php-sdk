@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Webhooks\Deliveries\DeliverySummary;
 
 /**
- * `pending`, `delivering`, `retrying`, `delivered`, `failed`, or `cancelled` (source or its webhook was removed).
+ * Delivery state. `pending` is waiting for an attempt, `delivering` has an attempt in progress, `retrying` is waiting for an automatic retry, `delivered` was acknowledged with a 2xx, `failed` has no automatic retries left, and `cancelled` means the source or its webhook was removed.
  */
 enum Status: string
 {

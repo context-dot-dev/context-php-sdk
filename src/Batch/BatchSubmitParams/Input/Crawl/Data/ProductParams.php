@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Product options. Requires formats.product: true.
+ * Options for the `product` output. Requires `formats.product: true`.
  *
  * @phpstan-type ProductParamsShape = array{
  *   dedupeImages?: bool|null, useAIFallback?: bool|null

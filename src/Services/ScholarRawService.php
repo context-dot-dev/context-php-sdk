@@ -31,7 +31,7 @@ final class ScholarRawService implements ScholarRawContract
     /**
      * @api
      *
-     * Search full-text papers from arXiv and Europe PMC. Returns up to 250 relevant papers with matching passages and full-text links.
+     * Search the full text of papers from arXiv and Europe PMC by topic or question. Each result includes the matching passage and a direct link to the full text. Page through up to 250 matches, ranked by relevance or newest first.
      *
      * @param array{
      *   query: string,

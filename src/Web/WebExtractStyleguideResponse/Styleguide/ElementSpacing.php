@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Spacing system used on the website.
+ * Spacing scale used on the website, from `xs` to `xl`.
  *
  * @phpstan-type ElementSpacingShape = array{
  *   lg: string, md: string, sm: string, xl: string, xs: string

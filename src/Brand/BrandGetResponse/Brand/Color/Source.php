@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Brand\BrandGetResponse\Brand\Color;
 
 /**
- * Where the color was observed: 'site' colors come from the website's own theme signals (rendered page colors, manifest, theme-color meta), 'logo' colors from logo image pixels.
+ * `site` colors come from the website's own theme (rendered page colors, web app manifest, `theme-color` meta tag); `logo` colors come from logo pixels.
  */
 enum Source: string
 {

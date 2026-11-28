@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Additional constraints every result must match.
+ * Constraints every result must match, in addition to `query`.
  *
  * @phpstan-type FiltersShape = array{
  *   countries?: list<string>|null,
@@ -23,7 +23,7 @@ final class Filters implements BaseModel
     use SdkModel;
 
     /**
-     * Countries people live in as two-letter codes, such as US or GB.
+     * Only return people who live in these countries, as ISO 3166-1 alpha-2 codes such as `US`.
      *
      * @var list<string>|null $countries
      */
@@ -69,7 +69,7 @@ final class Filters implements BaseModel
     }
 
     /**
-     * Countries people live in as two-letter codes, such as US or GB.
+     * Only return people who live in these countries, as ISO 3166-1 alpha-2 codes such as `US`.
      *
      * @param list<string> $countries
      */

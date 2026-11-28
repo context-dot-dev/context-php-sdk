@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Scholar\ScholarSearchParams;
 
 /**
- * Order the top 250 matches. date_desc puts newest first, with undated papers last.
+ * `relevance` puts the closest matches first; `date_desc` puts the newest papers first, with undated papers last. Both orders apply to the top 250 matches.
  */
 enum Sort: string
 {

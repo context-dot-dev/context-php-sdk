@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Parse\ParseHandleParams;
 
 /**
- * Optional file extension hint, such as pdf, docx, xlsx, pptx, html, json, csv, md, py, rtf, jpg, png, txt, warc, or warc.gz.
+ * File type hint, such as `pdf`, `docx`, `xlsx`, `pptx`, `html`, `json`, `csv`, `md`, `py`, `rtf`, `jpg`, `png`, `txt`, `warc`, or `warc.gz`. Use it when the `Content-Type` header is missing or generic.
  */
 enum Extension: string
 {

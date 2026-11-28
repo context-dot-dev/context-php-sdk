@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Pause for a fixed number of milliseconds before continuing to the next action.
+ * Pause for a fixed time before the next action.
  *
  * @phpstan-type WebScrapeWaitActionShape = array{do: 'wait', timeMs: int}
  */

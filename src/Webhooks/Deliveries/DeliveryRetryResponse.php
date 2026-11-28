@@ -23,7 +23,7 @@ final class DeliveryRetryResponse implements BaseModel
     use SdkModel;
 
     /**
-     * Delivery ID.
+     * Unique ID of the delivery.
      */
     #[Required]
     public string $id;
@@ -82,7 +82,7 @@ final class DeliveryRetryResponse implements BaseModel
     }
 
     /**
-     * Delivery ID.
+     * Unique ID of the delivery.
      */
     public function withID(string $id): self
     {

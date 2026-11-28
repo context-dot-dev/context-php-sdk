@@ -11,7 +11,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * The extracted product, or null when the page is not a product detail page.
+ * The extracted product. `null` when the page is not a product detail page.
  *
  * @phpstan-import-type VariantShape from \ContextDev\Batch\BatchGetResultsResponse\Data\FailedPage\Result\Product\Data\Product\Variant
  *
@@ -60,7 +60,7 @@ final class Product implements BaseModel
     public ?string $category;
 
     /**
-     * ISO 4217 currency code.
+     * ISO 4217 currency code of `price`.
      */
     #[Required]
     public ?string $currency;
@@ -142,7 +142,7 @@ final class Product implements BaseModel
     public array $targetAudience;
 
     /**
-     * Product variations, such as different colors or sizes, with their attributes and images. Empty if none are found. May not include every variation offered by the store.
+     * Product variants, such as colors or sizes, with their attributes and images. `[]` when none are found. May not include every variant the store offers.
      *
      * @var list<Variant> $variants
      */
@@ -291,7 +291,7 @@ final class Product implements BaseModel
     }
 
     /**
-     * ISO 4217 currency code.
+     * ISO 4217 currency code of `price`.
      */
     public function withCurrency(?string $currency): self
     {
@@ -433,7 +433,7 @@ final class Product implements BaseModel
     }
 
     /**
-     * Product variations, such as different colors or sizes, with their attributes and images. Empty if none are found. May not include every variation offered by the store.
+     * Product variants, such as colors or sizes, with their attributes and images. `[]` when none are found. May not include every variant the store offers.
      *
      * @param list<Variant|VariantShape> $variants
      */

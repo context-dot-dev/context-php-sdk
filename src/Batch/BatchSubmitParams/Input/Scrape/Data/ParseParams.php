@@ -11,7 +11,7 @@ use ContextDev\Core\Conversion\Contracts\Converter;
 use ContextDev\Core\Conversion\Contracts\ConverterSource;
 
 /**
- * Requires `formats.parse: true`; required when it is set.
+ * Custom rules or a prebuilt parser for the `parsed` output. Required when `formats.parse` is `true`, and allowed only then.
  *
  * @phpstan-import-type UnionMember0Shape from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\ParseParams\UnionMember0
  * @phpstan-import-type UnionMember1Shape from \ContextDev\Batch\BatchSubmitParams\Input\Scrape\Data\ParseParams\UnionMember1

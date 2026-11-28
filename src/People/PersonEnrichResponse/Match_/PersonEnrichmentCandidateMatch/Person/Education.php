@@ -31,21 +31,39 @@ final class Education implements BaseModel
     /** @use SdkModel<EducationShape> */
     use SdkModel;
 
+    /**
+     * School or university.
+     */
     #[Required]
     public Institution $institution;
 
+    /**
+     * Degree or qualification.
+     */
     #[Optional]
     public ?string $degree;
 
+    /**
+     * Description of the studies.
+     */
     #[Optional]
     public ?string $description;
 
+    /**
+     * When the studies ended.
+     */
     #[Optional('end_date')]
     public ?EndDate $endDate;
 
+    /**
+     * Subject or major studied.
+     */
     #[Optional('field_of_study')]
     public ?string $fieldOfStudy;
 
+    /**
+     * When the studies started.
+     */
     #[Optional('start_date')]
     public ?StartDate $startDate;
 
@@ -99,6 +117,8 @@ final class Education implements BaseModel
     }
 
     /**
+     * School or university.
+     *
      * @param Institution|InstitutionShape $institution
      */
     public function withInstitution(Institution|array $institution): self
@@ -109,6 +129,9 @@ final class Education implements BaseModel
         return $self;
     }
 
+    /**
+     * Degree or qualification.
+     */
     public function withDegree(string $degree): self
     {
         $self = clone $this;
@@ -117,6 +140,9 @@ final class Education implements BaseModel
         return $self;
     }
 
+    /**
+     * Description of the studies.
+     */
     public function withDescription(string $description): self
     {
         $self = clone $this;
@@ -126,6 +152,8 @@ final class Education implements BaseModel
     }
 
     /**
+     * When the studies ended.
+     *
      * @param EndDate|EndDateShape $endDate
      */
     public function withEndDate(EndDate|array $endDate): self
@@ -136,6 +164,9 @@ final class Education implements BaseModel
         return $self;
     }
 
+    /**
+     * Subject or major studied.
+     */
     public function withFieldOfStudy(string $fieldOfStudy): self
     {
         $self = clone $this;
@@ -145,6 +176,8 @@ final class Education implements BaseModel
     }
 
     /**
+     * When the studies started.
+     *
      * @param StartDate|StartDateShape $startDate
      */
     public function withStartDate(StartDate|array $startDate): self

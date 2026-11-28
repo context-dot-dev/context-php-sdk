@@ -53,7 +53,7 @@ final class Metadata implements BaseModel
     use SdkModel;
 
     /**
-     * Additional non-social meta tags not promoted to top-level metadata fields.
+     * Other non-social meta tags that don't have their own field.
      *
      * @var array<string,AdditionalMetaVariants>|null $additionalMeta
      */
@@ -61,7 +61,7 @@ final class Metadata implements BaseModel
     public ?array $additionalMeta;
 
     /**
-     * Resolved alternate links from link rel=alternate tags.
+     * Alternate links from `link rel="alternate"` tags, as absolute URLs.
      *
      * @var list<Alternate>|null $alternates
      */
@@ -69,31 +69,31 @@ final class Metadata implements BaseModel
     public ?array $alternates;
 
     /**
-     * Author metadata, when present.
+     * Author, when present.
      */
     #[Optional]
     public ?string $author;
 
     /**
-     * Resolved canonical URL, when present.
+     * Absolute canonical URL, when present.
      */
     #[Optional('canonicalUrl')]
     public ?string $canonicalURL;
 
     /**
-     * Best description extracted from standard, Open Graph, or Twitter metadata.
+     * Best available description, from standard, Open Graph, or Twitter meta tags.
      */
     #[Optional]
     public ?string $description;
 
     /**
-     * Resolved favicon URL, when present.
+     * Absolute favicon URL, when present.
      */
     #[Optional]
     public ?string $favicon;
 
     /**
-     * Up to 500 h1–h6 headings in document order, before content filtering.
+     * Headings (`h1` to `h6`) in document order, from the full page before any filtering. Up to 500. Omitted when the page has none.
      *
      * @var list<Heading>|null $headings
      */
@@ -101,7 +101,7 @@ final class Metadata implements BaseModel
     public ?array $headings;
 
     /**
-     * Primary resolved preview image from Open Graph, Twitter, or image metadata.
+     * Main preview image URL, from Open Graph, Twitter, or image meta tags.
      */
     #[Optional]
     public ?string $image;
@@ -115,7 +115,7 @@ final class Metadata implements BaseModel
     public ?array $jsonLd;
 
     /**
-     * Keywords extracted from the page's keywords meta tag.
+     * Keywords from the page's `keywords` meta tag.
      *
      * @var list<string>|null $keywords
      */
@@ -123,19 +123,19 @@ final class Metadata implements BaseModel
     public ?array $keywords;
 
     /**
-     * Language extracted from html lang or language meta tags.
+     * Page language, from the `html` `lang` attribute or language meta tags.
      */
     #[Optional]
     public ?string $language;
 
     /**
-     * Modified timestamp/date from page metadata, when present.
+     * Last-modified date or timestamp from page metadata, when present.
      */
     #[Optional]
     public ?string $modifiedTime;
 
     /**
-     * Open Graph metadata with the og: prefix removed and keys camel-cased.
+     * Open Graph tags, with the `og:` prefix removed and keys in camelCase.
      *
      * @var array<string,OpenGraphVariants>|null $openGraph
      */
@@ -143,31 +143,31 @@ final class Metadata implements BaseModel
     public ?array $openGraph;
 
     /**
-     * Published timestamp/date from page metadata, when present.
+     * Publish date or timestamp from page metadata, when present.
      */
     #[Optional]
     public ?string $publishedTime;
 
     /**
-     * Robots meta directive, when present.
+     * `robots` meta directive, when present.
      */
     #[Optional]
     public ?string $robots;
 
     /**
-     * Site or application name from page metadata.
+     * Site or app name from page metadata.
      */
     #[Optional]
     public ?string $siteName;
 
     /**
-     * Best title extracted from the page.
+     * Best available page title.
      */
     #[Optional]
     public ?string $title;
 
     /**
-     * Twitter card metadata with the twitter: prefix removed and keys camel-cased.
+     * Twitter card tags, with the `twitter:` prefix removed and keys in camelCase.
      *
      * @var array<string,TwitterVariants>|null $twitter
      */
@@ -237,7 +237,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Additional non-social meta tags not promoted to top-level metadata fields.
+     * Other non-social meta tags that don't have their own field.
      *
      * @param array<string,AdditionalMetaShape> $additionalMeta
      */
@@ -250,7 +250,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Resolved alternate links from link rel=alternate tags.
+     * Alternate links from `link rel="alternate"` tags, as absolute URLs.
      *
      * @param list<Alternate|AlternateShape> $alternates
      */
@@ -263,7 +263,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Author metadata, when present.
+     * Author, when present.
      */
     public function withAuthor(string $author): self
     {
@@ -274,7 +274,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Resolved canonical URL, when present.
+     * Absolute canonical URL, when present.
      */
     public function withCanonicalURL(string $canonicalURL): self
     {
@@ -285,7 +285,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Best description extracted from standard, Open Graph, or Twitter metadata.
+     * Best available description, from standard, Open Graph, or Twitter meta tags.
      */
     public function withDescription(string $description): self
     {
@@ -296,7 +296,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Resolved favicon URL, when present.
+     * Absolute favicon URL, when present.
      */
     public function withFavicon(string $favicon): self
     {
@@ -307,7 +307,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Up to 500 h1–h6 headings in document order, before content filtering.
+     * Headings (`h1` to `h6`) in document order, from the full page before any filtering. Up to 500. Omitted when the page has none.
      *
      * @param list<Heading|HeadingShape> $headings
      */
@@ -320,7 +320,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Primary resolved preview image from Open Graph, Twitter, or image metadata.
+     * Main preview image URL, from Open Graph, Twitter, or image meta tags.
      */
     public function withImage(string $image): self
     {
@@ -344,7 +344,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Keywords extracted from the page's keywords meta tag.
+     * Keywords from the page's `keywords` meta tag.
      *
      * @param list<string> $keywords
      */
@@ -357,7 +357,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Language extracted from html lang or language meta tags.
+     * Page language, from the `html` `lang` attribute or language meta tags.
      */
     public function withLanguage(string $language): self
     {
@@ -368,7 +368,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Modified timestamp/date from page metadata, when present.
+     * Last-modified date or timestamp from page metadata, when present.
      */
     public function withModifiedTime(string $modifiedTime): self
     {
@@ -379,7 +379,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Open Graph metadata with the og: prefix removed and keys camel-cased.
+     * Open Graph tags, with the `og:` prefix removed and keys in camelCase.
      *
      * @param array<string,OpenGraphShape> $openGraph
      */
@@ -392,7 +392,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Published timestamp/date from page metadata, when present.
+     * Publish date or timestamp from page metadata, when present.
      */
     public function withPublishedTime(string $publishedTime): self
     {
@@ -403,7 +403,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Robots meta directive, when present.
+     * `robots` meta directive, when present.
      */
     public function withRobots(string $robots): self
     {
@@ -414,7 +414,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Site or application name from page metadata.
+     * Site or app name from page metadata.
      */
     public function withSiteName(string $siteName): self
     {
@@ -425,7 +425,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Best title extracted from the page.
+     * Best available page title.
      */
     public function withTitle(string $title): self
     {
@@ -436,7 +436,7 @@ final class Metadata implements BaseModel
     }
 
     /**
-     * Twitter card metadata with the twitter: prefix removed and keys camel-cased.
+     * Twitter card tags, with the `twitter:` prefix removed and keys in camelCase.
      *
      * @param array<string,TwitterShape> $twitter
      */

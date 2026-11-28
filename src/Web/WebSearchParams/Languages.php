@@ -12,7 +12,7 @@ use ContextDev\Web\WebSearchParams\Languages\UnionMember0;
 use ContextDev\Web\WebSearchParams\Languages\UnionMember1;
 
 /**
- * Languages to return results in, as BCP 47 language codes such as `en` or `de`, or "all" for any language. Defaults to "all". Example: ["en", "de"].
+ * Languages to return results in, as BCP 47 codes such as `en` or `de`, or `all` for any language.
  *
  * @phpstan-type LanguagesVariants = list<value-of<UnionMember1>>|value-of<UnionMember0>
  * @phpstan-type LanguagesShape = LanguagesVariants

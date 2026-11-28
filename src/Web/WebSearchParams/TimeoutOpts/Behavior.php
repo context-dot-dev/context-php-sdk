@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Web\WebSearchParams\TimeoutOpts;
 
 /**
- * "fail" returns 408 at the deadline. "return-partial" returns available results; inspect the response’s partial flag.
+ * `fail` returns 408 at the deadline. `return-partial` returns the results collected so far and marks the response as partial.
  */
 enum Behavior: string
 {

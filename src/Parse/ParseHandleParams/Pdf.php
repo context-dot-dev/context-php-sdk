@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * PDF page-range options as a JSON object, e.g. {"start": 2, "end": 5}.
+ * PDF page range as a JSON object, such as `{"start": 2, "end": 5}`.
  *
  * @phpstan-type PdfShape = array{end?: int|null, start?: int|null}
  */
@@ -19,13 +19,13 @@ final class Pdf implements BaseModel
     use SdkModel;
 
     /**
-     * Last PDF page to parse (1-based, inclusive). Defaults to the final page. Must be >= start.
+     * Last page to parse. Defaults to the last page. Must be at least `start`.
      */
     #[Optional]
     public ?int $end;
 
     /**
-     * First 1-based PDF page to parse.
+     * First page to parse, starting at 1.
      */
     #[Optional]
     public ?int $start;
@@ -51,7 +51,7 @@ final class Pdf implements BaseModel
     }
 
     /**
-     * Last PDF page to parse (1-based, inclusive). Defaults to the final page. Must be >= start.
+     * Last page to parse. Defaults to the last page. Must be at least `start`.
      */
     public function withEnd(int $end): self
     {
@@ -62,7 +62,7 @@ final class Pdf implements BaseModel
     }
 
     /**
-     * First 1-based PDF page to parse.
+     * First page to parse, starting at 1.
      */
     public function withStart(int $start): self
     {

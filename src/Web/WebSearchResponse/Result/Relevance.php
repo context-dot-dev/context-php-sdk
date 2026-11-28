@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Web\WebSearchResponse\Result;
 
 /**
- * Relevance to the original query.
+ * How relevant the result is to the query.
  */
 enum Relevance: string
 {

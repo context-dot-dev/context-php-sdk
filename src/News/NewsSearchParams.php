@@ -16,7 +16,7 @@ use ContextDev\News\NewsSearchParams\SearchBy\NewsSearchByNaturalLanguage;
 use ContextDev\News\NewsSearchParams\SortBy;
 
 /**
- * Find news about a company by name, domain, ticker, or ISIN, or search all news with a natural-language query. Filter articles and continue through results with a cursor.
+ * Find news about a company by name, domain, ticker, or ISIN, or search all news with a natural-language query. Each article includes its publisher, type of coverage, and, for company searches, whether the company is the main subject. Narrow results by publisher, country, language, article type, or publish date.
  *
  * @see ContextDev\Services\NewsService::search()
  *
@@ -42,7 +42,7 @@ final class NewsSearchParams implements BaseModel
     use SdkParams;
 
     /**
-     * What to search for: a specific company, or a natural-language query across all news.
+     * What to search for: news about a specific company, or a natural-language query across all news.
      *
      * @var SearchByVariants $searchBy
      */
@@ -50,25 +50,25 @@ final class NewsSearchParams implements BaseModel
     public NewsSearchByNaturalLanguage|NewsSearchByEntity $searchBy;
 
     /**
-     * Opaque next_cursor from the previous response, or null for the first page.
+     * Cursor from the previous page's `next_cursor`. Omit for the first page.
      */
     #[Optional(nullable: true)]
     public ?string $cursor;
 
     /**
-     * Optional result filters. Use at most one of sourceDomain, sourceCountry, articleLanguage, or articleType. A date range may accompany that category; date.from must not exceed date.to.
+     * Filters for the results. Use at most one of `sourceDomain`, `sourceCountry`, `articleLanguage`, or `articleType`, optionally combined with `date`.
      */
     #[Optional]
     public ?FilterBy $filterBy;
 
     /**
-     * Maximum results to return. Defaults to 10.
+     * Maximum number of articles to return per page.
      */
     #[Optional]
     public ?int $limit;
 
     /**
-     * Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @var list<string>|null $policies
      */
@@ -76,13 +76,13 @@ final class NewsSearchParams implements BaseModel
     public ?array $policies;
 
     /**
-     * Result ordering. Defaults to newest for entity searches. Natural-language searches are always ordered by relevance.
+     * How to order results. Company searches default to `newest`; natural-language searches always use `relevance`.
      */
     #[Optional]
     public ?SortBy $sortBy;
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @var list<string>|null $tags
      */
@@ -143,7 +143,7 @@ final class NewsSearchParams implements BaseModel
     }
 
     /**
-     * What to search for: a specific company, or a natural-language query across all news.
+     * What to search for: news about a specific company, or a natural-language query across all news.
      *
      * @param SearchByShape $searchBy
      */
@@ -157,7 +157,7 @@ final class NewsSearchParams implements BaseModel
     }
 
     /**
-     * Opaque next_cursor from the previous response, or null for the first page.
+     * Cursor from the previous page's `next_cursor`. Omit for the first page.
      */
     public function withCursor(?string $cursor): self
     {
@@ -168,7 +168,7 @@ final class NewsSearchParams implements BaseModel
     }
 
     /**
-     * Optional result filters. Use at most one of sourceDomain, sourceCountry, articleLanguage, or articleType. A date range may accompany that category; date.from must not exceed date.to.
+     * Filters for the results. Use at most one of `sourceDomain`, `sourceCountry`, `articleLanguage`, or `articleType`, optionally combined with `date`.
      *
      * @param FilterBy|FilterByShape $filterBy
      */
@@ -181,7 +181,7 @@ final class NewsSearchParams implements BaseModel
     }
 
     /**
-     * Maximum results to return. Defaults to 10.
+     * Maximum number of articles to return per page.
      */
     public function withLimit(int $limit): self
     {
@@ -192,7 +192,7 @@ final class NewsSearchParams implements BaseModel
     }
 
     /**
-     * Access policy IDs to apply. A URL must pass every policy. Leave it out unless access policies are enabled for your organization; otherwise the request fails with `ACCESS_POLICIES_NOT_ENABLED`.
+     * Access policy IDs to apply; each URL must pass all of them. Requires access policies enabled for your organization; otherwise returns `ACCESS_POLICIES_NOT_ENABLED`.
      *
      * @param list<string> $policies
      */
@@ -205,7 +205,7 @@ final class NewsSearchParams implements BaseModel
     }
 
     /**
-     * Result ordering. Defaults to newest for entity searches. Natural-language searches are always ordered by relevance.
+     * How to order results. Company searches default to `newest`; natural-language searches always use `relevance`.
      *
      * @param SortBy|SortByShape $sortBy
      */
@@ -218,7 +218,7 @@ final class NewsSearchParams implements BaseModel
     }
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @param list<string> $tags
      */

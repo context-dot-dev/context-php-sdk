@@ -14,7 +14,7 @@ use ContextDev\People\PersonSearchParams\Mode;
 use ContextDev\People\PersonSearchParams\Zdr;
 
 /**
- * Find people with a natural-language query.
+ * Find people from a plain-language description, such as `VPs of sales at solar companies in California`. Each result includes the current role and employer, location, years of experience, skills, schools, and public profile URLs. Pages with no matches are free.
  *
  * @see ContextDev\Services\PeopleService::search()
  *
@@ -36,25 +36,25 @@ final class PersonSearchParams implements BaseModel
     use SdkParams;
 
     /**
-     * Describe the people to find. Up to 500 characters in `fast` mode and 5000 in `ultra` mode.
+     * Plain-language description of the people to find. Up to 500 characters in `fast` mode and 5000 in `ultra` mode.
      */
     #[Required]
     public string $query;
 
     /**
-     * Use next_cursor with the same query, mode and filters to fetch the next page.
+     * Cursor from the previous page's `next_cursor`. Omit for the first page. Send the same `query`, `mode`, and `filters` with it.
      */
     #[Optional]
     public ?string $cursor;
 
     /**
-     * Additional constraints every result must match.
+     * Constraints every result must match, in addition to `query`.
      */
     #[Optional]
     public ?Filters $filters;
 
     /**
-     * `fast` matches people on basic criteria (e.g. their role, location or background); `ultra` plans a deeper search, judges each candidate against every criterion in the query. Complex `ultra` searches can take up to 30 seconds to complete, so allow for that in your client timeout.
+     * `fast` matches people on basic criteria such as role, location, or background; `ultra` runs a deeper search, checks every candidate against each criterion in your query, and adds a `match` score. Complex `ultra` searches can take up to 30 seconds, so set your client timeout to match.
      *
      * @var value-of<Mode>|null $mode
      */
@@ -62,7 +62,7 @@ final class PersonSearchParams implements BaseModel
     public ?string $mode;
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @var list<string>|null $tags
      */
@@ -128,7 +128,7 @@ final class PersonSearchParams implements BaseModel
     }
 
     /**
-     * Describe the people to find. Up to 500 characters in `fast` mode and 5000 in `ultra` mode.
+     * Plain-language description of the people to find. Up to 500 characters in `fast` mode and 5000 in `ultra` mode.
      */
     public function withQuery(string $query): self
     {
@@ -139,7 +139,7 @@ final class PersonSearchParams implements BaseModel
     }
 
     /**
-     * Use next_cursor with the same query, mode and filters to fetch the next page.
+     * Cursor from the previous page's `next_cursor`. Omit for the first page. Send the same `query`, `mode`, and `filters` with it.
      */
     public function withCursor(string $cursor): self
     {
@@ -150,7 +150,7 @@ final class PersonSearchParams implements BaseModel
     }
 
     /**
-     * Additional constraints every result must match.
+     * Constraints every result must match, in addition to `query`.
      *
      * @param Filters|FiltersShape $filters
      */
@@ -163,7 +163,7 @@ final class PersonSearchParams implements BaseModel
     }
 
     /**
-     * `fast` matches people on basic criteria (e.g. their role, location or background); `ultra` plans a deeper search, judges each candidate against every criterion in the query. Complex `ultra` searches can take up to 30 seconds to complete, so allow for that in your client timeout.
+     * `fast` matches people on basic criteria such as role, location, or background; `ultra` runs a deeper search, checks every candidate against each criterion in your query, and adds a `match` score. Complex `ultra` searches can take up to 30 seconds, so set your client timeout to match.
      *
      * @param Mode|value-of<Mode> $mode
      */
@@ -176,7 +176,7 @@ final class PersonSearchParams implements BaseModel
     }
 
     /**
-     * Labels for filtering usage in the dashboard.
+     * Labels for this request. Filter usage and request logs by them in the dashboard or with `GET /org/logs`.
      *
      * @param list<string> $tags
      */

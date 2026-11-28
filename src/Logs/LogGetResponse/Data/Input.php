@@ -10,7 +10,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * What was sent with the request.
+ * Input retained from the request.
  *
  * @phpstan-type InputShape = array{query: array<string,mixed>, body?: mixed}
  */
@@ -20,7 +20,7 @@ final class Input implements BaseModel
     use SdkModel;
 
     /**
-     * Query parameters as sent.
+     * Query parameters of the request.
      *
      * @var array<string,mixed> $query
      */
@@ -71,7 +71,7 @@ final class Input implements BaseModel
     }
 
     /**
-     * Query parameters as sent.
+     * Query parameters of the request.
      *
      * @param array<string,mixed> $query
      */

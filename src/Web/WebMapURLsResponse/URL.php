@@ -23,19 +23,35 @@ final class URL implements BaseModel
     /** @use SdkModel<URLShape> */
     use SdkModel;
 
+    /**
+     * Page URL.
+     */
     #[Required]
     public string $url;
 
+    /**
+     * Page description, when available.
+     */
     #[Optional]
     public ?string $description;
 
-    /** @var list<string>|null $keywords */
+    /**
+     * Keywords from the page's `keywords` meta tag.
+     *
+     * @var list<string>|null $keywords
+     */
     #[Optional(list: 'string')]
     public ?array $keywords;
 
+    /**
+     * Page language, when available.
+     */
     #[Optional]
     public ?string $language;
 
+    /**
+     * Page title, when available.
+     */
     #[Optional]
     public ?string $title;
 
@@ -84,6 +100,9 @@ final class URL implements BaseModel
         return $self;
     }
 
+    /**
+     * Page URL.
+     */
     public function withURL(string $url): self
     {
         $self = clone $this;
@@ -92,6 +111,9 @@ final class URL implements BaseModel
         return $self;
     }
 
+    /**
+     * Page description, when available.
+     */
     public function withDescription(string $description): self
     {
         $self = clone $this;
@@ -101,6 +123,8 @@ final class URL implements BaseModel
     }
 
     /**
+     * Keywords from the page's `keywords` meta tag.
+     *
      * @param list<string> $keywords
      */
     public function withKeywords(array $keywords): self
@@ -111,6 +135,9 @@ final class URL implements BaseModel
         return $self;
     }
 
+    /**
+     * Page language, when available.
+     */
     public function withLanguage(string $language): self
     {
         $self = clone $this;
@@ -119,6 +146,9 @@ final class URL implements BaseModel
         return $self;
     }
 
+    /**
+     * Page title, when available.
+     */
     public function withTitle(string $title): self
     {
         $self = clone $this;

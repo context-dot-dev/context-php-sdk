@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * What this batch cost so far.
+ * Credits reserved for the batch.
  *
  * @phpstan-type CreditsShape = array{reserved: int}
  */
@@ -19,7 +19,7 @@ final class Credits implements BaseModel
     use SdkModel;
 
     /**
-     * Credits held at submission; unused credits are refunded when the batch settles.
+     * Credits reserved for the batch. Unused credits are refunded once it reaches `cancelled`.
      */
     #[Required]
     public int $reserved;
@@ -58,7 +58,7 @@ final class Credits implements BaseModel
     }
 
     /**
-     * Credits held at submission; unused credits are refunded when the batch settles.
+     * Credits reserved for the batch. Unused credits are refunded once it reaches `cancelled`.
      */
     public function withReserved(int $reserved): self
     {

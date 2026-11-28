@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Batch\BatchSubmitResponse;
 
 /**
- * How pages will be selected.
+ * `scrape` for a URL list, `crawl` for a site crawl.
  */
 enum Mode: string
 {

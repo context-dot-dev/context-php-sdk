@@ -23,7 +23,7 @@ final class Result implements BaseModel
     use SdkModel;
 
     /**
-     * Extracted page content as Markdown (empty string on failure).
+     * Page content as Markdown. Empty string when the page failed.
      */
     #[Required]
     public string $markdown;
@@ -70,7 +70,7 @@ final class Result implements BaseModel
     }
 
     /**
-     * Extracted page content as Markdown (empty string on failure).
+     * Page content as Markdown. Empty string when the page failed.
      */
     public function withMarkdown(string $markdown): self
     {

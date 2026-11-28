@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Batch timestamps.
+ * When the batch was created and started.
  *
  * @phpstan-type TimingShape = array{createdAt: string, startedAt: string|null}
  */
@@ -25,7 +25,7 @@ final class Timing implements BaseModel
     public string $createdAt;
 
     /**
-     * When processing started. Null if it was cancelled while still queued.
+     * When scraping started. `null` if the batch was cancelled before it started.
      */
     #[Required('started_at')]
     public ?string $startedAt;
@@ -76,7 +76,7 @@ final class Timing implements BaseModel
     }
 
     /**
-     * When processing started. Null if it was cancelled while still queued.
+     * When scraping started. `null` if the batch was cancelled before it started.
      */
     public function withStartedAt(?string $startedAt): self
     {

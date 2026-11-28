@@ -9,7 +9,7 @@ use ContextDev\Core\Concerns\SdkModel;
 use ContextDev\Core\Contracts\BaseModel;
 
 /**
- * Authenticated browser profile used for this scrape, or null when no profile was requested. New and existing profile requests both return the profile ID.
+ * Browser profile used for this scrape. `null` when no profile was requested.
  *
  * @phpstan-type ProfileShape = array{id: string}
  */
@@ -19,7 +19,7 @@ final class Profile implements BaseModel
     use SdkModel;
 
     /**
-     * Save this ID after creating a profile, then reuse it as sharedParams.profile.profileId with type "existing".
+     * ID of the browser profile. After creating a profile, save it and pass it as `sharedParams.profile.profileId` with `type: "existing"`.
      */
     #[Required]
     public string $id;
@@ -58,7 +58,7 @@ final class Profile implements BaseModel
     }
 
     /**
-     * Save this ID after creating a profile, then reuse it as sharedParams.profile.profileId with type "existing".
+     * ID of the browser profile. After creating a profile, save it and pass it as `sharedParams.profile.profileId` with `type: "existing"`.
      */
     public function withID(string $id): self
     {

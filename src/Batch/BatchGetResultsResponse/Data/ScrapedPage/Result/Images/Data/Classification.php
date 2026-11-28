@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace ContextDev\Batch\BatchGetResultsResponse\Data\ScrapedPage\Result\Images\Data;
 
+/**
+ * What the image shows, such as a photo, logo, or icon. Requires `classification` enrichment.
+ */
 enum Classification: string
 {
     case PHOTOGRAPHY = 'photography';

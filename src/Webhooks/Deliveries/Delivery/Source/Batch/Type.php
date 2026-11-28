@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ContextDev\Webhooks\Deliveries\Delivery\Source\Batch;
 
 /**
- * Which deliveries to list: `batch` or `monitor`.
+ * The event came from a batch.
  */
 enum Type: string
 {
