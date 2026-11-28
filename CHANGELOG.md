@@ -1,5 +1,44 @@
 # Changelog
 
+## [2.53.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.52.0...v2.53.0) (2026-11-28)
+
+
+### Features
+
+* **answers:** limit research to listed sources with controls ([#3252](https://github.com/context-dot-dev/context-php-sdk/issues/3252)) ([8cce45f](https://github.com/context-dot-dev/context-php-sdk/commit/8cce45fc194aa92e77e83cf4a3fa041bc702366b))
+* **batch:** add follow, scrape and exclude crawl rules ([#3244](https://github.com/context-dot-dev/context-php-sdk/issues/3244)) ([20fa936](https://github.com/context-dot-dev/context-php-sdk/commit/20fa9365d3784e25278cad74c9e883215373c4a7))
+* **crawl:** say why a crawled page failed ([#3130](https://github.com/context-dot-dev/context-php-sdk/issues/3130)) ([ebdf5eb](https://github.com/context-dot-dev/context-php-sdk/commit/ebdf5eb0f754e0223f92b69b1bf46914488f8701))
+* **feedback:** add bad_brand feedback category ([#3136](https://github.com/context-dot-dev/context-php-sdk/issues/3136)) ([2dea04d](https://github.com/context-dot-dev/context-php-sdk/commit/2dea04dff7b06e37bda60979852f39af3155c28e))
+* **monitors:** filter monitor credit usage by tag ([#3077](https://github.com/context-dot-dev/context-php-sdk/issues/3077)) ([ccf46ce](https://github.com/context-dot-dev/context-php-sdk/commit/ccf46ce576a5f41fd002329c54654930cfbbe2b5))
+* **scholar:** add POST /scholar/search endpoint ([#2997](https://github.com/context-dot-dev/context-php-sdk/issues/2997)) ([27a3385](https://github.com/context-dot-dev/context-php-sdk/commit/27a3385ba3256fd5941a10eeaac2abb835b42c3d))
+* **scrape:** accept includeFrames auto and make it the default ([#3280](https://github.com/context-dot-dev/context-php-sdk/issues/3280)) ([606591e](https://github.com/context-dot-dev/context-php-sdk/commit/606591e5a7d030f03ef471410c130357d656c177))
+* **scrape:** add a car-rental-locations parser for avis and budget branches ([#3021](https://github.com/context-dot-dev/context-php-sdk/issues/3021)) ([4a2f0d4](https://github.com/context-dot-dev/context-php-sdk/commit/4a2f0d4b146dec90c4779e591485b34f20b58a9b))
+* **scrape:** include price and availability on product variants ([#3113](https://github.com/context-dot-dev/context-php-sdk/issues/3113)) ([ebdf5eb](https://github.com/context-dot-dev/context-php-sdk/commit/ebdf5eb0f754e0223f92b69b1bf46914488f8701))
+
+
+### Bug Fixes
+
+* **access-policies:** tell callers to drop `policies` when the feature is off ([#3090](https://github.com/context-dot-dev/context-php-sdk/issues/3090)) ([764376f](https://github.com/context-dot-dev/context-php-sdk/commit/764376fda38acb0265f80e28f22bed2d0a6202ef))
+* **answers:** flag list items that came back unresearched and send incomplete answers back once ([#3145](https://github.com/context-dot-dev/context-php-sdk/issues/3145)) ([e12058f](https://github.com/context-dot-dev/context-php-sdk/commit/e12058feace43e5262a0b992d5167393a713145a))
+* **batch:** list every batch and remove shouldIncludeUnified ([#3322](https://github.com/context-dot-dev/context-php-sdk/issues/3322)) ([fe521c6](https://github.com/context-dot-dev/context-php-sdk/commit/fe521c62cd0be3a1993f10debe9b3ba4980e55b2))
+* **brand:** rename country_gl to country and CountryGL to LowercaseCountryCode ([#3326](https://github.com/context-dot-dev/context-php-sdk/issues/3326)) ([636bb39](https://github.com/context-dot-dev/context-php-sdk/commit/636bb395e19da819609f36e266ab875e304cefcb))
+* **google-maps:** search from the URL's country, merge two draws, and read the real primary category ([#3158](https://github.com/context-dot-dev/context-php-sdk/issues/3158)) ([7e62ce4](https://github.com/context-dot-dev/context-php-sdk/commit/7e62ce4be2abd6178ec00a6ca8eb532472386ddd))
+* **scrape:** read google play ratings from the storefront that offers the app ([#3084](https://github.com/context-dot-dev/context-php-sdk/issues/3084)) ([ccf46ce](https://github.com/context-dot-dev/context-php-sdk/commit/ccf46ce576a5f41fd002329c54654930cfbbe2b5))
+* **web-search:** explain why a result's page content is missing ([#3074](https://github.com/context-dot-dev/context-php-sdk/issues/3074)) ([9cd4a86](https://github.com/context-dot-dev/context-php-sdk/commit/9cd4a86af2ca77e3ea96d7caa350f6ebe3b89691))
+
+
+### Chores
+
+* **stlc:** stop generating the PHP SDK's Packagist publish workflow ([#2952](https://github.com/context-dot-dev/context-php-sdk/issues/2952)) ([6b2639f](https://github.com/context-dot-dev/context-php-sdk/commit/6b2639f5bcd2e4704fdd0c55934d51e48d5044b5))
+
+
+### Documentation
+
+* **answers:** state the 2000-character task limit in its description ([#3137](https://github.com/context-dot-dev/context-php-sdk/issues/3137)) ([2dea04d](https://github.com/context-dot-dev/context-php-sdk/commit/2dea04dff7b06e37bda60979852f39af3155c28e))
+* **openapi:** hide superseded inputs and document missing 403 and 402 responses ([#3323](https://github.com/context-dot-dev/context-php-sdk/issues/3323)) ([bd2f4ba](https://github.com/context-dot-dev/context-php-sdk/commit/bd2f4baf7092b823bd5be57aa51e760c4a9bf148))
+* **openapi:** rewrite public reference copy and normalize field order ([#3325](https://github.com/context-dot-dev/context-php-sdk/issues/3325)) ([8333ff2](https://github.com/context-dot-dev/context-php-sdk/commit/8333ff2ab3dabe2252e6c4a9b9f70e4f81b02882))
+* **scrape:** describe late scrape outputs as per-output REQUEST_TIMEOUT in a 200 ([#3080](https://github.com/context-dot-dev/context-php-sdk/issues/3080)) ([5a543dc](https://github.com/context-dot-dev/context-php-sdk/commit/5a543dc845fc449606e63ef629ea215cb4852abc))
+
 ## [2.52.0](https://github.com/context-dot-dev/context-php-sdk/compare/v2.51.0...v2.52.0) (2026-11-17)
 
 
