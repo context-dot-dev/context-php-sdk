@@ -6,14 +6,13 @@ namespace ContextDev\Services;
 
 use ContextDev\Brand\BrandGetResponse;
 use ContextDev\Brand\BrandRetrieveParams;
-use ContextDev\Brand\BrandRetrieveParams\CountryGl;
+use ContextDev\Brand\BrandRetrieveParams\Country;
 use ContextDev\Brand\BrandRetrieveParams\ForceLanguage;
 use ContextDev\Brand\BrandRetrieveParams\TickerExchange;
 use ContextDev\Brand\BrandRetrieveParams\TimeoutOpts;
 use ContextDev\Brand\BrandRetrieveParams\Type;
 use ContextDev\Brand\BrandRetrieveParams\Zdr;
 use ContextDev\Brand\BrandSearchParams;
-use ContextDev\Brand\BrandSearchParams\Country;
 use ContextDev\Brand\BrandSearchParams\Language;
 use ContextDev\Brand\BrandSearchParams\QueryBy;
 use ContextDev\Brand\BrandSearchResponse;
@@ -53,7 +52,7 @@ final class BrandRawService implements BrandRawContract
      *   timeoutOpts?: TimeoutOpts|TimeoutOptsShape,
      *   zdr?: Zdr|value-of<Zdr>,
      *   name: string,
-     *   countryGl?: value-of<CountryGl>,
+     *   country?: value-of<Country>,
      *   email: string,
      *   ticker: string,
      *   tickerExchange?: value-of<TickerExchange>,
@@ -97,7 +96,7 @@ final class BrandRawService implements BrandRawContract
      * @param array{
      *   query: string,
      *   autocomplete?: bool,
-     *   country?: value-of<Country>,
+     *   country?: value-of<BrandSearchParams\Country>,
      *   language?: value-of<Language>,
      *   queryBy?: list<QueryBy|value-of<QueryBy>>,
      *   tags?: list<string>,

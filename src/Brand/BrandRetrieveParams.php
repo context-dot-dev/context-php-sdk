@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ContextDev\Brand;
 
-use ContextDev\Brand\BrandRetrieveParams\CountryGl;
+use ContextDev\Brand\BrandRetrieveParams\Country;
 use ContextDev\Brand\BrandRetrieveParams\ForceLanguage;
 use ContextDev\Brand\BrandRetrieveParams\TickerExchange;
 use ContextDev\Brand\BrandRetrieveParams\TimeoutOpts;
@@ -38,7 +38,7 @@ use ContextDev\Core\Contracts\BaseModel;
  *   timeoutOpts?: null|TimeoutOpts|TimeoutOptsShape,
  *   zdr?: null|Zdr|value-of<Zdr>,
  *   name: string,
- *   countryGl?: null|CountryGl|value-of<CountryGl>,
+ *   country?: null|Country|value-of<Country>,
  *   email: string,
  *   ticker: string,
  *   tickerExchange?: null|TickerExchange|value-of<TickerExchange>,
@@ -123,12 +123,12 @@ final class BrandRetrieveParams implements BaseModel
     public string $name;
 
     /**
-     * Two-letter ISO 3166-1 alpha-2 country code (GL parameter) used to localize search.
+     * Lowercase ISO 3166-1 alpha-2 country code, such as `us`.
      *
-     * @var value-of<CountryGl>|null $countryGl
+     * @var value-of<Country>|null $country
      */
-    #[Optional('country_gl', enum: CountryGl::class)]
-    public ?string $countryGl;
+    #[Optional(enum: Country::class)]
+    public ?string $country;
 
     /**
      * Email address to retrieve brand data for (e.g., 'jane@stripe.com').
@@ -235,7 +235,7 @@ final class BrandRetrieveParams implements BaseModel
      * @param list<string>|null $tags
      * @param TimeoutOpts|TimeoutOptsShape|null $timeoutOpts
      * @param Zdr|value-of<Zdr>|null $zdr
-     * @param CountryGl|value-of<CountryGl>|null $countryGl
+     * @param Country|value-of<Country>|null $country
      * @param TickerExchange|value-of<TickerExchange>|null $tickerExchange
      * @param MccShape|null $mcc
      * @param PhoneShape|null $phone
@@ -255,7 +255,7 @@ final class BrandRetrieveParams implements BaseModel
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
         Zdr|string|null $zdr = null,
-        CountryGl|string|null $countryGl = null,
+        Country|string|null $country = null,
         TickerExchange|string|null $tickerExchange = null,
         ?string $city = null,
         ?bool $highConfidenceOnly = null,
@@ -279,7 +279,7 @@ final class BrandRetrieveParams implements BaseModel
         null !== $tags && $self['tags'] = $tags;
         null !== $timeoutOpts && $self['timeoutOpts'] = $timeoutOpts;
         null !== $zdr && $self['zdr'] = $zdr;
-        null !== $countryGl && $self['countryGl'] = $countryGl;
+        null !== $country && $self['country'] = $country;
         null !== $tickerExchange && $self['tickerExchange'] = $tickerExchange;
         null !== $city && $self['city'] = $city;
         null !== $highConfidenceOnly && $self['highConfidenceOnly'] = $highConfidenceOnly;
@@ -411,14 +411,14 @@ final class BrandRetrieveParams implements BaseModel
     }
 
     /**
-     * Two-letter ISO 3166-1 alpha-2 country code (GL parameter) used to localize search.
+     * Lowercase ISO 3166-1 alpha-2 country code, such as `us`.
      *
-     * @param CountryGl|value-of<CountryGl> $countryGl
+     * @param Country|value-of<Country> $country
      */
-    public function withCountryGl(CountryGl|string $countryGl): self
+    public function withCountry(Country|string $country): self
     {
         $self = clone $this;
-        $self['countryGl'] = $countryGl;
+        $self['country'] = $country;
 
         return $self;
     }

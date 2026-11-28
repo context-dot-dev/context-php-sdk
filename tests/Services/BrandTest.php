@@ -68,7 +68,7 @@ final class BrandTest extends TestCase
             timeoutOpts: ['milliseconds' => 1000, 'behavior' => 'fail'],
             zdr: 'enabled',
             name: 'xxx',
-            countryGl: 'af',
+            country: 'af',
             email: 'dev@stainless.com',
             ticker: 'ticker',
             tickerExchange: 'AMEX',

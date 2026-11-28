@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace ContextDev\ServiceContracts;
 
 use ContextDev\Brand\BrandGetResponse;
-use ContextDev\Brand\BrandRetrieveParams\CountryGl;
+use ContextDev\Brand\BrandRetrieveParams\Country;
 use ContextDev\Brand\BrandRetrieveParams\ForceLanguage;
 use ContextDev\Brand\BrandRetrieveParams\TickerExchange;
 use ContextDev\Brand\BrandRetrieveParams\TimeoutOpts;
 use ContextDev\Brand\BrandRetrieveParams\Type;
 use ContextDev\Brand\BrandRetrieveParams\Zdr;
-use ContextDev\Brand\BrandSearchParams\Country;
 use ContextDev\Brand\BrandSearchParams\Language;
 use ContextDev\Brand\BrandSearchParams\QueryBy;
 use ContextDev\Brand\BrandSearchResponse;
@@ -43,7 +42,7 @@ interface BrandContract
      * @param list<string> $tags labels for filtering usage in the dashboard
      * @param TimeoutOpts|TimeoutOptsShape $timeoutOpts request deadline and what to return when it passes
      * @param Zdr|value-of<Zdr> $zdr `enabled` disables request logs and traces and omits request and response content from usage logs. Brand data and hosted assets may still be stored. Returns 403 `ZDR_NOT_ENABLED` unless your organization has ZDR.
-     * @param CountryGl|value-of<CountryGl> $countryGl two-letter ISO 3166-1 alpha-2 country code (GL parameter) used to localize search
+     * @param Country|value-of<Country> $country lowercase ISO 3166-1 alpha-2 country code, such as `us`
      * @param TickerExchange|value-of<TickerExchange> $tickerExchange stock exchange code
      * @param string $city optional city name to prioritize when searching for the brand
      * @param bool $highConfidenceOnly when set to true, the API performs additional verification to ensure the identified brand matches the transaction with high confidence
@@ -68,7 +67,7 @@ interface BrandContract
         ?array $tags = null,
         TimeoutOpts|array|null $timeoutOpts = null,
         Zdr|string|null $zdr = null,
-        CountryGl|string|null $countryGl = null,
+        Country|string|null $country = null,
         TickerExchange|string|null $tickerExchange = null,
         ?string $city = null,
         ?bool $highConfidenceOnly = null,
@@ -82,7 +81,7 @@ interface BrandContract
      *
      * @param string $query Search term, matched against the fields selected by queryBy (e.g. 'nike', 'nike.com', 'nik').
      * @param bool $autocomplete Whether the search term matches by prefix, so partial words match as they are typed (e.g. 'nik' matches Nike). Set to false to match whole words only.
-     * @param Country|value-of<Country> $country only return brands in this country, as an uppercase ISO 3166-1 alpha-2 code such as US or GB
+     * @param \ContextDev\Brand\BrandSearchParams\Country|value-of<\ContextDev\Brand\BrandSearchParams\Country> $country only return brands in this country, as an uppercase ISO 3166-1 alpha-2 code such as US or GB
      * @param Language|value-of<Language> $language only return brands with this primary language, such as english or french
      * @param list<QueryBy|value-of<QueryBy>> $queryBy Fields to match the search term against, as a comma-separated list or repeated parameter: 'name', 'domain', or both. Defaults to both.
      * @param list<string> $tags Comma-separated labels for filtering usage, e.g. `production,team-alpha`.
@@ -94,7 +93,7 @@ interface BrandContract
     public function search(
         string $query,
         bool $autocomplete = true,
-        Country|string|null $country = null,
+        \ContextDev\Brand\BrandSearchParams\Country|string|null $country = null,
         Language|string|null $language = null,
         array $queryBy = ['name', 'domain'],
         ?array $tags = null,

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace ContextDev\Brand\BrandRetrieveParams;
 
 /**
- * Two-letter ISO 3166-1 alpha-2 country code (GL parameter) used to localize search.
+ * Lowercase ISO 3166-1 alpha-2 country code, such as `us`.
  */
-enum CountryGl: string
+enum Country: string
 {
     case AF = 'af';
 
